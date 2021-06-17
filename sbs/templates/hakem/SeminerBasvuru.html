@@ -1,0 +1,367 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+    <div class="modal modal-title fade in" tabindex="-1" role="dialog" id="application"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Bilgileri Giriniz</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data" role="form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label> İsim</label>
+
+
+                            <input type="text" name="name" class="form-control" readonly="readonly" required=""
+                                   maxlength="1000" id="name">
+
+                        </div>
+                        <div class="form-group">
+                            <label> Başlangıç Tarihi </label>
+                            <input type="text" name="start" class="form-control" readonly="readonly" required=""
+                                   maxlength="1000" id="start">
+                        </div>
+                        <div class="form-group">
+                            <label> Bitis tarihi</label>
+                            <input type="text" name="finish" class="form-control" readonly="readonly" required=""
+                                   maxlength="1000" id="finish">
+                        </div>
+                        <div class="form-group">
+                            <label> Yeri</label>
+                            <input type="text" name="location" class="form-control" readonly="readonly" required=""
+                                   maxlength="1000" id="location">
+                        </div>
+                        <div class="form-group">
+                            <label> Dekont </label>
+                            <input type="file" name="file" class="form-control" required
+                                   maxlength="1000" id="location">
+                        </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <input type="text" name="pk" id="pk" class="form-control" readonly="readonly" required=""
+                           maxlength="1000">
+
+                    <button type="submit" class="btn btn-primary " id="save">Kaydet</button>
+                </div>
+                </form>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <section class="content">
+
+
+        <div class="row">
+
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Başvurularım </h3>
+                        </div>
+
+                        <div class="card-body">
+                            <table id="musabakalar" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>İsim</th>
+                                    <th>Başl. Tarihi</th>
+                                    <th>Bitiş. Tarihi</th>
+
+                                    <th>Yer</th>
+                                    <th>Geçerlilik yılı</th>
+                                    <th>Başvurularim</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if seminer.all %}
+                                    {% for item in seminer %}
+                                        <tr id="seminer-{{ item.pk }}">
+                                            <td>{{ forloop.counter }} </td>
+                                            {#                                            belt.athlete_set.first#}
+                                            <td>{{ item.name }}</td>
+                                            <td>{{ item.startDate |date }} </td>
+                                            <td>{{ item.finishDate |date }}</td>
+                                            <td>{{ item.location }}</td>
+                                            <td>{{ item.year }}</td>
+
+                                            <td>{% for basvuru in item.judgeApplication.all %}
+
+                                                {% if basvuru.judge.user == user %}
+                                                    {{ basvuru.creationDate |date }} -{{ basvuru.status }}<br>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+
+    <script>
+
+        $(function () {
+            $('#musabakalar').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+                    {##}
+                    {##}
+                    {#'copy',#}
+                    {#'csv',#}
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Sbs Bilgi Sistemi',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5]
+                        },
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5]
+                        },
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Sbs Bilgi Sistemi',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Sbs Bilgi Sistemi ',
+                        {#footer: true,#}
+                        exportOptions: {
+                            {#     yer degisimi de yapilabilir.#}
+                            columns: [0, 2, 1, 3, 4, 5]
+
+                        },
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Sporcular.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+
+        })
+
+
+    </script>
+
+
+
+
+
+
+
+{% endblock %}
+

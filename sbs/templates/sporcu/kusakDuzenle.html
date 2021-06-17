@@ -1,0 +1,126 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+    <section class="content">
+
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+
+
+            <section class="col-lg-3 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Kuşak Güncelle</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form method="post" role="form">
+                            <div class="card-body">
+                                {% csrf_token %}
+
+
+                                <div class="form-group">
+                                    <label> {{ category_item_form.name.label }}</label>
+                                    {{ category_item_form.name }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label> {{ category_item_form.parent.label }}</label>
+                                    {{ category_item_form.parent }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label> {{ category_item_form.branch.label }}</label>
+                                    {{ category_item_form.branch }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label> {{ category_item_form.isFirst.label }}</label>
+                                    {{ category_item_form.isFirst }}
+                                </div>
+
+
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Güncelle</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+
+
+
+
+
+
+
+{% endblock %}

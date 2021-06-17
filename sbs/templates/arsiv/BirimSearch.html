@@ -1,0 +1,477 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger modal-danger-food fade in" id="modal-success-danger" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarısız</h4>
+                </div>
+                <div class="modal-body successModalD">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-active"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-warning fade in deneme223" tabindex="-1" role="dialog" id="modal-mail"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı giriş bilgilerini göndermek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf12"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close2">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-lg-12 ">
+                <div class="card-body">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Birim Filtrele</h3>
+                        </div>
+                        <form method="post" role="form">
+                            <div class="card-body secim">
+                                {% csrf_token %}
+
+                                <div class="col-lg-3">
+                                    <div class="form-group ">
+                                        <label> Birimler</label>
+                                        <select name="birim_id" class="form-control select2 select2-hidden-accessible"
+                                                style="width: 100%; " id="birim_id" tabindex="-1"
+                                                aria-hidden="true">
+                                            <option value="" selected="">Seçiniz</option>
+
+                                            {% for item in birimler %}
+
+                                                <option value="{{ item.pk }}">{{ item.name }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Ara</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        {% if units %}
+            <div class="row">
+                <div class="col-lg-12 ">
+                    <div class="card-body">
+                        <div class="card card-primary">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Agaç Yapısı</h3>
+                            </div>
+
+
+                            <div class="card-body">
+
+                                <ul class="control-sidebar-menu " data-widget="tree">
+                                    {% for item in units %}
+
+                                        <li class="treeview " id="tree-{{ item.pk }}">
+                                            <a href="#"><b>
+                                                <i class=" fa fa-folder-o"></i>
+                                                <span>{{ item.name }}</span> </b>
+
+                                                </span>
+                                            </a>
+
+
+                                            <ul class="treeview-menu" id="unit-{{ item.pk }}" style="display:block; ">
+                                            </ul>
+                                        </li>
+
+                                    {% endfor %}
+                                </ul>
+
+
+                            </div>
+
+
+                        </div>
+                        <!-- /.card -->
+
+
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- /.row (main row) -->
+        {% endif %}
+    </section>
+
+    <script>
+        $(function () {
+            $('#kullanicilar').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+                    {##}
+                    {##}
+                    {#'copy',#}
+                    {#'csv',#}
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Sbs Bilgi Sistemi',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            {#columns: [0, 1, 2, 3, 4, 5]#}
+                        },
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            {#columns: [0, 1, 2, 3, 4, 5]#}
+                        },
+                        titleAttr: 'Pfd Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Sbs Bilgi Sistemi',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Sbs Bilgi Sistemi ',
+                        {#footer: true,#}
+                        exportOptions: {
+                            {#     yer degisimi de yapilabilir.#}
+                            {#columns: [0, 2, 1, 3, 4, 5]#}
+
+                        },
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Sporcular.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+
+
+            $("#birim_id").change(function () {
+                var birim = $(this).find('option:selected').val();
+
+
+                clear();
+                list(birim);
+            });
+
+            {% for item in klasor %}
+
+
+
+                $("#tree-{{ item.birim_id }}").addClass("open");
+
+                $("#unit-{{ item.birim_id }}").prepend("<ul  class='treeview'><a href='#'><b><i class=' fa fa-folder-o'></i>" +
+                    "<span> {{ item.name }}</span></b></a><ul class='treeview-menu' style='display:block;' id='klasor-{{ item.pk }}'></ul></ul>");
+            {% endfor %}
+            {% for item in files %}
+                $("#klasor-{{ item.klasor_id }}").prepend("<li ' id='file-{{ item.pk }}'><a href='{% url 'sbs:dosya-guncelle' item.pk %}'>{{ item.sirano }}</a></li>");
+            {% endfor %}
+
+        });
+
+        function clear() {
+
+
+            $(".parametre").remove();
+
+        }
+
+
+        function list(birim) {
+            {#alert(birim);#}
+            $.ajax({
+                url: "{% url "sbs:parametre-bilgi" %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    "cmd": birim,
+                },
+                success: function (result) {
+                    console.log(result)
+
+                    {#$("#id_town").append('<option value="">-----------</option>');#}
+
+                    for (item in result.data) {
+                        {#string#}
+                        if (result.data[item].type == 'string') {
+
+                            $(".secim").append('<div class="col-lg-3 parametre"><div class="form-group"> <label> ' + result.data[item].title + '</label><input type="text" name="' + result.data[item].title + '"  maxlength="250" class="form-control"  id="id_' + result.data[item].title + '"></div></div>');
+
+                        }
+                        {#number#}
+                        if (result.data[item].type == 'number') {
+
+                            $(".secim").append('<div class="col-lg-3 parametre"><div class="form-group"> <label> ' + result.data[item].title + '</label><input type="text" onkeypress="validate(event)" name="' + result.data[item].title + '"  maxlength="250" class="form-control"  id="id_' + result.data[item].title + '"></div></div>');
+
+                        }
+                        {#date#}
+                        if (result.data[item].type == 'date') {
+
+                            $(".secim").append('<div class="col-lg-3 parametre"><div class="form-group"> <label> ' + result.data[item].title + '</label><input type="text" name="' + result.data[item].title + '"  maxlength="250" class="form-control  datepicker6 "  id="id_' + result.data[item].title + '"></div></div>');
+
+                        }
+
+                    }
+
+                }
+            });
+
+        };
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+

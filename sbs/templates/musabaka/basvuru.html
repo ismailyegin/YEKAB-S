@@ -1,0 +1,728 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+    <style>
+
+
+        /***** PROFILE USER *****/
+        .profile-left-heading {
+            padding: 20px;
+            background-color: #3b4354;
+            border-top-right-radius: 3px;
+            border-top-left-radius: 3px;
+        }
+
+        .profile-left-heading .panel-options > li > a {
+            font-size: 14px;
+        }
+
+        .profile-left-heading .profile-photo {
+            width: 128px;
+            display: block;
+            margin: auto;
+        }
+
+        .profile-left-heading .profile-photo img {
+            padding: 5px;
+            background-color: #262b36;
+            border: 2px solid #505b72;
+        }
+
+        .profile-left-heading .profile-name {
+            color: #fff;
+            font-weight: 300;
+            font-size: 20px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .profile-left-heading .profile-designation {
+            color: #9fa8bc;
+            font-weight: 300;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        .profile-left-heading .list-group {
+            margin: 20px 0;
+        }
+
+        .profile-left-heading .list-group .list-group-item {
+            background-color: transparent;
+            border-width: 0 0 1px;
+            border-color: #464f63;
+            padding-left: 0;
+            padding-right: 0;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: none;
+            font-family: 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
+            font-weight: 600;
+            letter-spacing: .5px;
+        }
+
+        .profile-left-heading .list-group .list-group-item a {
+            float: right;
+            color: #fff;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+        }
+
+        .profile-left-heading .list-group .list-group-item a:hover,
+        .profile-left-heading .list-group .list-group-item a:focus {
+            color: #46b8da;
+        }
+
+        .profile-left-heading .list-group .list-group-item:first-child {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-width: 1px;
+        }
+
+        .profile-left-heading .list-group .list-group-item:last-child {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .profile-left-body {
+            padding: 20px;
+            background-color: #464f63;
+            color: #9fa8bc;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+
+        .profile-left-body .panel-title {
+            color: #fff;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .profile-left-body .profile-social > li a {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 28px;
+            -webkit-transition: all 0.2s ease-out 0s;
+            -o-transition: all 0.2s ease-out 0s;
+            transition: all 0.2s ease-out 0s;
+        }
+
+        .profile-left-body .profile-social > li a:hover,
+        .profile-left-body .profile-social > li a:focus {
+            color: #fff;
+        }
+
+        .profile-btn-follow {
+            margin-top: 20px;
+        }
+
+
+    </style>
+
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade modal-dialog" tabindex="-1" role="dialog" id="kural20"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Kural20title">Kural İhlali </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Verilen degerler 20 kg kuralına uymadıgı için güncellenemedi. </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+
+                </div>
+            </div>
+        </div>
+</div>
+
+
+    <div class="modal modal-dialog fade in deneme23" tabindex="-1" role="dialog" id="reddetwhy"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Ek Bilgileri Giriniz</h4>
+                </div>
+                <div class="modal-body" id="kategoriadd">
+                    <label for="inputState">Kategori</label>
+                    <select id="category" onchange="Kategori()" class="form-control">
+                        <option selected>Seçiniz...</option>
+                        {% for weight in weights %}
+                            <option value="{{ weight.pk }}">{{ weight.kategoriadi }}</option>
+                        {% endfor %}
+                    </select>
+
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-default pull-left btn-ok" id="btn-gonder"
+                            data-dismiss="modal">Kaydet
+                    </button>
+                    <button type="button" class="btn  btn-default" id="btn-closereddet">Geri Dön</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+
+
+
+
+
+    <div class="row">
+        <section class="col-lg-12 ">
+
+            <div class=" dash-center">
+                <div class="profile-left mb20">
+
+
+                    <div class="profile-left-heading">
+                        <h2 class="profile-name">{{ competition.name }}</h2>
+                        <h4 class="profile-designation">{{ competition.startDate |date:"d " }}
+                            - {{ competition.finishDate | date }}</h4>
+                        {#                                    <center><a href="{% url "sbs:basvuru" pk=competition.pk %}">#}
+                        {#                                        <button class="btn btn-danger btn-quirk profile-btn-follow">&nbsp;&nbsp;&nbsp;#}
+                        {#                                            BAŞVURU YAP#}
+                        {#                                            &nbsp;&nbsp;&nbsp;#}
+                        {#                                        </button>#}
+                        {#                                    </a></center>#}
+
+                    </div>
+                    <div class="profile-left-body">
+
+
+                        <div class="row">
+                            <div class="col-xs-5 col-sm-4">
+                                <div class="pull-left">
+                                    <h4 class="panel-title">MÜSABAKANIN YERİ</h4>
+                                    <p>
+                                        <i class="glyphicon glyphicon-map-marker mr5"></i>{{ competition.eventPlace }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 col-sm-4">
+                                <div class="pull-left">
+                                    <h4 class="panel-title">MÜSABAKANIN TARİHİ</h4>
+                                    <p>
+                                        <i class="fa fa-calendar mr5"></i> {{ competition.startDate |date:"d " }}
+                                        - {{ competition.finishDate | date }}</p>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 col-sm-4">
+                                <div class="pull-left">
+                                    <h4 class="panel-title">ONLİNE BAŞVURU TARİHİ</h4>
+                                    <p>
+                                        <i class="fa fa-calendar mr5"></i>{{ competition.registerStartDate |date:"d " }}
+                                        - {{ competition.registerFinishDate | date }}</p>
+                                </div>
+                            </div>
+
+                        </div><!-- row -->
+
+
+                    </div>
+                </div><!-- profile-left -->
+                <br>
+            </div>
+
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary">
+                <div class="card-header with-border">
+                    <h3 class="card-title">Sporcular</h3>
+                </div>
+                <div class="card-header with-border">
+                    <div class="btn-group">
+
+                        <a href="{% url "sbs:musabaka-sporcu-sec" competition.pk %}"
+                           type="button" class="btn btn-success"><i
+                                class="fa fa-edit"></i>Sporcu Ekle
+                        </a>
+
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="sporcular" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ad Soyad</th>
+                            {#                            <th>Doğum Tarihi</th>#}
+                            {% if aktif == 'Admin' %}
+                                <th>Kulüp</th>
+                            {% endif %}
+                            <th>Kategori</th>
+
+                            <th>İşlemler</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if athletes %}
+                            {% for compathlete in athletes %}
+                                <tr>
+                                    <td>{{ forloop.counter }} </td>
+                                    <td>
+                                        {{ compathlete.athlete.user.first_name }} {{ compathlete.athlete.user.last_name }}
+                                        {% if compathlete.category.kategoriadi == 'Çift Erkekler' or compathlete.category.kategoriadi == 'Çift Bayanlar' or compathlete.category.kategoriadi == 'Karışık' %}
+                                            <br>{{ compathlete.athleteTwo.user.first_name }}
+                                            {{ compathlete.athleteTwo.user.last_name }}
+
+                                        {% endif %}</td>
+                                    {#                                    <td>{{ compathlete.athlete.person.birthDate |date }} </td>#}
+                                    {% if aktif == 'Admin' %}
+                                        <td>{{ compathlete.athlete.licenses.last.sportsClub }}</td>
+                                    {% endif %}
+                                    <td>{{ compathlete.category }}</td>
+
+                                    <td>
+                                        <div class="btn-group">
+                                            <a onclick=" addPlayer( {{ compathlete.athlete.pk }},{{ compathlete.id }},{{ compathlete.category.pk }})"
+                                               type="button" class="btn btn-primary"><i
+                                                    class="fa fa-edit"></i>Güncelle
+                                            </a>
+                                            <a onclick="deleteAthlete({{ compathlete.id }})"
+                                               type="button" class="btn btn-danger"><i
+                                                    class="fa fa-remove"></i>Kaldır
+                                            </a>
+
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+                        {% endif %}
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script>
+
+        function deleteAthlete(id) {
+
+            console.log(id);
+            var html = '';
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "sbs:musabaka-sporcu-kaldir" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Sporcu başarıyla kaldırıldı.';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:basvuru" competition.pk %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        };
+
+
+        $(function () {
+            $('#sporcular').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+                    {##}
+                    {##}
+                    {#'copy',#}
+                    {#'csv',#}
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Sbs Bilgi Sistemi',
+                        text: '<i class="fa  fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+
+                        titleAttr: 'Pfd Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Sbs Bilgi Sistemi',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Sbs Bilgi Sistemi ',
+                        footer: true,
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Sporcular.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+
+        });
+
+        function addPlayer(id, competitionId, kategori) {
+
+            $('#category option').removeAttr('selected').filter('[value=' + kategori + ']').attr('selected', true)
+            console.log(kategori)
+
+            if (kategori == 3 || kategori == 4 || kategori == 5) {
+
+                row = $("body").find("#antrenor");
+
+                if (row.length == 0) {
+
+                    $('#kategoriadd').append("<label class=' test '>Antrenör Seç</label><select id='antrenor' class='form-control test ' onchange='SporcuGetir()'><option value='0'>Antrenör Seçiniz </option></select>");
+                    $('#kategoriadd').append("<label class=' test '>Sporcu Seç</label><select id='sporcu' class='form-control test '><option value='0'>Sporcu Seçiniz </option></select>");
+
+                }
+                $.ajax({
+                    url: "{% url "sbs:catagori-antrenor-sec-ajax" %}",
+                    type: "POST",
+                    data: {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+
+                        isActive: 'False',
+
+                    },
+
+                    success: function (result) {
+                        $("#antrenor option").each(function () {
+                            $(this).remove();
+                        });
+
+                        result.data.forEach(element => $('#antrenor').append("<option value=" + element.pk + ">" + element.name + "</option>"));
+                    }
+                });
+
+
+            }
+
+
+            $("#reddetwhy").on("shown.bs.modal", function (e) {
+ if (e.handled !== true) { // This will prevent event triggering more then once
+     e.handled = true;
+
+ $("#btn-gonder").click(function () {
+
+
+                    {#console.log(competitionId)#}
+                    $.ajax({
+                            url: "{% url "sbs:catagori-sporcu-guncelle-ajax" pk=212121223232323232 competition=999999999999999 %}".replace(/212121223232323232/, id.toString()).replace(/999999999999999/, competitionId.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                             sporcu: $("#sporcu option:selected").val(),
+                             category: $('#category').val(),
+                             isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Sporcu Başarıyla Güncellendi  .';
+                            {#debugger;#}
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:basvuru"  competition.pk  %}");
+
+                                    $('#modal-warning').modal('hide');
+                                    $('.modal').modal('hide');
+
+
+                                });
+
+                            }).modal('show');
+                        }
+                    });
+
+
+
+
+
+
+                });
+ }
+
+            }).modal('show');
+            $('#btn-closereddet').click(function () {
+
+
+                $('#modal-warning').modal('hide');
+                $('.modal').modal('hide');
+
+            });
+        };
+
+        function Kategori() {
+
+            if ($("#category option:selected").val() == 3 || $("#category option:selected").val() == 4 || $("#category option:selected").val() == 5) {
+
+                {#alert('benden selam olsun bolu beyine');#}
+                row = $("body").find("#antrenor")
+
+                if (row.length == 0) {
+
+                    $('#kategoriadd').append("<label class=' test '>Antrenör Seç</label><select id='antrenor' class='form-control test ' onchange='SporcuGetir()'><option value='0'>Antrenör Seçiniz </option></select>");
+                    $('#kategoriadd').append("<label class=' test '>Sporcu Seç</label><select id='sporcu' class='form-control test '><option value='0'>Sporcu Seçiniz </option></select>");
+
+
+                    $.ajax({
+                        url: "{% url "sbs:catagori-antrenor-sec-ajax" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+
+                            isActive: 'False',
+
+                        },
+
+                        success: function (result) {
+                            $("#antrenor option").each(function () {
+                                $(this).remove();
+                            });
+
+                            result.data.forEach(element => $('#antrenor').append("<option value=" + element.pk + ">" + element.name + "</option>"));
+                        }
+                    });
+                }
+            } else {
+
+                $('.test').remove();
+
+
+            }
+
+        }
+
+        function SporcuGetir() {
+
+
+            $.ajax({
+                url: "{% url "sbs:catagori-antrenor-sporcu-sec-ajax" %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+
+                    isActive: 'False',
+                    coach: $("#antrenor option:selected").val(),
+
+                },
+
+                success: function (result) {
+
+                    $("#sporcu option").each(function () {
+                        $(this).remove();
+                    });
+
+                    result.data.forEach(element => $('#sporcu').append("<option value=" + element.pk + ">" + element.name + "</option>"));
+                }
+            });
+        }
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

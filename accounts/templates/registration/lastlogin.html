@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TBF BİLGİ SİSTEMİ </title>
+    <meta name="description" content="TBF BİLGİ SİSTEMİ"/>
+    <meta name="keywords" content="TBF BİLGİ SİSTEMİ"/>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'bower_components/Ionicons/css/ionicons.min.css' %} ">
+    <link rel="shortcut icon" type="image/png" href="/media/favicon.png"/>
+
+    <link rel="stylesheet" href="{% static 'plugins/iCheck/all.css' %}">
+
+    <link rel="stylesheet"
+          href="{% static 'bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'bower_components/select2/dist/css/select2.min.css' %}">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+
+
+    {#    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">#}
+    <link rel="stylesheet" href="{% static 'datatable/css/table.css' %}">
+    <link rel="stylesheet" href="{% static 'datatable/css/button.css' %}">
+
+    {#    seçim test#}
+    <link rel="stylesheet" href="{% static 'datatable/css/select.css' %}">
+    <link rel="stylesheet" href="{% static 'datatable/css/editor.css' %}">
+    <link rel="stylesheet" href="{% static 'datatable/css/rowGroup.css' %}">
+
+
+    {#    buton tasarimi icin#}
+    {#     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">#}
+    {#     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.foundation.min.css">#}
+    {#     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.foundation.min.css">#}
+
+    <link rel="stylesheet"
+          href="{% static 'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}">
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %} ">
+
+    <link rel="stylesheet" href="{% static 'dist/css/jquery.tagsinput.css' %} ">
+
+    <link rel="stylesheet" href="{% static 'dist/css/checkbox.css' %} ">
+
+    <link rel="stylesheet" href="{% static 'dist/css/carousel.css' %} ">
+
+    <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+
+    {#    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">#}
+
+    <link rel="stylesheet" href="{% static 'fieldChooser/css/jquery.lwMultiSelect.css' %}">
+    <link rel="stylesheet" href="{% static 'bower_components/bootstrap-daterangepicker/daterangepicker.css' %}">
+
+
+    <link rel="stylesheet" href="{% static 'loader/loader.css' %}">
+    <link rel="stylesheet" href="{% static 'bower_components/jvectormap/jquery-jvectormap.css' %}">
+
+    <link rel="stylesheet" href="{% static 'plugins/iCheck/square/blue.css' %}">
+    <!-- jQuery 3 -->
+    <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+
+    <script src="{% static 'loader/loader.js' %}"></script>
+
+    <script src="{% static 'fieldChooser/js/jquery.lwMultiSelect.js' %}"></script>
+
+
+
+    <style>
+        .imagesize {
+            height: 200px;
+            width: 200px;
+        }
+    </style>
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition login-page">
+
+<div class="login-box">
+    <div class="login-logo">
+        <span class="logo-lg"><img width="80%" src="/media/giris-logo.png" alt="User Image" style="margin-bottom: 5px;"> </span>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">Lütfen Bilgilerinizi Giriniz</p>
+
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message.message }}</li>
+
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+
+
+
+        <form action="" method="post">
+
+
+            {% csrf_token %}
+            <div class="form-group has-feedback">
+                <input type="text" name="tcno" class="form-control " required="required" onkeypress="validate(event)"
+                       onkeyup="if(this.value.length >11){this.value=this.value.substr(0, 11);}" placeholder="T.C."
+                       maxlength="120" id="id_tc">
+
+
+            </div>
+
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" placeholder="isim:" name="isim" required="required"">
+
+
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" placeholder="soyisim: " name="soyisim" required="required">
+
+
+            </div>
+            <div class="form-group has-feedback">
+
+
+                <input type="text" name="tarih" placeholder="Dogum Tarihi:" class="form-control datemask" id="datepicker"
+                        required="required">
+
+
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-xs-8">
+
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Gönder</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+        <a href="{% url 'accounts:login' %}" class="text-center">Geri Dön </a><br>
+
+    </div>
+    <!-- /.login-box-body -->
+</div>
+
+
+<!-- Bootstrap 3.3.7 -->
+<script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+
+<script src="{% static 'bower_components/select2/dist/js/select2.full.min.js' %}"></script>
+
+<script src="{% static 'plugins/input-mask/jquery.inputmask.js' %}"></script>
+
+<script src="{% static 'plugins/input-mask/jquery.inputmask.date.extensions.js' %}"></script>
+
+<script src="{% static 'plugins/input-mask/jquery.inputmask.extensions.js' %}"></script>
+
+
+<script src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
+
+<script src="{% static 'bower_components/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+
+<script src="{% static 'bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+
+<script src="{% static 'bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.tr.min.js' %}"></script>
+
+
+<script src="{% static 'bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js' %}"></script>
+
+<script src="{% static 'plugins/timepicker/bootstrap-timepicker.min.js' %}"></script>
+
+<script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+
+
+<script src="{% static 'bower_components/jquery-sparkline/dist/jquery.sparkline.min.js' %}"></script>
+<script src="{% static 'plugins/jvectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
+<script src="{% static 'plugins/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<script src="{% static 'bower_components/chart.js/Chart.js' %}"></script>
+{#<script src="{% static 'dist/js/pages/dashboard2.js' %}"></script>#}
+<!-- SlimScroll -->
+<script src="{% static 'bower_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
+<!-- FastClick -->
+<script src="{% static 'bower_components/fastclick/lib/fastclick.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'dist/js/demo.js' %}"></script>
+
+<script src="{% static 'dist/js/jquery.tagsinput.js' %}"></script>
+
+
+<script src="{% static 'plugins/iCheck/icheck.min.js' %}"></script>
+
+
+<script src="{% static 'dist/js/carousel.js' %}"></script>
+
+
+<script src="{% static 'fieldChooser/js/jquery.lwMultiSelect.js' %}"></script>
+
+
+<script>
+
+
+    function validate(evt) {
+        var theEvent = evt || window.event;
+
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+            // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
+
+
+    $(function () {
+
+
+
+        $('.datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
+        //Money Euro
+        {#$('[data-mask]').inputmask()#}
+
+
+        //Date picker
+        $('#datepicker').datepicker({
+            autoclose: true,
+            language: 'tr',
+            format: 'dd/mm/yyyy',
+        });
+
+
+    });
+</script>
+</body>
+</html>

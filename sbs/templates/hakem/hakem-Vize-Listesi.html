@@ -1,0 +1,385 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Beklemede olanlari degiştirmek istediginizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-lg-12 ">
+                <div class="card-body">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Hakem Vize Filtrele</h3>
+                        </div>
+                        <form method="post" role="form">
+                            <div class="card-body">
+                                {% csrf_token %}
+                                <div class="row">
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label> {{ user_form.first_name.label }}</label>
+                                        {{ user_form.first_name }}
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label> {{ user_form.last_name.label }}</label>
+                                        {{ user_form.last_name }}
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label> {{ user_form.email.label }}</label>
+                                        {{ user_form.email }}
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label> {{ branch.branch.label }}</label>
+                                        {{ branch.branch }}
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label> {{ user_form.definition.label }}</label>
+                                        {{ user_form.definition }}
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label> Vize</label>
+                                        <select name="visa" class="form-control select2 select2-hidden-accessible"
+                                                style="width: 100%; " id="id_visa" tabindex="-1"
+                                                aria-hidden="true">
+                                            <option value="" selected="">Seçiniz</option>
+
+                                            <option value="VISA">Vizeli</option>
+
+                                            <option value="NONE">Vizesiz</option>
+
+                                        </select>
+
+
+                                    </div>
+                                </div>
+                                    </div>
+
+
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Ara</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-primary">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">Vize Listesi</h3>
+                    </div>
+                    {#                    {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}#}
+                    {#                        <a onclick="onay()" type="button" class="btn btn-success">#}
+                    {#                            <i class="fa fa-edit"></i>#}
+                    {#                            Hepsini Onayla#}
+                    {#                        </a>#}
+                    {#                        <a onclick="reddet()" type="button" class="btn btn-danger">#}
+                    {#                            <i class="fa fa-trash"></i>#}
+                    {#                            Hepsini Reddet#}
+                    {#                        </a>#}
+                    {##}
+                    {#                    {% endif %}#}
+                    <div class="card-body">
+
+                        <table id="belt" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th> Ad</th>
+                                <th>Brans</th>
+                                <th> Hak Kazanma Yılı</th>
+                                <th> Onay Durumu</th>
+                                <th> Dekont</th>
+                                <th> İşlemler</th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if referees.all %}
+                                {% for refere in referees %}
+                                    {% for belt in refere.visa.all %}
+                                    <tr>
+
+                                        <td></td>
+
+                                        <td>
+
+                                            <a target="_blank">{{ belt.Judgevisa.first }} </a>
+
+                                        </td>
+                                        <td>{{ belt.branch }}</td>
+
+                                        <td>{{ belt.startDate.year }}  </td>
+
+
+                                        <td>{{ belt.status }}  </td>
+
+
+                                        <td><a href="/media/{{ belt.form }}" target="_blank"> <i
+                                                class="fa fa-file-image-o fa-2x " style="color: red"
+                                                aria-hidden="true"></i></a></td>
+
+                                        <td>
+                                            <div class="btn-group">
+                                                {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                                    <a href="{% url "sbs:hakem-vize-list-onay" referee_pk=belt.pk %}"
+                                                       type="button" class="btn btn-success"><i
+                                                            class="fa fa-edit"></i>Onayla
+                                                    </a>
+
+
+                                                    <a href="{% url "sbs:hakem-vize-list-reddet" referee_pk=belt.pk %}"
+                                                       type="button" class="btn btn-danger"><i
+                                                            class="fa fa-trash"></i>Reddet</a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+
+                                {% endfor %}
+                                {% endfor %}
+                            {% endif %}
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <script>
+        $(function () {
+            var t = $('#belt').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: "Ekle Çıkar",
+                        titleAttr: 'Ekle Çıkar',
+                         title: 'SBS',
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'SBS',
+                        text: "Yazdır",
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: "Pdf",
+                         title: 'SBS',
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: "Excel",
+                        titleAttr: 'Excel Kaydet',
+                         title: 'SBS',
+                    },
+                    {
+                        text: 'Json',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'sbs.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+
+        })
+    </script>
+
+
+
+{% endblock %}
+

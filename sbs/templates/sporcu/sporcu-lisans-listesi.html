@@ -1,0 +1,544 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal modal-success fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Beklemede olan bütün kayıtlar degistirilsin mi? </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-warning fade in deneme22" tabindex="-1" role="dialog" id="reddetwhy"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Lütfen reddetme nedenini giriniz?</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="reddetwhytext" id="reddetwhytext" class="form-control" required>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-gonder"
+                            data-dismiss="modal">Gönder
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-closereddet">Geri Dön</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <section class="content">
+        {#        {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}#}
+        <div class="row">
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Lisans Filtrele</h3>
+                        </div>
+                        <form method="post" role="form">
+
+                            <div class="card-body">
+                                {% csrf_token %}
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> Ad</label>
+                                            <input type="text" name="first_name" class="form-control " value=""
+                                                   maxlength="30" id="id_first_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> Soyad</label>
+                                            <input type="text" name="last_name" class="form-control "
+                                                   maxlength="150" id="id_last_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> Email</label>
+                                            <input type="text" name="email" class="form-control "
+                                                   maxlength="254" id="id_email">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> {{ Sportclup.sportsClub.label }}</label>
+                                            {{ Sportclup.sportsClub }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> {{ Sportclup.branch.label }}</label>
+                                            {{ Sportclup.branch }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Onay durumu </label>
+                                            <select name="status" class="form-control select2 select2-hidden-accessible"
+                                                    style="width: 100%;" id="id_status" tabindex="-1"
+                                                    aria-hidden="true">
+                                                <option value="" selected="">---------</option>
+
+                                                <option value="Beklemede">Beklemede</option>
+                                                <option value="Onaylandı">Onaylandı</option>
+                                                <option value="Reddedildi">Reddedildi</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Ara</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+        </div>
+        {#        {% endif %}#}
+
+        <div class="row">
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Lisans Listesi</h3>
+                        </div>
+                        {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                            <div class="form-group m-2">
+                                <button onclick="onay()" type="button" class="btn btn-success">
+                                    <i class="fa fa-edit"></i>
+                                    Hepsini Onayla
+                                </button>
+                                <button onclick="reddet()" type="button" class="btn btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                    Hepsini Reddet
+                                </button>
+                            </div>
+                        {% endif %}
+
+                        <div class="card-body">
+                            <table id="licenses" class="table">
+
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>İsim Soyisim</th>
+                                    <th>Kulüp</th>
+                                    <th> Başlama Tarihi</th>
+                                    <th> Bitiş Tarihi</th>
+                                    <th> Branş</th>
+                                    <th> Lisans No</th>
+                                    <th> Lisans Foto.</th>
+                                    <th> Onay Durumu</th>
+                                    {#                                {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}#}
+                                    <th> İşlemler</th>
+                                    {#                                {% endif %}#}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if licenses.all %}
+                                    {% for license in licenses %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ license.athlete_set.first }}</td>
+                                            <td>{{ license.sportsClub }}</td>
+                                            <td>{{ license.startDate }}  </td>
+                                            <td>{{ license.expireDate }}  </td>
+                                            <td>{{ license.branch }}  </td>
+                                            <td>{{ license.licenseNo }}</td>
+                                            <td><a href="/media/{{ license.lisansPhoto }}" target="_blank"> <i
+                                                    class="fa fa-file-image-o fa-2x " style="color: red"
+                                                    aria-hidden="true"></i></a></td>
+                                            <td> {{ license.status }}
+
+                                                {% if  license.status == 'Reddedildi' %}
+                                                    (  {{ license.reddetwhy }})
+                                                {% endif %}
+                                            </td>
+
+                                            <td>
+
+                                                <div class="btn-group">
+
+
+                                                    {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                                        <a href="{% url "sbs:sporcu-lisans-listesi-onayla" license_pk=license.pk %}"
+                                                           type="button" class="btn btn-success"><i
+                                                                class="fa fa-edit"></i>Onayla
+                                                        </a>
+                                                        <button type="button" class="btn btn-danger"
+                                                                onclick="reddetwhy({{ license.pk }})"><i
+                                                                class="fa fa-trash"></i>Reddet
+                                                        </button>
+                                                    {% endif %}
+
+
+                                                </div>
+
+                                            </td>
+
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+
+
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </section>
+        </div>
+
+
+    </section>
+
+
+
+    <script>
+
+
+        $(function () {
+            $('#licenses').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: "Ekle Çıkar",
+                        titleAttr: 'Ekle Çıkar',
+                         title: 'SBS',
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'SBS',
+                        text: "Yazdır",
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: "Pdf",
+                         title: 'SBS',
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: "Excel",
+                        titleAttr: 'Excel Kaydet',
+                         title: 'SBS',
+                    },
+                    {
+                        text: 'Json',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'sbs.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+
+
+            })
+
+        });
+
+
+    </script>
+    {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+        <script>
+
+            function onay() {
+                var html = '';
+                $("#modal-danger").on("shown.bs.modal", function (e) {
+                    $("#btn-conf").click(function () {
+                        $.ajax({
+                            url: "{% url "sbs:sporcu-lisans-hepsini-onayla"%}".replace(),
+                            type: "POST",
+                            data: {
+                                'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                isActive: 'False'
+                            },
+                            success: function (result) {
+
+                                html = 'Lisansların hepsi başarı ile onaylandı.';
+                                debugger;
+                                $(".successModal").html(html);
+                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                        window.location.replace("{% url "sbs:lisans-listesi"%}");
+
+                                    });
+
+                                }).modal('show');
+
+
+                                console.log(result.status)
+                            }
+                        });
+                    });
+                }).modal('show');
+                $('#btn-close').click(function () {
+                    $('#modal-danger').modal('hide');
+                });
+            }
+
+
+        </script>
+        <script>
+
+
+            function reddet() {
+
+                console.log("reddet çalisti");
+                var html = '';
+                $("#modal-danger").on("shown.bs.modal", function (e) {
+                    $("#btn-conf").click(function () {
+                        $.ajax({
+                            url: "{% url "sbs:sporcu-lisans-hepsini-reddet"%}".replace(),
+                            type: "POST",
+                            data: {
+                                'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                isActive: 'False'
+                            },
+                            success: function (result) {
+
+                                html = 'Lisanslarin hepsi başarı ile reddedildi.';
+                                debugger;
+                                $(".successModal").html(html);
+                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                        window.location.replace("{% url "sbs:lisans-listesi"%}");
+
+                                    });
+
+                                }).modal('show');
+
+
+                                console.log(result.status)
+                            }
+                        });
+                    });
+                }).modal('show');
+                $('#btn-close').click(function () {
+                    $('#modal-danger').modal('hide');
+                });
+
+            }
+        </script>
+
+        <script>
+
+            function reddetwhy(id) {
+
+                $("#reddetwhy").on("shown.bs.modal", function (e) {
+
+                    $("#btn-gonder").click(function () {
+                        $.ajax({
+                            url: "{% url "sbs:sporcu-lisans-listesi-reddet" license_pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                            type: "POST",
+                            data: {
+                                'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                reddetwhy: $('#reddetwhytext').val(),
+                                isActive: 'False',
+
+
+                            },
+                            success: function (result) {
+
+                                html = 'Lisans reddedildi .';
+                                debugger;
+                                $(".successModal").html(html);
+                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                        window.location.replace("{% url "sbs:lisans-listesi"%}");
+
+                                    });
+
+                                }).modal('show');
+                            }
+                        });
+                    });
+
+
+                }).modal('show');
+                $('#btn-closereddet').click(function () {
+                    console.log('buradan çık')
+
+                    $('#modal-warning').modal('hide');
+                    $('.modal').modal('hide');
+
+                });
+
+            }
+
+
+        </script>
+
+
+
+    {% endif %}
+{% endblock %}
+

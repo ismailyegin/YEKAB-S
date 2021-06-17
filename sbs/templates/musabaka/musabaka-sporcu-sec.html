@@ -1,0 +1,580 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+
+
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-eksik"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Sporcu kaydedilmedi</p>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn  btn-outline btn-ok" id="btn-kural ">Kapat</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-dialog fade in deneme23" tabindex="-1" role="dialog" id="reddetwhy"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Ek Bilgileri Giriniz</h4>
+                </div>
+                <div class="modal-body" id="kategoriadd">
+                    <label for="inputState">Kategori</label>
+                    <select id="weight" onchange="Kategori()" class="form-control">
+                        <option selected>Seçiniz...</option>
+                        {% for weight in weights %}
+                            <option value="{{ weight.pk }}">{{ weight.kategoriadi }}</option>
+                        {% endfor %}
+                    </select>
+
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-default pull-left btn-ok" id="btn-gonder"
+                            data-dismiss="modal">Kaydet
+                    </button>
+                    <button type="button" class="btn  btn-default" id="btn-closereddet">Geri Dön</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <section class="content">
+
+
+        <div class="row">
+
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Sporcu Seç</h3>
+                        </div>
+
+
+                        {% if aktif == 'Admin' %}
+                            <a href="{% url "sbs:musabaka-duzenle" pk=pk %}"
+                               type="button" class="btn btn-success"><i
+                                    class="fa fa-edit"></i>Müsabaka Düzenle
+                            </a>
+                        {% endif %}
+
+
+
+                        {% if application.all %}
+                            {% for competition in application %}
+                                <div class="card-header with-border">
+                                    <div class="btn-group">
+                                        <a href="{% url "sbs:basvuru" pk=competition.pk %}"
+                                           type="button" class="btn btn-success"><i
+                                                class="fa fa-edit"></i> Başvurularim
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+
+
+                        {% endif %}
+
+
+
+                        <div class="card-body berktug">
+                            <form method="post" enctype="multipart/form-data" role="form">
+                                {% csrf_token %}
+                                <table id="sporcular" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Dogum Tarihi</th>
+                                        <th>Kulüp</th>
+                                        <th>İşlemler</th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% if athletes.all %}
+                                        {% for athlete in athletes %}
+                                            <tr>
+
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ athlete.user.first_name }} {{ athlete.user.last_name }} </td>
+                                                <td>{{ athlete.licenses.last.sportsClub }}</td>
+                                                <td>
+                                                    <div class="btn-group">
+
+                                                        <a class="btn btn-primary"
+                                                           data-toggle="modal"
+                                                           onclick=addPlayer({{ athlete.pk }},{{ competition.pk }})><i
+                                                                class="fa fa-plus"></i>Ekle</a>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        {% endfor %}
+                                    {% endif %}
+
+
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+
+
+
+
+    </div>
+
+
+    <script>
+
+
+        function Kategori() {
+
+            console.log($("#weight option:selected").text());
+            console.log($("#weight option:selected").val());
+            if ($("#weight option:selected").val() == 3 || $("#weight option:selected").val() == 4  || $("#weight option:selected").val() == 5) {
+
+                row = $("body").find("#antrenor")
+
+                if (row.length == 0) {
+
+                    $('#kategoriadd').append("<label class=' test '>Antrenör Seç</label><select id='antrenor' class='form-control test ' onchange='SporcuGetir()'><option value='0'>Antrenör Seçiniz </option></select>");
+                    $('#kategoriadd').append("<label class=' test '>Sporcu Seç</label><select id='sporcu' class='form-control test '><option value='0'>Sporcu Seçiniz </option></select>");
+
+
+                    $.ajax({
+                        url: "{% url "sbs:catagori-antrenor-sec-ajax" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+
+                            isActive: 'False',
+
+                        },
+
+                        success: function (result) {
+                            $("#antrenor option").each(function () {
+                                $(this).remove();
+                            });
+
+                            result.data.forEach(element => $('#antrenor').append("<option value=" + element.pk + ">" + element.name + "</option>"));
+                        }
+                    });
+                }
+            } else {
+
+                $('.test').remove();
+
+
+            }
+
+        }
+
+        function SporcuGetir() {
+
+
+            $.ajax({
+                url: "{% url "sbs:catagori-antrenor-sporcu-sec-ajax" %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+
+                    isActive: 'False',
+                    coach: $("#antrenor option:selected").val(),
+
+                },
+
+                success: function (result) {
+
+                    $("#sporcu option").each(function () {
+                        $(this).remove();
+                    });
+
+                    result.data.forEach(element => $('#sporcu').append("<option value=" + element.pk + ">" + element.name + "</option>"));
+                }
+            });
+        }
+
+
+
+
+        $(function () {
+            //Enable iCheck plugin for checkcardes
+            //iCheck for checkcard and radio inputs
+            $('.berktug input[type="checkcard"]').iCheck({
+
+                checkcardClass: 'icheckcard_flat-blue',
+
+            });
+
+        });
+
+
+        {#    --------------------------------------------------------------------#}
+        $(function () {
+
+
+            Playerlist();
+
+
+        });
+
+        function Playerlist() {
+            table = $('#sporcular').DataTable();
+            table.destroy();
+
+            $('#sporcular').DataTable({
+                language: {
+
+                    url: "//cdn.datatables.net/plug-ins/1.10.20/i18n/Turkish.json"
+
+                },
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'responsive': true,
+                'autoWidth': true,
+                "serverSide": true,
+                "processing": true,
+                'ajax': {
+
+                    "url": '{% url "sbs:Kategorilerin-Sporculari"%}',
+                    "methot": 'POST',
+                    "data": {
+                        "cmd":{{ pk }},
+                    },
+                },
+
+
+                'columns': [
+                    {#{"targets": -1},#}
+                    {'data': 'say'},
+                    {'data': 'name'},
+                    {'data': 'birthDate'},
+                    {'data': 'klup'},
+                    {#{'data': 'brans'},#}
+                    {#{'data': 'kusak'},#}
+
+                    {
+                        "data": null,
+                        "bSortable": false,
+                        "mRender": function (data) {
+
+
+                            return '<div class="btn-group"><a class="btn btn-primary" data-toggle="modal" onclick="addPlayer(' + data.pk + ',' + {{ pk }}+')" ><i class="fa fa-plus"></i>' + 'Ekle' + '</a></div>';
+
+
+                        }
+                    }
+                ],
+                dom: 'Bfrtip',
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Sporcular',
+                        text: '<i class="fa  fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Sporcular',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Sbs Bilgi Sistemi ',
+                        footer: true,
+
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Sporcular.json'
+                            );
+                        }
+                    }
+                ],
+
+
+            });
+
+
+        }
+
+
+        function addPlayer(id, competitionId) {
+
+            $("#reddetwhy").on("shown.bs.modal", function (e) {
+
+
+                console.log();
+                $("#btn-gonder").click(function () {
+
+                    {#console.log('buradan girdi', competitionId);#}
+
+                    if (e.handled !== true) {
+                        e.handled = true;
+
+                        if ($('#weight').val()) {
+
+                                $.ajax({
+                                    url: "{% url "sbs:catagori-sporcu-sec-ajax" pk=212121223232323232 competition=999999999999999 %}".replace(/212121223232323232/, id.toString()).replace(/999999999999999/, competitionId.toString()),
+                                    type: "POST",
+                                    data: {
+                                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+                                        weight: $('#weight').val(),
+                                        sporcu: $("#sporcu option:selected").val(),
+                                        isActive: 'False',
+
+                                    },
+
+                                    success: function (result) {
+
+
+                                        console.log(result)
+
+                                        alert(result.msg);
+
+                                        html = result.msg;
+                                        debugger;
+                                        $(".successModal").html(html);
+                                        window.location.replace("{% url "sbs:musabaka-sporcu-sec" pk %}");
+                                    }
+                                });
+
+
+                        } else {
+                            {#    model gelecek #}
+
+                            alert("Lütfen eksik alanlari giriniz");
+
+                        }
+
+                    }
+                });
+
+
+            }).modal('show');
+            $('#btn-closereddet').click(function () {
+
+
+                $('#modal-warning').modal('hide');
+                $('.modal').modal('hide');
+
+            });
+
+        }
+
+
+    </script>
+
+
+{% endblock %}
+

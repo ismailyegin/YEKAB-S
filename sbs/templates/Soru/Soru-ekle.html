@@ -1,0 +1,313 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediginizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <section class="content">
+
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+
+
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Soru Ekle</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form method="post" role="form">
+                            <div class="card-body">
+                                {% csrf_token %}
+
+
+                                <div class="form-group">
+                                    <label> {{ form.question.label }}</label>
+                                    {{ form.question }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label> {{ form.reaply.label }}</label>
+                                    {{ form.reaply }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label> {{ form.count.label }}</label>
+                                    {{ form.count }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label> {{ form.isActiv.label }}</label>
+                                    {{ form.isActiv }}
+                                </div>
+
+
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Sorular </h3>
+                        </div>
+
+                        <table id="kategori" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Soru
+                                <th>Cevap</th>
+                                <th>Aktif</th>
+                                <th>Sıra</th>
+                                <th>Güncelle/Sil</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+
+                            {% if questions.all %}
+                                {% for question in questions %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ question.question }}</td>
+                                        <td>{{ question.reaply }}</td>
+                                        <td>{{ question.isActiv }}</td>
+                                        <td>{{ question.count }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="{% url "sbs:soru-guncelle" question.pk %}"
+                                                   type="button" class="btn btn-warning"><i
+                                                        class="fa fa-edit"></i>Güncelle
+                                                </a>
+
+                                                <a class="btn btn-danger"
+                                                   data-toggle="modal" onclick=deleteCategoryItem({{ question.pk }})><i
+                                                        class="fa fa-trash"></i>Sil</a>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+                            {% endif %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+
+
+    <script>
+        $(function () {
+
+            $('#kategori').DataTable({
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+
+            })
+
+        })
+    </script>
+
+
+    <script>
+        function deleteCategoryItem(id) {
+            var html = ''
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+
+                        url: "{% url "sbs:soru-delete" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Soru Başarıyla Silindi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:soru-ekle" %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+    </script>
+
+
+{% endblock %}

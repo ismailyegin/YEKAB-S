@@ -1,0 +1,182 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            {{ group.name }} İzin Ayarları
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Kulüp Düzenle</a></li>
+
+        </ol>
+    </section>
+
+
+
+    <style>
+
+        SELECT, INPUT[type="text"] {
+            width: 320px;
+            box-sizing: border-box;
+        }
+
+        SECTION .ddd {
+            padding: 8px;
+            background-color: #f0f0f0;
+            overflow: auto;
+        }
+
+        SECTION .ddd > DIV {
+            float: left;
+            padding: 4px;
+        }
+
+        SECTION .ddd > DIV + DIV {
+            width: 40px;
+            text-align: center;
+        }
+    </style>
+
+    <form method="post" onsubmit="selectAll()" role="form">
+
+        <div class="row">
+            {% csrf_token %}
+            <div class="form-group">
+                <section class="container ddd">
+                    <div class="col-md-5">
+                        {{ form.left }}
+                        <select name="21" id="leftValues" size="20" multiple="multiple">>
+                            {% for menu in menu %}
+                                <option value="{{ menu.id }}">{{ menu.name }}</option>
+
+
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="col-md-2">
+                        <input type="button" id="btnLeft" value="&lt;&lt;"/>
+                        <input type="button" id="btnRight" value="&gt;&gt;"/>
+                    </div>
+                    <div class="col-md-5">
+                        {{ form.right }}
+                        <select name="deneme[]" id="rightValues" size="20" multiple="multiple">
+                            {% for menu in ownmenu %}
+                                <option value="{{ menu.id }}">{{ menu.name }}</option>
+
+
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                </section>
+            </div>
+
+
+        </div>
+        <div class="box-footer">
+            <button class="btn btn-primary pull-right" id="send" type="submit">Kaydet</button>
+        </div>
+    </form>
+
+
+
+    <script>$("#btnLeft").click(function () {
+        var selectedItem = $("#rightValues option:selected");
+        $("#leftValues").append(selectedItem);
+    });
+
+    $("#btnRight").click(function () {
+        var selectedItem = $("#leftValues option:selected");
+        $("#rightValues").append(selectedItem);
+    });
+
+    $("#rightValues").change(function () {
+        var selectedItem = $("#rightValues option:selected");
+        $("#txtRight").val(selectedItem.text());
+    });
+
+
+    function selectAll() {
+        for (var i = 0; i < document.getElementById("rightValues").options.length; i++) {
+            document.getElementById("rightValues").options[i].selected = true;
+        }
+        return true;
+    }
+
+
+    </script>
+
+
+
+    <script>
+        // yanit idli linke tıklanırsa çalış
+        $('#send').on('click', function (event) {
+            console.log("{{ csrf_token }}");
+            selectAll()
+            $.ajax({
+                url: "{% url 'accounts:save-permission' %}",
+                type: "post", // or "get"
+                data: {
+                    values: $('#rightValues').val(),
+                    group: {{ group.pk }}
+                },
+                success: function (result) {
+                    //swal("Başarılı", "İzinler Güncellendi.", "success");
+                    swal({
+                        title: "Başarılı!",
+                        text: "İzin başarıyla güncellendi",
+                        timer: 8000,
+                        showConfirmButton: false,
+
+
+                    });
+
+                    location.reload();
+                }
+            });
+        });
+
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    </script>
+
+
+
+
+{% endblock %}
+
+
+
+
+

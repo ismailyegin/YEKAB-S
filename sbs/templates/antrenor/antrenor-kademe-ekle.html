@@ -1,0 +1,118 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+    <section class="content-header">
+        <h1>
+            Antrenor Kademe Ekle
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Antrenor Kademe Ekle</a></li>
+
+        </ol>
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-3">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label> {{ grade_form.startDate.label }}</label>
+                                        {{ grade_form.startDate }}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ grade_form.branch.label }}</label>
+                                        {{ grade_form.branch }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ grade_form.definition.label }}</label>
+                                        {{ grade_form.definition }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ grade_form.dekont.label }}</label>
+                                        {{ grade_form.dekont }}
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Onaya Gönder</button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+
+
+    </section>
+
+{% endblock %}
+
+
+

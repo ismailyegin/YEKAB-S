@@ -1,0 +1,316 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+    <div class="row">
+
+        <section class="col-lg-12 ">
+
+
+            <div class="card-body">
+
+
+                <div class="col-xs-12">
+                    <div class="card">
+                        <div class="card-header col-lg-12" style="background-color:white">
+
+                            <ul class="nav nav-tabs justify-content-center" id="compSene" role="tablist">
+
+
+                                {% for competition in year %}
+                                    <li class="nav-item">
+                                        <a class="nav-link label label-primary">
+                                            <td>{{ competition.year }}</td>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+
+
+                            </ul>
+
+
+                        </div>
+                        <!-- /.card-header -->
+
+                        <div class="card-body">
+                            <table id="sonuclar" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>İsim</th>
+                                    {#                                    <th>YIl</th>#}
+                                    {#                                    <th>Başl. Tarihi</th>#}
+                                    {#                                    <th>Bitiş. Tarihi</th>#}
+                                    {#                                    <th>Genel Türü</th>#}
+                                    {#                                    <th>Türü</th>#}
+                                    <td>işlemler</td>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if competitions.all %}
+                                    {% for competition in competitions %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ competition.name }}</td>
+                                            {#                                            <td>{{ competition.year }}</td>#}
+                                            {#                                            <td>{{ competition.startDate | date }} </td>#}
+                                            {#                                            <td>{{ competition.finishDate | date }}</td>#}
+                                            {#                                            <td>{{ competition.get_compGeneralType_display }}</td>#}
+                                            {#                                            <td>{{ competition.get_compType_display }}</td>#}
+
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{% url "sbs:sonuc-liste" competition.pk %}"
+                                                       type="button" class="btn btn-success"><i
+                                                            class="fa fa-edit"></i>Sonuclar
+                                                    </a>
+
+                                                    {#                                                    {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}#}
+                                                    {#                                                        <a href="{% url "sbs:musabaka-duzenle" competition.pk %}"#}
+                                                    {#                                                           type="button" class="btn btn-warning"><i#}
+                                                    {#                                                                class="fa fa-edit"></i>İncele#}
+                                                    {#                                                        </a>#}
+                                                    {##}
+                                                    {##}
+                                                    {##}
+                                                    {#                                                        <a class="btn btn-danger"#}
+                                                    {#                                                           data-toggle="modal"#}
+                                                    {#                                                           onclick=deleteCompetition({{ competition.pk }})><i#}
+                                                    {#                                                                class="fa fa-trash"></i>Sil</a>#}
+                                                    {#                                                    {% endif %}#}
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+
+
+            </div>
+        </section>
+
+
+    </div>
+
+
+
+
+
+
+
+    <script>
+
+        $(function () {
+
+
+            $('.nav-link').click(function () {
+                var year = $(this).text();
+
+                table = $('#sonuclar').DataTable();
+                table.destroy();
+                $('#sonuclar').DataTable({
+                    'paging': true,
+                    'searching': true,
+                    'ordering': true,
+                    'responsive': true,
+                    'autoWidth': true,
+                    "serverSide": true,
+                    "processing": true,
+                    'ajax': {
+
+                        "url": '{% url "sbs:sonuclar-ajax"%}',
+                        "methot": 'POST',
+                        "data": {
+                            "cmd": year,
+                        },
+                    },
+
+
+                    'columns': [
+                        {'data': 'say'},
+                        {'data': 'name'},
+
+
+                        {
+                            "data": null,
+                            "bSortable": false,
+                            "mRender": function (data) {
+                                return '<div class="btn-group"><a href="/sbs/sonuc/sonuc-liste/' + data.pk + '" type="button" class="btn btn-success"><i class="fa fa-edit"></i>Sonuclar\</a>'
+                            }
+                        }
+                    ],
+
+                    dom: 'Bfrtip',
+                    language: {
+                        buttons: {
+                            pageLength: {
+                                _: " %d  Tane Göster",
+                                '-1': "Hepsini Göster"
+                            }
+                        }
+                    },
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                    ],
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: "Ekle Çıkar",
+                        titleAttr: 'Ekle Çıkar',
+                         title: 'SBS',
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'SBS',
+                        text: "Yazdır",
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: "Pdf",
+                         title: 'SBS',
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: "Excel",
+                        titleAttr: 'Excel Kaydet',
+                         title: 'SBS',
+                    },
+                    {
+                        text: 'Json',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'sbs.json'
+                            );
+                        }
+                    }
+
+
+                ],
+
+
+                });
+            });
+
+
+            $('#sonuclar').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: "Ekle Çıkar",
+                        titleAttr: 'Ekle Çıkar',
+                         title: 'SBS',
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'SBS',
+                        text: "Yazdır",
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: "Pdf",
+                         title: 'SBS',
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: "Excel",
+                        titleAttr: 'Excel Kaydet',
+                         title: 'SBS',
+                    },
+                    {
+                        text: 'Json',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'sbs.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': false,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false,
+                'responsive': true,
+                'borderBottom': false,
+                'stateSave': true,
+
+                'columnDefs': [
+                    {width: '70%', targets: 1}
+                ],
+            });
+
+        });
+
+
+    </script>
+
+
+
+
+
+
+{% endblock %}

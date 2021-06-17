@@ -1,0 +1,195 @@
+{% extends 'base_layout.html' %}
+
+
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="row">
+
+
+        <div class="col-lg-1 col-sm-2 col-xs-2" style="height: 600px;"
+             onclick="location.href='{% url "sbs:sporcu-lisans-duzenle-mobil" count=geri %}'">
+            <br><br><br><br><br><br><br>
+
+
+            <a href="{% url "sbs:sporcu-lisans-duzenle-mobil" count=geri %}" type="button"
+               class="btn btn-default btn-lg center-block">Geri</a>
+        </div>
+
+        <div class="col-lg-10 col-sm-8 col-xs-8">
+
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="col-lg-12 text-center">
+                                <td>
+                                    <img src="/media/{{ license.lisansPhoto }}" class="user-image" alt="None"
+                                         style=" width:80%;height: 80%;">
+                                </td>
+                            </div>
+
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label> İsim </label>
+                                    {{ license.athlete_set.first }}
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label> Baslangıc Tarihi </label>
+                                    {{ license.startDate }}
+                                </div>
+                                <div class="form-group">
+                                    <label>Bitiş Tarihi</label>
+                                    {{ license.expireDate }}
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Branş</label>
+                                    {{ license.branch }}
+                                </div>
+                                <div class="form-group">
+                                    <label>Lisans Photo</label>
+                                    <a href="/media/{{ license.lisansPhoto }}" target="_blank">{{ license.lisansPhoto }}
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label> Lisans Numarasi </label>
+                                    <h4> {{ license.licenseNo }}</h4>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Verildigi il </label>
+                                    {{ license.cityHeadShip }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Kulubü:</label>
+                                    {{ license.sportsClub }}
+                                </div>
+                                <div class="form-group">
+                                    <label>Onay Durumu :</label>
+                                    {{ license.status }}-{{ license.reddetwhy }}
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-12">
+                                {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+
+                                    <div class="col-lg-10">
+                                        <form action="{% url "sbs:sporcu-lisans-listesi-reddet-mobil" license_pk=license.pk  count=say %}"
+                                              method="post">
+                                            {% csrf_token %}
+                                            <div class="input-group margin ">
+                                                <input type="text" name="text" class="form-control"><br>
+                                                <span class="input-group-btn">
+                                                  <button type="submit" class="btn btn-danger">reddet!</button>
+                                                      </span>
+                                            </div>
+                                        </form>
+
+
+                                    </div>
+                                    <div class="col-lg-2">
+
+                                        <div class="input-group margin text-left"><br>
+                                            <span class="input-group-btn">
+                                        <a href="{% url "sbs:sporcu-lisans-listesi-onayla-mobil" license_pk=license.pk  count=say %}"
+                                           type="button" class="btn btn-success pull-left  "><i
+                                                class="fa fa-edit"></i>Onayla
+                                        </a>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-1 col-sm-2 col-xs-2" style=" height: 600px;"
+             onclick="location.href='{% url "sbs:sporcu-lisans-duzenle-mobil" count=ileri %}'">
+            <br><br><br><br><br><br><br>
+            <a href="{% url "sbs:sporcu-lisans-duzenle-mobil" count=ileri %}" type="button"
+               class="btn btn-default btn-lg pull-left center-block"> ileri
+            </a>
+        </div>
+
+
+    </div>
+
+
+
+{% endblock %}
+
+
+

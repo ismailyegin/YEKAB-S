@@ -1,0 +1,163 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+    <section class="content-header">
+        <h1>
+            Sporcu Lisans Düzenle
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Sporcu Lisans Düzenle</a></li>
+
+        </ol>
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-3">
+                    <div class="card card-solid card-info">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                     <div class="form-group">
+                                        <label> {{ license_form.lisansPhoto.label }}</label>
+                                       {% load static %}
+                                                <img src="{% static 'images/photo.png' %}" id="preview2"
+                                                     class="img-responsive img-rounded "
+                                                     style="height: 125px;width: 100px;">
+                                                <p>
+                                                    <input accept="image/*" type="file" class="form-group"
+                                                           name="lisansPhoto" required="" id="id_lisansPhoto"
+                                                           onchange="previewImage2()">
+
+                                                </p>
+                                    </div>
+                                     <div class="form-group">
+                                        <label> {{ license_form.licenseNo.label }}</label>
+                                        {{ license_form.licenseNo }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ license_form.branch.label }}</label>
+                                        {{ license_form.branch }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ license_form.startDate.label }}</label>
+                                        {{ license_form.startDate }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ license_form.expireDate.label }}</label>
+                                        {{ license_form.expireDate }}
+                                    </div>
+
+
+
+
+                                    <div class="form-group">
+                                        <label> {{ license_form.cityHeadShip.label }}</label>
+                                        {{ license_form.cityHeadShip }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ license_form.sportsClub.label }}</label>
+                                        {{ license_form.sportsClub }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ license_form.coach.label }}</label>
+                                        {{ license_form.coach }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ license_form.coach2.label }}</label>
+                                        {{ license_form.coach2 }}
+                                    </div>
+
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                            <button class="btn btn-primary pull-right" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+
+
+    </section>
+    <script>
+    function previewImage2() {
+            var file = document.getElementById("id_lisansPhoto").files;
+            if (file.length > 0) {
+                var fileReader = new FileReader();
+                fileReader.onload = function (event) {
+                    document.getElementById("preview2").setAttribute("src", event.target.result);
+                }
+                fileReader.readAsDataURL(file[0]);
+            }
+        }
+    </script>
+
+{% endblock %}
+
+
+

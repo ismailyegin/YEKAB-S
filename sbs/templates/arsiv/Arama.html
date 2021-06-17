@@ -1,0 +1,644 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger modal-danger-food fade in" id="modal-success-danger" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarısız</h4>
+                </div>
+                <div class="modal-body successModalD">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-active"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-warning fade in deneme223" tabindex="-1" role="dialog" id="modal-mail"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı giriş bilgilerini göndermek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf12"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close2">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+
+
+        <section class="content-header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Arama Alanı </h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'sbs:evrak-anasayfa' %}">Arşiv Anasayfa </a></li>
+
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+
+        <div class="row">
+
+
+            <div class="col-md-12">
+                <!-- Custom Tabs (Pulled to the right) -->
+                <div class="card card-primary card-outline card-tabs nav-tabs-right">
+                    <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist" id="navtop">
+                        <li class=" nav-item"><a class="nav-link active" href="#genel" data-toggle="tab"
+                                                 aria-expanded="true">Genel Arama
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link " href="#detay" data-toggle="tab" aria-expanded="false">Detaylı
+                            Arama
+                        </a></li>
+                        {##}
+                        {#                        <li class="pull-left header"><i class="fa fa-th"></i> Arama Alanı</li>#}
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="genel">
+                            <form method="post" role="form">
+
+                                {% csrf_token %}
+                                <div class="card-body">
+                                    <div class="col-lg-12">
+                                        <div class="form-group ">
+                                            <label> Genel Arama </label>
+                                            <input type="text" name="search" class="form-control"
+                                                   style="width: 100%; " id="search" tabindex="-1"
+                                                   aria-hidden="true">
+                                            </input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Ara</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane  " id="detay">
+
+                            <div class="col-lg-12">
+                                <div class="card-tabs">
+                                    <div class="card-header">
+                                        <ul class="nav nav-tabs" id="navlower">
+                                            <li class="nav-item"><a class="nav-link active" href="#birim"
+                                                                    data-toggle="tab">Birim</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#klasor" data-toggle="tab">Klasör</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active height-control " id="birim">
+                                                <form method="post" role="form">
+
+                                                    {% csrf_token %}
+                                                    <div class="secim"><label> Birimler</label>
+                                                        <select name="searchbirim"
+                                                                id="searchbirim"
+                                                                class="form-control select2 select2-hidden-accessible"
+                                                                style="width: 100%; " tabindex="-1"
+                                                                aria-hidden="true">
+
+                                                            {% if aktif == 'Personel' %}
+
+                                                                <option value="" selected>---------</option>
+                                                                <option value="{{ employe.birim.pk }}">{{ employe.birim.name }}</option>
+                                                            {% else %}
+                                                                {% for item in klasor_form.birim %}
+                                                                    {{ item }}
+
+                                                                {% endfor %}
+                                                            {% endif %}
+
+
+                                                        </select></div>
+
+
+                                                    <div class="card-footer">
+                                                        <button type="submit" class="btn btn-primary">Ara</button>
+                                                    </div>
+                                                </form>
+
+                                            </div>
+
+                                            <!-- /.tab-pane -->
+                                            <div class="tab-pane" id="klasor">
+                                                <form method="post" role="form">
+
+                                                    {% csrf_token %}
+                                                    <tr>
+                                                        <th><label for="klasorname">Tanımı:</label></th>
+                                                        <td><input type="text" name="klasorname" maxlength="120"
+                                                                   class="form-control"
+                                                                   id="klasorname"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><label for="klasorsirano">Sıra Numarası:</label></th>
+                                                        <td><input type="number" name="klasorsirano"
+                                                                   class="form-control"
+                                                                   id="klasorsirano"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><label for="klasorlocation">Konumu:</label></th>
+                                                        <td><select name="klasorlocation" class="form-control"
+                                                                    id="klasorlocation">
+                                                            {% for item in klasor_form.location %}
+
+
+                                                                {{ item }}
+
+                                                            {% endfor %}
+
+                                                        </select></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><label for="klasorbirim">Birim:</label></th>
+                                                        <td><select name="klasorbirim" class="form-control"
+                                                                    id="klasorbirim">
+
+                                                            {% if aktif == 'Personel' %}
+
+                                                                <option value="" selected>---------</option>
+                                                                <option value="{{ employe.birim.pk }}">{{ employe.birim.name }}</option>
+                                                            {% else %}
+                                                                {% for item in klasor_form.birim %}
+                                                                    {{ item }}
+
+                                                                {% endfor %}
+                                                            {% endif %}
+
+
+                                                        </select></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><label for="id_startyear"> Başlangıç Yılı:</label></th>
+                                                        <td><input type="number" name="klasorstartyear"
+                                                                   class="form-control dateyear" id="id_startyear"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><label for="id_finishyear">Bitiş Yılı:</label></th>
+                                                        <td><input type="number" name="klasorfinishyear"
+                                                                   class="form-control dateyear" id="id_finishyear">
+                                                        </td>
+                                                    </tr>
+
+                                                    <div class="card-footer">
+                                                        <button type="submit" class="btn btn-primary">Ara</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- /.tab-pane -->
+                                            {#                                        <div class="tab-pane" id="dosya">#}
+                                            {#                                            <div class="card-body">#}
+                                            {##}
+                                            {##}
+                                            {#                                                <div class="col-lg-12">#}
+                                            {#                                                    <div class="form-group ">#}
+                                            {#                                                        <label> Sıra Numarası </label>#}
+                                            {#                                                        <input type="text" name="searchdosya" class="form-control"#}
+                                            {#                                                               style="width: 100%; " id="searchdosya" tabindex="-1"#}
+                                            {#                                                               aria-hidden="true">#}
+                                            {#                                                        </input>#}
+                                            {##}
+                                            {##}
+                                            {#                                                    </div>#}
+                                            {#                                                </div>#}
+                                            {##}
+                                            {##}
+                                            {#                                            </div>#}
+                                            {#                                            <div class="card-footer">#}
+                                            {#                                                <button type="submit" class="btn btn-primary">Ara</button>#}
+                                            {#                                            </div>#}
+                                            {#                                        </div>#}
+                                            <!-- /.tab-pane -->
+                                        </div>
+                                        <!-- /.tab-content -->
+                                    </div>
+                                </div>
+
+
+                                <!-- nav-tabs-custom -->
+                            </div>
+
+                        </div>
+                        <!-- /.tab-pane -->
+
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- nav-tabs-custom -->
+            </div>
+
+
+            <!-- /.card-body -->
+
+
+            </form>
+        </div>
+
+
+        {% if units %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Arama Sonucu</h3>
+                        </div>
+                        <!-- ./card-header -->
+                        <div class="card-body p-0">
+                            <table class="table table-hover">
+                                <tbody>
+                                <div class="card-body p-0">
+                                    <table class="table table-hover">
+                                        <tbody>
+
+
+                                        {% for unit in units %}
+
+                                            <tr data-widget="expandable-table" aria-expanded="true">
+                                                <td>
+
+                                                    <div class="btn-group">
+                                                        <a type="button"
+                                                           href="{% url 'sbs:arsiv-birimUpdate' unit.pk %}"
+                                                           class="btn btn-default"><i
+                                                                class="fa fa-align-left"></i></a>
+
+
+                                                    </div>
+                                                    {{ unit.name }}
+                                                </td>
+
+                                            </tr>
+                                            <tr class="expandable-body">
+                                                <td>
+                                                    <div class="p-0">
+                                                        <table class="table table-hover">
+                                                            <tbody>
+
+                                                            {% for kla in klasor %}
+                                                                {% if kla.birim == unit %}
+                                                                    <tr data-widget="expandable-table"
+                                                                        aria-expanded="true">
+                                                                        <td>
+                                                                            <div class="btn-group">
+                                                                                <a type="button"
+                                                                                   href="{% url 'sbs:klasor-guncelle' kla.pk %}"
+                                                                                   class="btn btn-default"><i
+                                                                                        class="fa fa-align-right"></i></a>
+
+
+                                                                            </div>
+
+                                                                            {{ kla.name }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr class="expandable-body ">
+                                                                        <td>
+                                                                            <div class="p-0">
+                                                                                <table class="table table-hover">
+
+
+                                                                                    {% if backsearch == 'genelArama' %}
+
+                                                                                        {% for dos in dosyadizi %}
+                                                                                            {% if dos.klasor_id == kla.pk %}
+                                                                                                <tr>
+                                                                                                    <td>
+                                                                                                       <b> {{ dos.sirano }}({{ dos.parametre }})</b>
+                                                                                                        <span id="dosya-{{ dos.pk }}"></span>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <a href="{% url 'sbs:dosya-guncelle' dos.pk %}"
+                                                                                                           class="btn btn-primary">
+                                                                                                            incele</a>
+                                                                                                    </td>
+
+                                                                                                </tr>
+
+                                                                                            {% endif %}
+                                                                                        {% endfor %}
+
+
+
+                                                                                    {% else %}
+                                                                                        {% for dos in dosya %}
+                                                                                            {% if dos.klasor_id == kla.pk %}
+                                                                                                <tr>
+                                                                                                    <td>
+                                                                                                        {{ dos.sirano }}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <a href="{% url 'sbs:dosya-guncelle' dos.pk %}"
+                                                                                                           class="btn btn-primary">
+                                                                                                            incele</a>
+                                                                                                    </td>
+
+                                                                                                </tr>
+
+                                                                                            {% endif %}
+                                                                                        {% endfor %}
+                                                                                    {% endif %}
+
+
+                                                                                </table>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+
+
+                                                                {% endif %}
+                                                            {% endfor %}
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        {% endfor %}
+
+                                    </table>
+                                </div>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        {% endif %}
+    </section>
+
+    <script>
+        $(function () {
+
+            {% for item in dosyaX %}
+
+                $("#dosya-{{ item.pk }}").text($("#dosya-{{ item.pk }}").text() + "({{item.title }} : "+ "{{ item.value }})");
+            {% endfor %}
+
+            {% if backsearch %}
+
+                {% if backsearch == "birimArama" %}
+                    $("#searchbirim option[value='{{ backdata }}']").prop("selected", true);
+
+                    $('#navtop a[href="#detay"]').tab('show');
+                    list({{ backdata }});
+                {% elif backsearch == "searchKlasor"  %}
+                    $('#navtop a[href="#detay"]').tab('show');
+                    $('#navlower a[href="#klasor"]').tab('show');
+                    var str = "{{ backdata }}";
+                    var dizi = str.split("/");
+                    $("#klasorname").val(dizi[0]);
+                    $("#klasorsirano").val(dizi[1]);
+                    $("#klasorlocation option[value='" + dizi[2] + "']").prop("selected", true);
+                    $("#klasorbirim option[value='" + dizi[3] + "']").prop("selected", true);
+                {% elif backsearch == "genelArama"  %}
+                    $("#search").val('{{ backdata }}');
+                {% endif %}
+            {% endif %}
+
+
+
+            $("#searchbirim").change(function () {
+                var birim = $(this).find('option:selected').val();
+
+
+                clear();
+                list(birim);
+            });
+
+
+        });
+
+
+        function clear() {
+
+
+            $(".parametre").remove();
+
+        }
+
+        function list(birim) {
+            {#alert(birim);#}
+            $.ajax({
+                url: "{% url "sbs:parametre-bilgi" %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    "cmd": birim,
+                },
+                success: function (result) {
+                    console.log(result)
+
+                    {#$("#id_town").append('<option value="">-----------</option>');#}
+
+                    for (item in result.data) {
+                        {#string#}
+                        if (result.data[item].type == 'string') {
+
+                            $(".secim").append('<div class="form-group parametre"> <label> ' + result.data[item].title + '</label><input type="text" name="' + result.data[item].title + '"  maxlength="250" class="form-control"  id="id_' + result.data[item].title + '"></div>');
+
+                        }
+                        {#number#}
+                        if (result.data[item].type == 'number') {
+
+                            $(".secim").append('<div class="form-group parametre"> <label> ' + result.data[item].title + '</label><input type="text" onkeypress="validate(event)" name="' + result.data[item].title + '"  maxlength="250" class="form-control"  id="id_' + result.data[item].title + '"></div>');
+
+                        }
+                        {#date#}
+                        if (result.data[item].type == 'date') {
+
+                            $(".secim").append('<div class="form-group parametre"> <label> ' + result.data[item].title + '</label><input type="text" name="' + result.data[item].title + '"  maxlength="250" class="form-control  datepicker6 "  id="id_' + result.data[item].title + '"></div>');
+
+                        }
+
+                    }
+
+                }
+            });
+
+        };
+
+    </script>
+
+{% endblock %}
+

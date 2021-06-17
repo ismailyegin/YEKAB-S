@@ -1,0 +1,445 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Reddetmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <section class="content">
+
+
+        <div class="row">
+
+
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Antrenör Başvuruları </h3>
+                        </div>
+
+                        <div class="card-header with-border">
+                            <div class="btn-group">
+                                <a href="{% url "sbs:antrenor-ekle" %}"
+                                   type="button" class="btn btn-success"><i
+                                        class="fa fa-edit"></i> Antrenör Ekle
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <table id="basvuru" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th> Ad Soyad</th>
+                                    <th>E-Mail</th>
+                                    <th>Onay Durumu</th>
+
+                                    {% if aktif == 'Admin' %}
+                                        <th>İncele/Sil</th>
+                                    {% endif %}
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if referees.all %}
+                                    {% for referee in referees %}
+                                        <tr id="coach-{{ referee.pk }}">
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ referee.first_name }} {{ referee.last_name }} </td>
+                                            <td>{{ referee.email }} </td>
+                                            <td>{{ referee.status }} </td>
+
+
+                                            {#                                            <td>#}
+                                            {##}
+                                            {##}
+                                            {#                                                {% for grade in referee.visa.all %}#}
+                                            {#                                                    {% if  grade.status == 'Onaylandı' and grade.isActive == True %}#}
+                                            {##}
+                                            {#                                                        <p>{{ grade.branch }}  </p>#}
+                                            {#                                                    {% endif %}#}
+                                            {##}
+                                            {##}
+                                            {#                                                {% endfor %}#}
+                                            {##}
+                                            {#                                            </td>#}
+                                            <td>
+                                                <div class="btn-group">
+                                                    {#                                                    {% if referee.status != "Onaylandı" %}#}
+                                                    {##}
+                                                    {#                                                        <a href="{% url "sbs:basvuru-onayla-coach" referee.pk %}"#}
+                                                    {#                                                       type="button" class="btn btn-success"><i#}
+                                                    {#                                                            class="fa fa-edit"></i> Onayla#}
+                                                    {#                                                    </a>#}
+                                                    {#                                     #}
+                                                    {##}
+                                                    {##}
+                                                    {#                                                    {% endif %}#}
+                                                    <a onclick="approvalCoach({{ referee.pk }})"
+                                                       type="button" class="btn btn-success"><i
+                                                            class="fa fa-edit"></i> Onayla
+                                                    </a>
+
+
+                                                    <a href="{% url "sbs:update-coach-reference" referee.pk %}"
+                                                       type="button" class="btn btn-warning"><i
+                                                            class="fa fa-edit"></i> İncele
+                                                    </a>
+
+                                                    <a class="btn btn-danger"
+                                                       data-toggle="modal" onclick=deleteReferee({{ referee.pk }})><i
+                                                            class="fa fa-trash"></i> Reddet</a>
+
+
+                                                    {#                                                 {% if referee.status != "Reddedildi" %}#}
+                                                    {##}
+                                                    {##}
+                                                    {#                                         #}
+                                                    {#                                                     {% endif %}#}
+
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+
+    <script>
+        $(function () {
+            $('#basvuru').DataTable({
+                   dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: "Ekle Çıkar",
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Sporcular',
+                        text: "Yazdır",
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: "Pdf",
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: "Excel",
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text:'Json',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Sporcular.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            });
+
+        })
+        function deleteReferee(id) {
+
+            console.log(id);
+            var html = ''
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "sbs:coach-basvuru-reddet" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Antrenör Başarıyla Reddedildi.';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+
+                                    $('#coach-' + id + ' td').eq(3).text('Reddedildi');
+                                    $('#modal-success').modal('hide');
+
+                                    {#window.location.replace("{% url "sbs:basvuru-coach" %}");#}
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+
+
+        function approvalCoach(id) {
+
+            console.log(id);
+            var html = ''
+
+            $.ajax({
+                url: "{% url "sbs:onayla-coach-basvuru" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    isActive: 'False'
+                },
+                success: function (result) {
+
+
+                    if (result.status == 'Success') {
+
+                        html = 'Antrenör  Başarıyla Onaylandı ';
+                        debugger;
+                        $(".successModal").html(html);
+                        $('#coach-' + id + ' td').eq(3).text('Onaylandı');
+                        $('#modal-success').on("shown.bs.modal", function (e) {
+                            $(".btn-ok").click(function () {
+
+
+                                $('#modal-success').modal('hide');
+
+
+                            });
+
+
+                        }).modal('show');
+
+                    } else {
+
+
+                        html = 'Antrenör  Eklenemedi ';
+                        $(".successModal").html(html);
+                        $('#modal-success').on("shown.bs.modal", function (e) {
+                            $(".btn-ok").click(function () {
+
+
+                                $('#modal-success').modal('hide');
+
+
+                            });
+
+
+                        }).modal('show');
+
+
+                    }
+
+                }
+            });
+
+
+        }
+    </script>
+
+
+
+
+
+{% endblock %}
+

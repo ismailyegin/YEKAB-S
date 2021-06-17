@@ -1,0 +1,737 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <section class="content-header">
+        <h1>
+            Kulüp Düzenle
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Kulüp Düzenle</a></li>
+
+        </ol>
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Genel Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label> {{ club_form.name.label }}</label>
+                                {{ club_form.name }}
+                            </div>
+                            <div class="form-group">
+                                <label> {{ club_form.shortName.label }}</label>
+                                {{ club_form.shortName }}
+                            </div>
+                            <div class="form-group">
+                                <label> {{ club_form.foundingDate.label }}</label>
+                                {{ club_form.foundingDate }}
+                            </div>
+                            <div class="form-group">
+                                <label> {{ club_form.isFormal.label }}</label>
+                                {{ club_form.isFormal }}
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                <label>{{ club_form.logo.label }}</label>
+                                <img src="/media/{{ club_form.logo.value|default_if_none:"" }}" width="100"
+                                     height="100">
+                                {{ club_form.logo }}
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6">
+
+                                <div class="form-group">
+                                    <label> {{ club_form.petition.label }}</label>
+                                    {{ club_form.petition }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                <button class="btn btn-primary" type="submit">Kaydet</button>
+                            {% endif %}
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">İletişim Bilgileri</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ club_form.clubMail.label }}</label>
+                                        {{ club_form.clubMail }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber.label }}</label>
+                                        {{ communication_form.phoneNumber }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber2.label }}</label>
+                                        {{ communication_form.phoneNumber2 }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ communication_form.country.label }}</label>
+                                        {{ communication_form.country }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.city.label }}</label>
+                                        {{ communication_form.city }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.postalCode.label }}</label>
+                                        {{ communication_form.postalCode }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label> {{ communication_form.address.label }}</label>
+                                        {{ communication_form.address }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                <button class="btn btn-primary" type="submit">Kaydet</button>
+                            {% endif %}
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Kulüp Üyeleri</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-header with-border">
+                                <div class="btn-group">
+                                    {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                        <a href="{% url "sbs:choose-sport-club-user"  club.pk %}"
+                                           type="button" class="btn btn-success"><i
+                                                class="fa fa-edit"></i> Kulüp Üyesi Ekle
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <table id="club" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Rolü</th>
+                                    <th>İşlemler</th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if clubPersons.all %}
+                                    {% for athlete in clubPersons %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ athlete.user.first_name }} {{ athlete.user.last_name }} </td>
+                                            <td>{{ athlete.role.name }} </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                                        <a onclick="deleteClubPerson({{ athlete.id }}, {{ club.pk }})"
+                                                           type="button" class="btn btn-danger"><i
+                                                                class="fa fa-edit"></i>Çıkar
+                                                        </a>
+                                                    {% endif %}
+
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Kulüp Antrenörleri</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-header with-border">
+                                <div class="btn-group">
+                                    {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                        <a href="{% url "sbs:choose-coach-clup"  club.pk %}"
+                                           type="button" class="btn btn-success"><i
+                                                class="fa fa-edit"></i> Antrenör Ekle
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <table id="antrenorler" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Kademe</th>
+                                    <th>İşlemler</th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if clubCoachs.all %}
+                                    {% for coach in clubCoachs %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ coach.user.first_name }} {{ coach.user.last_name }} </td>
+                                            <td>{{ coach.grades.last.definition.name }} </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    {% if aktif == 'Admin' or aktif == 'Yonetim'%}
+                                                        <a onclick="deleteClubCoach({{ coach.id }}, {{ club.pk }})"
+                                                           type="button" class="btn btn-danger"><i
+                                                                class="fa fa-edit"></i>Çıkar
+                                                        </a>
+                                                    {% endif %}
+
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="row">
+
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Sporcular</h3>
+                        </div>
+                        <div class="card-header with-border">
+                            <div class="btn-group">
+                                <a href="{% url "sbs:sporcu-ekle" %}"
+                                   type="button" class="btn btn-success"><i
+                                        class="fa fa-edit"></i> Yeni Sporcu Ekle
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="sporcular" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th> Ad Soyad</th>
+
+                                    {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                        <th>Kulüp</th>
+                                    {% endif %}
+                                    {#                                    <th>Branş</th>#}
+                                    <th>İşlemler</th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if athletes.all %}
+                                    {% for athlete in athletes %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ athlete.user.first_name }} {{ athlete.user.last_name }} </td>
+
+
+                                            {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+
+                                                <td>
+                                                    {% for license in athlete.licenses.all %}
+                                                        {% if  license.status == 'Onaylandı' %}
+                                                            <p>{{ license.sportsClub }}</p>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
+
+                                            {% endif %}
+
+
+
+
+                                            {% comment %}<td>
+                                                {% for belts in athlete.belts.all %}
+                                                    {% if  belts.status == 'Onaylandı' %}
+                                                        <p>{{ belts.definition }}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>{% endcomment %}
+
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{% url "sbs:update-athletes" athlete.pk %}"
+                                                       type="button" class="btn btn-warning"><i
+                                                            class="fa fa-edit"></i>İncele
+                                                    </a>
+
+
+                                                    {#                                                    <a href="{% url "sbs:sporcu-lisans-ekle" athlete.pk %}"#}
+                                                    {#                                                       type="button" class="btn btn-secondary btn-success">Lisans#}
+                                                    {#                                                        Ekle#}
+                                                    {#                                                    </a>#}
+
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+    <script>
+        $(function () {
+
+            $('#sporcular').DataTable({
+
+
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            });
+
+            $('#club').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+                    {##}
+                    {##}
+                    {#'copy',#}
+                    {#'csv',#}
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Sbs Bilgi Sistemi',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5]
+                        },
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5]
+                        },
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Sbs Bilgi Sistemi',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Sbs Bilgi Sistemi ',
+                        {#footer: true,#}
+                        exportOptions: {
+                            {#     yer degisimi de yapilabilir.#}
+                            columns: [0, 2, 1, 3, 4, 5]
+
+                        },
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Sporcular.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+
+        })
+    </script>
+    <script>
+        $(function () {
+            $('#antrenorler').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+                    {##}
+                    {##}
+                    {#'copy',#}
+                    {#'csv',#}
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Twf Bilgi Sistemi',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5]
+                        },
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5]
+                        },
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Twf Bilgi Sistemi',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Twf Bilgi Sistemi ',
+                        {#footer: true,#}
+                        exportOptions: {
+                            {#     yer degisimi de yapilabilir.#}
+                            columns: [0, 2, 1, 3, 4, 5]
+
+                        },
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Sporcular.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+
+        })
+    </script>
+
+    <script>
+        function deleteClubPerson(id, club_id) {
+
+            console.log(id);
+            var html = '';
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "sbs:ClubUser-cikar" pk=212121223232323232 club_pk=999999999999999 %}".replace(/212121223232323232/, id.toString()).replace(/999999999999999/, club_id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Kulüp üyesi başarıyla çıkarıldı.';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:update-club" club.pk %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+    </script>
+    <script>
+
+        function deleteClubCoach(id, club_id) {
+
+            console.log(id);
+            var html = '';
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "sbs:ClubCoach-cikar" pk=212121223232323232 club_pk=999999999999999 %}".replace(/212121223232323232/, id.toString()).replace(/999999999999999/, club_id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Antrenör başarıyla çıkarıldı.';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:update-club" club.pk %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+    </script>
+
+{% endblock %}
+
+
+

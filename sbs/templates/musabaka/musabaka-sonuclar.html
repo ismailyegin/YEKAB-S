@@ -1,0 +1,366 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+    <style>
+
+
+        .ui-widget-overlay {
+            height: 100%;
+            left: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #000000;
+            opacity: 0.7;
+        }
+
+
+    </style>
+
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <section class="content">
+
+        <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary">
+                <div class="card-header with-border">
+                    <h3 class="card-title">{{ competition.name  }} Sonuçları</h3>
+                </div>
+
+                <div class="card-body">
+                    <table id="sonucTable" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Derecesi</th>
+                            <th>İsim Soyad</th>
+                            <th>Kategori</th>
+                            {% if aktif == 'Admin' %}
+                                        <th>Kulubü</th>
+                                    {% endif %}
+
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if compAthlete %}
+                            {% for compathlete in compAthlete %}
+                                <tr>
+                                     <td>{{ compathlete.degree }}</td>
+                                    <td>
+                                        {{ compathlete.athlete.user.first_name }} {{ compathlete.athlete.user.last_name }}
+                                        {% if compathlete.category.kategoriadi == 'Çift Erkekler' or compathlete.category.kategoriadi == 'Çift Bayanlar' or compathlete.category.kategoriadi == 'Karışık' %}
+                                            <br>{{ compathlete.athleteTwo.user.first_name }}
+                                            {{ compathlete.athleteTwo.user.last_name }}
+
+                                        {% endif %}</td>
+                                    {#                                    <td>{{ compathlete.athlete.person.birthDate |date }} </td>#}
+
+                                    <td>{{ compathlete.category }}</td>
+                                {% if aktif == 'Admin' %}
+                                        <td>{{ compathlete.athlete.licenses.last.sportsClub }}</td>
+                                    {% endif %}
+
+                                </tr>
+
+                            {% endfor %}
+                        {% endif %}
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    </section>
+    <script>
+        $(function () {
+
+             $('#sonucTable').DataTable({
+
+                dom: 'Bfrtip',
+                orderFixed: [[2, 'asc']],
+                rowGroup: {
+                    dataSrc: 2
+                },
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+
+
+                    {
+                        extend: "pageLength",
+
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Spor Bilgi Sistemi',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+
+                        text: '<i class="fa fa-file-excel-o"></i>',
+
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Projeler.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': false,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+
+
+            });
+
+
+        });
+
+
+    </script>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        $(function () {
+            //Enable iCheck plugin for checkcardes
+            //iCheck for checkcard and radio inputs
+            $('.berktug input[type="checkcard"]').iCheck({
+
+                checkcardClass: 'icheckcard_flat-blue',
+
+            });
+
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $('#sporcular').DataTable({
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true
+            });
+            $('#sonuclar').DataTable({
+                'paging': false,
+                'lengthChange': false,
+                'searching': false,
+                'ordering': true,
+                'info': false,
+                'autoWidth': true
+            })
+
+        })
+    </script>
+
+{% endblock %}
+

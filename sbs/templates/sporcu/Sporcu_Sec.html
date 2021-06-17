@@ -1,0 +1,838 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Birleştirme işlemini onaylıyor musunuz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class=" alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <section class="content">
+
+        <div class="row">
+
+            <section class="col-lg-12 ">
+
+
+                <div class="card card-info collapsed-card">
+                    <div class="card-header with-border">
+
+                        <h3 class="card-title">Birleşmeden Kalacak Sporcu Bilgileri </h3>
+
+                        <div class="card-tools pull-right">
+                            ( {{ user_form.instance.first_name }} {{ user_form.instance.last_name }} )
+                            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i
+                                    class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <!-- /.card-tools -->
+                    </div>
+                    <div class="card-body">
+
+                        <form method="post" enctype="multipart/form-data" role="form">
+                            {% csrf_token %}
+                            <div class="row">
+
+                                <div class="col-lg-6">
+                                    <div class="card card-primary">
+                                        <div class="card-header with-border">
+                                            <h3 class="card-title">Genel Bilgiler</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+
+
+                                                <div class="col-lg-12 text-center">
+                                                    <div class="form-group">
+
+                                                        <label> {{ person_form.profileImage.label }}</label>
+
+                                                        <center>
+                                                            <img
+                                                                    src="/media/{{ person_form.instance.athlete.person.profileImage }}"
+                                                                    class="img-responsive img-bordered"
+                                                                    alt="Resim Yok"
+                                                                    style=" width: 100px; height: 100px;"
+
+                                                            ><br>
+                                                        </center>
+                                                        {#                                        {{ person_form.profileImage }}#}
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+
+
+                                                    <div class="form-group">
+                                                        <label> {{ person_form.tc.label }}</label>
+                                                        {{ person_form.tc }}
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <label> {{ user_form.first_name.label }}</label>
+                                                        {{ user_form.first_name }}
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label> {{ user_form.last_name.label }}</label>
+                                                        {{ user_form.last_name }}
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <label> {{ person_form.bloodType.label }}</label>
+                                                        {{ person_form.bloodType }}
+                                                    </div>
+
+
+                                                </div>
+                                                <br>
+                                                <div class="col-lg-6">
+
+
+                                                    <div class="form-group">
+                                                        <label> {{ person_form.motherName.label }}</label>
+                                                        {{ person_form.motherName }}
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <label> {{ person_form.fatherName.label }}</label>
+                                                        {{ person_form.fatherName }}
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label> {{ person_form.birthplace.label }}</label>
+                                                        {{ person_form.birthplace }}
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <label> {{ person_form.birthDate.label }}</label>
+                                                        {{ person_form.birthDate }}
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <label> {{ person_form.gender.label }}</label>
+                                                        {{ person_form.gender }}
+                                                    </div>
+
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card card-primary">
+                                        <div class="card-header with-border">
+                                            <h3 class="card-title">İletişim Bilgileri</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label> {{ user_form.email.label }}</label>
+                                                        {{ user_form.email }}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label> {{ communication_form.phoneNumber.label }}</label>
+                                                        {{ communication_form.phoneNumber }}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label> {{ communication_form.phoneNumber2.label }}</label>
+                                                        {{ communication_form.phoneNumber2 }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label> {{ communication_form.country.label }}</label>
+                                                        {{ communication_form.country }}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label> {{ communication_form.city.label }}</label>
+                                                        {{ communication_form.city }}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label> {{ communication_form.postalCode.label }}</label>
+                                                        {{ communication_form.postalCode }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label> {{ communication_form.address.label }}</label>
+                                                        {{ communication_form.address }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {#                        <div class="card-footer">#}
+                                        {#                            <button class="btn btn-primary" type="submit">Kaydet</button>#}
+                                        {#                        </div>#}
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card card-primary">
+                                        <div class="card-header with-border">
+                                            <h3 class="card-title">Lisans Bilgileri</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-header with-border">
+
+                                            </div>
+                                            <table id="license" class="table table-bordered table-hover ">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Kulüp-Antrenör</th>
+                                                    <th> Başlama Tarihi</th>
+                                                    <th> Bitiş Tarihi</th>
+                                                    <th> Branş</th>
+                                                    <th> Lisans No</th>
+                                                    <th> Lisans Foto.</th>
+                                                    <th> Onay Durumu</th>
+                                                    <th>işlemler</th>
+
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if licenses_form.all %}
+                                                    {% for license in licenses_form %}
+                                                        <tr>
+                                                            <td>{{ forloop.counter }} </td>
+                                                            <td>
+                                                                {% if license.sportsClub.name == 'FERDI' %}
+
+                                                                    {{ license.coach }}
+
+
+                                                                {% else %}
+                                                                    {{ license.sportsClub }}
+
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>{{ license.startDate | date }}  </td>
+                                                            <td>{{ license.expireDate | date }}  </td>
+                                                            <td>{{ license.branch }}  </td>
+                                                            <td>{{ license.licenseNo }}  </td>
+                                                            <td><a href="/media/{{ license.lisansPhoto }}"
+                                                                   target="_blank"> <img
+                                                                    src="/media/{{ license.lisansPhoto }}"
+                                                                    class="user-image" alt="None"
+                                                                    style=" width: 30px;height: 30px;"></a></td>
+                                                            <td>{{ license.status }}
+                                                                {% if  license.status == 'Reddedildi' %}
+                                                                    (  {{ license.reddetwhy }})
+                                                                {% endif %}
+
+
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn-group">
+
+
+                                                                    {% if aktif == 'Admin' %}
+                                                                        <a href="{% url "sbs:sporcu-lisans-onayla" license_pk=license.pk athlete_pk=athlete.pk %}"
+                                                                           type="button" class="btn btn-success"><i
+                                                                                class="fa fa-edit"></i>Onayla
+                                                                        </a>
+
+
+
+
+                                                                        <button type="button" class="btn btn-danger"
+                                                                                onclick="reddetwhy({{ license.pk }},{{ athlete.pk }})">
+                                                                            <i
+                                                                                    class="fa fa-trash"></i>Reddet
+                                                                        </button>
+
+
+
+
+                                                                        <a onclick="deleteLisans({{ license.id }}, {{ athlete.pk }})"
+                                                                           type="button" class="btn btn-danger"><i
+                                                                                class="fa fa-edit"></i>Sil
+                                                                        </a>
+
+                                                                    {% endif %}
+                                                                    {% if aktif == 'Admin' %}
+
+                                                                        {% if user.groups.all.0.name == 'Antrenor' %}
+
+
+                                                                            <a href="{% url "sbs:sporcu-lisans-duzenle-antrenor" license_pk=license.pk athlete_pk=athlete.pk %}"
+                                                                               type="button"
+                                                                               class="btn btn-warning"><i
+                                                                                    class="fa fa-edit"></i>Güncelle
+                                                                            </a>
+
+
+
+                                                                        {% else %}
+
+
+                                                                            <a href="{% url "sbs:sporcu-lisans-duzenle" license_pk=license.pk athlete_pk=athlete.pk %}"
+                                                                               type="button"
+                                                                               class="btn btn-warning"><i
+                                                                                    class="fa fa-edit"></i>Güncelle
+                                                                            </a>
+
+
+                                                                        {% endif %}
+
+                                                                    {% endif %}
+
+
+                                                                </div>
+                                                            </td>
+
+
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                {% endif %}
+
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card card-primary">
+                                        <div class="card-header with-border">
+                                            <h3 class="card-title">Müsabaka Bilgileri</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-header with-border">
+
+                                            </div>
+                                            <table id="competition" class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Müsabaka</th>
+                                                    <th>Müsabaka Türü</th>
+                                                    {#                                    <th> Başlama Tarihi</th>#}
+                                                    {#                                    <th> Bitiş Tarihi</th>#}
+                                                    {#                                    <th> Branş</th>#}
+                                                    {#                                    <th> Lisans No</th>#}
+                                                    {#                                    <th> Lisans Foto.</th>#}
+                                                    {#                                    <th> Onay Durumu</th>#}
+                                                    {#                                    <th> İşlemler</th>#}
+
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if competitions.all %}
+                                                    {% for musabaka  in competitions %}
+                                                        <tr>
+                                                            <td>{{ forloop.counter }} </td>
+                                                            <td>
+                                                                {{ musabaka.name }}
+                                                            </td>
+                                                            <td>
+
+                                                                {% if musabaka.compGeneralType == 0 %}
+                                                                    Yurt içi
+                                                                {% else %}
+                                                                    Yurt Dışı
+                                                                {% endif %}
+
+                                                            </td>
+
+
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                {% endif %}
+
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+
+        <div class="row">
+
+            <section class="col-lg-6 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Birleştirilecek Kişileri Seç</h3>
+                        </div>
+                        <div class="card-body berktug">
+                            <form method="post" enctype="multipart/form-data" role="form">
+                                {% csrf_token %}
+
+
+                                <table id="sporcular" class="table table-bordered  display">
+                                    <thead>
+                                    <tr>
+
+                                        <th>No</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Klup</th>
+                                        <th>Seç</th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+
+                                <div class="card-header with-border">
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+
+            <section class="col-lg-6">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary">
+
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Seçilen sporcular</h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="events" class="table table-bordered  display">
+                                <thead>
+                                <tr>
+
+                                    <th>Ad Soyad</th>
+                                    <th>Klup</th>
+                                    <th>İncele</th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <button onclick="Gonder()" class="btn btn-primary">Birleştir</button>
+                    </div>
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+
+
+    </div>
+
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl">Extra large
+        modal
+    </button>
+
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                ...
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript" language="JavaScript">
+
+        var secilenler = new Array();
+
+
+        $(function () {
+
+
+            var table = $('#competition').DataTable({
+                orderFixed: [[2, 'asc']],
+                rowGroup: {
+                    dataSrc: 2
+
+                },
+                'paging': true,
+                'searching': false,
+                'ordering': true,
+                'responsive': true,
+                'autoWidth': true,
+
+            });
+
+
+            Playerlist();
+
+            var table = $('#sporcular').DataTable();
+            var events = $('#events').DataTable({
+
+
+                'paging': true,
+                'searching': false,
+                'ordering': true,
+                'responsive': true,
+                'autoWidth': true,
+                "select": true,
+            });
+
+
+        });
+
+
+        function degersec(id) {
+
+
+            var deger = -1;
+            deger = secilenler.indexOf(id);
+            console.log(deger);
+
+            if (deger == -1) {
+
+                secilenler[secilenler.length] = id;
+                console.log(secilenler);
+            $("#btnsec-" + id).hide("slow");
+
+
+            var events = $('#events').DataTable();
+
+
+            events.row.add([
+                $('#row-' + id + ' td').eq(1).text(),
+                $('#row-' + id + ' td').eq(2).text(),
+
+                "<div   class='btn-group'><a target='_blank' href='http://sbs.halter.gov.tr:81/sbs/sporcu/sporcuDuzenle/" + id + "'type='button' class='btn btn-warning'><i class='fa fa-edit'></i>İncele</a>" +
+                "<a onclick='degercıkar(" + id + ")'type='button' class='btn btn-danger'><i class='fa fa-edit'></i>Çıkar </a></div>",
+
+
+            ]).node().id = "event-" + id;
+            events.draw(true);
+
+
+            } else {
+
+                alert("Bu deger seçilmiştir.");
+                $("#btnsec-" + id).hide("slow");
+            }
+
+
+        };
+
+        function degercıkar(id) {
+
+
+            var index = secilenler.indexOf(id);
+            if (index !== -1) {
+
+                secilenler.splice(index, 1);
+            }
+            console.log(secilenler)
+
+
+            var events = $('#events').DataTable();
+            events.row("#event-" + id).remove().draw(false);
+            {#$("#check-" + id).prop("checked", false);#}
+            {#$("#check-" + id).prop("disabled", true);#}
+            $("#btnsec-" + id).show("slow");
+
+
+        }
+
+        function Gonder() {
+
+            {#alert('birlestir tıklandi'+secilenler);#}
+
+            {#console.log(id);#}
+            var html = '';
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function (e) {
+
+
+                    $.ajax({
+                        url: "{% url "sbs:sporcu-birlestir-onay" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            secilenler: secilenler,
+                            athlete:{{ athlete.pk }},
+                        },
+                        success: function (result) {
+                            if (result.status == 'Success') {
+                                html = 'Başari ile birleştirildi.';
+
+                                window.location.replace("{% url "sbs:sporcular" %}");
+
+                            } else {
+
+                                alert('Birşeyler ters gitti.')
+
+                            }
+                        }
+                    });
+
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+
+        }
+
+        function Playerlist() {
+
+            table = $('#sporcular').DataTable();
+            table.destroy();
+
+
+            console.log('secilenler=' + secilenler);
+
+            table = $('#sporcular').DataTable({
+
+
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'responsive': true,
+                'autoWidth': true,
+                "serverSide": true,
+                "processing": true,
+                "rowId": "id",
+                {#"select": true,#}
+                'ajax': {
+
+                    "url": '{% url "sbs:Sporcu-sec-ajax"%}',
+                    "methot": 'POST',
+                    'data': {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                        isActive: 'True',
+                        athlete:{{ athlete.pk }},
+                    },
+
+                },
+                'columns': [
+                    {#{"targets": -1},#}
+
+                    {'data': 'say'},
+                    {'data': 'name'},
+                    {'data': 'klup'},
+                    {
+                        "data": null,
+                        "bSortable": false,
+                        "mRender": function (data) {
+                            deger = secilenler.indexOf(data.pk);
+
+                            if (deger == -1) {
+
+                                return '<div   class="btn-group"><a  id="btnsec-' + data.pk + '" onclick="degersec(' + data.pk + ')" type="button"class="btn btn-warning"><i class="fa fa-edit"></i>Seç</a> ';
+
+                            } else {
+
+                                return '<label>Deger seçildi</label>';
+                            }
+
+
+                        }
+                    },
+
+
+                ],
+
+
+            });
+
+
+        }
+
+    </script>
+
+{% endblock %}
+

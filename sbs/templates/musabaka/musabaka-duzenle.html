@@ -1,0 +1,765 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-eksik"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Sporcu kaydedilmedi</p>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn  btn-outline btn-ok" id="btn-kural ">Kapat</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-kural"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Girilen veriler 20 kg kuralına uygun degildir.</p>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn  btn-outline btn-ok" id="btn-kural ">Kapat</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-dialog fade in deneme23" tabindex="-1" role="dialog" id="reddetwhy"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Ek Bilgileri Giriniz</h4>
+                </div>
+                <div class="modal-body">
+                    <label for="inputState">Siklet</label>
+                    <select id="weight" class="form-control">
+                        <option selected>Seçiniz...</option>
+                        {% for weight in weights %}
+                            <option value="{{ weight.pk }}">{{ weight.weight }}</option>
+                        {% endfor %}
+                    </select>
+
+
+                    <label for="kop">Koparma</label>
+                    <input type="number" name="kop" id="kop" class="form-control" required>
+
+
+                    <label for="silk">Silkme </label>
+                    <input type="number" name="silk" id="silk" class="form-control" required>
+
+
+                    <label for="total">Toplam Kaldırış</label>
+                    <input type="number" name="total" id="total" class="form-control" required>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-default pull-left btn-ok" id="btn-gonder"
+                            data-dismiss="modal">Kaydet
+                    </button>
+                    <button type="button" class="btn  btn-default" id="btn-closereddet">Geri Dön</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <section class="content-header">
+        <h1>
+            Müsabaka İncele
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Müsabaka İncele</a></li>
+
+        </ol>
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Genel Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ competition_form.name.label }}</label>
+                                        {{ competition_form.name }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.startDate.label }}</label>
+                                        {{ competition_form.startDate }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.finishDate.label }}</label>
+                                        {{ competition_form.finishDate }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ competition_form.year.label }}</label>
+                                        {{ competition_form.year }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.compType.label }}</label>
+                                        {{ competition_form.compType }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ competition_form.compGeneralType.label }}</label>
+                                        {{ competition_form.compGeneralType }}
+                                    </div>
+
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ competition_form.eventPlace.label }}</label>
+                                        {{ competition_form.eventPlace }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Kategoriler</label>
+                                        <select class="form-control select2" multiple="multiple " name="jobDesription"
+                                                id="multipleSelect"
+                                                data-placeholder="Kategorileri  Seçiniz">
+                                            {% for item in category %}
+                                                <option value="{{ item.pk }}">{{ item.kategoriadi }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.registerStartDate.label }}</label>
+                                        {{ competition_form.registerStartDate }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ competition_form.registerFinishDate.label }}</label>
+                                        {{ competition_form.registerFinishDate }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Yaş Gurupları</label>
+                                        <select class="form-control select2" multiple="multiple " name="ages"
+                                                id="ages"
+                                                data-placeholder="Yaşlari  Seçiniz">
+                                            {% for item in ages %}
+                                                <option value="{{ item.pk }}">{{ item.year }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="card-footer">
+                                {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+
+                                    <button class="btn btn-primary" type="submit">Güncelle</button>
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Sporcular</h3>
+                        </div>
+                        <div class="card-header with-border">
+                            <div class="btn-group">
+
+                                <a href="{% url "sbs:musabaka-sporcu-sec" competition.pk %}"
+                                   type="button" class="btn btn-success"><i
+                                        class="fa fa-edit"></i>Sporcu Ekle
+                                </a>
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="sporcular" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Takım</th>
+                                    <th>Firsth Name</th>
+                                    <th>Last Name</th>
+                                <th>Birth Date</th>
+                                    <th>Gender</th>
+                                    <th>MemberID</th>
+                                    <th>Kulüp</th>
+                                    <th>Seed</th>
+
+                                    <th>Kategori</th>
+
+                                    <th>Kimlik No</th>
+
+                                    {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                        <th>Antrenör 1</th>
+                                        <th>Antrenör 2</th>
+                                        <th>Diger Sporcu</th>
+                                        <th>İşlemeler</th>
+                                    {% endif %}
+
+
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if athletes %}
+                                    {% for compathlete in athletes %}
+                                        {% if compathlete.category.kategoriadi == "Tek Erkekler" or compathlete.category.kategoriadi == "Tek Bayanlar" %}
+                                        <tr>
+
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ compathlete.athlete.user.first_name }}
+                                            </td>
+                                        <td>{{ compathlete.athlete.user.last_name }}</td>
+                                        <td>{{ compathlete.athlete.person.birthDate }}</td>
+                                            <td>
+                                                {% if compathlete.athlete.person.gender == 1 %}
+
+                                                    M
+                                                {% else %}
+                                                    F
+
+                                                {% endif %}
+                                            </td>
+
+
+                                            <td>{{ compathlete.athlete.pk }} </td>
+
+
+                                            <td>{{ compathlete.athlete.licenses.last.sportsClub }}</td>
+                                            <td></td>
+                                            <td>{{ compathlete.category }} </td>
+                                            <td>{{ compathlete.athlete.person.tc }} </td>
+
+
+                                            {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                                <td>{{ compathlete.athlete.licenses.last.coach }}</td>
+                                                <td>{{ compathlete.athlete.licenses.last.coach2 }}</td>
+                                                <td></td>
+
+                                                <td>
+                                                    <div class="btn-group">
+
+                                                        <a onclick="deleteAthlete({{ compathlete.id }})"
+                                                           type="button" class="btn btn-danger"><i
+                                                                class="fa fa-remove"></i>Kaldır
+                                                        </a>
+
+
+                                                    </div>
+                                                </td>
+                                            {% endif %}
+
+                                        </tr>
+                                        {% else %}
+                                            <tr>
+
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ compathlete.athlete.user.first_name }}
+
+                                                </td>
+                                            <td>{{ compathlete.athlete.user.last_name }}</td>
+                                            <td>{{ compathlete.athlete.person.birthDate   }}</td>
+                                                <td>
+                                                    {% if compathlete.athlete.person.gender == 1 %}
+
+                                                        M
+                                                    {% else %}
+                                                        F
+
+                                                    {% endif %}
+                                                </td>
+
+
+                                                <td>{{ compathlete.athlete.pk }} </td>
+
+
+                                                <td>{{ compathlete.athlete.licenses.last.sportsClub }}</td>
+                                                <td></td>
+                                                <td>{{ compathlete.category }} </td>
+                                                <td>{{ compathlete.athlete.person.tc }} </td>
+
+
+                                                {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                                    <td>{{ compathlete.athlete.licenses.last.coach }}</td>
+                                                    <td>{{ compathlete.athlete.licenses.last.coach2 }}</td>
+                                                      <td>{{ compathlete.athleteTwo.pk }}</td>
+
+                                                    <td>
+                                                        <div class="btn-group">
+
+                                                            <a onclick="deleteAthlete({{ compathlete.id }})"
+                                                               type="button" class="btn btn-danger"><i
+                                                                    class="fa fa-remove"></i>Kaldır
+                                                            </a>
+
+
+                                                        </div>
+                                                    </td>
+                                                {% endif %}
+
+                                            </tr>
+                                            <tr>
+
+                                                <td>{{forloop.counter}} </td>
+                                                <td>{{ compathlete.athleteTwo.user.first_name }} </td>
+                                            <td>{{ compathlete.athleteTwo.user.last_name }}</td>
+                                            <td>{{ compathlete.athleteTwo.person.birthDate }}</td>
+                                                <td>
+                                                    {% if compathlete.athleteTwo.person.gender == 1 %}
+
+                                                        M
+                                                    {% else %}
+                                                        F
+
+                                                    {% endif %}
+                                                </td>
+
+
+                                                <td>{{ compathlete.athleteTwo.pk }} </td>
+
+
+                                                <td>{{ compathlete.athleteTwo.licenses.last.sportsClub }}</td>
+<td></td>
+                                                <td>{{ compathlete.category }} </td>
+                                                <td>{{ compathlete.athleteTwo.person.tc }} </td>
+
+
+                                                {% if aktif == 'Admin' or aktif == 'Yonetim' %}
+                                                    <td>{{ compathlete.athleteTwo.licenses.last.coach }}</td>
+                                                    <td>{{ compathlete.athleteTwo.licenses.last.coach2 }}</td>
+                                                    <td>{{ compathlete.athlete.pk }}</td>
+
+                                                    <td>
+                                                        <div class="btn-group">
+
+                                                            <a onclick="deleteAthlete({{ compathlete.id }})"
+                                                               type="button" class="btn btn-danger"><i
+                                                                    class="fa fa-remove"></i>Kaldır
+                                                            </a>
+
+
+                                                        </div>
+                                                    </td>
+                                                {% endif %}
+
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+
+
+    </section>
+
+    <script>
+
+
+        $(function () {
+
+
+            var year = new Array();
+            {% for item in competition.ages.all %}
+                year.push("{{ item.pk }}");
+            {% endfor %}
+            $('#ages').val(year);
+
+
+
+
+            var jop = new Array();
+            {% for item in competition.categoryies.all %}
+                jop.push("{{ item.pk }}");
+            {% endfor %}
+            $('#multipleSelect').val(jop);
+
+
+            $('#sporcular').DataTable({
+
+                dom: 'Bfrtip',
+                {#orderFixed: [[3, 'asc']],#}
+                {#rowGroup: {#}
+                {#    dataSrc: 3#}
+                {# },#}
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+
+
+                    {
+                        extend: "pageLength",
+
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Spor Bilgi Sistemi',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+
+                        text: '<i class="fa fa-file-excel-o"></i>',
+
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Projeler.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': false,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': false,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+
+
+            });
+
+
+        });
+
+
+        function addPlayer(id, competitionId, weight, total, silk1, kop1) {
+
+
+            $("#reddetwhy").on("shown.bs.modal", function (e) {
+
+                $('#total').val(total);
+                $('#silk').val(silk1);
+                $('#kop').val(kop1);
+                $('#weight  option:selected').text(weight);
+
+
+                $("#btn-gonder").click(function () {
+
+                    console.log('buradan girdi', competitionId)
+                    if (e.handled !== true) {
+                        // This will prevent event triggering more then once
+                        e.handled = true;
+                        if ($('#weight').val() && $('#total').val() && $('#silk').val() && $('#kop').val()) {
+
+                            $.ajax({
+                                url: "{% url "sbs:catagori-sporcu-update-ajax" pk=212121223232323232 competition=999999999999999 %}".replace(/212121223232323232/, id.toString()).replace(/999999999999999/, competitionId.toString()),
+                                type: "POST",
+                                data: {
+                                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                    total: $('#total').val(),
+                                    weight: $('#weight').val(),
+                                    silk: $('#silk').val(),
+                                    kop: $('#kop').val(),
+                                    isActive: 'False'
+
+                                },
+                                success: function (result) {
+
+
+                                    if (result.msg == "Kural20") {
+                                        $('#modal-kural').on("shown.bs.modal", function (e) {
+                                            $(".btn-ok").click(function () {
+
+
+                                                $('#modal-warning').modal('hide');
+                                                $('.modal').modal('hide');
+                                            });
+
+                                        }).modal('show');
+                                    } else if (result.msg == "Eksik") {
+                                        $('#modal-eksik').on("shown.bs.modal", function (e) {
+                                            $(".btn-ok").click(function () {
+
+
+                                                $('#modal-warning').modal('hide');
+                                                $('.modal').modal('hide');
+                                            });
+
+                                        }).modal('show');
+
+
+                                    } else {
+
+                                        html = 'Sporcu Başarıyla Güncellendi .';
+                                        debugger;
+                                        $(".successModal").html(html);
+                                        window.location.replace("{% url "sbs:musabaka-duzenle" competition.pk %}");
+
+
+                                    }
+
+
+                                }
+                            });
+
+
+                        } else {
+                            {#    model gelecek #}
+
+                            alert("Lütfen eksik alanlari giriniz");
+
+                        }
+
+
+                    }
+                });
+
+
+            }).modal('show');
+            $('#btn-closereddet').click(function () {
+
+
+                $('#modal-warning').modal('hide');
+                $('.modal').modal('hide');
+
+            });
+
+        }
+
+
+        function deleteAthlete(id) {
+
+            console.log(id);
+            var html = '';
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "sbs:musabaka-sporcu-kaldir" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Sporcu başarıyla kaldırıldı.';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:musabaka-duzenle" competition.pk %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+    </script>
+
+{% endblock %}
+
+
+

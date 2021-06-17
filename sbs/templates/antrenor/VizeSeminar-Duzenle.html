@@ -1,0 +1,485 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <section class="content-header">
+        <h1>
+            Semineri İncele
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Seminer İncele</a></li>
+
+        </ol>
+    </section>
+
+    <section class="content">
+
+        {% if competition.forWhichClazz == 'COACH' %}
+            <div class="card card-primary">
+
+                <div class="card-header with-border">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">Onay Durumu</h3>
+                        <div class="card-header with-border">
+                            <h3 class="card-title">{{ competition.status }}</h3>
+
+
+                            <div class="text-right">
+                                <a href="{% url "sbs:seminar-onayla" competition.pk %}"
+                                   type="button" class="btn btn-warning"><i
+                                        class="fa fa-edit"></i>Onayla
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        {% endif %}
+
+
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Genel Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ competition_form.name.label }}</label>
+                                        {{ competition_form.name }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.startDate.label }}</label>
+                                        {{ competition_form.startDate }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ competition_form.finishDate.label }}</label>
+                                        {{ competition_form.finishDate }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ competition_form.branch.label }}</label>
+                                        {{ competition_form.branch }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> Seminer Türünü Seçiniz {{ competition.forWhichClazz }}</label>
+                                        <select name="typeSeminar"
+                                                class="form-control select2 select2-hidden-accessible"
+                                                style="width: 100%; " id="type_visaSeminer">
+                                            <option value="visa">Vize Seminer</option>
+
+                                            <option value="claim">Talep Toplama</option>
+
+
+                                        </select>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-lg-6">
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.application.label }}</label>
+                                        {{ competition_form.application }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.appStartDate.label }}</label>
+                                        {{ competition_form.appStartDate }}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.appFinishDate.label }}</label>
+                                        {{ competition_form.appFinishDate }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ competition_form.location.label }}</label>
+                                        {{ competition_form.location }}
+                                    </div>
+                                                                                                                          <div class="form-group">
+                                        <label> {{ competition_form.year.label }}</label>
+                                        {{ competition_form.year }}
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="card-footer">
+                                {% if aktif == 'Admin' %}
+
+                                    <button class="btn btn-primary" type="submit">Güncelle</button>
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% if competition.forWhichClazz == 'COACH' %}
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <div class="card card-primary">
+                            <div class="card-header with-border">
+                                <h3 class="card-title"> Seçili Antrenörler</h3>
+                            </div>
+                            <div class="card-header with-border">
+                                <div class="btn-group">
+
+                                    <a href="{% url "sbs:vize-semineri-antroner-sec" competition.pk %}"
+                                       type="button" class="btn btn-success"><i
+                                            class="fa fa-edit"></i>Antrenör Ekle
+                                    </a>
+
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="sporcular" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Doğum Tarihi</th>
+                                        {#                                    {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}#}
+                                        {#                                        <th>Kulüp</th>#}
+                                        {#                                    {% endif %}#}
+                                        <th>İşlemler</th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if athletes %}
+                                        {% for athlete in athletes %}
+                                            <tr>
+                                                <td>{{ forloop.counter }} </td>
+                                                <td>{{ athlete.user.first_name }} {{ athlete.user.last_name }} </td>
+                                                <td>{{ athlete.person.birthDate }} </td>
+
+
+                                                <td>
+                                                    <div class="btn-group">
+
+                                                        <a onclick="deleteAthlete({{ athlete.id }}, {{ competition.pk }})"
+                                                           type="button" class="btn btn-danger"><i
+                                                                class="fa fa-edit"></i>Kaldır
+                                                        </a>
+
+
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+
+                                        {% endfor %}
+                                    {% endif %}
+
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title"> Basvuru Yapan Antrenörler</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <table id="sporcular" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ad Soyad</th>
+                                    <th>T.C.</th>
+                                    <th>Mail Adresi</th>
+                                    <th>Telefon</th>
+                                    <th>Dekont</th>
+
+                                    <th>Onay Durumu</th>
+                                    {% if competition.forWhichClazz == 'COACH' %}
+                                        <th>İşlemler</th>
+                                    {% endif %}
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if competition %}
+                                    {% for athlete in competition.coachApplication.all %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ athlete.coach.user.first_name }} {{ athlete.coach.user.last_name }} </td>
+                                            <td>{{ athlete.coach.person.tc }} </td>
+                                            <td>{{ athlete.coach.user.email }} </td>
+                                            <td>{{ athlete.coach.communication.phoneNumber }} </td>
+                                            <td><a href="/media/{{ athlete.dekont }}">{{ athlete.dekont }}</a>
+                                            </td>
+                                            <td> {{ athlete.status }}</td>
+
+                                            {% if competition.forWhichClazz == 'COACH' %}
+                                                <td>
+                                                    <div class="btn-group">
+
+                                                        <a onclick="onayla({{ athlete.id }}, {{ competition.pk }})"
+                                                           type="button" class="btn btn-success"><i
+                                                                class="fa fa-edit"></i>Onayla
+                                                        </a>
+                                                        <a onclick="reddet({{ athlete.id }}, {{ competition.pk }})"
+                                                           type="button" class="btn btn-danger"><i
+                                                                class="fa fa-edit"></i>Reddet
+                                                        </a>
+
+
+                                                    </div>
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+
+
+    </section>
+
+    <script>
+        $(function () {
+            $('#type_visaSeminer option[value={% if competition.forWhichClazz == 'COACH'  %}visa{% else %}claim{% endif %}]').attr('selected', 'selected');
+
+        });
+
+
+        function reddet(coachApplicationPk, seminerpk) {
+            $.ajax({
+                url: "{% url "sbs:visaSeminar-antrenorbasvuru-reddet" pk=212121223232323232 competition=999999999999999 %}".replace(/212121223232323232/, coachApplicationPk.toString()).replace(/999999999999999/, seminerpk.toString()),
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    isActive: 'False'
+                },
+                success: function (result) {
+
+                    html = ' Reddedildi.';
+                    debugger;
+                    $(".successModal").html(html);
+                    $('#modal-success').on("shown.bs.modal", function (e) {
+                        $(".btn-ok").click(function () {
+
+                            window.location.replace("{% url "sbs:seminar-duzenle" competition.pk %}");
+
+                        });
+
+                    }).modal('show');
+
+
+                    console.log(result.status)
+                }
+            });
+
+
+        }
+
+        function onayla(coachApplicationPk, seminerpk) {
+            $.ajax({
+                url: "{% url "sbs:visaSeminar-antrenorbasvuru-onayla" pk=212121223232323232 competition=999999999999999 %}".replace(/212121223232323232/, coachApplicationPk.toString()).replace(/999999999999999/, seminerpk.toString()),
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    isActive: 'False'
+                },
+                success: function (result) {
+
+                    html = ' Antrenör  eklendi';
+                    debugger;
+                    $(".successModal").html(html);
+                    $('#modal-success').on("shown.bs.modal", function (e) {
+                        $(".btn-ok").click(function () {
+
+                            window.location.replace("{% url "sbs:seminar-duzenle" competition.pk %}");
+
+                        });
+
+                    }).modal('show');
+
+
+                    console.log(result.status)
+                }
+            });
+        }
+
+
+
+
+        function deleteAthlete(id, competition) {
+
+            console.log(id);
+            console.log(competition)
+            var html = '';
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "sbs:visaSeminar-antrenör-sil" pk=212121223232323232 competition=999999999999999 %}".replace(/212121223232323232/, id.toString()).replace(/999999999999999/, competition.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = ' Başarıyla Silindi.';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:seminar-duzenle" competition.pk %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        };
+
+    </script>
+
+{% endblock %}
+
+
+

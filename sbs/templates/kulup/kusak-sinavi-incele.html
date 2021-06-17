@@ -1,0 +1,393 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <section class="content">
+        <div class="card-body">
+            <div class="card card-primary">
+
+                <div class="card-header with-border">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">Onay Durumu</h3>
+                    </div>
+
+
+                    <div class="card-header with-border">
+                        <h3 class="card-title">{{ exam.status }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-primary">
+                <form method="post" enctype="multipart/form-data" role="form">
+                    {% csrf_token %}
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card card-primary">
+                                <div class="card-header with-border">
+                                    <h3 class="card-title">Sınav Bilgileri</h3>
+                                </div>
+
+                                <div class="card-body">
+                                    <table id="sporcular" class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Kulüp</th>
+                                            <th>Sınav Tarihi</th>
+
+                                            <th>Dekont</th>
+
+                                            <th>İşlemler</th>
+
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+
+                                        <tr>
+                                            <td>{{ exam.sportClub }}  </td>
+                                            <td>{{ exam.examDate }}</td>
+
+
+                                            <td><a href="/media/{{ exam.dekont }}" target="_blank"><img
+                                                    src="/media/{{ exam.dekont }}" class="user-image" alt="KOBİLTEK"
+                                                    style=" width: 30px;height: 30px;"></a></td>
+
+
+                                            <td>
+                                                {% if aktif == 'Admin' %}
+                                                    <div class="btn-group">
+                                                        <a href="{% url "sbs:kusak-sinavi-onayla" exam.pk %}"
+                                                           type="button" class="btn btn-success"><i
+                                                                class="fa fa-edit"></i>Onayla
+                                                        </a>
+
+                                                        <a href="{% url "sbs:kusak-sinavi-reddet" exam.pk %}"
+                                                           type="button" class="btn btn-danger"><i
+                                                                class="fa fa-edit"></i>Reddet
+
+                                                        </a> <a href="{% url "sbs:kusak-sinavi-duzenle" exam.pk %}"
+                                                                type="button" class="btn btn-warning"><i
+                                                            class="fa fa-edit"></i>Güncelle
+                                                    </a>
+
+
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+
+
+                                        </tr>
+
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card card-primary">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-primary">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Seçili Sporcular</h3>
+                            </div>
+                            <div class="card-header with-border">
+                                <div class="btn-group">
+                                    <a href="{% url "sbs:kusak-sinavi-sporcu-sec" exam.pk %}"
+                                       type="button" class="btn btn-success"><i
+                                            class="fa fa-edit"></i> Sporculari Ekle
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="sporcular" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Ad Soyad</th>
+                                        <th>Önceki Kuşak</th>
+                                        <th>Sonraki Kuşak</th>
+                                        <th>Lisans No</th>
+                                        <th>İşlemler</th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if exam.athletes.all %}
+                                        {% for athlete in exam.athletes.all %}
+                                            <tr>
+                                                <td>{{ athlete.user.first_name }} {{ athlete.user.last_name }} </td>
+                                                <td>{{ athlete.belts.last.definition.name }}</td>
+                                                <td>{{ athlete.belts.last.definition.parent.name }}</td>
+                                                <td>{{ athlete.licenses.last.licenseNo }}</td>
+                                                <td><a onclick="deleteAthlete({{ athlete.id }}, {{ exam.pk }})"
+                                                       type="button" class="btn btn-danger"><i
+                                                        class="fa fa-edit"></i>Sil
+                                                </a></td>
+
+                                            </tr>
+
+                                        {% endfor %}
+                                    {% endif %}
+
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="card card-primary">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-primary">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Seçili Antronerler</h3>
+                            </div>
+                            <div class="card-header with-border">
+                                <div class="btn-group">
+                                    <a href="{% url "sbs:kusak-sinavi-antroner-sec" exam.pk %}"
+                                       type="button" class="btn btn-success"><i
+                                            class="fa fa-edit"></i> Antronerleri Ekle
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="sporcular" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Ad Soyad</th>
+                                        <th>Kademe</th>
+                                        <th>Vize</th>
+                                        <th>İşlemler</th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if exam.coachs.all %}
+                                        {% for coach in exam.coachs.all %}
+                                            <tr>
+                                                <td>{{ coach.user.first_name }} {{ coach.user.last_name }} </td>
+                                                <td>{{ coach.grade }}</td>
+                                                <td>{{ coach.visa }}</td>
+                                                <td><a onclick="deleteAntroner({{ coach.id }}, {{ exam.pk }})"
+                                                       type="button" class="btn btn-danger"><i
+                                                        class="fa fa-edit"></i>Sil
+                                                </a></td>
+
+                                            </tr>
+
+                                        {% endfor %}
+                                    {% endif %}
+
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            </form>
+        </div>
+        </div>
+
+    </section>
+    <script>
+        function deleteAntroner(id, exam_pk) {
+
+            console.log(id);
+            console.log(exam_pk)
+            var html = '';
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "sbs:kulup-sinavi-antroner-sil" pk=212121223232323232 exam_pk=999999999999999 %}".replace(/212121223232323232/, id.toString()).replace(/999999999999999/, exam_pk.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Başarıyla Silindi.';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:kusak-sinavi-incele" exam.pk %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        };
+
+        function deleteAthlete(id, exam_pk) {
+
+            console.log(id);
+            console.log(exam_pk)
+            var html = '';
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "sbs:kulup-sinavi-sporcu-sil" pk=212121223232323232 exam_pk=999999999999999 %}".replace(/212121223232323232/, id.toString()).replace(/999999999999999/, exam_pk.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Kuşak Başarıyla Silindi.';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "sbs:kusak-sinavi-incele" exam.pk %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        };
+    </script>
+{% endblock %}
+
+
+

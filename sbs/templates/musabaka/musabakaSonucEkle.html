@@ -1,0 +1,192 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+    <section class="content-header">
+        <h1>
+            Müsabaka Sonuc Ekle
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Müsabaka Sonuc Ekle</a></li>
+
+        </ol>
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Müsabaka</label>
+                                        <select required  class="form-control" id="competitions" name="competitions" >
+                                            <option selected> Seçiniz</option>
+                                            {% for item in competition %}
+                                                <option value="{{ item.pk }}">{{ item.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Kategori</label>
+                                        <select required  class="form-control" id="categori" name="categori" required>
+                                            <option selected> Seçiniz</option>
+                                            {#                                            {% for item in categori %}#}
+                                            {#                                            <option value="{{ item.pk }}">{{ item.kategoriadi }}</option>#}
+                                            {#                                            {% endfor %}#}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Sporcu</label>
+                                        <select required  class="form-control" id="athlete" name="athlete" required>
+                                            <option selected> Seçiniz</option>
+                                            {#                                            {% for item in categori %}#}
+                                            {#                                            <option value="{{ item.pk }}">{{ item.kategoriadi }}</option>#}
+                                            {#                                            {% endfor %}#}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Derece</label>
+                                        <input name="degre" class="form-control" type="number" placeholder="Derece"
+                                               required="required">
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+
+
+    </section>
+
+
+
+
+
+    <script>
+
+
+        $("#competitions").change(function () {
+
+            $("#categori option").each(function () {
+                $(this).remove();
+            });
+            $("#athlete option").each(function () {
+                            $(this).remove();
+                        });
+            $('#categori').append("<option>Seçiniz</option>")
+            {% if categori %}
+                $('#categori').append("{% for item in categori %}<option value='{{item.pk}}'>{{ item.kategoriadi }}</option>{% endfor %}")
+            {% endif %}
+        });
+
+        $("#categori").change(function () {
+
+
+            categori = $("#categori option:selected").val();
+            competition = $("#competitions option:selected").val();
+            if (categori != null && competition != null) {
+                $.ajax({
+                    url: "{% url "sbs:musabaka-sonuc-ajax"%}",
+                    type: "POST",
+                    data: {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+                        categori: categori,
+                        competition: competition,
+                        isActive: 'False',
+
+                    },
+
+                    success: function (result) {
+
+                        $("#athlete option").each(function () {
+                            $(this).remove();
+                        });
+
+
+                        result.athlete.forEach(element => $('#athlete').append("<option value=" + element.pk + ">" + element.name + "</option>"));
+
+                    }
+                });
+
+            } else {
+                alert('lütfen deger seçiniz');
+            }
+
+
+        });
+
+
+    </script>
+
+{% endblock %}
+
+
+
