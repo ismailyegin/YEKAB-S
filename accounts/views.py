@@ -34,10 +34,6 @@ from sbs.models.ReferenceReferee import ReferenceReferee
 from sbs.services import general_methods
 
 
-import os
-import zipfile
-
-
 
 def index(request):
     return render(request, 'accounts/index.html')
@@ -45,6 +41,7 @@ def index(request):
 
 def login(request):
     if request.user.is_authenticated is True:
+        # aktif rol şeklinde degişmeli
         return redirect('sbs:admin')
 
     if request.method == 'POST':
@@ -65,24 +62,24 @@ def login(request):
             # eger user.groups birden fazla ise klup üyesine gönder yoksa devam et
 
             if active == 'KlupUye':
-                return redirect('sbs:kulup-uyesi')
+                return redirect('ekabis:kulup-uyesi')
 
             elif active == 'Antrenor':
-                return redirect('sbs:antrenor')
+                return redirect('ekabis:antrenor')
 
             elif active == 'Hakem':
-                return redirect('sbs:hakem')
+                return redirect('ekabis:hakem')
 
             elif active == 'Sporcu':
-                return redirect('sbs:sporcu')
+                return redirect('ekabis:sporcu')
 
             elif active == 'Yonetim':
-                return redirect('sbs:federasyon')
+                return redirect('ekabis:federasyon')
 
             elif active == 'Admin':
-                return redirect('sbs:admin')
+                return redirect('ekabis:admin')
             elif active == 'Arsiv':
-                return redirect('sbs:evrak-anasayfa')
+                return redirect('ekabis:evrak-anasayfa')
             else:
                 return redirect('accounts:logout')
 

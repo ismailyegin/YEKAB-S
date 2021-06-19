@@ -32,6 +32,7 @@ urlpatterns = [
     # path('accounts/', include('django.contrib.auth.urls'))
     path('', include('accounts.urls')),
     path('sbs/', include('sbs.urls')),
+    path('ekabis/', include('ekabis.urls')),
 
 ]
 
