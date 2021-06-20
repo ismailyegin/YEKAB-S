@@ -77,17 +77,17 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
 
-                'sbs.services.general_methods.aktif',
+                'ekabis.services.general_methods.aktif',
 
-                'sbs.services.general_methods.getMenu',
-                'sbs.services.general_methods.getAdminMenu',
-                'sbs.services.general_methods.getAthleteMenu',
-                'sbs.services.general_methods.getRefereeMenu',
-                'sbs.services.general_methods.getCoachMenu',
-                'sbs.services.general_methods.getDirectoryMenu',
-                'sbs.services.general_methods.getClubUserMenu',
-                'sbs.services.general_methods.getProfileImage',
-                'sbs.services.general_methods.get_notification',
+                'ekabis.services.general_methods.getMenu',
+                'ekabis.services.general_methods.getAdminMenu',
+                'ekabis.services.general_methods.getAthleteMenu',
+                'ekabis.services.general_methods.getRefereeMenu',
+                'ekabis.services.general_methods.getCoachMenu',
+                'ekabis.services.general_methods.getDirectoryMenu',
+                'ekabis.services.general_methods.getClubUserMenu',
+                'ekabis.services.general_methods.getProfileImage',
+                'ekabis.services.general_methods.get_notification',
 
                 # "education.services.general_methods.append_privileges",
             ],
@@ -159,12 +159,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.badminton.gov.tr'
+EMAIL_HOST = 'webmail.kobiltek.com'
 EMAIL_PORT = '587'
-EMAIL_HOST_USER = 'no-reply@badminton.gov.tr'
-EMAIL_HOST_PASSWORD = 'Kobil2013*'
+EMAIL_HOST_USER = 'fatih@kobiltek.com'
+EMAIL_HOST_PASSWORD = 'kobil2013'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = False
+
 
 STATIC_ROOT = ''
 

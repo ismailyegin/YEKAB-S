@@ -1,12 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
-
 from sbs.models.Person import Person
 from sbs.models.Communication import Communication
 from sbs.models.Abirim import Abirim
-
-
-
 class EmployeArsiv(models.Model):
     person = models.OneToOneField(Person, on_delete=models.CASCADE)
     communication = models.OneToOneField(Communication, on_delete=models.CASCADE)
