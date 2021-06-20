@@ -1,0 +1,302 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    <section class="content">
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Ana Sayfa
+
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Ana Sayfa</a></li>
+
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Info cardes -->
+            <div class="row">
+                <div class="col-lg-12 col-xs-12">
+                    <!-- small card -->
+                    <div class="small-card bg-aqua">
+                        <div class="inner">
+                            <h3>{{ total_athlete }}</h3>
+
+                            <p>Sporcu Sayısı</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa  fa-flag-checkered"></i>
+                        </div>
+                        <a href="{% url "sbs:sporcular" %}" class="small-card-footer">
+                            Daha Fazla <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- ./col -->
+
+                <!-- ./col -->
+                <div class="col-lg-6 col-xs-6">
+                    <!-- small card -->
+                    <div class="small-card bg-yellow">
+                        <div class="inner">
+                            <h3>{{ total_club_user }}</h3>
+
+                            <p>Üye Sayısı</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-ios-people-outline"></i>
+                        </div>
+                        <a href="{% url "sbs:kulup-uyeleri" %}" class="small-card-footer">
+                            Daha Fazla <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+
+            <section class="content ">
+                <div class="row">
+
+                    {#            <div class="col-lg-6">#}
+                    {#                <div class="card card-primary">#}
+                    {#                    <div class="card-header with-border">#}
+                    {#                        <h3 class="card-title">Onay Bekleyen Kuşaklar</h3>#}
+                    {#                    </div>#}
+                    {#                    <div class="card-body">#}
+                    {#                     <table id="belt" class="table table-bordered table-hover">#}
+                    {#                            <thead>#}
+                    {#                            <tr>#}
+                    {#                                <th>#</th>#}
+                    {#                                <th> Ad</th>#}
+                    {#                                {% if user.groups.all.0 == 'Yonetim' or user.groups.all.0 == 'Admin' %}#}
+                    {#                                    <th>Kulüp</th>#}
+                    {#                                {% endif %}#}
+                    {##}
+                    {#                                <th> İşlemler</th>#}
+                    {##}
+                    {##}
+                    {#                            </tr>#}
+                    {#                            </thead>#}
+                    {#                            <tbody>#}
+                    {#                            {% if belts.all %}#}
+                    {#                                {% for belt in belts %}#}
+                    {#                                    <tr>#}
+                    {##}
+                    {#                                        <td>{{ forloop.counter }} </td>#}
+                    {##}
+                    {#                                        <td>#}
+                    {##}
+                    {#                                            <a target="_blank"> {{ belt.athlete_set.first }}</a>#}
+                    {##}
+                    {#                                        </td>#}
+                    {##}
+                    {#                                        {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}#}
+                    {#                                            <td>{{ belt.athlete_set.first.licenses.last.sportsClub }}</td>#}
+                    {#                                        {% endif %}#}
+                    {##}
+                    {##}
+                    {#                                        <td>#}
+                    {#                                            <div class="btn-group">#}
+                    {#                                                <a href="#"#}
+                    {#                                                   type="button" class="btn btn-success"><i#}
+                    {#                                                        class="fa fa-check"></i>#}
+                    {#                                                </a>#}
+                    {#                                                <a class="btn btn-danger"#}
+                    {#                                                   data-toggle="modal"><i#}
+                    {#                                                        class="fa fa-times"></i></a>#}
+                    {##}
+                    {#                                            </div>#}
+                    {#                                        </td>#}
+                    {##}
+                    {##}
+                    {#                                    </tr>#}
+                    {##}
+                    {#                                {% endfor %}#}
+                    {#                            {% endif %}#}
+                    {##}
+                    {##}
+                    {#                            </tbody>#}
+                    {#                        </table>#}
+                    {#                    </div>#}
+                    {#                </div>#}
+                    {##}
+                    {##}
+                    {#            </div>#}
+                </div>
+                {% if athletes.all %}
+
+                    <div class="row">
+
+
+                        <div class="card card-primary">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Bilgileri Eksik Sporcular</h3>
+                            </div>
+                            {#                        <div class="card-header with-border">#}
+                            {#                            <div class="btn-group">#}
+                            {#                                <a href="{% url "sbs:sporcu-ekle" %}"#}
+                            {#                                   type="button" class="btn btn-success"><i#}
+                            {#                                        class="fa fa-edit"></i> Yeni Sporcu Ekle#}
+                            {#                                </a>#}
+                            {#                            </div>#}
+                            {#                        </div>#}
+
+
+                            <div class="card-body">
+                                <table id="sporcular" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th> Ad Soyad</th>
+
+
+                                        <th>İşlemler</th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% for athlete in athletes %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ athlete.user.first_name }} {{ athlete.user.last_name }} </td>
+
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{% url "sbs:update-athletes" athlete.pk %}"
+                                                       type="button" class="btn btn-warning"><i
+                                                            class="fa fa-edit"></i>İncele
+                                                    </a>
+
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                            <!-- /.card -->
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <script>
+                        $(function () {
+                            $('#sporcular').DataTable({
+
+
+                                dom: 'Bfrtip',
+
+                                language: {
+                                    buttons: {
+                                        pageLength: {
+                                            _: " %d  Tane Göster",
+                                            '-1': "Hepsini Göster"
+                                        }
+                                    }
+                                },
+
+                                lengthMenu: [
+                                    [10, 25, 50, 100, -1],
+                                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                                ],
+
+                                'buttons': [
+
+
+                                    {
+                                        extend: "pageLength",
+                                    },
+
+
+                                    {
+                                        extend: 'colvis',
+                                        text: '<i class=" fa  fa-th-list"></i>',
+                                        titleAttr: 'Ekle Çıkar'
+
+
+                                    },
+                                    {
+                                        extend: 'print',
+                                        title: 'Sporcular',
+                                        text: '<i class="fa  fa-print"></i>',
+                                        exportOptions: {
+                                            columns: [0, 1, 2, 3, 4, 5]
+                                        },
+                                        titleAttr: 'Yazdır'
+                                    },
+                                    {
+                                        extend: 'pdfHtml5',
+                                        download: 'open',
+                                        text: '<i class="fa fa-file-pdf-o"></i>',
+                                        exportOptions: {
+                                            columns: [0, 1, 2, 3, 4, 5]
+                                        },
+                                        titleAttr: 'Pdf Kaydet'
+                                    },
+
+                                    {
+                                        extend: 'excelHtml5',
+                                        title: 'Sporcular',
+                                        text: '<i class="fa fa-file-excel-o"></i>',
+                                        messageTop: 'Halter Bilgi Sistemi ',
+
+                                        exportOptions: {
+
+                                            columns: [0, 2, 1, 3, 4, 5]
+
+                                        },
+                                        titleAttr: 'Excel Kaydet'
+                                    },
+                                    {
+                                        text: '<i class="fa fa-file-text-o"></i>',
+                                        action: function (e, dt, button, config) {
+                                            var data = dt.buttons.exportData();
+
+                                            $.fn.dataTable.fileSave(
+                                                new Blob([JSON.stringify(data)]),
+                                                'Sporcular.json'
+                                            );
+                                        }
+                                    }
+
+
+                                ],
+                                'bubble': true,
+                                'paging': true,
+                                'lengthChange': true,
+                                'searching': true,
+                                'ordering': true,
+                                'info': true,
+                                'autoWidth': true,
+                                'responsive': true,
+                                {#'select': true,#}
+
+
+                            });
+
+                        });
+
+
+                    </script>
+
+
+                {% endif %}
+{% endblock %}

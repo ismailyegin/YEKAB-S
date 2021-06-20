@@ -1,0 +1,715 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+    <section class="content-header">
+        <h1>
+            Firma Güncelle
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Firma Güncelle </a></li>
+
+        </ol>
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Genel Bilgiler</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label> {{ company_form.isFormal.label }}</label>
+                                {{ company_form.isFormal }}
+                            </div>
+
+                            <div class="form-group">
+                                <label> {{ company_form.name.label }}</label>
+                                {{ company_form.name }}
+                            </div>
+                            <div class="form-group">
+                                <label> {{ company_form.degree.label }}</label>
+                                {{ company_form.degree }}
+                            </div>
+
+
+                            <div class="form-group">
+                                <label> {{ company_form.taxOffice.label }}</label>
+                                {{ company_form.taxOffice }}
+                            </div>
+                            <div class="form-group">
+                                <label id="labelTaxNumber"> {{ company_form.taxnumber.label }}</label>
+                                {{ company_form.taxnumber }}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ company_form.sorumlu.label }}</label>
+
+                                {{ company_form.sorumlu }}
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">İletişim Bilgileri</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ company_form.mail.label }}</label>
+                                        {{ company_form.mail }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber.label }}</label>
+                                        {{ communication_form.phoneNumber }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber2.label }}</label>
+                                        {{ communication_form.phoneNumber2 }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ communication_form.country.label }}</label>
+                                        {{ communication_form.country }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.city.label }}</label>
+                                        {{ communication_form.city }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.postalCode.label }}</label>
+                                        {{ communication_form.postalCode }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label> {{ communication_form.address.label }}</label>
+                                        {{ communication_form.address }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
+
+                    <div class="box-body">
+
+
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+
+                                    Proje İş Tanımlari </h3>
+
+                            </div>
+
+                            <div class="box-header with-border">
+
+
+                                <div class="form-group">
+                                    <label>İş Tanımları</label>
+                                    <select class="form-control select2" multiple="multiple " name="jobDesription"
+                                            id="multipleSelect"
+                                            data-placeholder="İş Tanımı Seçiniz">
+                                        {% for item in jobDescription %}
+                                            <option value="{{ item.pk }}">{{ item.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="box-footer">
+                                    <button class="btn btn-primary" type="submit">Kaydet</button>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <!-- /.box -->
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+
+                <section class="col-lg-12 ">
+
+
+                    <div class="box-body">
+
+
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+
+                                    {{ company_form.instance }} İhale Projeleri </h3>
+
+                            </div>
+
+                            <div class="box-header with-border">
+                                <div class="btn-group">
+                                    {#                                    {% if user.groups.all.0.name == 'Admin' %}#}
+
+                                    {#                                        <a href="{% url "sbs:proje-ekle" %}"#}
+                                    {#                                           type="button" class="btn btn-success"><i#}
+                                    {#                                                class="fa fa-edit"></i> Yeni Proje Ekle#}
+                                    {#                                        </a>#}
+                                    {#                                    {% endif %}#}
+                                </div>
+                            </div>
+
+                            <div class="box-body table-responsive">
+                                <table id="projects" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tanımı</th>
+                                        <th>İli</th>
+                                        <th>Bütçe Yılı</th>
+                                        <th>Yatırım Programı</th>
+                                        <th>Proje Durumu</th>
+                                        <th>Proje Cinsi</th>
+                                        <th>İs Bitim Tarihi</th>
+                                        <th>Açıklama</th>
+                                        <th>İşlemler</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if projects.all %}
+                                        {% for project in projects.all %}
+                                            {% if project.projectStatus  ==  'Proje tamamlandı' %}
+                                                <tr style="background-color:#E1d7d7">
+
+                                                    {% else %}
+                                                <tr>
+
+
+                                            {% endif %}
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ project.name }} </td>
+                                        <td>{{ project.city }} </td>
+                                        <td>{{ project.butceYili }} </td>
+                                        <td>{{ project.butceCinsi }} </td>
+                                        <td>{{ project.projectStatus }}</td>
+                                        <td>{{ project.projeCinsi }}</td>
+
+                                        <td>{{ project.aifinish |date:"d/m/Y" }}</td>
+                                        <td>{{ project.phases.all.last.definition }} </td>
+                                        <td>
+                                            <div class="btn-group ">
+
+                                                {% if user.groups.all.0.name == 'Admin' %}
+                                                    <a href="{% url "sbs:proje-duzenle" project.pk %}"
+                                                       type="button" class="btn btn-warning btn-lg"><i
+                                                            class="fa fa-edit"></i>
+                                                    </a>
+                                                {% else %}
+
+                                                    <a href="{% url "sbs:proje-incele-personel" project.pk %}"
+                                                       type="button" class="btn btn-warning btn-lg"><i
+                                                            class="fa fa-edit"></i>
+                                                    </a>
+
+                                                {% endif %}
+
+                                            </div>
+                                        </td>
+
+                                        </tr>
+
+                                        {% endfor %}
+                                    {% endif %}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <!-- /.box -->
+
+
+                    </div>
+                </section>
+
+
+            </div>
+
+
+            <div class="row">
+
+
+                <section class="col-lg-12 ">
+
+
+                    <div class="box-body">
+
+
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+
+                                    {{ company_form.instance }} Alt Projeleri </h3>
+
+                            </div>
+
+                            <div class="box-header with-border">
+                                <div class="btn-group">
+                                    {#                                    {% if user.groups.all.0.name == 'Admin' %}#}
+                                    {##}
+                                    {#                                        <a href="{% url "sbs:proje-ekle" %}"#}
+                                    {#                                           type="button" class="btn btn-success"><i#}
+                                    {#                                                class="fa fa-edit"></i> Yeni Proje Ekle#}
+                                    {#                                        </a>#}
+                                    {#                                    {% endif %}#}
+                                </div>
+                            </div>
+
+                            <div class="box-body table-responsive">
+                                <table id="subprojects" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+
+                                        <th>Tanımı</th>
+                                        <th>İli</th>
+                                        <th>İs Tanımı</th>
+                                        <th>Bütçe Yılı</th>
+                                        <th>Yatırım Programı</th>
+                                        <th>Proje Durumu</th>
+                                        <th>Proje Cinsi</th>
+                                        <th>İs Bitim Tarihi</th>
+                                        <th>Açıklama</th>
+                                        <th>İşlemler</th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if subProject.all %}
+                                        {% for project in subProject.all %}
+                                            {% for item in project.subcompany.all %}
+                                                {% if item.company.pk == company.pk %}
+                                                    {% if project.projectStatus  ==  'Proje tamamlandı' %}
+                                                        <tr style="background-color:#E1d7d7">
+
+                                                            {% else %}
+                                                        <tr>
+
+
+                                                    {% endif %}
+                                                <td></td>
+                                                <td>{{ project.name }} </td>
+                                                <td>{{ project.city }} </td>
+                                                <td>
+
+
+                                                    {{ item.jopDescription }}
+
+
+                                                </td>
+                                                <td>{{ project.butceYili }} </td>
+                                                <td>{{ project.butceCinsi }} </td>
+                                                <td>{{ project.projectStatus }}</td>
+                                                <td>{{ project.projeCinsi }}</td>
+
+                                                <td>{{ project.aifinish |date:"d/m/Y" }}</td>
+                                                <td>{{ project.phases.all.last.definition }} </td>
+                                                <td>
+                                                    <div class="btn-group ">
+
+                                                        {% if user.groups.all.0.name == 'Admin' %}
+                                                            <a href="{% url "sbs:proje-duzenle" project.pk %}"
+                                                               type="button" class="btn btn-warning btn-lg"><i
+                                                                    class="fa fa-edit"></i>
+                                                            </a>
+
+
+                                                        {% else %}
+
+                                                            <a href="{% url "sbs:proje-incele-personel" project.pk %}"
+                                                               type="button" class="btn btn-warning btn-lg"><i
+                                                                    class="fa fa-edit"></i>
+                                                            </a>
+
+                                                        {% endif %}
+
+                                                    </div>
+                                                </td>
+
+                                                </tr>
+
+
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        {% endfor %}
+                                    {% endif %}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <!-- /.box -->
+
+
+                    </div>
+                </section>
+
+
+            </div>
+
+        </form>
+
+
+    </section>
+
+
+    <script>
+
+        $(document).ready(function () {
+            var jop = new Array();
+            {% for item in company.JopDescription.all %}
+                jop.push("{{ item.pk }}");
+            {% endfor %}
+            $('#multipleSelect').val(jop);
+
+
+            isFormal = $("#id_isFormal option:selected").text();
+
+            if (isFormal == 'Bireysel') {
+                $('#labelTaxNumber').html('TC Kimlik Numarasi');
+
+            } else {
+                $('#labelTaxNumber').html('Vergi Numarası');
+            }
+
+            $('#id_isFormal').change(function () {
+                selected = $("#id_isFormal option:selected").text();
+                if (selected == 'Kurumsal') {
+                    $('#labelTaxNumber').html('Vergi Numarası');
+                } else {
+                    $('#labelTaxNumber').html('TC Kimlik Numarasi');
+                }
+
+            });
+
+            $('#projects').DataTable({
+
+                dom: 'Bfrtip',
+                {#orderFixed: [[6, 'asc']],#}
+                {#rowGroup: {#}
+                {#    dataSrc: 6#}
+                {# },#}
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+
+
+                    {
+                        extend: "pageLength",
+
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Projeler',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL',
+                        exportOptions: {
+                            columns: [0, 1, ':visible'],
+
+
+                        },
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Projeler',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Etüt Bilgi Sistemi ',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Projeler.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true, "columnDefs": [
+                    {responsivePriority: 1, targets: 1},
+                    {responsivePriority: 2, targets: 7},
+                ],
+                'responsive': {
+                    'details': {
+
+
+                        'display': $.fn.dataTable.Responsive.display.modal({
+                            'header': function (row) {
+                                var data = row.data();
+                                return data[1];
+                            }
+                        }),
+                        'renderer': $.fn.dataTable.Responsive.renderer.tableAll(),
+                    }
+                },
+
+
+            });
+
+            $('#subprojects').DataTable({
+
+                dom: 'Bfrtip',
+                orderFixed: [[3, 'asc']],
+                rowGroup: {
+
+
+                    startRender: function (rows, group) {
+                        return group + ' (' + rows.count() + ')';
+                    },
+                    dataSrc: 3,
+
+
+                },
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+
+
+                    {
+                        extend: "pageLength",
+
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Projeler',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL',
+                        exportOptions: {
+                            columns: [0, 1, ':visible'],
+
+
+                        },
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Projeler',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Etüt Bilgi Sistemi ',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Projeler.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true, "columnDefs": [
+                    {responsivePriority: 1, targets: 1},
+                    {responsivePriority: 2, targets: 7},
+                ],
+                'responsive': {
+                    'details': {
+
+
+                        'display': $.fn.dataTable.Responsive.display.modal({
+                            'header': function (row) {
+                                var data = row.data();
+                                return data[1];
+                            }
+                        }),
+                        'renderer': $.fn.dataTable.Responsive.renderer.tableAll(),
+                    }
+                },
+
+
+            });
+        });
+
+
+    </script>
+
+{% endblock %}
+
+

@@ -42,7 +42,7 @@ def index(request):
 def login(request):
     if request.user.is_authenticated is True:
         # aktif rol şeklinde degişmeli
-        return redirect('sbs:admin')
+        return redirect('ekabis:admin')
 
     if request.method == 'POST':
 

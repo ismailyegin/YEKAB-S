@@ -1,0 +1,308 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+
+    <section class="content">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Ana Sayfa
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Ana Sayfa</a></li>
+
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Info cardes -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-card">
+                    <span class="info-card-icon bg-aqua"><i class="ion ion-ios-people-outline"></i></span>
+
+                    <div class="info-card-content">
+                        <span class="info-card-text">Sporcu Sayısı</span>
+                        <span class="info-card-number">{{ athlete_count }}</span>
+                    </div>
+                    <!-- /.info-card-content -->
+                </div>
+                <!-- /.info-card -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-card">
+                    <span class="info-card-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
+
+                    <div class="info-card-content">
+                        <span class="info-card-text">Antrenör Sayısı</span>
+                        <span class="info-card-number">{{ total_coachs }}</span>
+                    </div>
+                    <!-- /.info-card-content -->
+                </div>
+                <!-- /.info-card -->
+            </div>
+            <!-- /.col -->
+
+            <!-- fix for small devices only -->
+            <div class="clearfix visible-sm-block"></div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-card">
+                    <span class="info-card-icon bg-green"><i class="ion ion-android-menu"></i></span>
+
+                    <div class="info-card-content">
+                        <span class="info-card-text">Kulüp Sayısı</span>
+                        <span class="info-card-number">{{ total_club }}</span>
+                    </div>
+                    <!-- /.info-card-content -->
+                </div>
+                <!-- /.info-card -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-card">
+                    <span class="info-card-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
+
+                    <div class="info-card-content">
+                        <span class="info-card-text">Hakem Sayısı</span>
+                        <span class="info-card-number">{{ total_judge }}</span>
+                    </div>
+                    <!-- /.info-card-content -->
+                    </div>
+                <!-- /.info-card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        {#müsabaka raporu#}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">Müsabaka Raporu</h3>
+
+                        <div class="card-tools pull-right">
+                            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-card-tool" data-widget="remove"><i
+                                    class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p class="text-center">
+                                    <strong>Badminton Müsabaka Sporcu Sayısı</strong>
+                                </p>
+
+                                <div class="chart">
+                                    <!-- Sales Chart Canvas -->
+                                    <canvas id="salesChart2"></canvas>
+                                </div>
+                                <!-- /.chart-responsive -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-4">
+{#                                <p class="text-center">#}
+{#                                    <strong>{{ lastcompetition.name }}</strong>#}
+{#                                </p>#}
+
+                                <div class="progress-group">
+                                    <span class="progress-text">Toplam Sporcu</span>
+                                    <span class="progress-number"><b>{{ competition_athlete_count }}</b>/{{ max }}</span>
+
+                                    <div class="progress sm">
+                                        <div class="progress-bar progress-bar-aqua"
+                                             style="width: {{ max_x }}%"></div>
+                                    </div>
+                                </div>
+                                <!-- /.progress-group -->
+                                <div class="progress-group">
+                                    <span class="progress-text">Toplam Erkek Sporcu</span>
+                                    <span class="progress-number"><b>{{ competition_male }}</b>/{{ max_male }}</span>
+
+                                    <div class="progress sm">
+                                        <div class="progress-bar progress-bar-red"
+                                             style="width: {{ competition_male_x }}%"></div>
+                                    </div>
+                                </div>
+                                <!-- /.progress-group -->
+                                <div class="progress-group">
+                                    <span class="progress-text">Toplam Kadın Sporcu</span>
+                                    <span class="progress-number"><b>{{ competition_female }}</b>/{{ max_female }}</span>
+
+                                    <div class="progress sm">
+                                        <div class="progress-bar progress-bar-green"
+                                             style="width: {{ competition_female_x }}%"></div>
+                                    </div>
+                                </div>
+                                <!-- /.progress-group -->
+
+                            </div>
+
+
+                            <!-- /.col -->
+                        </div>
+
+                        <!-- /.row -->
+                        <div class="row">
+
+
+                            {% for item in data %}
+
+                                <div class="col-sm-2 col-xs-6">
+                                    <div class="description-block border-right">
+                                        <span class="description-percentage text-green">{{ item.competiton.startDate |date }}</span>
+                                        <h5 class="description-header">{{ item.count }}</h5>
+                                        <span class="description-text">{{ item.competiton.name }}</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                            {% endfor %}
+                            <!-- /.col -->
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </section>
+    </section>
+    <script>
+
+
+        $(function () {
+
+
+            var salesChartCanvas = $('#salesChart2').get(0).getContext('2d');
+            // This will get the first returned node in the jQuery collection.
+            var salesChart = new Chart(salesChartCanvas);
+
+            var salesChartData = {
+                labels: [{% for item in data %}'{{ item.competiton.startDate |date }}',{% endfor %}],
+
+                datasets: [
+
+
+                    {
+                        label: 'Digital Goods',
+                        fillColor: 'rgba(60,141,188,0.9)',
+                        strokeColor: 'rgba(60,141,188,0.8)',
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: [{% for item in data %}{{ item.count }}, {% endfor %}],
+                    }
+
+                ]
+            };
+            var salesChartOptions = {
+                // Boolean - If we should show the scale at all
+                showScale: true,
+                // Boolean - Whether grid lines are shown across the chart
+                scaleShowGridLines: false,
+                // String - Colour of the grid lines
+                scaleGridLineColor: 'rgba(0,0,0,.05)',
+                // Number - Width of the grid lines
+                scaleGridLineWidth: 1,
+                // Boolean - Whether to show horizontal lines (except X axis)
+                scaleShowHorizontalLines: true,
+                // Boolean - Whether to show vertical lines (except Y axis)
+                scaleShowVerticalLines: true,
+                // Boolean - Whether the line is curved between points
+                bezierCurve: true,
+                // Number - Tension of the bezier curve between points
+                bezierCurveTension: 0.3,
+                // Boolean - Whether to show a dot for each point
+                pointDot: false,
+                // Number - Radius of each point dot in pixels
+                pointDotRadius: 4,
+                // Number - Pixel width of point dot stroke
+                pointDotStrokeWidth: 1,
+                // Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+                pointHitDetectionRadius: 20,
+                // Boolean - Whether to show a stroke for datasets
+                datasetStroke: true,
+                // Number - Pixel width of dataset stroke
+                datasetStrokeWidth: 2,
+                // Boolean - Whether to fill the dataset with a color
+                datasetFill: true,
+                // String - A legend template
+                legendTemplate: ' ',
+                // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                maintainAspectRatio: true,
+                // Boolean - whether to make the chart responsive to window resizing
+                responsive: true
+            };
+
+            // Create the line chart
+            salesChart.Line(salesChartData, salesChartOptions);
+
+
+            var pieChartCanvas = $('#pieChart2').get(0).getContext('2d');
+            var pieChart = new Chart(pieChartCanvas);
+            var PieData = [
+                {
+                    value: 1678,
+                    color: '#f56954',
+                    highlight: '#f56954',
+                    label: 'Kadın'
+                },
+                {
+                    value: 3764,
+                    color: '#00a65a',
+                    highlight: '#00a65a',
+                    label: 'Erkek'
+                },
+
+            ];
+            var pieOptions = {
+                // Boolean - Whether we should show a stroke on each segment
+                segmentShowStroke: true,
+                // String - The colour of each segment stroke
+                segmentStrokeColor: '#fff',
+                // Number - The width of each segment stroke
+                segmentStrokeWidth: 1,
+                // Number - The percentage of the chart that we cut out of the middle
+                percentageInnerCutout: 50, // This is 0 for Pie charts
+                // Number - Amount of animation steps
+                animationSteps: 100,
+                // String - Animation easing effect
+                animationEasing: 'easeOutBounce',
+                // Boolean - Whether we animate the rotation of the Doughnut
+                animateRotate: true,
+                // Boolean - Whether we animate scaling the Doughnut from the centre
+                animateScale: false,
+                // Boolean - whether to make the chart responsive to window resizing
+                responsive: true,
+                // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                maintainAspectRatio: false,
+                // String - A legend template
+                legendTemplate: '',
+                // String - A tooltip template
+                tooltipTemplate: ''
+            };
+            // Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            pieChart.Doughnut(PieData, pieOptions);
+            // -----------------
+            // - END PIE CHART -
+        });
+
+
+    </script>
+
+
+
+{% endblock %}

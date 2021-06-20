@@ -1,0 +1,208 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+    <section class="content-header">
+        <h1>
+            Firma Ekle
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Firma Ekle</a></li>
+
+        </ol>
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Genel Bilgiler</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label> {{ company_form.isFormal.label }}</label>
+                                {{ company_form.isFormal }}
+                            </div>
+
+                            <div class="form-group">
+                                <label> {{ company_form.name.label }}</label>
+                                {{ company_form.name }}
+                            </div>
+                            <div class="form-group">
+                                <label> {{ company_form.degree.label }}</label>
+                                {{ company_form.degree }}
+                            </div>
+
+
+                            <div class="form-group">
+                                <label> {{ company_form.taxOffice.label }}</label>
+                                {{ company_form.taxOffice }}
+                            </div>
+                            <div class="form-group">
+                                <label id="labelTaxNumber"> {{ company_form.taxnumber.label }}</label>
+                                {{ company_form.taxnumber }}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ company_form.sorumlu.label }}</label>
+
+                                {{ company_form.sorumlu }}
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>İş Tanımları</label>
+                                <select class="form-control select2" name="jobDesription" multiple="multiple "
+                                        id="multipleSelect"
+                                        data-placeholder="İş Tanımlarini  Seçiniz">
+                                    {% for item in  jobDescription %}
+                                        <option value="{{ item.pk }}">{{ item.name }}</option>
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+
+
+                        </div>
+                        <div class="box-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">İletişim Bilgileri</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ company_form.mail.label }}</label>
+                                        {{ company_form.mail }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber.label }}</label>
+                                        {{ communication_form.phoneNumber }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber2.label }}</label>
+                                        {{ communication_form.phoneNumber2 }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ communication_form.country.label }}</label>
+                                        {{ communication_form.country }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.city.label }}</label>
+                                        {{ communication_form.city }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.postalCode.label }}</label>
+                                        {{ communication_form.postalCode }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label> {{ communication_form.address.label }}</label>
+                                        {{ communication_form.address }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+
+    </section>
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#id_isFormal').change(function () {
+                selected = $("#id_isFormal option:selected").text();
+                if (selected == 'Kurumsal') {
+                    $('#labelTaxNumber').html('Vergi Numarası');
+                } else {
+                    $('#labelTaxNumber').html('TC Kimlik Numarasi');
+                }
+
+
+            });
+        });
+
+
+    </script>
+
+{% endblock %}
+
+
