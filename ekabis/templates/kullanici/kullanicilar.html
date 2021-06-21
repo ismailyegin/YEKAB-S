@@ -357,13 +357,13 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'SBS',
+                         title: 'Yekabis',
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'SBS',
+                        title: 'Yekabis',
                         text: "Yazdır",
                         titleAttr: 'Yazdır'
                     },
@@ -371,7 +371,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'SBS',
+                         title: 'Yekabis',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -379,7 +379,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'SBS',
+                         title: 'Yekabis',
                     },
                     {
                         text: 'Json',
@@ -388,7 +388,7 @@
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'sbs.json'
+                                'yekabis.json'
                             );
                         }
                     }
@@ -417,7 +417,7 @@
             $("#modal-active").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
                     $.ajax({
-                        url: "{% url "sbs:kullanici-aktifet" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:kullanici-aktifet" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -431,14 +431,11 @@
                             $('#modal-success').on("shown.bs.modal", function (e) {
                                 $(".btn-ok").click(function () {
 
-                                    window.location.replace("{% url "sbs:kullanicilar" %}");
+                                    window.location.replace("{% url "ekabis:kullanicilar" %}");
 
                                 });
 
                             }).modal('show');
-
-
-                            console.log(result.status)
                         }
                     });
                 });
@@ -456,7 +453,7 @@
             $("#modal-mail").on("shown.bs.modal", function (e) {
                 $("#btn-conf12").click(function () {
                         $.ajax({
-                            url: "{% url "sbs:kullanici-bilgi-gonder" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                            url: "{% url "ekabis:kullanici-bilgi-gonder" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
                             type: "POST",
                             data: {
                                 'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -471,7 +468,7 @@
                                     $('#modal-success-danger').on("shown.bs.modal", function (e) {
                                         $(".btn-ok").click(function () {
 
-                                            window.location.replace("{% url "sbs:kullanicilar" %}");
+                                            window.location.replace("{% url "ekabis:kullanicilar" %}");
 
                                         });
                                     }).modal('show');
@@ -484,7 +481,7 @@
                                     $('#modal-success').on("shown.bs.modal", function (e) {
                                         $(".btn-ok").click(function () {
 
-                                            window.location.replace("{% url "sbs:kullanicilar" %}");
+                                            window.location.replace("{% url "ekabis:kullanicilar" %}");
 
                                         });
                                     }).modal('show');

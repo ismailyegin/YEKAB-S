@@ -49,15 +49,24 @@
 
 
     <section class="content-header">
-        <h1>
-            Firma Ekle
 
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Firma Ekle</a></li>
 
-        </ol>
-    </section>
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>{{ aktif }}-
+                            Firma Ekle</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Firma Ekle</a></li>
+                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </section>
     <section class="content">
 
         <form method="post" enctype="multipart/form-data" role="form">
@@ -65,11 +74,11 @@
             <div class="row">
 
                 <div class="col-lg-6">
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Genel Bilgiler</h3>
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Genel Bilgiler</h3>
                         </div>
-                        <div class="box-body">
+                        <div class="card-body">
                             <div class="form-group">
                                 <label> {{ company_form.isFormal.label }}</label>
                                 {{ company_form.isFormal }}
@@ -100,21 +109,21 @@
                             </div>
 
 
-                            <div class="form-group">
-                                <label>İş Tanımları</label>
-                                <select class="form-control select2" name="jobDesription" multiple="multiple "
-                                        id="multipleSelect"
-                                        data-placeholder="İş Tanımlarini  Seçiniz">
-                                    {% for item in  jobDescription %}
-                                        <option value="{{ item.pk }}">{{ item.name }}</option>
-                                    {% endfor %}
-
-                                </select>
-                            </div>
+{#                            <div class="form-group">#}
+{#                                <label>İş Tanımları</label>#}
+{#                                <select class="form-control select2" name="jobDesription" multiple="multiple "#}
+{#                                        id="multipleSelect"#}
+{#                                        data-placeholder="İş Tanımlarini  Seçiniz">#}
+{#                                    {% for item in  jobDescription %}#}
+{#                                        <option value="{{ item.pk }}">{{ item.name }}</option>#}
+{#                                    {% endfor %}#}
+{##}
+{#                                </select>#}
+{#                            </div>#}
 
 
                         </div>
-                        <div class="box-footer">
+                        <div class="card-footer">
                             <button class="btn btn-primary" type="submit">Kaydet</button>
                         </div>
 
@@ -123,11 +132,11 @@
 
                 </div>
                 <div class="col-lg-6">
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">İletişim Bilgileri</h3>
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">İletişim Bilgileri</h3>
                         </div>
-                        <div class="box-body">
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -167,7 +176,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="box-footer">
+                        <div class="card-footer">
                             <button class="btn btn-primary" type="submit">Kaydet</button>
                         </div>
 

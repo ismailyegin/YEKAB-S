@@ -222,7 +222,7 @@
                     {% if person.profileImage %}
 
                         <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"
-                             src="/demosbs/media/{{ person.profileImage }}">
+                             src="/media/{{ person.profileImage }}">
 
                     {% else %}
                         <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"
@@ -235,7 +235,7 @@
                         {% if person.profileImage %}
 
                             <img alt="İmage" style="height: 100px; width: 100px;" class="rounded-circle"
-                                 src="/demosbs/media/{{ person.profileImage }}">
+                                 src="/media/{{ person.profileImage }}">
 
                         {% else %}
                             <img alt="İmage" style="height: 100px; width: 100px;" class="rounded-circle"
@@ -245,23 +245,15 @@
 
                         <p>
                             {{ user.first_name }}   {{ user.last_name }}
-                            {% if aktif == "KlupUye" %}
-                                <small> Kulüp Üyesi </small>
 
 
-                            {% elif aktif == "Hakem" %}
-                                <small> Hakem</small>
-                            {% elif aktif == "Arsiv" or aktif == 'Personel' %}
-                                <small> Arsiv</small>
+                            {% if aktif == 'Personel' %}
+                                <small> Personel</small>
                             {% elif  aktif ==  "Admin" %}
                                 <small> Admin</small>
 
                             {% elif aktif == "Yonetim" %}
                                 <small> Yönetim</small>
-                            {% elif aktif == "Sporcu" %}
-                                <small> Sporcu </small>
-                            {% elif aktif == "Antrenor" %}
-                                <small> Antrenör</small>
                             {% endif %}
 
                         </p>
@@ -271,7 +263,7 @@
                         <div class="row">
                             {% for gr in group %}
                             <div class="col-md text-center">
-                                <a href="{% url 'sbs:aktive-update' gr.pk %}">{{ gr.name }}</a>
+                                <a href="{% url 'ekabis:aktive-update' gr.pk %}">{{ gr.name }}</a>
                             </div>
                             {% endfor %}
                         </div>
@@ -281,33 +273,22 @@
                     <li class="user-footer">
                         <div class="row">
                               <div class="col-md">
-                                                 {% if aktif == "Sporcu" %}
-                            <a href="{% url "sbs:sporcu-profil-guncelle" %}"
-                               class="btn btn-default btn-flat">Profil Bilgisi</a>
 
-                        {% elif aktif == "Admin" %}
-                            <a href="{% url "sbs:admin-profil-guncelle" %}"
+                        {% if aktif == "Admin" %}
+                            <a href="{% url "ekabis:admin-profil-guncelle" %}"
                                class="btn btn-default btn-flat">Profil Bilgisi</a>
                                                 {% elif aktif == "Arsiv" or aktif == 'Personel' %}
-                            <a href="{% url "sbs:admin-profil-guncelle" %}"
+                            <a href="{% url "ekabis:admin-profil-guncelle" %}"
                                class="btn btn-default btn-flat">Profil Bilgisi</a>
 
-                        {% elif aktif == "Hakem" %}
-                            <a href="{% url "sbs:hakem-profil-guncelle" %}"
-                               class="btn btn-default btn-flat">Profil Bilgisi</a>
+
 
                         {% elif aktif == "Yonetim" %}
-                            <a href="{% url "sbs:yonetim-kurul-profil-guncelle" %}"
+                            <a href="{% url "ekabis:yonetim-kurul-profil-guncelle" %}"
                                class="btn btn-default btn-flat">Profil Bilgisi</a>
 
-
-                        {% elif aktif == "KulupUye" %}
-                            <a href="{% url "sbs:kulup-uyesi-profil-guncelle" %}"
-                               class="btn btn-default btn-flat">Profil Bilgisi</a>
-
-
-                        {% elif aktif == "Antrenor" %}
-                            <a href="{% url "sbs:antrenor-profil-guncelle" %}"
+                        {% elif aktif == "Personel" %}
+                            <a href="{% url "ekabis:yonetim-kurul-profil-guncelle" %}"
                                class="btn btn-default btn-flat">Profil Bilgisi</a>
 
 
@@ -336,12 +317,7 @@
         <a href="#" class="brand-link">
             <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo"
                  class="brand-image img-circle elevation-3" style="opacity: .8">
-            {% if aktif == "Arsiv" or aktif == 'Personel' %}
-                <span class="brand-text white-30 font-weight-light"><small>DİJİTAL ARŞİV SİSTEMİ</small></span>
-            {% else %}
-                <span class="brand-text font-weight-light">SPOR BİLGİ SİSTEMİ</span>
-            {% endif %}
-
+             <span class="brand-text font-weight-light">YEKABİS</span>
         </a>
 
         <!-- Sidebar -->
@@ -380,17 +356,11 @@
                                 </li>
                             {% endif %}
                         {% endfor %}
-                    {% elif aktif == 'Arsiv' or aktif == 'Personel' %}
+                    {% elif aktif == 'Personel' %}
                         {% for menu in arsivmenus %}
                             {% if menu.is_parent %}
                                 <li class="nav-item menu-is-opening menu-open">
-                                    {#                                    <a href="#" class="nav-link ">#}
-                                    {#                                        <i class="nav-icon fas {{ menu.fa_icon }}"></i>#}
-                                    {#                                        <p>#}
-                                    {#                                            {{ menu.name }}#}
-                                    {#                                            <i class="fas fa-angle-left right"></i>#}
-                                    {#                                        </p>#}
-                                    {#                                    </a>#}
+
                                     <ul class="nav nav-treeview">
                                         {% for menusub in arsivmenus %}
                                             {% if menusub.parent.id is menu.id %}
@@ -433,86 +403,8 @@
                                 </li>
                             {% endif %}
                         {% endfor %}
-                    {% elif aktif == 'KlupUye' %}
-                        {% for menu in clubusermenus %}
-                            {% if menu.is_parent %}
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas {{ menu.fa_icon }}"></i>
-                                        <p>
-                                            {{ menu.name }}
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        {% for menusub in clubusermenus %}
-                                            {% if menusub.parent.id is menu.id %}
-                                                <li class="nav-item">
-                                                    <a href="{% url menusub.url %}" class="nav-link">
-                                                        <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                        <p>{{ menusub.name }}</p>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    {% elif aktif == 'Antrenor' %}
-                        {% for menu in coachmenus %}
-                            {% if menu.is_parent %}
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas {{ menu.fa_icon }}"></i>
-                                        <p>
-                                            {{ menu.name }}
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        {% for menusub in coachmenus %}
-                                            {% if menusub.parent.id is menu.id %}
-                                                <li class="nav-item">
-                                                    <a href="{% url menusub.url %}" class="nav-link">
-                                                        <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                        <p>{{ menusub.name }}</p>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    {% elif aktif == 'Hakem' %}
-                        {% for menu in refereemenus %}
-                            {% if menu.is_parent %}
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas {{ menu.fa_icon }}"></i>
-                                        <p>
-                                            {{ menu.name }}
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        {% for menusub in refereemenus %}
-                                            {% if menusub.parent.id is menu.id %}
-                                                <li class="nav-item">
-                                                    <a href="{% url menusub.url %}" class="nav-link">
-                                                        <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                        <p>{{ menusub.name }}</p>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-
                     {% endif %}
+
 
                 </ul>
             </nav>

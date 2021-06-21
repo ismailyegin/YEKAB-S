@@ -10,14 +10,14 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from sbs.Forms.ClaimForm import ClaimForm
-from sbs.services import general_methods
-from sbs.models.Claim import Claim
-from sbs.Forms.DestekSearchForm import DestekSearchform
+from ekabis.Forms.ClaimForm import ClaimForm
+from ekabis.services import general_methods
+from ekabis.models.Claim import Claim
+from ekabis.Forms.DestekSearchForm import DestekSearchform
 from unicode_tr import unicode_tr
-from sbs.Forms.UserSearchForm import UserSearchForm
+from ekabis.Forms.UserSearchForm import UserSearchForm
 
-from sbs.models import MenuDirectory, MenuAdmin
+from ekabis.models import MenuDirectory, MenuAdmin
 
 
 @login_required

@@ -12,6 +12,7 @@ class MenuAdmin(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     count=models.IntegerField(null=True,blank=True)
     kobilid = models.IntegerField(null=True, blank=True, default=1)
+    sorting = models.IntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ['count']

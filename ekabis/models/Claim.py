@@ -2,11 +2,6 @@ import enum
 
 from django.db import models
 
-from sbs.models.Coach import Coach
-from sbs.models.Judge import Judge
-from sbs.models.EnumFields import EnumFields
-
-
 class Claim(models.Model):
     WAITED = 'Beklemede'
     APPROVED = 'Onaylandı'

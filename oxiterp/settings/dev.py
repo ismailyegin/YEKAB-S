@@ -6,7 +6,7 @@ from oxiterp.settings.base import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'taekwondo2',
+        'NAME': 'ekabis',
         'USER': 'root',
         'PASSWORD': 'kobil2013',
         'HOST': 'localhost',

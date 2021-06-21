@@ -361,13 +361,13 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'SBS',
+                         title: 'YEKABİS',
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'SBS',
+                        title: 'YEKABİS',
                         text: "Yazdır",
                         titleAttr: 'Yazdır'
                     },
@@ -375,7 +375,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'SBS',
+                         title: 'YEKABİS',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -383,7 +383,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'SBS',
+                         title: 'YEKABİS',
                     },
                     {
                         text: 'Json',
@@ -392,7 +392,7 @@
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'sbs.json'
+                                'YEKABİS.json'
                             );
                         }
                     }
@@ -413,103 +413,5 @@
         })
     </script>
 
-    <script>
-        function activeUser(id) {
-
-            console.log(id);
-            var html = ''
-            $("#modal-active").on("shown.bs.modal", function (e) {
-                $("#btn-conf1").click(function () {
-                    $.ajax({
-                        url: "{% url "sbs:kullanici-aktifet" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
-                        type: "POST",
-                        data: {
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            isActive: 'False'
-                        },
-                        success: function (result) {
-
-                            html = 'Kullanıcı Durumu Değiştirildi';
-                            debugger;
-                            $(".successModal").html(html);
-                            $('#modal-success').on("shown.bs.modal", function (e) {
-                                $(".btn-ok").click(function () {
-
-                                    window.location.replace("{% url "sbs:kullanicilar" %}");
-
-                                });
-
-                            }).modal('show');
-
-
-                            console.log(result.status)
-                        }
-                    });
-                });
-            }).modal('show');
-            $('#btn-close1').click(function () {
-                $('#modal-active').modal('hide');
-            });
-
-        }
-
-        function sendInform(id) {
-            debugger;
-            console.log(id);
-            var html = ''
-            $("#modal-mail").on("shown.bs.modal", function (e) {
-                $("#btn-conf12").click(function () {
-                        $.ajax({
-                            url: "{% url "sbs:kullanici-bilgi-gonder" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
-                            type: "POST",
-                            data: {
-                                'csrfmiddlewaretoken': "{{  csrf_token  }}",
-
-                            },
-                            success: function (result) {
-
-                                if (result.status == 'Fail') {
-                                    html = result.msg;
-                                    debugger;
-                                    $(".successModalD").html(html);
-                                    $('#modal-success-danger').on("shown.bs.modal", function (e) {
-                                        $(".btn-ok").click(function () {
-
-                                            window.location.replace("{% url "sbs:kullanicilar" %}");
-
-                                        });
-                                    }).modal('show');
-
-
-                                } else {
-                                    html = result.msg;
-                                    debugger;
-                                    $(".successModal").html(html);
-                                    $('#modal-success').on("shown.bs.modal", function (e) {
-                                        $(".btn-ok").click(function () {
-
-                                            window.location.replace("{% url "sbs:kullanicilar" %}");
-
-                                        });
-                                    }).modal('show');
-
-
-                                }
-
-
-                                console.log(result.status)
-                            }
-                        });
-                    }
-                )
-                ;
-            }).modal('show');
-            $('#btn-close2').click(function () {
-                $('#modal-mail').modal('hide');
-            });
-
-        }
-
-    </script>
 {% endblock %}
 

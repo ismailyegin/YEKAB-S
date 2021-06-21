@@ -9,7 +9,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from sbs.services import general_methods
+from ekabis.services import general_methods
 
 from django.core.mail import BadHeaderError, send_mail
 
@@ -22,7 +22,7 @@ def help(request):
         if konu and icerik:
             try:
                 konu = "[" + user.email + "] - " + konu
-                send_mail(konu, icerik, 'taekwondo@kobiltek.com', ['fatih@kobiltek.com'])
+                send_mail(konu, icerik, 'ekabis@kobiltek.com', ['fatih@kobiltek.com'])
                 messages.success(request, 'Yardım ve Destek talebi basari ile gönderilmistir.')
             except BadHeaderError:
                 # print('Invalid header found.')

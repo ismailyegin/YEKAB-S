@@ -48,16 +48,24 @@
 
 
 
-    <section class="content-header">
-        <h1>
-            Firma Güncelle
+     <section class="content-header">
 
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Firma Güncelle </a></li>
 
-        </ol>
-    </section>
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Firma Güncelle</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Firma Güncelle</a></li>
+                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </section>
     <section class="content">
 
         <form method="post" enctype="multipart/form-data" role="form">
@@ -65,11 +73,11 @@
             <div class="row">
 
                 <div class="col-lg-6">
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Genel Bilgiler</h3>
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Genel Bilgiler</h3>
                         </div>
-                        <div class="box-body">
+                        <div class="card-body">
                             <div class="form-group">
                                 <label> {{ company_form.isFormal.label }}</label>
                                 {{ company_form.isFormal }}
@@ -99,7 +107,7 @@
                                 {{ company_form.sorumlu }}
                             </div>
                         </div>
-                        <div class="box-footer">
+                        <div class="card-footer">
                             <button class="btn btn-primary" type="submit">Kaydet</button>
                         </div>
 
@@ -109,11 +117,11 @@
 
                 </div>
                 <div class="col-lg-6">
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">İletişim Bilgileri</h3>
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">İletişim Bilgileri</h3>
                         </div>
-                        <div class="box-body">
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -153,25 +161,25 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="box-footer">
+                        <div class="card-footer">
                             <button class="btn btn-primary" type="submit">Kaydet</button>
                         </div>
 
 
                     </div>
 
-                    <div class="box-body">
+                    <div class="card-body">
 
 
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">
+                        <div class="card card-primary">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">
 
                                     Proje İş Tanımlari </h3>
 
                             </div>
 
-                            <div class="box-header with-border">
+                            <div class="card-header with-border">
 
 
                                 <div class="form-group">
@@ -185,7 +193,7 @@
                                     </select>
                                 </div>
 
-                                <div class="box-footer">
+                                <div class="card-footer">
                                     <button class="btn btn-primary" type="submit">Kaydet</button>
                                 </div>
 
@@ -194,7 +202,7 @@
 
 
                         </div>
-                        <!-- /.box -->
+                        <!-- /.card -->
 
 
                     </div>
@@ -209,18 +217,18 @@
                 <section class="col-lg-12 ">
 
 
-                    <div class="box-body">
+                    <div class="card-body">
 
 
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">
+                        <div class="card card-primary">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">
 
                                     {{ company_form.instance }} İhale Projeleri </h3>
 
                             </div>
 
-                            <div class="box-header with-border">
+                            <div class="card-header with-border">
                                 <div class="btn-group">
                                     {#                                    {% if user.groups.all.0.name == 'Admin' %}#}
 
@@ -232,7 +240,7 @@
                                 </div>
                             </div>
 
-                            <div class="box-body table-responsive">
+                            <div class="card-body table-responsive">
                                 <table id="projects" class="table table-hover">
                                     <thead>
                                     <tr>
@@ -272,20 +280,20 @@
                                         <td>{{ project.phases.all.last.definition }} </td>
                                         <td>
                                             <div class="btn-group ">
-
-                                                {% if user.groups.all.0.name == 'Admin' %}
-                                                    <a href="{% url "sbs:proje-duzenle" project.pk %}"
-                                                       type="button" class="btn btn-warning btn-lg"><i
-                                                            class="fa fa-edit"></i>
-                                                    </a>
-                                                {% else %}
-
-                                                    <a href="{% url "sbs:proje-incele-personel" project.pk %}"
-                                                       type="button" class="btn btn-warning btn-lg"><i
-                                                            class="fa fa-edit"></i>
-                                                    </a>
-
-                                                {% endif %}
+{##}
+{#                                                {% if user.groups.all.0.name == 'Admin' %}#}
+{#                                                    <a href="{% url "ekabis:proje-duzenle" project.pk %}"#}
+{#                                                       type="button" class="btn btn-warning btn-lg"><i#}
+{#                                                            class="fa fa-edit"></i>#}
+{#                                                    </a>#}
+{#                                                {% else %}#}
+{##}
+{#                                                    <a href="{% url "ekabis:proje-incele-personel" project.pk %}"#}
+{#                                                       type="button" class="btn btn-warning btn-lg"><i#}
+{#                                                            class="fa fa-edit"></i>#}
+{#                                                    </a>#}
+{##}
+{#                                                {% endif %}#}
 
                                             </div>
                                         </td>
@@ -301,7 +309,7 @@
                             </div>
 
                         </div>
-                        <!-- /.box -->
+                        <!-- /.card -->
 
 
                     </div>
@@ -317,18 +325,18 @@
                 <section class="col-lg-12 ">
 
 
-                    <div class="box-body">
+                    <div class="card-body">
 
 
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">
+                        <div class="card card-primary">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">
 
                                     {{ company_form.instance }} Alt Projeleri </h3>
 
                             </div>
 
-                            <div class="box-header with-border">
+                            <div class="card-header with-border">
                                 <div class="btn-group">
                                     {#                                    {% if user.groups.all.0.name == 'Admin' %}#}
                                     {##}
@@ -340,7 +348,7 @@
                                 </div>
                             </div>
 
-                            <div class="box-body table-responsive">
+                            <div class="card-body table-responsive">
                                 <table id="subprojects" class="table table-hover">
                                     <thead>
                                     <tr>
@@ -427,7 +435,7 @@
                             </div>
 
                         </div>
-                        <!-- /.box -->
+                        <!-- /.card -->
 
 
                     </div>

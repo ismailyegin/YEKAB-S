@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
-from sbs.models.Communication import Communication
-from sbs.models.CategoryItem import CategoryItem
+from ekabis.models.Communication import Communication
+from ekabis.models.CategoryItem import CategoryItem
 
 
 class Company(models.Model):

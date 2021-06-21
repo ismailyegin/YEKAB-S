@@ -3,11 +3,10 @@ from random import choices
 from django.contrib.auth.models import User
 from django.db import models
 
-from sbs.models import CategoryItem
-from sbs.models.License import License
-from sbs.models.Level import Level
-from sbs.models.Person import Person
-from sbs.models.Communication import Communication
+
+from ekabis.models.Person import Person
+from ekabis.models.Communication import Communication
+from ekabis.models.CategoryItem import CategoryItem
 
 
 class Employee(models.Model):

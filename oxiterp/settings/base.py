@@ -46,7 +46,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'accounts',
-    'sbs',
     'ekabis',
 
 ]
@@ -81,11 +80,8 @@ TEMPLATES = [
 
                 'ekabis.services.general_methods.getMenu',
                 'ekabis.services.general_methods.getAdminMenu',
-                'ekabis.services.general_methods.getAthleteMenu',
-                'ekabis.services.general_methods.getRefereeMenu',
-                'ekabis.services.general_methods.getCoachMenu',
                 'ekabis.services.general_methods.getDirectoryMenu',
-                'ekabis.services.general_methods.getClubUserMenu',
+                'ekabis.services.general_methods.getPersonelMenu',
                 'ekabis.services.general_methods.getProfileImage',
                 'ekabis.services.general_methods.get_notification',
 

@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from sbs.models.DirectoryCommission import DirectoryCommission
-from sbs.models.DirectoryMemberRole import DirectoryMemberRole
-from sbs.models.Person import Person
-from sbs.models.Communication import Communication
+from ekabis.models.DirectoryCommission import DirectoryCommission
+from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
+from ekabis.models.Person import Person
+from ekabis.models.Communication import Communication
 
 
 class DirectoryMember(models.Model):
@@ -18,5 +18,5 @@ class DirectoryMember(models.Model):
 
     oldpk = models.IntegerField(null=True, blank=True)
 
-    # class Meta:
-    #     default_permissions = ()
+    class Meta:
+        default_permissions = ()

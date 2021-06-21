@@ -1,49 +1,15 @@
 from builtins import print, set, property, int
 from datetime import timedelta, datetime
-from operator import attrgetter
-from os import name
-
-from django.db.models.functions import Lower
-
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.models import User, Group
-from django.contrib import messages
-from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from sbs.Forms.BeltForm import BeltForm
-from sbs.Forms.CategoryItemForm import CategoryItemForm
-from sbs.Forms.CommunicationForm import CommunicationForm
-from sbs.Forms.DisabledCommunicationForm import DisabledCommunicationForm
-from sbs.Forms.DisabledPersonForm import DisabledPersonForm
-from sbs.Forms.DisabledUserForm import DisabledUserForm
-from sbs.Forms.LicenseForm import LicenseForm
-from sbs.Forms.LicenseFormAntrenor import LicenseFormAntrenor
-from sbs.Forms.UserForm import UserForm
-from sbs.Forms.PersonForm import PersonForm
-from sbs.Forms.UserSearchForm import UserSearchForm
-from sbs.Forms.SearchClupForm import SearchClupForm
-from sbs.models import Athlete, CategoryItem, Person, Communication, License, SportClubUser, SportsClub, City, Country, \
-    Coach, CompAthlete, Competition
-from sbs.models.EnumFields import EnumFields
-from sbs.models.Level import Level
-from sbs.services import general_methods
+from ekabis.Forms.UserSearchForm import UserSearchForm
+from ekabis.services import general_methods
+from ekabis.models.Logs import Logs
 
-from sbs.models.Logs import Logs
-
-from accounts.models import Forgot
-
-# page
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-# from sbs.models.simplecategory import simlecategory
-
-from sbs.models.PreRegistration import PreRegistration
-from sbs.models.ReferenceReferee import ReferenceReferee
-from sbs.models.ReferenceCoach import ReferenceCoach
 
 
 @login_required
