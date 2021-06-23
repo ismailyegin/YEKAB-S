@@ -10,25 +10,15 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7723d10b-0554-4c47-b5c6-4f6552a76209" name="Default Changelist" comment="personeller destek talep ve yönetici modelleri eklendi">
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/personel/Personel-Profil-güncelle.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/personel/PersonellerTeknik.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/personel/istanimi-duzenle.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/personel/istanimlari.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/personel/personel-duzenle.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/personel/personel-ekle.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/personel/personeller-detay.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/personel/personeller.html" afterDir="false" />
+    <list default="true" id="7723d10b-0554-4c47-b5c6-4f6552a76209" name="Default Changelist" comment="personel  ve ünvan kategorileri eklendi.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Forms/CategoryItemForm.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Forms/CategoryItemForm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ekabis/Views/EmployeeViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/EmployeeViews.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/migrations/0002_company.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/migrations/0003_remove_company_jopdescription.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/migrations/0004_company_jopdescription.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/personelDuzenle.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/personel/personelDuzenle.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/personelEkle.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/personel/personelEkle.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/personelListesi.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/personel/personelListesi.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/PersonellerTeknik.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/istanimi-duzenle.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/istanimlari.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/personelListesi.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/unvan-duzenle.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/personel/unvan-duzenle.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/unvanListesi.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/personel/unvanListesi.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ekabis/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -135,7 +125,7 @@
       <workItem from="1624132390548" duration="5063000" />
       <workItem from="1624258755645" duration="3893000" />
       <workItem from="1624263087390" duration="9579000" />
-      <workItem from="1624442222076" duration="5253000" />
+      <workItem from="1624442222076" duration="5841000" />
     </task>
     <task id="LOCAL-00001" summary="commit initial">
       <created>1623933322363</created>
@@ -186,7 +176,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624444495887</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="personel  ve ünvan kategorileri eklendi.">
+      <created>1624450203535</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1624450203535</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -210,6 +207,7 @@
     <MESSAGE value="Ekabis app güncellemeler" />
     <MESSAGE value="yonetim ve şirket modülleri eklendi." />
     <MESSAGE value="personeller destek talep ve yönetici modelleri eklendi" />
-    <option name="LAST_COMMIT_MESSAGE" value="personeller destek talep ve yönetici modelleri eklendi" />
+    <MESSAGE value="personel  ve ünvan kategorileri eklendi." />
+    <option name="LAST_COMMIT_MESSAGE" value="personel  ve ünvan kategorileri eklendi." />
   </component>
 </project>

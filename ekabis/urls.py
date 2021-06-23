@@ -50,20 +50,16 @@ urlpatterns = [
 
     #personeller
     url(r'personel/personeller/$', EmployeeViews.return_employees, name='personeller'),
-    url(r'personel/personeller/hepsi/$', EmployeeViews.return_employees_all, name='personeller-all'),
     url(r'personel/personel-ekle/$', EmployeeViews.add_employee, name='personel-ekle'),
     url(r'personel/personel-duzenle/(?P<pk>\d+)$', EmployeeViews.edit_employee, name='personel-duzenle'),
+
+
     url(r'personel/unvanListesi/$', EmployeeViews.return_workdefinitionslist, name='unvanlistesi'),
-    url(r'personel/istanimi/sil/(?P<pk>\d+)$', EmployeeViews.delete_workdefinition,
-        name='istanimi-sil'),
-    url(r'personel/isTanimi-duzenle/(?P<pk>\d+)$', EmployeeViews.edit_workdefinition,
-        name='istanimi-duzenle'),
-    url(r'personel/Unvan-duzenle/(?P<pk>\d+)$', EmployeeViews.edit_workdefinitionUnvan,
-        name='unvan-duzenle'),
-    url(r'personel/personel-profil-guncelle/$', EmployeeViews.updateRefereeProfile,
-        name='personel-profil-guncelle'),
-    url(r'personel/Unvansil/(?P<pk>\d+)$', EmployeeViews.delete_employeetitle,
-        name='unvan-sil'),
+    url(r'personel/Unvan-duzenle/(?P<pk>\d+)$', EmployeeViews.edit_workdefinitionUnvan,name='unvan-duzenle'),
+    url(r'personel/Unvansil/(?P<pk>\d+)$', EmployeeViews.delete_employeetitle, name='unvan-sil'),
+
+    url(r'personel/personel-profil-guncelle/$', EmployeeViews.updateRefereeProfile,name='personel-profil-guncelle'),
+
 
 
 
