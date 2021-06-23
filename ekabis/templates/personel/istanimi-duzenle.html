@@ -1,0 +1,111 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+    <section class="content">
+
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+
+
+            <section class="col-lg-12 ">
+
+
+                <div class="box-body">
+
+
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">İş Tanımı Düzenle</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form method="post" role="form">
+                            <div class="box-body">
+                                {% csrf_token %}
+
+
+                                <div class="form-group">
+                                    <label> {{ category_item_form.name.label }}</label>
+                                    {{ category_item_form.name }}
+                                </div>
+
+
+                            </div>
+                            <!-- /.box-body -->
+
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-primary">Güncelle</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                    <!-- /.box -->
+
+
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+
+
+
+
+
+
+
+{% endblock %}

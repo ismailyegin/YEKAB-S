@@ -23,7 +23,7 @@ from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Country import Country
 from ekabis.models.Employee import Employee
 from ekabis.services import general_methods
-from ekabis.models.Notification import Notification
+
 
 
 @login_required
@@ -33,11 +33,11 @@ def add_employee(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
+
     user_form = UserForm()
     person_form = PersonForm()
-    test=Notification.objects.all()
     communication=Communication()
-    country=Country.objects.get(name='Türkiye')
+    country=Country.objects.get(name__icontains='TÜRKİYE')
     communication.country=country
     communication_form = CommunicationForm(instance=communication)
 
@@ -85,7 +85,7 @@ def add_employee(request):
 
             messages.success(request, 'Personel Başarıyla Kayıt Edilmiştir.')
 
-            return redirect('sbs:personeller')
+            return redirect('ekabis:personeller')
 
         else:
 
@@ -127,13 +127,13 @@ def edit_employee(request, pk):
     employee_form.fields['workDefinition'].queryset = CategoryItem.objects.filter(
         forWhichClazz="EMPLOYEE_WORKDEFINITION")
 
-    # bildirimden  gelinmisse ve sistem deki  kisinin ise true yap daha görülmesin
-    get = request.GET.get('notification')
-    if get:
-        notification = Notification.objects.get(pk=int(get))
-        if notification.users == request.user:
-            notification.is_show = True
-            notification.save()
+    # # bildirimden  gelinmisse ve sistem deki  kisinin ise true yap daha görülmesin
+    # get = request.GET.get('notification')
+    # if get:
+    #     notification = Notification.objects.get(pk=int(get))
+    #     if notification.users == request.user:
+    #         notification.is_show = True
+    #         notification.save()
 
 
 
@@ -156,7 +156,7 @@ def edit_employee(request, pk):
 
             messages.success(request, 'Personel Başarıyla Güncellenmiştir.')
 
-            # return redirect('sbs:personeller')
+            # return redirect('ekabis:personeller')
 
         else:
 
@@ -244,7 +244,7 @@ def return_employees_all(request):
         return redirect('accounts:login')
 
     user_form = UserSearchForm()
-    employees = employees = Employee.objects.all()
+    employees = Employee.objects.all()
 
 
 
@@ -295,15 +295,15 @@ def return_workdefinitionslist(request):
             categoryItem.save()
 
             log = str(name) + " unvanini ekledi"
-            log = general_methods.logwrite(request, log)
+            log = general_methods.logwrite(request,request.user, log)
 
-            return redirect('sbs:unvanlistesi')
+            return redirect('ekabis:unvanlistesi')
 
         else:
 
             messages.warning(request, 'Alanları Kontrol Ediniz')
     categoryitem = CategoryItem.objects.filter(forWhichClazz="EMPLOYEE_WORKDEFINITION")
-    return render(request, 'epproje/unvanListesi.html',
+    return render(request, 'personel/unvanListesi.html',
                   {'category_item_form': category_item_form, 'categoryitem': categoryitem})
 
 
@@ -349,7 +349,7 @@ def edit_workdefinition(request, pk):
 
             log = str(request.POST.get('name')) + " is tanimi güncelledi"
             log = general_methods.logwrite(request, log)
-            return redirect('sbs:istanimiListesi')
+            return redirect('ekabis:istanimiListesi')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
 
@@ -373,13 +373,31 @@ def edit_workdefinitionUnvan(request, pk):
             messages.success(request, 'Başarıyla Güncellendi')
 
             log = str(request.POST.get('name')) + " Unvan güncelledi"
-            log = general_methods.logwrite(request, log)
-            return redirect('sbs:unvanlistesi')
+            log = general_methods.logwrite(request,request.user, log)
+            return redirect('ekabis:unvanlistesi')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
 
-    return render(request, 'epproje/unvan-duzenle.html',
+    return render(request, 'personel/unvan-duzenle.html',
                   {'category_item_form': category_item_form})
+
+@login_required
+def delete_employeetitle(request, pk):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    if request.method == 'POST' and request.is_ajax():
+        try:
+            obj = CategoryItem.objects.get(pk=pk)
+            obj.delete()
+            return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+        except CategoryItem.DoesNotExist:
+            return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+    else:
+        return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
 
 
 
@@ -419,10 +437,10 @@ def updateRefereeProfile(request):
             user.save()
             update_session_auth_hash(request, user)
             messages.success(request, 'Şifre Başarıyla Güncellenmiştir.')
-            return redirect('sbs:personel-profil-guncelle')
+            return redirect('ekabis:personel-profil-guncelle')
 
         else:
-            return redirect('sbs:personel-profil-guncelle')
+            return redirect('ekabis:personel-profil-guncelle')
 
     return render(request, 'personel/Personel-Profil-güncelle.html',
                   {'user_form': user_form, 'communication_form': communication_form,

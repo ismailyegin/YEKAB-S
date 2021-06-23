@@ -86,7 +86,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{% url 'sbs:birim-personelleri' %}">Personel  Listesi </a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'ekabis:birim-personelleri' %}">Personel  Listesi </a></li>
                             {#              <li class="breadcrumb-item active">Advanced Form</li>#}
                         </ol>
                     </div>
@@ -661,7 +661,7 @@
                         if (e.handled !== true) { // This will prevent event triggering more then once
                             e.handled = true;
                             $("#btn-group").click(function () {
-                                window.location.replace("{% url "sbs:sporcu-aktive-group" pk=member.user.pk %}?group={{ group.name }}&pk={{ member.pk }}&person={{ member.person.pk }}&communication={{ member.communication.pk }}&user={{ member.user.pk }}");
+                                window.location.replace("{% url "ekabis:sporcu-aktive-group" pk=member.user.pk %}?group={{ group.name }}&pk={{ member.pk }}&person={{ member.person.pk }}&communication={{ member.communication.pk }}&user={{ member.user.pk }}");
 
                             });
                         }

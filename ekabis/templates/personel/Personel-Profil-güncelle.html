@@ -45,56 +45,120 @@
 
 
     {% endif %}
-    <section class="content">
-            <section class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h1>{{ aktif }}-
-                            Personel Ekle</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{% url 'ekabis:birim-personelleri' %}">Personel  Listesi </a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                        </ol>
-                    </div>
-                </div>
-            </section>
 
-        </section>
+
+    <section class="content-header">
+        <h1>
+            Personel  Güncelle
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Personel  Düzenle</a></li>
+
+        </ol>
+    </section>
+
+
+
+
+    <section class="content">
 
         <form method="post" enctype="multipart/form-data" role="form">
             {% csrf_token %}
             <div class="row">
 
                 <div class="col-lg-6">
-                    <div class="card card-solid card-info">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Genel Bilgiler</h3>
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Şifre İşlemleri</h3>
                         </div>
-                        <div class="card-body">
+                        <div class="box-body">
                             <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                       <label> {{ person_form.profileImage.label }}</label>
 
-                                <div class="col-lg-12 text-center">
-                                    <center>
-                                        <div class="form-group">
-                                            <label> {{ person_form.profileImage.label }}</label>
-                                            {% load static %}
+                                        <center>
 
-                                            <img src="{% static 'images/user.png' %} " id="preview"
-                                                 class="img-responsive img-rounded"
-                                                 style=" height: 125px;width: 130px;">
-                                            <input type="file" name="profileImage" accept="image/*"
-                                                   id="id_profileImage"
-                                                   onchange="previewImage()">
-                                        </div>
-                                    </center>
+                                            {% if person_form.instance.profileImage %}
+                                                <img
+                                                    src="{{ MEDIA_URL }}{{ person_form.instance.profileImage }}"
+                                                    class="img-responsive img-bordered " alt="Resim Yok"
+                                            ><br>
+                                            {% endif %}
+                                        </center>
+                                    {{ person_form.profileImage }}
+
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> </label>
+                                        {{ password_form }}
+                                    </div>
                                 </div>
 
+                            </div>
+
+                        </div>
+                        <div class="box-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+                </div>
+
+
+                <div class="col-lg-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Genel Bilgiler</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
                                 <div class="col-lg-6">
-                                   <div class="form-group">
+
+
+                                    <div class="form-group">
                                         <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.motherName.label }}</label>
+                                        {{ person_form.motherName }}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.birthplace.label }}</label>
+                                        {{ person_form.birthplace }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="padding-top: 16px"> {{ person_form.bloodType.label }}</label>
+                                        {{ person_form.bloodType }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ person_form.gender.label }}</label>
+                                        {{ person_form.gender }}
+                                    </div>
+
+                                </div>
+                                <br>
+                                <div class="col-lg-6">
+
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.tc.label }}</label>
+                                        {{ person_form.tc }}
                                     </div>
 
 
@@ -103,22 +167,10 @@
                                         {{ user_form.last_name }}
                                     </div>
 
-                                    <div class="form-group">
-                                        <label> {{ person_form.birthplace.label }}</label>
-                                        {{ person_form.birthplace }}
-                                    </div>
 
                                     <div class="form-group">
-                                        <label> {{ unit_form.birim.label }}</label>
-                                        {{ unit_form.birim }}
-                                    </div>
-                                </div>
-
-
-                                <div class="col-lg-6">
-                                     <div class="form-group">
-                                        <label> {{ person_form.tc.label }}</label>
-                                        {{ person_form.tc }}
+                                        <label> {{ person_form.fatherName.label }}</label>
+                                        {{ person_form.fatherName }}
                                     </div>
 
 
@@ -126,15 +178,9 @@
                                         <label> {{ person_form.birthDate.label }}</label>
                                         {{ person_form.birthDate }}
                                     </div>
-                                    <div class="form-group">
-                                        <label> {{ person_form.gender.label }}</label>
-                                        {{ person_form.gender }}
-                                    </div>
-
 
 
                                 </div>
-
 
                             </div>
                         </div>
@@ -142,13 +188,12 @@
 
                     </div>
 
-                </div>
-                <div class="col-lg-6">
-                    <div class="card card-solid card-success">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">İletişim Bilgileri</h3>
+
+                     <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">İletişim Bilgileri</h3>
                         </div>
-                        <div class="card-body">
+                        <div class="box-body">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -159,8 +204,10 @@
                                         <label> {{ communication_form.phoneNumber.label }}</label>
                                         {{ communication_form.phoneNumber }}
                                     </div>
-
-
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber2.label }}</label>
+                                        {{ communication_form.phoneNumber2 }}
+                                    </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -171,12 +218,11 @@
                                         <label> {{ communication_form.city.label }}</label>
                                         {{ communication_form.city }}
                                     </div>
-
-
-
+                                    <div class="form-group">
+                                        <label> {{ communication_form.postalCode.label }}</label>
+                                        {{ communication_form.postalCode }}
+                                    </div>
                                 </div>
-
-
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
@@ -186,11 +232,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-success pull-right" type="submit">Kaydet</button>
                         </div>
 
 
@@ -201,6 +242,14 @@
             </div>
 
         </form>
+        <script>
+
+            $('#id_new_password2').prop('required', false);
+            $('#id_new_password1').prop('required', false);
+
+        </script>
+
+
     </section>
 
 {% endblock %}

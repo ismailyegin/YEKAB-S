@@ -1,0 +1,843 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <section class="content-header">
+        <h1>
+            Personel Düzenle
+
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Personel Düzenle</a></li>
+
+        </ol>
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Genel Bilgiler</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+
+
+                                <div class="col-lg-12 text-center">
+                                    <div class="form-group">
+                                        <label> {{ person_form.profileImage.label }}</label>
+
+                                        <center>
+
+                                            {% if person_form.instance.profileImage %}
+                                                <img
+                                                        src="{{ MEDIA_URL }}{{ person_form.instance.profileImage }}"
+                                                        class="img-responsive img-bordered imagesize " alt="Resim Yok"
+                                                        style="height: 150px;width: 150px;"
+                                                ><br>
+                                            {% endif %}
+                                        </center>
+
+                                        {{ person_form.profileImage }}
+                                    </div>
+
+
+                                </div>
+                                <div class="col-lg-6">
+
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.tc.label }}</label>
+                                        {{ person_form.tc }}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ user_form.first_name.label }}</label>
+                                        {{ user_form.first_name }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ user_form.last_name.label }}</label>
+                                        {{ user_form.last_name }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.gender.label }}</label>
+                                        {{ person_form.gender }}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.bloodType.label }}</label>
+                                        {{ person_form.bloodType }}
+                                    </div>
+
+
+                                </div>
+                                <br>
+                                <div class="col-lg-6">
+
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.motherName.label }}</label>
+                                        {{ person_form.motherName }}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.fatherName.label }}</label>
+                                        {{ person_form.fatherName }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.birthplace.label }}</label>
+                                        {{ person_form.birthplace }}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.birthDate.label }}</label>
+                                        {{ person_form.birthDate }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ employee_form.workDefinition.label }}</label>
+                                        {{ employee_form.workDefinition }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Grubu</label>
+
+                                        <input type="text" name="days"
+                                               value="{{ employee_form.instance.user.groups.all.0.name }}"
+                                               class="form-control pull-right" disabled="">
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="box box-info collapsed-box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Devem Eden İnşaat Alanlari</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <!-- /.box-tools -->
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body" style="display: none;">
+                            <div class="row" style="padding-bottom: 10px">
+
+
+                                <ul class="nav nav-pills nav-stacked">
+                                    {% if cezainfaz_dev %}
+
+                                        <li><a href="#">Ceza İnfaz Kurumu
+                                            <small class="label label-primary  pull-right"> {{ cezainfaz_dev }}
+                                                m² </small></a>
+                                        </li>{% endif %}
+                                    {% if adaletbinasi_dev %}
+                                        <li><a href="#">Adalet Binası <small
+                                                class="label label-primary  pull-right"> {{ adaletbinasi_dev }}
+                                            m² </small></a>
+                                        </li>{% endif %}
+
+                                    {% if adlitip_dev %}
+                                        <li><a href="#">Adli Tıp
+                                            <small class="label label-primary  pull-right"> {{ adlitip_dev }}
+                                                m² </small></a>
+                                        </li>{% endif %}
+
+                                    {% if bolgeadliye_dev %}
+                                        <li><a href="#">Bölge Adliye Mahkemesi
+                                            <small class="label label-primary  pull-right"> {{ bolgeadliye_dev }}
+                                                m² </small></a>
+                                        </li>{% endif %}
+                                    {% if bolgeidari_dev %}
+                                        <li><a href="#">Bölge İdare Mahkemesi <small
+                                                class="label label-primary  pull-right">
+                                            {{ bolgeidari_dev }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if denetimserbeslik_dev %}
+                                        <li><a href="#">Denetimli Serbestlik
+                                            <small class="label label-primary  pull-right"> {{ denetimserbeslik_dev }}
+                                                m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if bakanlikbinasi_dev %}
+                                        <li><a href="#">Bakanlık Bİnası <small class="label label-primary  pull-right">
+                                            {{ bakanlikbinasi_dev }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if personelegitim_dev %}
+                                        <li><a href="#">Personel Eğitim Merkezi
+                                            <small class="label label-primary  pull-right"> {{ personelegitim_dev }}
+                                                m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if lojman_dev %}
+                                        <li><a href="#">Lojman
+                                            <small class="label label-primary  pull-right"> {{ lojman_dev }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if diger_dev %}
+                                        <li><a href="#">Diger <small
+                                                class="label label-primary  pull-right"> {{ diger_dev }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+
+                                </ul>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="box box-info collapsed-box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Tamamlanan İnşaat Alanlari</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <!-- /.box-tools -->
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body" style="display: none;">
+                            <div class="row" style="padding-bottom: 10px">
+
+
+                                <ul class="nav nav-pills nav-stacked">
+                                    {% if cezainfaz_tam %}
+
+                                        <li><a href="#">Ceza İnfaz Kurumu
+                                            <small class="label label-primary  pull-right"> {{ cezainfaz_tam }}
+                                                m² </small></a>
+                                        </li>{% endif %}
+                                    {% if adaletbinasi_tam %}
+                                        <li><a href="#">Adalet Binası <small
+                                                class="label label-primary  pull-right"> {{ adaletbinasi_tam }}
+                                            m² </small></a>
+                                        </li>{% endif %}
+
+                                    {% if adlitip_tam %}
+                                        <li><a href="#">Adli Tıp
+                                            <small class="label label-primary  pull-right"> {{ adlitip_tam }}
+                                                m² </small></a>
+                                        </li>{% endif %}
+
+                                    {% if bolgeadliye_tam %}
+                                        <li><a href="#">Bölge Adliye Mahkemesi
+                                            <small class="label label-primary  pull-right"> {{ bolgeadliye_tam }}
+                                                m² </small></a>
+                                        </li>{% endif %}
+                                    {% if bolgeidari_tam %}
+                                        <li><a href="#">Bölge İdare Mahkemesi <small
+                                                class="label label-primary  pull-right">
+                                            {{ bolgeidari_tam }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if denetimserbeslik_tam %}
+                                        <li><a href="#">Denetimli Serbestlik
+                                            <small class="label label-primary  pull-right"> {{ denetimserbeslik_tam }}
+                                                m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if bakanlikbinasi_tam %}
+                                        <li><a href="#">Bakanlık Bİnası <small class="label label-primary  pull-right">
+                                            {{ bakanlikbinasi_tam }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if personelegitim_tam %}
+                                        <li><a href="#">Personel Eğitim Merkezi
+                                            <small class="label label-primary  pull-right"> {{ personelegitim_tam }}
+                                                m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if lojman_tam %}
+                                        <li><a href="#">Lojman
+                                            <small class="label label-primary  pull-right"> {{ lojman_tam }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if diger_tam %}
+                                        <li><a href="#">Diger <small
+                                                class="label label-primary  pull-right"> {{ diger_tam }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+
+                                </ul>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">İletişim Bilgileri</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ user_form.email.label }}</label>
+                                        {{ user_form.email }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber.label }}</label>
+                                        {{ communication_form.phoneNumber }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber2.label }}</label>
+                                        {{ communication_form.phoneNumber2 }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label> {{ communication_form.country.label }}</label>
+                                        {{ communication_form.country }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.city.label }}</label>
+                                        {{ communication_form.city }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.postalCode.label }}</label>
+                                        {{ communication_form.postalCode }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label> {{ communication_form.address.label }}</label>
+                                        {{ communication_form.address }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
+                    <div class="box box-primary">
+
+                        <div class="box box-default">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Toplam İnşaat Alanlari</h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                            class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                            class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="chart-responsive">
+                                            <canvas id="pieChart2" height="202" width="303"
+                                                    style="width: 243px; height: 162px;"></canvas>
+                                        </div>
+                                        <!-- ./chart-responsive -->
+                                    </div>
+
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer no-padding">
+
+
+                                <ul class="nav nav-pills nav-stacked">
+                                    {% if cezainfaz %}
+
+                                    <li><a href="#">Ceza İnfaz Kurumu
+                                        <small class="label label-primary  pull-right"> {{ cezainfaz }} m² </small></a>
+                                    </li>
+                                {% endif %}
+                                    {% if adaletbinasi %}
+                                        <li><a href="#">Adalet Binası <small
+                                                class="label label-primary  pull-right"> {{ adaletbinasi }} m² </small></a>
+                                        </li>{% endif %}
+
+                                    {% if adlitip %}
+                                        <li><a href="#">Adli Tıp
+                                            <small class="label label-primary  pull-right"> {{ adlitip }}
+                                                m² </small></a>
+                                        </li>{% endif %}
+
+                                    {% if bolgeadliye %}
+                                        <li><a href="#">Bölge Adliye Mahkemesi
+                                            <small class="label label-primary  pull-right"> {{ bolgeadliye }}
+                                                m² </small></a>
+                                        </li>{% endif %}
+                                    {% if bolgeidari %}
+                                        <li><a href="#">Bölge İdare Mahkemesi <small
+                                                class="label label-primary  pull-right">
+                                            {{ bolgeidari }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if denetimserbeslik %}
+                                        <li><a href="#">Denetimli Serbestlik
+                                            <small class="label label-primary  pull-right"> {{ denetimserbeslik }}
+                                                m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if bakanlikbinasi %}
+                                        <li><a href="#">Bakanlık Bİnası <small class="label label-primary  pull-right">
+                                            {{ bakanlikbinasi }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if personelegitim %}
+                                        <li><a href="#">Personel Eğitim Merkezi
+                                            <small class="label label-primary  pull-right"> {{ personelegitim }}
+                                                m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if lojman %}
+                                        <li><a href="#">Lojman
+                                            <small class="label label-primary  pull-right"> {{ lojman }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if city %}
+                                        <li><a href="#">Diger <small
+                                                class="label label-primary  pull-right"> {{ diger }} m² </small></a>
+                                        </li>
+                                    {% endif %}
+
+                                </ul>
+                            </div>
+                            <!-- /.footer -->
+
+                            <!-- /.box -->
+
+                            <!-- PRODUCT LIST -->
+
+
+                            <!-- /.box -->
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+            </div>
+
+        </form>
+
+
+    </section>
+    <div class="row">
+
+
+        <section class="col-lg-12 ">
+
+
+            <div class="box-body">
+
+
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {% if city %}
+                                {{ city.name }} İlindeki Projeler</h3>
+                            {% else %}
+                                Projeleri</h3>
+                            {% endif %}
+                    </div>
+
+
+                    <div class="box-body table-responsive">
+                        <table id="projects" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tanımı</th>
+                                <th>Görevi</th>
+                                <th>İli</th>
+                                <th>İnşaat Alanı(m²)</th>
+                                <th>Bütçe Yılı</th>
+                                <th>Bütçe Cinsi</th>
+                                <th>Projenin Durumu</th>
+
+                                <th>İşlemler</th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if projects.all %}
+                                {% for project in projects.all %}
+
+
+
+                                    {% if project.projectStatus == 'Proje tamamlandı' %}
+                                        <tr style="background-color:#E1d7d7">
+                                            {% else %}
+                                        <tr>
+
+                                    {% endif %}
+                                <td>{{ forloop.counter }} </td>
+                                <td>{{ project.name }} </td>
+                                <td>
+
+
+                                    {% for item in project.employees.all %}
+
+                                        {% if item.employee.user.pk == personel.pk %}
+                                            {{ item.projectEmployeeTitle }} <br>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                    {% if project.sorumlu.user.pk == personel.pk %}
+                                        Sorumlu<br>
+                                    {% endif %}
+
+
+                                </td>
+                                <td>{{ project.city }} </td>
+                                <td>{{ project.insaatAlani }} </td>
+                                <td>{{ project.butceYili }} </td>
+
+                                <td>{{ project.butceCinsi }} </td>
+                                <td>{{ project.projectStatus }} </td>
+
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url "ekabis:proje-duzenle" project.pk %}"
+                                           type="button" class="btn btn-warning btn-lg"><i
+                                                class="fa fa-edit "></i>
+                                        </a>
+                                        <a class="btn btn-danger  btn-lg"
+                                           data-toggle="modal" onclick=deleteReferee({{ project.pk }})><i
+                                                class="fa fa-trash"></i></a>
+
+                                    </div>
+                                </td>
+
+                                </tr>
+
+                                {% endfor %}
+                            {% endif %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <!-- /.box -->
+
+
+            </div>
+        </section>
+
+
+    </div>
+
+
+    <script>
+
+        $(function () {
+
+            {#pie log#}
+            var pieChartCanvas = $('#pieChart2').get(0).getContext('2d');
+            var pieChart = new Chart(pieChartCanvas);
+            var PieData = [
+                {
+                    value: {{adaletbinasi}},
+                    color: '#f56954',
+                    highlight: '#f56954',
+                    label: 'Adalet Binası'
+                },
+                {
+                    value: {{cezainfaz}},
+                    color: '#00a65a',
+                    highlight: '#00a65a',
+                    label: 'Ceza İnfaz Kurumu'
+                },
+                {
+                    value: {{adlitip}},
+                    color: '#f39c12',
+                    highlight: '#f39c12',
+                    label: 'Adli Tıp'
+                },
+                {
+                    value: {{bolgeadliye}},
+                    color: '#00c0ef',
+                    highlight: '#00c0ef',
+                    label: 'Bölge Adliye Mahkemesi'
+                },
+                {
+                    value: {{bolgeidari}},
+                    color: '#3c8dbc',
+                    highlight: '#3c8dbc',
+                    label: 'Bölge İdare Mahkemesi'
+                },
+                {
+                    value: {{denetimserbeslik}},
+                    color: '#d2d6de',
+                    highlight: '#d2d6de',
+                    label: 'Denetimli Serbestlik'
+                },
+
+                {
+                    value: {{bakanlikbinasi}},
+                    color: '#d0c0ef',
+                    highlight: '#d0c0ef',
+                    label: 'Bakanlık Bİnası'
+                },
+                {
+                    value: {{personelegitim}},
+                    color: '#a0c0ef',
+                    highlight: '#a0c0ef',
+                    label: 'Personel Eğitim Merkezi'
+                },
+                {
+                    value: {{lojman}},
+                    color: '#ECF0F5',
+                    highlight: '#ECF0F5',
+                    label: 'Lojman'
+                },
+                {
+                    value: {{diger}},
+                    color: '#000000',
+                    highlight: '#000000',
+                    label: 'Diger'
+                },
+
+            ];
+            var pieOptions = {
+                // Boolean - Whether we should show a stroke on each segment
+                segmentShowStroke: true,
+                // String - The colour of each segment stroke
+                segmentStrokeColor: '#fff',
+                // Number - The width of each segment stroke
+                segmentStrokeWidth: 1,
+                // Number - The percentage of the chart that we cut out of the middle
+                percentageInnerCutout: 50, // This is 0 for Pie charts
+                // Number - Amount of animation steps
+                animationSteps: 100,
+                // String - Animation easing effect
+                animationEasing: 'easeOutBounce',
+                // Boolean - Whether we animate the rotation of the Doughnut
+                animateRotate: true,
+                // Boolean - Whether we animate scaling the Doughnut from the centre
+                animateScale: true,
+                // Boolean - whether to make the chart responsive to window resizing
+                responsive: true,
+                // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                maintainAspectRatio: false,
+                // String - A legend template
+                legendTemplate: '<ul class=\'<%=name.toLowerCase()%>-legend\'><br><% for (var i=0; i<segments.length; i++){ %><li><span style= \'background-color:<%=segments[i].fillColor%>\'></span><%if(segments[i].label){ %><%=segments[i].label%><%}%></li><%}%></ul>',
+                // String - A tooltip template
+                tooltipTemplate: '<%=value%>  m²  <%=label%>'
+            };
+            // Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            pieChart.Doughnut(PieData, pieOptions);
+            // -----------------
+            // - END PIE CHART -
+
+
+            $('#projects').DataTable({
+
+
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Göster",
+                            '-1': "Hepsini Göster"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Personeller',
+                        text: '<i class="fa  fa-print"></i>',
+                        messageTop: '{{ personel.get_full_name }} Projeleri',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        messageTop: '{{ personel.get_full_name }} Projeleri',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Projeler',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: '{{ personel.get_full_name }} Projeleri',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Personeller.json'
+                            );
+                        }
+                    }
+
+
+                ],
+
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': {
+                    'details': {
+
+
+                        'display': $.fn.dataTable.Responsive.display.modal({
+                            'header': function (row) {
+                                var data = row.data();
+                                return data[1];
+                            }
+                        }),
+                        'renderer': $.fn.dataTable.Responsive.renderer.tableAll(),
+                    }
+                },
+
+            })
+
+        })
+    </script>
+
+
+
+{% endblock %}
+
+
+

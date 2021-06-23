@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from ekabis.models import CategoryItem
+from ekabis.models.CategoryItem import CategoryItem
 
 
 class CategoryItemForm(ModelForm):
