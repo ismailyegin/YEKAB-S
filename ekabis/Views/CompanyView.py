@@ -52,7 +52,7 @@ def return_add_Company(request):
                     company.save()
 
             messages.success(request, 'Firma Kayıt Edilmiştir.')
-            return redirect('sbs:company-list')
+            return redirect('ekabis:company-list')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
     return render(request, 'Company/Company.html',
@@ -63,12 +63,10 @@ def return_add_Company(request):
 @login_required
 def return_list_Company(request):
     perm = general_methods.control_access(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
     company_form = Company.objects.all().order_by('-creationDate')
-
     return render(request, 'Company/Companys.html',
                   {'company_form': company_form})
 
@@ -85,8 +83,6 @@ def return_update_Company(request, pk):
     communication = Communication.objects.get(pk=company.communication.pk)
     communication_form = CommunicationForm(request.POST or None, instance=communication)
     jobDescription = CategoryItem.objects.filter(forWhichClazz="EPPROJECT_EMPLOYEE_TITLE")
-    for item in company.JopDescription.all():
-        print(item.name)
 
     if request.method == 'POST':
         if company_form.is_valid():
@@ -104,7 +100,7 @@ def return_update_Company(request, pk):
                     company.save()
 
             messages.success(request, 'Firma Güncellenmiştir.')
-            # return redirect('sbs:company-list')
+            # return redirect('ekabis:company-list')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
 

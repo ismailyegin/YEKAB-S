@@ -654,7 +654,7 @@
                         if (e.handled !== true) { // This will prevent event triggering more then once
                             e.handled = true;
                             $("#btn-group").click(function () {
-                                window.location.replace("{% url "sbs:sporcu-aktive-group" pk=member.user.pk %}?group={{ group.name }}&pk={{ member.pk }}&person={{ member.person.pk }}&communication={{ member.communication.pk }}&user={{ member.user.pk }}");
+                                window.location.replace("{% url "ekabis:sporcu-aktive-group" pk=member.user.pk %}?group={{ group.name }}&pk={{ member.pk }}&person={{ member.person.pk }}&communication={{ member.communication.pk }}&user={{ member.user.pk }}");
 
                             });
                         }

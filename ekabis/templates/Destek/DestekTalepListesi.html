@@ -279,7 +279,7 @@
                         <div class="card-header with-border">
                             <div class="btn-group">
                                 {% if aktif == "Admin" or aktif == "Arsiv" %}
-                                    <a href="{% url "sbs:destek-talep-ekle" %}"
+                                    <a href="{% url "ekabis:destek-talep-ekle" %}"
                                        type="button" class="btn btn-success"><i
                                             class="fa fa-edit"></i> Destek Talep Ekle
                                     </a>
@@ -328,11 +328,11 @@
                                                 <td>
                                                     <div class="btn-group">
 
-                                                        <a href="{% url "sbs:destek-guncelle" log.pk %}"
+                                                        <a href="{% url "ekabis:destek-guncelle" log.pk %}"
                                                            type="button" class="btn btn-warning"><i
                                                                 class="fa fa-edit"></i>İncele
                                                         </a>
-                                                        <a href="{% url "sbs:destek-delete" log.pk %}"
+                                                        <a href="{% url "ekabis:destek-delete" log.pk %}"
                                                            type="button" class="btn btn-danger"><i
                                                                 class="fa fa-edit"></i>Sil
                                                         </a>
@@ -393,13 +393,13 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'SBS',
+                         title: 'YEKABİS',
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'SBS',
+                        title: 'YEKABİS',
                         text: "Yazdır",
                         titleAttr: 'Yazdır'
                     },
@@ -407,7 +407,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'SBS',
+                         title: 'YEKABİS',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -415,7 +415,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'SBS',
+                         title: 'YEKABİS',
                     },
                     {
                         text: 'Json',
@@ -424,7 +424,7 @@
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'sbs.json'
+                                'YEKABİS.json'
                             );
                         }
                     }

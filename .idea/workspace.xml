@@ -10,7 +10,23 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7723d10b-0554-4c47-b5c6-4f6552a76209" name="Default Changelist" comment="yonetim ve şirket modülleri eklendi." />
+    <list default="true" id="7723d10b-0554-4c47-b5c6-4f6552a76209" name="Default Changelist" comment="yonetim ve şirket modülleri eklendi.">
+      <change afterPath="$PROJECT_DIR$/ekabis/Forms/CategoryItemForm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ekabis/Forms/EmployeeForm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ekabis/Views/EmployeeViews.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ekabis/models/Notification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/Views/ClaimView.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/ClaimView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/Views/CompanyView.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/CompanyView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/Company/CompanyUpdate.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Company/CompanyUpdate.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/Destek/DestekTalepListesi.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Destek/DestekTalepListesi.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/anasayfa/federasyon.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/anasayfa/federasyon.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/yonetim/kurul-uye-rolleri.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/yonetim/kurul-uye-rolleri.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/yonetim/kurul-uyeleri.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/yonetim/kurul-uyeleri.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/yonetim/kurul-uyesi-duzenle.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/yonetim/kurul-uyesi-duzenle.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/yonetim/kurullar.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/yonetim/kurullar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oxiterp/templates/base_layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/templates/base_layout.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,8 +43,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Setup Script" />
         <option value="Python Script" />
+        <option value="Setup Script" />
       </list>
     </option>
   </component>
@@ -47,7 +63,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/ekabis/Forms" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/ekabis/models" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -59,10 +75,10 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ekabis/models" />
       <recent name="$PROJECT_DIR$/ekabis/Forms" />
       <recent name="$PROJECT_DIR$/ekabis/Views" />
       <recent name="$PROJECT_DIR$/ekabis/templates" />
-      <recent name="$PROJECT_DIR$/ekabis/models" />
       <recent name="$PROJECT_DIR$/ekabis/Form" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -114,7 +130,8 @@
       <workItem from="1624098705924" duration="332000" />
       <workItem from="1624132390548" duration="5063000" />
       <workItem from="1624258755645" duration="3893000" />
-      <workItem from="1624263087390" duration="8054000" />
+      <workItem from="1624263087390" duration="9579000" />
+      <workItem from="1624442222076" duration="1997000" />
     </task>
     <task id="LOCAL-00001" summary="commit initial">
       <created>1623933322363</created>
@@ -151,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624273248396</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="yonetim ve şirket modülleri eklendi.">
+      <created>1624282956789</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1624282956789</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

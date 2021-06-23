@@ -348,91 +348,91 @@
                                 </div>
                             </div>
 
-                            <div class="card-body table-responsive">
-                                <table id="subprojects" class="table table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-
-                                        <th>Tanımı</th>
-                                        <th>İli</th>
-                                        <th>İs Tanımı</th>
-                                        <th>Bütçe Yılı</th>
-                                        <th>Yatırım Programı</th>
-                                        <th>Proje Durumu</th>
-                                        <th>Proje Cinsi</th>
-                                        <th>İs Bitim Tarihi</th>
-                                        <th>Açıklama</th>
-                                        <th>İşlemler</th>
-
-
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% if subProject.all %}
-                                        {% for project in subProject.all %}
-                                            {% for item in project.subcompany.all %}
-                                                {% if item.company.pk == company.pk %}
-                                                    {% if project.projectStatus  ==  'Proje tamamlandı' %}
-                                                        <tr style="background-color:#E1d7d7">
-
-                                                            {% else %}
-                                                        <tr>
-
-
-                                                    {% endif %}
-                                                <td></td>
-                                                <td>{{ project.name }} </td>
-                                                <td>{{ project.city }} </td>
-                                                <td>
-
-
-                                                    {{ item.jopDescription }}
-
-
-                                                </td>
-                                                <td>{{ project.butceYili }} </td>
-                                                <td>{{ project.butceCinsi }} </td>
-                                                <td>{{ project.projectStatus }}</td>
-                                                <td>{{ project.projeCinsi }}</td>
-
-                                                <td>{{ project.aifinish |date:"d/m/Y" }}</td>
-                                                <td>{{ project.phases.all.last.definition }} </td>
-                                                <td>
-                                                    <div class="btn-group ">
-
-                                                        {% if user.groups.all.0.name == 'Admin' %}
-                                                            <a href="{% url "sbs:proje-duzenle" project.pk %}"
-                                                               type="button" class="btn btn-warning btn-lg"><i
-                                                                    class="fa fa-edit"></i>
-                                                            </a>
-
-
-                                                        {% else %}
-
-                                                            <a href="{% url "sbs:proje-incele-personel" project.pk %}"
-                                                               type="button" class="btn btn-warning btn-lg"><i
-                                                                    class="fa fa-edit"></i>
-                                                            </a>
-
-                                                        {% endif %}
-
-                                                    </div>
-                                                </td>
-
-                                                </tr>
-
-
-                                                {% endif %}
-                                            {% endfor %}
-
-                                        {% endfor %}
-                                    {% endif %}
-
-
-                                    </tbody>
-                                </table>
-                            </div>
+{#                            <div class="card-body table-responsive">#}
+{#                                <table id="subprojects" class="table table-hover">#}
+{#                                    <thead>#}
+{#                                    <tr>#}
+{#                                        <th>#</th>#}
+{##}
+{#                                        <th>Tanımı</th>#}
+{#                                        <th>İli</th>#}
+{#                                        <th>İs Tanımı</th>#}
+{#                                        <th>Bütçe Yılı</th>#}
+{#                                        <th>Yatırım Programı</th>#}
+{#                                        <th>Proje Durumu</th>#}
+{#                                        <th>Proje Cinsi</th>#}
+{#                                        <th>İs Bitim Tarihi</th>#}
+{#                                        <th>Açıklama</th>#}
+{#                                        <th>İşlemler</th>#}
+{##}
+{##}
+{#                                    </tr>#}
+{#                                    </thead>#}
+{#                                    <tbody>#}
+{#                                    {% if subProject.all %}#}
+{#                                        {% for project in subProject.all %}#}
+{#                                            {% for item in project.subcompany.all %}#}
+{#                                                {% if item.company.pk == company.pk %}#}
+{#                                                    {% if project.projectStatus  ==  'Proje tamamlandı' %}#}
+{#                                                        <tr style="background-color:#E1d7d7">#}
+{##}
+{#                                                            {% else %}#}
+{#                                                        <tr>#}
+{##}
+{##}
+{#                                                    {% endif %}#}
+{#                                                <td></td>#}
+{#                                                <td>{{ project.name }} </td>#}
+{#                                                <td>{{ project.city }} </td>#}
+{#                                                <td>#}
+{##}
+{##}
+{#                                                    {{ item.jopDescription }}#}
+{##}
+{##}
+{#                                                </td>#}
+{#                                                <td>{{ project.butceYili }} </td>#}
+{#                                                <td>{{ project.butceCinsi }} </td>#}
+{#                                                <td>{{ project.projectStatus }}</td>#}
+{#                                                <td>{{ project.projeCinsi }}</td>#}
+{##}
+{#                                                <td>{{ project.aifinish |date:"d/m/Y" }}</td>#}
+{#                                                <td>{{ project.phases.all.last.definition }} </td>#}
+{#                                                <td>#}
+{#                                                    <div class="btn-group ">#}
+{##}
+{#                                                        {% if user.groups.all.0.name == 'Admin' %}#}
+{#                                                            <a href="{% url "sbs:proje-duzenle" project.pk %}"#}
+{#                                                               type="button" class="btn btn-warning btn-lg"><i#}
+{#                                                                    class="fa fa-edit"></i>#}
+{#                                                            </a>#}
+{##}
+{##}
+{#                                                        {% else %}#}
+{##}
+{#                                                            <a href="{% url "sbs:proje-incele-personel" project.pk %}"#}
+{#                                                               type="button" class="btn btn-warning btn-lg"><i#}
+{#                                                                    class="fa fa-edit"></i>#}
+{#                                                            </a>#}
+{##}
+{#                                                        {% endif %}#}
+{##}
+{#                                                    </div>#}
+{#                                                </td>#}
+{##}
+{#                                                </tr>#}
+{##}
+{##}
+{#                                                {% endif %}#}
+{#                                            {% endfor %}#}
+{##}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{##}
+{##}
+{#                                    </tbody>#}
+{#                                </table>#}
+{#                            </div>#}
 
                         </div>
                         <!-- /.card -->

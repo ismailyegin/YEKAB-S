@@ -77,7 +77,7 @@ def claim_add(request):
             claimSave.save()
 
             messages.success(request, 'Destek Talep  Eklendi.')
-            return redirect('sbs:destek-talep-listesi')
+            return redirect('ekabis:destek-talep-listesi')
         else:
             messages.warning(request, 'Form Bilgilerini Kontrol Ediniz Lütfen .')
 
@@ -98,7 +98,7 @@ def claim_update(request, pk):
         if claim_form.is_valid():
             claim_form.save()
             messages.success(request, 'Destek Talep  Güncellendi.')
-            return redirect('sbs:destek-talep-listesi')
+            return redirect('ekabis:destek-talep-listesi')
 
     return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, })
 
@@ -115,7 +115,7 @@ def claim_delete(request, pk):
 
     messages.success(request, 'Destek Talep  Silindi.')
 
-    return redirect('sbs:destek-talep-listesi')
+    return redirect('ekabis:destek-talep-listesi')
 
 
 @login_required

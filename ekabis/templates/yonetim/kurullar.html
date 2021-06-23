@@ -154,7 +154,7 @@
                                         <td>{{ commission.name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{% url "sbs:kurul-duzenle" commission.pk %}"
+                                                <a href="{% url "ekabis:kurul-duzenle" commission.pk %}"
                                                    type="button" class="btn btn-warning"><i
                                                         class="fa fa-edit"></i>Güncelle
                                                 </a>
@@ -221,13 +221,13 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'SBS',
+                         title: 'YEKABİS',
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'SBS',
+                        title: 'YEKABİS',
                         text: "Yazdır",
                         titleAttr: 'Yazdır'
                     },
@@ -235,7 +235,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'SBS',
+                         title: 'YEKABİS',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -243,7 +243,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'SBS',
+                         title: 'YEKABİS',
                     },
                     {
                         text: 'Json',
@@ -252,7 +252,7 @@
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'sbs.json'
+                                'YEKABİS.json'
                             );
                         }
                     }
@@ -282,7 +282,7 @@
             $("#modal-danger").on("shown.bs.modal", function (e) {
                 $("#btn-conf").click(function () {
                     $.ajax({
-                        url: "{% url "sbs:kurul_sil" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:kurul_sil" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -296,7 +296,7 @@
                             $('#modal-success').on("shown.bs.modal", function (e) {
                                 $(".btn-ok").click(function () {
 
-                                    window.location.replace("{% url "sbs:kurullar" %}");
+                                    window.location.replace("{% url "ekabis:kurullar" %}");
 
                                 });
 
