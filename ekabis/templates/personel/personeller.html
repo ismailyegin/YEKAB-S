@@ -142,54 +142,46 @@
 
                                 <div class="row">
 
-                                     <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label> {{ user_form.first_name.label }}</label>
-                                        {{ user_form.first_name }}
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> {{ user_form.first_name.label }}</label>
+                                            {{ user_form.first_name }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label> {{ user_form.last_name.label }}</label>
-                                        {{ user_form.last_name }}
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> {{ user_form.last_name.label }}</label>
+                                            {{ user_form.last_name }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label> {{ user_form.email.label }}</label>
-                                        {{ user_form.email }}
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> {{ user_form.email.label }}</label>
+                                            {{ user_form.email }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label> {{ user_form.workDefinition.label }}</label>
-                                        {{ user_form.workDefinition }}
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> {{ user_form.workDefinition.label }}</label>
+                                            {{ user_form.workDefinition }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label>Grubunu Seçiniz</label>
-                                        <select name="group" class="form-control select2 select2-hidden-accessible"
-                                                style="width: 100%; " id="group">
-                                            <option value="" selected>Seçiniz</option>
-                                            <option value="Personel">Personel</option>
-
-                                            <option value="Teknik">Teknik Personel</option>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Grubunu Seçiniz</label>
+                                            <select name="group" class="form-control select2 select2-hidden-accessible"
+                                                    style="width: 100%; " id="group">
+                                                <option value="" selected>Seçiniz</option>
+                                                <option value="Personel">Personel</option>
+                                                <option value="Teknik">Teknik Personel</option>
 
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-
-
-
-
-
-
 
 
                                 </div>
-
 
 
                             </div>
@@ -218,14 +210,14 @@
                 <div class="card-body">
 
 
-                    <div class="card card-primary">
+                    <div class="card card-primary card-outline direct-chat direct-chat-primary">
                         <div class="card-header with-border">
                             <h3 class="card-title">Personeller</h3>
                         </div>
 
                         <div class="card-body">
                             {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}
-                                <div class="card-header with-border">
+                                <div class="card-header with-border ">
                                     <div class="btn-group">
                                         <a href="{% url "ekabis:personel-ekle" %}"
                                            type="button" class="btn btn-success"><i
@@ -234,15 +226,15 @@
                                     </div>
                                 </div>
                             {% endif %}
+                        </div>
+                        <div class="card-body">
                             <table id="personel" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Ad Soyad</th>
 
-                                 <th> Email </th>
-
-
+                                    <th> Email</th>
 
                                     <th>Unvan</th>
                                     {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}
@@ -281,7 +273,7 @@
                                 </tbody>
                             </table>
                         </div>
-
+                        </div>
                     </div>
                     <!-- /.card -->
 
@@ -334,8 +326,8 @@
                         extend: 'print',
                         title: 'Personeller',
                         text: '<i class="fa  fa-print"></i>',
-                                                exportOptions: {
-                            columns: [0,1,':visible']
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
                         },
 
                         titleAttr: 'Yazdır'
@@ -344,8 +336,8 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: '<i class="fa fa-file-pdf-o"></i>',
-                                                exportOptions: {
-                            columns: [0,1,':visible']
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
                         },
 
                         titleAttr: 'Pdf Kaydet'
@@ -356,8 +348,8 @@
                         title: 'Personeller',
                         text: '<i class="fa fa-file-excel-o"></i>',
                         messageTop: 'Personeller ',
-                                                exportOptions: {
-                            columns: [0,1,':visible']
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
                         },
 
                         titleAttr: 'Excel Kaydet'

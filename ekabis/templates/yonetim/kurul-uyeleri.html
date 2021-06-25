@@ -129,7 +129,7 @@
 
     <section class="content">
         <div class="row">
-            <div class="col-lg-12 ">
+            <div class="col-lg-12">
                 <div class="card-body">
                     <div class="card card-primary">
                         <div class="card-header with-border">
@@ -183,20 +183,20 @@
                 <div class="card-body">
 
 
-                    <div class="card card-primary">
+                    <div class="card card-primary card-outline direct-chat direct-chat-primary">
                         <div class="card-header with-border">
                             <h3 class="card-title">Yönetim Kurulu Üyeleri</h3>
                         </div>
-
-                        <div class="card-header with-border">
-                            <div class="btn-group">
-                                <a href="{% url "ekabis:kurul-uyesi-ekle" %}"
-                                   type="button" class="btn btn-success"><i
-                                        class="fa fa-edit"></i> Üye Ekle
-                                </a>
+                        <div class="card-body">
+                            <div class="card-header with-border">
+                                <div class="btn-group">
+                                    <a href="{% url "ekabis:kurul-uyesi-ekle" %}"
+                                       type="button" class="btn btn-success"><i
+                                            class="fa fa-edit"></i> Üye Ekle
+                                    </a>
+                                </div>
                             </div>
                         </div>
-
                         <div class="card-body">
                             <table id="members" class="table table-bordered table-hover">
                                 <thead>

@@ -29,7 +29,7 @@ SECRET_KEY = 'j-hgr1ce(!9xi#aaffs%hm@(*(9sfv0shfi!*=md20woa3a23d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.20.10.3', 'localhost', '127.0.0.1','192.168.1.49']
+ALLOWED_HOSTS = ['172.20.10.3', 'localhost', '127.0.0.1','192.168.1.57','0.0.0.0']
 
 # Application definition
 
@@ -172,3 +172,15 @@ STATICFILES_DIRS = (os.path.join('oxiterp/static'),)
 LOGIN_URL = '/'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ekabis',
+        'USER': 'root',
+        'PASSWORD': 'kobil2013',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
