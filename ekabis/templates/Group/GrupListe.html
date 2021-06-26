@@ -129,11 +129,11 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Firma Listesi</h1>
+                        Grup Listesi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Firma Listesi</a></li>
+                        <li class="breadcrumb-item"><a href="#">Grup Listesi</a></li>
                         {#              <li class="breadcrumb-item active">Advanced Form</li>#}
                     </ol>
                 </div>
@@ -163,7 +163,7 @@
                             <div class="card-header with-border">
                                 <div class="btn-group">
 
-                                    <a href="{% url "ekabis:group-add" %}"
+                                    <a href="{% url "ekabis:add_group" %}"
                                        type="button" class="btn btn-success"><i
                                             class="fa fa-edit"></i> Yeni Grup Ekle
                                     </a>
@@ -190,7 +190,7 @@
                                             <td>{{ group.name }}</td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <a href="{% url "ekabis:group-update" group.pk %}"
+                                                    <a href="{% url "ekabis:change_group" group.pk %}"
                                                        type="button" class="btn btn-warning"><i
                                                             class="fa fa-edit"></i>İncele
                                                     </a>
@@ -258,7 +258,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar  ',
+                        title: 'Gruplar  ',
                         text: '<i class="fa  fa-print"></i>',
                         exportOptions: {
                             columns: [0, 1, ':visible']
@@ -279,7 +279,7 @@
                         extend: 'excelHtml5',
                         title: 'Ekabis',
                         text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Firmalar',
+                        messageTop: 'Gruplar',
                         {#footer: true,#}
                         exportOptions: {
                             {#     yer degisimi de yapilabilir.#}
@@ -295,7 +295,7 @@
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'Firmalar.json'
+                                'grup.json'
                             );
                         }
                     }

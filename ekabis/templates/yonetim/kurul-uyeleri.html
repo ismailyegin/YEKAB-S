@@ -190,7 +190,7 @@
                         <div class="card-body">
                             <div class="card-header with-border">
                                 <div class="btn-group">
-                                    <a href="{% url "ekabis:kurul-uyesi-ekle" %}"
+                                    <a href="{% url "ekabis:add_directorymember" %}"
                                        type="button" class="btn btn-success"><i
                                             class="fa fa-edit"></i> Üye Ekle
                                     </a>
@@ -226,7 +226,7 @@
                                             <td>{{ member.user.email }} </td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <a href="{% url "ekabis:kurul-uyesi-duzenle" member.pk %}"
+                                                    <a href="{% url "ekabis:change_directorymember" member.pk %}"
                                                        type="button" class="btn btn-warning"><i
                                                             class="fa fa-edit"></i> Güncelle
                                                     </a>
@@ -352,7 +352,7 @@
             $("#modal-danger").on("shown.bs.modal", function (e) {
                 $("#btn-conf").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:kurul-uyesi-sil" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:delete_directorymember" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -366,7 +366,7 @@
                             $('#modal-success').on("shown.bs.modal", function (e) {
                                 $(".btn-ok").click(function () {
 
-                                    window.location.replace("{% url "ekabis:kurul-uyeleri" %}");
+                                    window.location.replace("{% url "ekabis:view_directoryMember" %}");
 
                                 });
 

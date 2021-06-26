@@ -37,7 +37,7 @@ def return_directory_dashboard(request):
 @login_required
 def return_personel_dashboard(request):
     active = general_methods.controlGroup(request)
-    perm = general_methods.control_access_personel(request)
+    perm = general_methods.control_access(request)
 
 
     if not perm:
@@ -76,11 +76,12 @@ def activeGroup(request, pk):
     userActive.group = group
     userActive.save()
     if group.name == "Admin":
-        return redirect('ekabis:admin')
+        return redirect('ekabis:view_admin')
 
     elif group.name == 'Yonetim':
-        return redirect('ekabis:federasyon')
+        return redirect('ekabis:view_federasyon')
+
     elif group.name == 'Personel':
-        return redirect('ekabis:personel')
+        return redirect('ekabis:view_personel')
     else:
         return {}

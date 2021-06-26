@@ -8,11 +8,6 @@ app_name = "accounts"
 urlpatterns = [
     # path('', views.index, name='index'),
     path('', views.login, name='login'),
-    path('forgot/', views.forgot, name='forgot'),
-    url(r'logout/$', views.pagelogout, name='logout'),
-
-
-
-
-
+    path('forgot/', views.forgot, name='view_forgot'),
+    path('logout/', views.pagelogout, name='view_logout'),
 ]

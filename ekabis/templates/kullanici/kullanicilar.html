@@ -417,7 +417,7 @@
             $("#modal-active").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:kullanici-aktifet" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:view_status" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -431,7 +431,7 @@
                             $('#modal-success').on("shown.bs.modal", function (e) {
                                 $(".btn-ok").click(function () {
 
-                                    window.location.replace("{% url "ekabis:kullanicilar" %}");
+                                    window.location.replace("{% url "ekabis:view_user" %}");
 
                                 });
 
@@ -453,7 +453,7 @@
             $("#modal-mail").on("shown.bs.modal", function (e) {
                 $("#btn-conf12").click(function () {
                         $.ajax({
-                            url: "{% url "ekabis:kullanici-bilgi-gonder" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                            url: "{% url "ekabis:view_email" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
                             type: "POST",
                             data: {
                                 'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -468,7 +468,7 @@
                                     $('#modal-success-danger').on("shown.bs.modal", function (e) {
                                         $(".btn-ok").click(function () {
 
-                                            window.location.replace("{% url "ekabis:kullanicilar" %}");
+                                            window.location.replace("{% url "ekabis:view_user" %}");
 
                                         });
                                     }).modal('show');
@@ -481,7 +481,7 @@
                                     $('#modal-success').on("shown.bs.modal", function (e) {
                                         $(".btn-ok").click(function () {
 
-                                            window.location.replace("{% url "ekabis:kullanicilar" %}");
+                                            window.location.replace("{% url "ekabis:view_user" %}");
 
                                         });
                                     }).modal('show');

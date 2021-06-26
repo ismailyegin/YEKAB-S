@@ -7,12 +7,15 @@ from django.contrib.auth.models import Permission, User, Group
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 
-
-from ekabis.models.Employee import Employee
 from ekabis.models.MenuAdmin import MenuAdmin
 from ekabis.models.MenuDirectory import MenuDirectory
 from ekabis.models.MenuPersonel import MenuPersonel
 from ekabis.models.Menu import Menu
+
+from ekabis.models.Person import Person
+from ekabis.models.Employee import Employee
+from ekabis.models.DirectoryMember import DirectoryMember
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -96,15 +99,14 @@ def show_urls_deneme(urllist, depth=0):
 
     return urls
 def control_access(request):
+    print(request.resolver_match.url_name)
     groups = request.user.groups.all()
     is_exist = False
-
     for group in groups:
         permissions = group.permissions.all()
-
         for perm in permissions:
-
-            if request.resolver_match.url_name == perm.name:
+            if request.resolver_match.url_name == perm.codename:
+                print('Okey')
                 is_exist = True
 
         if group.name == "Admin":
@@ -112,45 +114,6 @@ def control_access(request):
 
     return is_exist
 
-def control_access_directory(request):
-    groups = request.user.groups.all()
-    is_exist = False
-
-    for group in groups:
-        permissions = group.permissions.all()
-
-        for perm in permissions:
-
-            if request.resolver_match.url_name == perm.name:
-                is_exist = True
-
-        if group.name == "Admin" or group.name == "Yonetim" or  group.name == 'Personel':
-            is_exist = True
-
-    return is_exist
-
-
-
-
-
-
-
-def control_access_personel(request):
-    groups = request.user.groups.all()
-    is_exist = False
-
-    for group in groups:
-        permissions = group.permissions.all()
-
-        for perm in permissions:
-
-            if request.resolver_match.url_name == perm.name:
-                is_exist = True
-
-        if group.name == "Admin" or group.name == "Yonetim" or  group.name == 'Personel':
-            is_exist = True
-
-    return is_exist
 
 
 def aktif(request):
@@ -158,7 +121,7 @@ def aktif(request):
         if not (ActiveGroup.objects.filter(user=request.user)):
             aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
             aktive.save()
-            aktif = request.user.groups.exclude(name='Sporcu')[0]
+            aktif = request.user.groups.all()[0]
         else:
             aktif = ActiveGroup.objects.get(user=request.user).group.name
         group = request.user.groups.all()
@@ -173,9 +136,9 @@ def aktif(request):
 def controlGroup(request):
     if User.objects.filter(pk=request.user.pk):
         if not (ActiveGroup.objects.filter(user=request.user)):
-            aktive = ActiveGroup(user=request.user, group=request.user.groups.exclude(name='Sporcu')[0])
+            aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
             aktive.save()
-            active = request.user.groups.exclude(name='Sporcu')[0]
+            active = request.user.groups.all()[0]
 
         else:
             active = ActiveGroup.objects.get(user=request.user).group.name
@@ -199,24 +162,8 @@ def getProfileImage(request):
             person = dict()
             person['profileImage'] = "profile/logo.png"
 
-        elif current_user.groups.filter(name='KlupUye').exists():
-            athlete = SportClubUser.objects.get(user=current_user)
-            person = Person.objects.get(id=athlete.person.id)
         elif current_user.groups.filter(name='Personel').exists():
-            athlete = Employe.objects.get(user=current_user)
-            person = Person.objects.get(id=athlete.person.id)
-
-
-        elif current_user.groups.filter(name='Sporcu').exists():
-            athlete = Athlete.objects.get(user=current_user)
-            person = Person.objects.get(id=athlete.person.id)
-
-        elif current_user.groups.filter(name='Antrenor').exists():
-            athlete = Coach.objects.get(user=current_user)
-            person = Person.objects.get(id=athlete.person.id)
-
-        elif current_user.groups.filter(name='Hakem').exists():
-            athlete = Judge.objects.get(user=current_user)
+            athlete = Employee.objects.get(user=current_user)
             person = Person.objects.get(id=athlete.person.id)
 
         elif current_user.groups.filter(name='Yonetim').exists():
@@ -232,15 +179,11 @@ def getProfileImage(request):
 
 
 def get_notification(request):
-    if (request.user.id):
-        current_user = request.user
-        if current_user.groups.filter(name='Admin').exists():
-            print('Admin bildirimleri')
-
-
-            return {}
-
-
+    # if (request.user.id):
+    #     current_user = request.user
+    #     if current_user.groups.filter(name='Admin').exists():
+    #         print('Admin bildirimleri')
+    #         return {}
     return {}
 
 

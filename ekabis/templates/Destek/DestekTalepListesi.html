@@ -279,7 +279,7 @@
                         <div class="card-header with-border">
                             <div class="btn-group">
                                 {% if aktif == "Admin" or aktif == "Arsiv" %}
-                                    <a href="{% url "ekabis:destek-talep-ekle" %}"
+                                    <a href="{% url "ekabis:add_claim" %}"
                                        type="button" class="btn btn-success"><i
                                             class="fa fa-edit"></i> Destek Talep Ekle
                                     </a>
@@ -328,11 +328,11 @@
                                                 <td>
                                                     <div class="btn-group">
 
-                                                        <a href="{% url "ekabis:destek-guncelle" log.pk %}"
+                                                        <a href="{% url "ekabis:change_claim" log.pk %}"
                                                            type="button" class="btn btn-warning"><i
                                                                 class="fa fa-edit"></i>İncele
                                                         </a>
-                                                        <a href="{% url "ekabis:destek-delete" log.pk %}"
+                                                        <a href="{% url "ekabis:delete_claim" log.pk %}"
                                                            type="button" class="btn btn-danger"><i
                                                                 class="fa fa-edit"></i>Sil
                                                         </a>

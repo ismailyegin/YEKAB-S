@@ -10,11 +10,3 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(label="Password", max_length=30, widget=forms.TextInput(
         attrs={'class': 'mdl-textfield__input', 'type': 'password', 'id': 'password'}))
 
-
-class PermForm(forms.Form):
-    permission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(),
-                                                widget=FilteredSelectMultiple("Permission", False, attrs={'rows': '2'}))
-
-    class Media:
-        css = {'all': ('/static/admin/css/widgets.css',), }
-        js = ('/admin/jsi18n/',)

@@ -27,4 +27,4 @@ def help(request):
             except BadHeaderError:
                 # print('Invalid header found.')
                 messages.warning(request, 'Alanları Kontrol Ediniz Bir Şeyler Ters Gitti')
-    return render(request, 'help/Help.html')
+    return render(request, 'Yardim/Help.html')

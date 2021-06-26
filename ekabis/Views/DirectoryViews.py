@@ -183,12 +183,9 @@ def update_directory_member(request, pk):
     member = DirectoryMember.objects.get(pk=pk)
 
     if not member.user.groups.all():
-        user = judge.user
         member.user.groups.add(Group.objects.get(name="Yonetim"))
         member.save()
     groups = Group.objects.all()
-
-
 
     user = User.objects.get(pk=member.user.pk)
     person = Person.objects.get(pk=member.person.pk)
@@ -353,7 +350,7 @@ def return_commissions(request):
             log = " Kurul eklendi"
             log = general_methods.logwrite(request, request.user, log)
             messages.success(request, 'Kurul Başarıyla Kayıt Edilmiştir.')
-            return redirect('ekabis:kurullar')
+            return redirect('ekabis:view_directorycommission')
 
         else:
 

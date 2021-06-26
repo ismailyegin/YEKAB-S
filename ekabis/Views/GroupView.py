@@ -11,19 +11,14 @@ from django.urls import reverse
 
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.GroupForm import GroupForm
-from ekabis.models.Company import Company
-from ekabis.models.Communication import Communication
-from ekabis.models.CategoryItem import CategoryItem
+
 from ekabis.services import general_methods
 
-from datetime import date, datetime
-import datetime
-from django.utils import timezone
 from django.contrib.auth.models import Group, Permission, User
 
 
 @login_required
-def return_add_group(request):
+def add_group(request):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -75,15 +70,12 @@ def return_update_group(request, pk):
         logout(request)
         return redirect('accounts:login')
     groups = Group.objects.get(pk=pk)
-    group_form = GroupForm(request.POST or None, instance=groups,)
-    print('gelecek sensin')
-    for item in groups.permissions.all():
-        print(item.codename)
+    group_form = GroupForm(request.POST or None, instance=groups)
     if request.method == 'POST':
         if group_form.is_valid():
             group_form.save()
             messages.success(request, 'Grup Güncellenmiştir.')
-            return redirect('ekabis:group-list')
+            return redirect('ekabis:view_group')
 
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')

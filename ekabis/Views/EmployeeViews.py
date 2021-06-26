@@ -79,10 +79,7 @@ def add_employee(request):
             personel.save()
 
             log = str(user.get_full_name()) + " personelini  kaydetti"
-            log = general_methods.logwrite(request, log)
-
-
-
+            log = general_methods.logwrite(request,request.user, log)
             messages.success(request, 'Personel Başarıyla Kayıt Edilmiştir.')
 
             return redirect('ekabis:personeller')
@@ -257,7 +254,7 @@ def return_workdefinitionslist(request):
             log = str(name) + " unvanini ekledi"
             log = general_methods.logwrite(request,request.user, log)
 
-            return redirect('ekabis:unvanlistesi')
+            return redirect('ekabis:view_categoryitem')
 
         else:
 
@@ -334,7 +331,7 @@ def edit_workdefinitionUnvan(request, pk):
 
             log = str(request.POST.get('name')) + " Unvan güncelledi"
             log = general_methods.logwrite(request,request.user, log)
-            return redirect('ekabis:unvanlistesi')
+            return redirect('ekabis:view_categoryitem')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
 
@@ -364,7 +361,7 @@ def delete_employeetitle(request, pk):
 
 @login_required
 def updateRefereeProfile(request):
-    perm = general_methods.control_access_personel(request)
+    perm = general_methods.control_access(request)
 
     if not perm:
         logout(request)
@@ -387,7 +384,6 @@ def updateRefereeProfile(request):
                 person.profileImage = request.FILES['profileImage']
                 person.save()
                 messages.success(request, 'Resim güncellendi.')
-
         except:
             print('hata' )
 

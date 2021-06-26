@@ -57,8 +57,6 @@ def update_user(request, pk):
     if request.method == 'POST':
 
         if user_form.is_valid() :
-
-
             user.username = user_form.cleaned_data['email']
             user.first_name = user_form.cleaned_data['first_name']
             user.last_name = user_form.cleaned_data['last_name']
@@ -67,7 +65,7 @@ def update_user(request, pk):
             user.save()
             update_session_auth_hash(request, user)
             messages.success(request, 'Kullanıcı Başarıyla Güncellendi')
-            return redirect('sbs:kullanicilar')
+            return redirect('ekabis:view_user')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
 

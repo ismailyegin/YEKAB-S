@@ -15,26 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import path, re_path
-from django.conf.urls import url, include
+from django.urls import path
+from django.conf.urls import include
 
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework_simplejwt import views as jwt_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    # re_path('api/(?P<version>(v1|v2))/', include('patient.urls')),
-    # path('hasta/', include('patient.urls',  namespace='patient')),
-    # url(r'^', include(router.urls)),
-    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-    # path('', include('accounts.urls')),
-    # path('accounts/', include('django.contrib.auth.urls'))
+    # Admin yönetimi sistem den engelendi
+    # path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('yekabis/', include('ekabis.urls')),
-
 ]
-
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # handler404 = 'education.Views.ErrorViews.page_not_found'

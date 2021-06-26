@@ -153,7 +153,7 @@
                                         <td>{{ item.name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{% url "ekabis:unvan-duzenle" item.pk %}"
+                                                <a href="{% url "ekabis:change_categoryitem" item.pk %}"
                                                    type="button" class="btn btn-warning" style="margin-right: 5px"><i
                                                         class="fa fa-edit"></i>Güncelle
                                                 </a>
@@ -213,7 +213,7 @@
             $("#modal-danger").on("shown.bs.modal", function (e) {
                 $("#btn-conf").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:unvan-sil" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:delete_categoryitem" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -227,7 +227,7 @@
                             $('#modal-success').on("shown.bs.modal", function (e) {
                                 $(".btn-ok").click(function () {
 
-                                    window.location.replace("{% url "ekabis:unvanlistesi" %}");
+                                    window.location.replace("{% url "ekabis:view_categoryitem" %}");
 
                                 });
 

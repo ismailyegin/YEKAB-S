@@ -47,7 +47,6 @@ def activeGroup(request, pk):
     person = Person.objects.get(pk=request.GET.get('person'))
     user = User.objects.get(pk=request.GET.get('user'))
 
-
     if group.name == "Admin":
         user.groups.add(group)
         user.is_superuser = True
@@ -62,6 +61,7 @@ def activeGroup(request, pk):
         user.groups.add(group)
         user.save()
         return redirect('ekabis:kulup-uyesi-guncelle', pk=clupuser.pk)
+
     elif group.name == "Yonetim":
         member = DirectoryMember(person=person, communication=communication, user=user,
                                  role=DirectoryMemberRole.objects.all()[0],

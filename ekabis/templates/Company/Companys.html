@@ -162,7 +162,7 @@
                         <div class="card-header with-border">
                             <div class="btn-group">
                                 {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}
-                                    <a href="{% url "ekabis:company-add" %}"
+                                    <a href="{% url "ekabis:add_company" %}"
                                        type="button" class="btn btn-success"><i
                                             class="fa fa-edit"></i> Yeni Firma Ekle
                                     </a>
@@ -192,7 +192,7 @@
                                             <td>{{ company.sorumlu }}</td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <a href="{% url "ekabis:company-update" company.pk %}"
+                                                    <a href="{% url "ekabis:change_company" company.pk %}"
                                                        type="button" class="btn btn-warning"><i
                                                             class="fa fa-edit"></i>İncele
                                                     </a>

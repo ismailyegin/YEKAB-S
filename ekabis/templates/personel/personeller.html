@@ -219,7 +219,7 @@
                             {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}
                                 <div class="card-header with-border ">
                                     <div class="btn-group">
-                                        <a href="{% url "ekabis:personel-ekle" %}"
+                                        <a href="{% url "ekabis:add_employee" %}"
                                            type="button" class="btn btn-success"><i
                                                 class="fa fa-edit"></i> Personel Ekle
                                         </a>
@@ -252,10 +252,10 @@
 
 
                                             <td>{{ athlete.workDefinition }} </td>
-                                            {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}
+                                            {% if  aktif == 'Yonetim' or aktif == 'Admin' %}
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{% url "ekabis:personel-duzenle" athlete.pk %}"
+                                                        <a href="{% url "ekabis:change_employee" athlete.pk %}"
                                                            type="button" class="btn btn-warning btn-lg"><i
                                                                 class="fa fa-edit"></i>
                                                         </a>

@@ -8,85 +8,81 @@ app_name = 'ekabis'
 urlpatterns = [
 
     # Dashboard
-    path('anasayfa/admin/', DashboardViews.return_admin_dashboard, name='admin'),
-    path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='federasyon'),
-    path('anasayfa/personel/', DashboardViews.return_personel_dashboard, name='personel'),
+    path('anasayfa/admin/', DashboardViews.return_admin_dashboard, name='view_admin'),
+    path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
+    path('anasayfa/personel/', DashboardViews.return_personel_dashboard, name='view_personel'),
 
 
-    # Admin profil güncelle
+    #profil güncelle
     path('admin/admin-profil-guncelle/', AdminViews.updateProfile,
          name='admin-profil-guncelle'),
 
-    # Yönetim ve  Kurul
-    path('yonetim/kurul-uyeleri/', DirectoryViews.return_directory_members, name='kurul-uyeleri'),
-    path('yonetim/kurul-uyesi-ekle/', DirectoryViews.add_directory_member, name='kurul-uyesi-ekle'),
-    path('yonetim/kurul-uyesi-duzenle/<int:pk>/', DirectoryViews.update_directory_member,
-         name='kurul-uyesi-duzenle'),
-    path('yonetim/kurul-uyeleri/sil/<int:pk>/', DirectoryViews.delete_directory_member,
-         name='kurul-uyesi-sil'),
-    path('yonetim/kurul-uye-rolleri/', DirectoryViews.return_member_roles, name='kurul-uye-rolleri'),
-    path('yonetim/kurul-uye-rolleri/sil/<int:pk>/', DirectoryViews.delete_member_role,
-         name='kurul_uye_rol_sil'),
-    path('yonetim/kurul-uye-rol-duzenle/<int:pk>/', DirectoryViews.update_member_role,
-         name='kurul-uye-rol-duzenle'),
-    path('yonetim/kurullar/', DirectoryViews.return_commissions, name='kurullar'),
-    path('yonetim/kurullar/sil/<int:pk>/', DirectoryViews.delete_commission,
-         name='kurul_sil'),
-    path('yonetim/kurul-duzenle/<int:pk>/', DirectoryViews.update_commission,
-         name='kurul-duzenle'),
     path('yonetim/yonetim-kurul-profil-guncelle/', DirectoryViews.updateDirectoryProfile,
          name='yonetim-kurul-profil-guncelle'),
 
-    path('yonetim/yonetim-guncelle/', DirectoryViews.updateDirectoryProfile,
-         name='yonetim-kurul-profil-guncelle'),
+    path('personel/personel-profil-guncelle/', EmployeeViews.updateRefereeProfile, name='personel-profil-güncelle'),
+
+    # Yönetim
+    path('yonetim/kurul-uyeleri/', DirectoryViews.return_directory_members, name='view_directoryMember'),
+    path('yonetim/kurul-uyesi-ekle/', DirectoryViews.add_directory_member, name='add_directorymember'),
+    path('yonetim/kurul-uyesi-duzenle/<int:pk>/', DirectoryViews.update_directory_member,name='change_directorymember'),
+    path('yonetim/kurul-uyeleri/sil/<int:pk>/', DirectoryViews.delete_directory_member,name='delete_directorymember'),
+
+    # yönetim rol
+    path('yonetim/kurul-uye-rolleri/', DirectoryViews.return_member_roles, name='view_directorymemberrole'),
+    path('yonetim/kurul-uye-rolleri/sil/<int:pk>/', DirectoryViews.delete_member_role, name='delete_directorymemberrole'),
+    path('yonetim/kurul-uye-rol-duzenle/<int:pk>/', DirectoryViews.update_member_role,name='change_directorymemberrole'),
+    # yönetim kurul
+
+    path('yonetim/kurullar/', DirectoryViews.return_commissions, name='view_directorycommission'),
+    path('yonetim/kurullar/sil/<int:pk>/', DirectoryViews.delete_commission,name='delete_directorycommission'),
+    path('yonetim/kurul-duzenle/<int:pk>/', DirectoryViews.update_commission,name='change_directorycommission'),
+
+
 
     # Kullanıcılar
-    path('kullanici/kullanicilar/', UserViews.return_users, name='kullanicilar'),
-    path('kullanici/kullanici-duzenle/<int:pk>/', UserViews.update_user, name='kullanici-duzenle'),
-    path('kullanici/kullanicilar/aktifet<int:pk>/', UserViews.active_user,
-         name='kullanici-aktifet'),
-    path('kullanici/kullanici-mail-gonder/<int:pk>/', UserViews.send_information,
-         name='kullanici-bilgi-gonder'),
+    path('kullanici/kullanicilar/', UserViews.return_users, name='view_user'),
+    path('kullanici/kullanici-duzenle/<int:pk>/', UserViews.update_user, name='change_user'),
+    path('kullanici/kullanicilar/aktifet<int:pk>/', UserViews.active_user, name='view_status'),
+    path('kullanici/kullanici-mail-gonder/<int:pk>/', UserViews.send_information, name='view_email'),
 
     # Personeller
-    path('personel/personel-listesi/', EmployeeViews.return_employees, name='personeller'),
-    path('personel/personel-ekle/', EmployeeViews.add_employee, name='personel-ekle'),
-    path('personel/personel-duzenle/<int:pk>/', EmployeeViews.edit_employee, name='personel-duzenle'),
-    path('personel/unvan-listesi/', EmployeeViews.return_workdefinitionslist, name='unvanlistesi'),
-    path('personel/Unvan-duzenle/<int:pk>/', EmployeeViews.edit_workdefinitionUnvan, name='unvan-duzenle'),
-    path('personel/Unvan-sil/<int:pk>/', EmployeeViews.delete_employeetitle, name='unvan-sil'),
-    path('personel/personel-profil-guncelle/', EmployeeViews.updateRefereeProfile, name='personel-profil-guncelle'),
+    path('personel/personel-listesi/', EmployeeViews.return_employees, name='view_employee'),
+    path('personel/personel-ekle/', EmployeeViews.add_employee, name='add_employee'),
+    path('personel/personel-duzenle/<int:pk>/', EmployeeViews.edit_employee, name='change_employee'),
+
+
+    path('personel/unvan-listesi/', EmployeeViews.return_workdefinitionslist, name='view_categoryitem'),
+    path('personel/Unvan-duzenle/<int:pk>/', EmployeeViews.edit_workdefinitionUnvan, name='change_categoryitem'),
+    path('personel/Unvan-sil/<int:pk>/', EmployeeViews.delete_employeetitle, name='delete_categoryitem'),
 
     #   log kayıtlari
-    path('log/log-kayitlari/', LogViews.return_log,
-         name='logs'),
+    path('log/log-kayitlari/', LogViews.return_log,name='view_logs'),
 
-    # rol güncelle
+    # activ grup  güncelle
+    path('rol/guncelle/<int:pk>/', DashboardViews.activeGroup,name='change_activegroup'),
 
-    path('rol/guncelle/<int:pk>/', DashboardViews.activeGroup,
-         name='aktive-update'),
-
-    path('rol/degisitir/<int:pk>/', AdminViews.activeGroup,
-         name='sporcu-aktive-group'),
+    # guruplar arasında tasıma işlemi
+    path('rol/degisitir/<int:pk>/', AdminViews.activeGroup,name='sporcu-aktive-group'),
 
     #     destek ve talep
 
-    path('destek-talep-listesi/', ClaimView.return_claim, name='destek-talep-listesi'),
-    path('destek/Destek-Ekle', ClaimView.claim_add, name='destek-talep-ekle'),
-    path('destek/destek-sil/<int:pk>/', ClaimView.claim_delete, name='destek-delete'),
-    path('destek/destek-guncelle/<int:pk>/', ClaimView.claim_update, name='destek-guncelle'),
+    path('destek-talep-listesi/', ClaimView.return_claim, name='view_claim'),
+    path('destek/Destek-Ekle', ClaimView.claim_add, name='add_claim'),
+    path('destek/destek-sil/<int:pk>/', ClaimView.claim_delete, name='delete_claim'),
+    path('destek/destek-guncelle/<int:pk>/', ClaimView.claim_update, name='change_claim'),
 
     #     Yardım
-    path('yardim', HelpViews.help, name='help'),
+    path('yardim', HelpViews.help, name='view_help'),
 
-    #     firma
-    path('firma/firma-ekle/', CompanyView.return_add_Company, name='company-add'),
-    path('firma/firma-listesi/', CompanyView.return_list_Company, name='company-list'),
-    path('firma/firma-guncelle/<int:pk>/', CompanyView.return_update_Company, name='company-update'),
+    # firma
+    path('firma/firma-ekle/', CompanyView.return_add_Company, name='add_company'),
+    path('firma/firma-listesi/', CompanyView.return_list_Company, name='view_company'),
+    path('firma/firma-guncelle/<int:pk>/', CompanyView.return_update_Company, name='change_company'),
+
 
     # Grup
-    #     firma
-    path('grup/grup-ekle/', GroupView.return_add_group, name='group-add'),
-    path('grup/grup-listesi/', GroupView.return_list_group, name='group-list'),
-    path('grup/grup-guncelleme/<int:pk>/', GroupView.return_update_group, name='group-update'),
+    path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
+    path('grup/grup-listesi/', GroupView.return_list_group, name='view_group'),
+    path('grup/grup-guncelleme/<int:pk>/', GroupView.return_update_group, name='change_group'),
 ]
