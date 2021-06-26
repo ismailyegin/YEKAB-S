@@ -1,5 +1,6 @@
 import traceback
 from django.contrib.auth.models import  User, Group,Permission
+from django.db.models import Q
 
 from ekabis.models.Logs import Logs
 from ekabis.models.MenuAdmin import MenuAdmin
@@ -16,6 +17,7 @@ from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.Employee import Employee
 from ekabis.models.Notification import Notification
 from ekabis.models.ActiveGroup import ActiveGroup
+from ekabis.models.Claim import Claim
 
 
 def UserService(request,filter):
@@ -78,7 +80,10 @@ def CompanyService(request, filter):
 def DirectoryMemberService(request, filter):
     try:
         if filter:
-            return DirectoryMember.objects.filter(**filter)
+            if type(filter)!=type(Q()):
+                return DirectoryMember.objects.filter(**filter)
+            else:
+                return DirectoryMember.objects.filter(filter)
         else:
             return DirectoryMember.objects.all()
     except Exception as e:
@@ -170,5 +175,19 @@ def PermissionService(request, filter):
             return Permission.objects.filter(**filter)
         else:
             return Permission.objects.all()
+    except Exception as e:
+        traceback.print_exception(e)
+
+
+def ClaimService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return Claim.objects.filter(**filter)
+            else:
+                return Claim.objects.filter(filter)
+
+        else:
+            return Claim.objects.all()
     except Exception as e:
         traceback.print_exception(e)

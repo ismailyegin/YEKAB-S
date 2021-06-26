@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from ekabis.Forms.UserSearchForm import UserSearchForm
 from ekabis.services import general_methods
 from ekabis.models.Logs import Logs
-
+from ekabis.services.services import LogsService
 
 
 @login_required
@@ -37,7 +37,7 @@ def return_log(request):
             finishDate = datetime.strptime(finishDate, "%d/%m/%Y").date()
 
         if not (firstName or lastName or email or playDate or finishDate):
-            logs = Logs.objects.all().order_by('-creationDate')
+            logs = LogsService(request,None)
 
         else:
             query = Q()

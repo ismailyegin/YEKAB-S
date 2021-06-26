@@ -1,3 +1,5 @@
+import json
+from django.core import serializers
 from builtins import classmethod
 
 from django.contrib.auth import logout
@@ -5,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib import messages
 from django.db.models import Q
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from ekabis.Forms.ClaimForm import ClaimForm
@@ -15,19 +16,16 @@ from ekabis.models.Claim import Claim
 from ekabis.Forms.DestekSearchForm import DestekSearchform
 from unicode_tr import unicode_tr
 from ekabis.Forms.UserSearchForm import UserSearchForm
-
-
-
+from ekabis.services.services import ClaimService
 @login_required
 def return_claim(request):
     perm = general_methods.control_access(request)
     active = general_methods.controlGroup(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
     destek_form = DestekSearchform()
-    destek = Claim.objects.none()
+    destek = None
     user_form = UserSearchForm()
     if request.method == 'POST':
         destek_form = DestekSearchform(request.POST or None)
@@ -35,10 +33,9 @@ def return_claim(request):
         importanceSort = request.POST.get('importanceSort')
         firstName = unicode_tr(request.POST.get('first_name')).upper()
         lastName = unicode_tr(request.POST.get('last_name')).upper()
-
         if not (status or importanceSort):
-            if active == 'Admin' or active == 'Arsiv':
-                destek = Claim.objects.all()
+            if active == 'Admin':
+                destek = ClaimService(request, None)
         else:
             query = Q()
             if status:
@@ -50,13 +47,10 @@ def return_claim(request):
             if firstName:
                 query &= Q(user__first_name__icontains=firstName)
 
-            if active == 'Admin' or active == 'Arsiv':
-                destek = Claim.objects.filter(query)
-
+            if active == 'Admin':
+                destek = ClaimService(request,query)
     return render(request, 'Destek/DestekTalepListesi.html',
                   {'claims': destek, 'destek_form': destek_form, 'user_form': user_form, })
-
-
 @login_required
 def claim_add(request):
     perm = general_methods.control_access(request)
@@ -75,7 +69,7 @@ def claim_add(request):
             claimSave.save()
 
             messages.success(request, 'Destek Talep  Eklendi.')
-            return redirect('ekabis:destek-talep-listesi')
+            return redirect('ekabis:view_claim')
         else:
             messages.warning(request, 'Form Bilgilerini Kontrol Ediniz Lütfen .')
 
@@ -96,7 +90,7 @@ def claim_update(request, pk):
         if claim_form.is_valid():
             claim_form.save()
             messages.success(request, 'Destek Talep  Güncellendi.')
-            return redirect('ekabis:destek-talep-listesi')
+            return redirect('ekabis:view_claim')
 
     return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, })
 
@@ -107,21 +101,15 @@ def claim_delete(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
+    claimfilter={
+        'pk':pk
+    }
 
-    clain = Claim.objects.get(pk=pk)
+    clain = ClaimService(request,claimfilter)[0]
     clain.delete()
 
     messages.success(request, 'Destek Talep  Silindi.')
 
-    return redirect('ekabis:destek-talep-listesi')
+    return redirect('ekabis:view_claim')
 
 
-@login_required
-def menu(request):
-    perm = general_methods.control_access(request)
-
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-
-    return render(request, 'Destek/Desktek-ekle.html', {})

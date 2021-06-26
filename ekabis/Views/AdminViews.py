@@ -41,9 +41,7 @@ def activeGroup(request, pk):
     gropfilter={
         'name' : request.GET.get('group')
     }
-    group = GroupService(request,gropfilter).exists()
-    pk = request.GET.get('pk')
-
+    group = GroupService(request,gropfilter)[0]
     communicationfilter={
         'pk' : request.GET.get('communication')
     }

@@ -1,9 +1,8 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.contrib import messages
-from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -19,16 +18,17 @@ from ekabis.Forms.DisabledUserForm import DisabledUserForm
 from ekabis.Forms.UserForm import UserForm
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserSearchForm import UserSearchForm
-from ekabis.models import Person, Communication
 from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMember import DirectoryMember
 from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
 from ekabis.services import general_methods
 
+
 from zeep import Client
-
-
 from unicode_tr import unicode_tr
+
+from ekabis.services.services import PersonService, UserService, GroupService, DirectoryMemberService, \
+    DirectoryMemberRoleService, DirectoryCommissionService
 
 
 @login_required
@@ -53,14 +53,20 @@ def add_directory_member(request):
         # controller tc email
 
         mail = request.POST.get('email')
-        if User.objects.filter(email=mail):
+        userfilter={
+            'mail':mail
+        }
+        if UserService(request,userfilter):
             messages.warning(request, 'Mail adresi başka bir kullanici tarafından kullanilmaktadir.')
             return render(request, 'yonetim/kurul-uyesi-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
                            'member_form': member_form})
 
         tc = request.POST.get('tc')
-        if Person.objects.filter(tc=tc):
+        personfilter={
+            'tc':tc
+        }
+        if PersonService(request,personfilter):
             messages.warning(request, 'Tc kimlik numarasi sistemde kayıtlıdır. ')
             return render(request, 'yonetim/kurul-uyesi-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
@@ -84,7 +90,10 @@ def add_directory_member(request):
             user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
             user.last_name = unicode_tr(user_form.cleaned_data['last_name']).upper()
             user.email = user_form.cleaned_data['email']
-            group = Group.objects.get(name='Yonetim')
+            groupfilter={
+                'name':'Yonetim'
+            }
+            group = GroupService(request,groupfilter)[0]
             password = User.objects.make_random_password()
             user.set_password(password)
             user.save()
@@ -99,17 +108,13 @@ def add_directory_member(request):
             directoryMember = DirectoryMember(user=user, person=person, communication=communication)
             directoryMember.role = member_form.cleaned_data['role']
             directoryMember.commission = member_form.cleaned_data['commission']
-
             directoryMember.save()
-
-
-
             log = str(user.get_full_name()) + " Kurul Uyesi kaydedildi"
             log = general_methods.logwrite(request, request.user, log)
 
             messages.success(request, 'Kurul Üyesi Başarıyla Kayıt Edilmiştir.')
 
-            return redirect('ekabis:kurul-uyesi-duzenle', directoryMember.pk)
+            return redirect('ekabis:change_directorymember', directoryMember.pk)
 
         else:
 
@@ -128,7 +133,7 @@ def return_directory_members(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    members = DirectoryMember.objects.none()
+    members =None
     user_form = UserSearchForm()
     if request.method == 'POST':
         user_form = UserSearchForm(request.POST)
@@ -137,7 +142,7 @@ def return_directory_members(request):
             lastName = unicode_tr(user_form.cleaned_data['last_name']).upper()
             email = user_form.cleaned_data.get('email')
             if not (firstName or lastName or email):
-                members = DirectoryMember.objects.all()
+                members = DirectoryMemberService(request,None)
             else:
                 query = Q()
                 if lastName:
@@ -146,7 +151,8 @@ def return_directory_members(request):
                     query &= Q(user__first_name__icontains=firstName)
                 if email:
                     query &= Q(user__email__icontains=email)
-                members = DirectoryMember.objects.filter(query)
+                members = DirectoryMemberService(request,query)
+
     return render(request, 'yonetim/kurul-uyeleri.html', {'members': members, 'user_form': user_form})
 
 
@@ -159,7 +165,10 @@ def delete_directory_member(request, pk):
         return redirect('accounts:login')
     if request.method == 'POST' and request.is_ajax():
         try:
-            obj = DirectoryMember.objects.get(pk=pk)
+            memberfilter={
+                'pk':pk
+            }
+            obj = DirectoryMemberService(request,memberfilter)[0]
 
             log = str(obj.user.get_full_name()) + " kurul uyesi silindi"
             log = general_methods.logwrite(request, request.user, log)
@@ -180,33 +189,34 @@ def update_directory_member(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    member = DirectoryMember.objects.get(pk=pk)
-
+    memberfilter = {
+        'pk': pk
+    }
+    member = DirectoryMemberService(request, memberfilter)[0]
     if not member.user.groups.all():
-        member.user.groups.add(Group.objects.get(name="Yonetim"))
+        groupfilter={
+            'name':'Yonetim'
+        }
+        member.user.groups.add(GroupService(request,groupfilter)[0])
         member.save()
-    groups = Group.objects.all()
+    groups = GroupService(request,None)
 
-    user = User.objects.get(pk=member.user.pk)
-    person = Person.objects.get(pk=member.person.pk)
+    user = member.user
+    person = member.person
+    communication = member.communication
 
     user_form = UserForm(request.POST or None, instance=user)
     person_form = PersonForm(request.POST or None, request.FILES or None, instance=person)
     member_form = DirectoryForm(request.POST or None, instance=member)
-
-    communication = Communication.objects.get(pk=member.communication.pk)
-
-
     communication_form = CommunicationForm(request.POST or None, instance=communication)
-
-
     if request.method == 'POST':
-
-        # controller tc email
 
         mail = request.POST.get('email')
         if user.email != mail:
-            if User.objects.filter(email=mail):
+            emailfilter={
+                'email':mail
+            }
+            if UserService(request,emailfilter):
                 messages.warning(request, 'Mail adresi başka bir kullanici tarafından kullanilmaktadir.')
                 return render(request, 'yonetim/kurul-uyesi-duzenle.html',
                               {'user_form': user_form, 'communication_form': communication_form, 'member': member,
@@ -216,7 +226,10 @@ def update_directory_member(request, pk):
         tc = request.POST.get('tc')
 
         if person.tc != tc:
-            if Person.objects.filter(tc=tc):
+            personfilter={
+                'tc':tc
+            }
+            if PersonService(request,personfilter):
                 messages.warning(request, 'Tc kimlik numarasi sistemde kayıtlıdır. ')
                 return render(request, 'yonetim/kurul-uyesi-duzenle.html',
                               {'user_form': user_form, 'communication_form': communication_form, 'member': member,
@@ -249,7 +262,6 @@ def update_directory_member(request, pk):
             log = general_methods.logwrite(request, request.user, log)
 
             messages.success(request, 'Kurul Üyesi Başarıyla Güncellendi')
-            # return redirect('ekabis:kurul-uyeleri')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
 
@@ -283,7 +295,7 @@ def return_member_roles(request):
         else:
 
             messages.warning(request, 'Alanları Kontrol Ediniz')
-    memberRoles = DirectoryMemberRole.objects.all()
+    memberRoles = DirectoryMemberRoleService(request,None)
     return render(request, 'yonetim/kurul-uye-rolleri.html',
                   {'member_role_form': member_role_form, 'memberRoles': memberRoles})
 
@@ -291,13 +303,15 @@ def return_member_roles(request):
 @login_required
 def delete_member_role(request, pk):
     perm = general_methods.control_access(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
     if request.method == 'POST' and request.is_ajax():
         try:
-            obj = DirectoryMemberRole.objects.get(pk=pk)
+            memberrolefilter={
+                'pk':pk
+            }
+            obj = DirectoryMemberRoleService(request,memberrolefilter)[0]
             obj.delete()
             return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
         except DirectoryMemberRole.DoesNotExist:
@@ -314,7 +328,10 @@ def update_member_role(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    memberRole = DirectoryMemberRole.objects.get(id=pk)
+    memberrolefilter={
+        'pk':pk
+    }
+    memberRole = DirectoryMemberRoleService(request,memberrolefilter)[0]
     member_role_form = DirectoryMemberRoleForm(request.POST or None, instance=memberRole)
 
     if request.method == 'POST':
@@ -355,7 +372,7 @@ def return_commissions(request):
         else:
 
             messages.warning(request, 'Alanları Kontrol Ediniz')
-    commissions = DirectoryCommission.objects.all()
+    commissions = DirectoryCommissionService(request,None)
     return render(request, 'yonetim/kurullar.html',
                   {'commission_form': commission_form, 'commissions': commissions})
 
@@ -369,8 +386,10 @@ def delete_commission(request, pk):
         return redirect('accounts:login')
     if request.method == 'POST' and request.is_ajax():
         try:
-            obj = DirectoryCommission.objects.get(pk=pk)
-
+            commissonfilter={
+                'pk':pk
+            }
+            obj = DirectoryCommissionService(request,commissonfilter)[0]
             log = str(obj.name) + " kurul silindi"
             log = general_methods.logwrite(request, request.user, log)
             obj.delete()
@@ -389,7 +408,10 @@ def update_commission(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    commission = DirectoryCommission.objects.get(id=pk)
+    commissonfilter = {
+        'pk': pk
+    }
+    commission = DirectoryCommissionService(request,commissonfilter)[0]
     commission_form = DirectoryCommissionForm(request.POST or None, instance=commission)
 
     if request.method == 'POST':
@@ -400,7 +422,7 @@ def update_commission(request, pk):
             log = str(commission.name) + " kurul guncellendi"
             log = general_methods.logwrite(request, request.user, log)
 
-            return redirect('ekabis:kurullar')
+            return redirect('ekabis:view_directorycommission')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
 
@@ -418,13 +440,16 @@ def updateDirectoryProfile(request):
         return redirect('accounts:login')
 
     user = request.user
-    directory_user = DirectoryMember.objects.get(user=user)
-    person = Person.objects.get(pk=directory_user.person.pk)
-    communication = Communication.objects.get(pk=directory_user.communication.pk)
+    memberfilter={
+        'user':user
+    }
+    member = DirectoryMemberService(request,memberfilter)[0]
+    person = member.person
+    communication = member.communication
     user_form = DisabledUserForm(request.POST or None, instance=user)
     person_form = DisabledPersonForm(request.POST or None, instance=person)
     communication_form = DisabledCommunicationForm(request.POST or None, instance=communication)
-    member_form = DisabledDirectoryForm(request.POST or None, instance=directory_user)
+    member_form = DisabledDirectoryForm(request.POST or None, instance=request.user)
     password_form = SetPasswordForm(request.user, request.POST)
 
     if request.method == 'POST':
@@ -447,8 +472,6 @@ def updateDirectoryProfile(request):
 
             log = str(user.get_full_name()) + " yönetim kurulu guncellendi"
             log = general_methods.logwrite(request, request.user, log)
-
-            return redirect('ekabis:yonetim-kurul-profil-guncelle')
 
         else:
 
