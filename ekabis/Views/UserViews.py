@@ -98,26 +98,6 @@ def active_user(request, pk):
         return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
 
 
-def UserAllMail(request):
-    for user in User.objects.all():
-        fdk = Forgot(user=user, status=False)
-        fdk.save()
-
-        log = general_methods.logwrite(request, " Yeni giris maili gönderildi")
-
-        html_content = ''
-        subject, from_email, to = 'Etut Proje Bilgi Sistemi Kullanıcı Bilgileri', 'etutproje@kobiltek.com', user.email
-        html_content = '<h2>ADALET BAKANLIGI PROJE TAKİP  SİSTEMİ</h2>'
-        html_content = html_content + '<p><strong>Kullanıcı Adınız :' + str(fdk.user.username) + '</strong></p>'
-        # html_content = html_content + '<p> <strong>Site adresi:</strong> <a href="http://127.0.0.1:8000/newpassword?query=' + str(
-        #     fdk.uuid) + '">http://127.0.0.1:8000/sbs/profil-guncelle/?query=' + str(fdk.uuid) + '</p></a>'
-        html_content = html_content + '<p> <strong>Yeni şifre oluşturma linki:</strong> <a href="https://www.kobiltek.com:81/etutproje/sbs/newpassword?query=' + str(
-            fdk.uuid) + '">https://www.kobiltek.com:81/etutproje/sbs/profil-guncelle/?query=' + str(
-            fdk.uuid) + '</p></a>'
-        msg = EmailMultiAlternatives(subject, '', from_email, [to])
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
-        return redirect("sbs:kullanicilar")
 
 @login_required
 def send_information(request, pk):

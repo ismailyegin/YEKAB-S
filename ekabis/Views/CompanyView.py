@@ -1,6 +1,3 @@
-from idlelib.idle_test.test_run import S
-from itertools import product
-
 from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
@@ -27,7 +24,6 @@ from django.contrib.auth.models import Group, Permission, User
 @login_required
 def return_add_Company(request):
     perm = general_methods.control_access(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
