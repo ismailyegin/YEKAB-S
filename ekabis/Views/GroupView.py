@@ -8,15 +8,10 @@ from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.GroupForm import GroupForm
-
 from ekabis.services import general_methods
-
 from django.contrib.auth.models import Group, Permission, User
-
-
 @login_required
 def add_group(request):
     perm = general_methods.control_access(request)
@@ -27,14 +22,11 @@ def add_group(request):
     group_form = GroupForm()
 
     if request.method == 'POST':
-        company_form = GroupForm(request.POST, request.FILES)
-        communication_form = CommunicationForm(request.POST, request.FILES)
-        if company_form.is_valid():
-            communication = communication_form.save(commit=False)
-            communication.save()
-            company = company_form.save(commit=False)
-            company.communication = communication
-            company.save()
+        group_form = GroupForm(request.POST)
+        if group_form.is_valid():
+            group_form.save()
+
+            # log yazılacak
 
             messages.success(request, 'Grup Kayıt Edilmiştir.')
             return redirect('ekabis:group-list')
@@ -54,18 +46,9 @@ def return_list_group(request):
     return render(request, 'Group/GrupListe.html',
                   {'groups': groups})
 
-
-
-
-
-
-
-
-
 @login_required
 def return_update_group(request, pk):
     perm = general_methods.control_access(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')

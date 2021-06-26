@@ -1,21 +1,7 @@
-import csv
 from datetime import datetime
-
-from django.conf import settings
-from django.contrib.auth.models import Permission, User, Group
-
-from ekabis.models.ActiveGroup import ActiveGroup
+from ekabis.services.services import ActiveGroupService,MenuAdminService,MenuDirectoryService,MenuPersonelService,MenuService,EmployeeService,DirectoryMemberService,UserService
 from ekabis.models.Logs import Logs
-
-from ekabis.models.MenuAdmin import MenuAdmin
-from ekabis.models.MenuDirectory import MenuDirectory
-from ekabis.models.MenuPersonel import MenuPersonel
-from ekabis.models.Menu import Menu
-
-from ekabis.models.Person import Person
-from ekabis.models.Employee import Employee
-from ekabis.models.DirectoryMember import DirectoryMember
-
+from  ekabis.models.ActiveGroup import ActiveGroup
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -47,12 +33,12 @@ def logwrite(request, user, log):
 
 
 def getMenu(request):
-    menus = Menu.objects.all()
+    menus = MenuService(request,None)
     return {'menus': menus}
 
 
 def getAdminMenu(request):
-    adminmenus = MenuAdmin.objects.all().order_by("sorting")
+    adminmenus = MenuAdminService(request,None)
     return {'adminmenus': adminmenus}
 
 
@@ -60,44 +46,14 @@ def getAdminMenu(request):
 
 
 def getDirectoryMenu(request):
-    refereemenus = MenuDirectory.objects.all().order_by("sorting")
+    refereemenus = MenuDirectoryService(request,None)
     return {'refereemenus': refereemenus}
 
 
 def getPersonelMenu(request):
-    coachmenus = MenuPersonel.objects.all().order_by("sorting")
+    coachmenus = MenuPersonelService(request,None)
     return {'coachmenus': coachmenus}
 
-
-
-def show_urls(urllist, depth=0):
-    urls = []
-
-    # show_urls(urls.urlpatterns)
-    for entry in urllist:
-
-        urls.append(entry)
-        perm = Permission(name=entry.name, codename=entry.pattern.regex.pattern, content_type_id=7)
-
-        if Permission.objects.filter(name=entry.name).count() == 0:
-            perm.save()
-        if hasattr(entry, 'url_patterns'):
-            show_urls(entry.url_patterns, depth + 1)
-
-    return urls
-
-
-def show_urls_deneme(urllist, depth=0):
-    urls = []
-    # show_urls(urls.urlpatterns)
-    for entry in urllist:
-
-        urls.append(entry)
-
-        if hasattr(entry, 'url_patterns'):
-            show_urls(entry.url_patterns, depth + 1)
-
-    return urls
 def control_access(request):
     print(request.resolver_match.url_name)
     groups = request.user.groups.all()
@@ -117,13 +73,23 @@ def control_access(request):
 
 
 def aktif(request):
-    if User.objects.filter(pk=request.user.pk):
-        if not (ActiveGroup.objects.filter(user=request.user)):
+    userfilter={
+        'pk' :request.user.pk
+    }
+    if UserService(request,userfilter):
+        activfilter={
+            'user' : request.user
+        }
+        if not (ActiveGroupService(request,activfilter)):
             aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
             aktive.save()
-            aktif = request.user.groups.all()[0]
+            aktif =aktive
         else:
-            aktif = ActiveGroup.objects.get(user=request.user).group.name
+            activfilter={
+                'user' : request.user
+            }
+            aktif = ActiveGroupService(request,activfilter)[0]
+            aktif=aktif.group.name
         group = request.user.groups.all()
         return {'aktif': aktif,
                 'group': group,
@@ -134,50 +100,48 @@ def aktif(request):
 
 
 def controlGroup(request):
-    if User.objects.filter(pk=request.user.pk):
-        if not (ActiveGroup.objects.filter(user=request.user)):
+    userfilter = {
+        'pk': request.user.pk
+    }
+    if UserService(request,userfilter):
+        activfilter={
+            'user' :request.user
+        }
+        if not (ActiveGroupService(request,activfilter)):
             aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
             aktive.save()
             active = request.user.groups.all()[0]
 
         else:
-            active = ActiveGroup.objects.get(user=request.user).group.name
+            activfilter = {
+                'user': request.user
+            }
+            active = ActiveGroupService(request, activfilter)[0]
+            active=active.group.name
         return active
 
     else:
         return {}
 
-
-
-
 def getProfileImage(request):
     if (request.user.id):
-        current_user = request.user
+        userfilter={
+            'user' : request.user
+        }
 
-        if current_user.groups.filter(name='Admin').exists():
+        if request.user.groups.filter(name='Admin').exists():
             person = dict()
             person['profileImage'] = "profile/logo.png"
-
-        if current_user.groups.filter(name='Arsiv').exists():
-            person = dict()
-            person['profileImage'] = "profile/logo.png"
-
-        elif current_user.groups.filter(name='Personel').exists():
-            athlete = Employee.objects.get(user=current_user)
-            person = Person.objects.get(id=athlete.person.id)
-
-        elif current_user.groups.filter(name='Yonetim').exists():
-            athlete = DirectoryMember.objects.get(user=current_user)
-            person = Person.objects.get(id=athlete.person.id)
-
+        elif request.user.groups.filter(name='Personel').exists():
+            athlete = EmployeeService(request,userfilter)[0]
+            person = athlete.person
+        elif request.user.groups.filter(name='Yonetim').exists():
+            athlete = DirectoryMemberService(request,userfilter)[0]
+            person = athlete.person
         else:
             person = None
-
         return {'person': person}
-
     return {}
-
-
 def get_notification(request):
     # if (request.user.id):
     #     current_user = request.user

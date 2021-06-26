@@ -6,14 +6,13 @@ from django.shortcuts import render, redirect
 from accounts.models import Forgot
 from ekabis.services import general_methods
 
-
+from ekabis.services.services import UserService
 
 def index(request):
     return render(request, 'accounts/index.html')
 
 def pagelogout(request):
-    log = "  Cikis yapti "
-    log = general_methods.logwrite(request, request.user, log)
+    log = general_methods.logwrite(request, request.user, "  Cikis yapti ")
     logout(request)
 
     return redirect('accounts:login')
@@ -43,7 +42,6 @@ def login(request):
 
             elif active == 'Admin':
                 return redirect('ekabis:view_admin')
-
             else:
                 return redirect('accounts:view_logout')
 
@@ -57,9 +55,11 @@ def login(request):
 def forgot(request):
     if request.method == 'POST':
         mail = request.POST.get('username')
-        obj = User.objects.filter(username=mail)
-        if obj.count() != 0:
-            user = User.objects.get(username=mail)
+        userfilter={
+            'username' : mail
+        }
+        if UserService(request,userfilter):
+            user = UserService(request,userfilter)[0]
             user.is_active = True
             user.save()
 
