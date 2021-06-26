@@ -41,19 +41,19 @@ def activeGroup(request, pk):
     gropfilter={
         'name' : request.GET.get('group')
     }
-    group = GroupService(request,gropfilter)[0]
+    group = GroupService(request,gropfilter).first()
     communicationfilter={
         'pk' : request.GET.get('communication')
     }
-    communication = CommunicationService(request,communicationfilter)[0]
+    communication = CommunicationService(request,communicationfilter).first()
     personfilter={
         'pk' : request.GET.get('person')
     }
-    person = PersonService(request,personfilter)[0]
+    person = PersonService(request,personfilter).first()
     userfilter={
         'pk' : request.GET.get('user')
     }
-    user = UserService(request,userfilter)[0]
+    user = UserService(request,userfilter).first()
     if group.name == "Admin":
         user.groups.add(group)
         user.is_superuser = True
@@ -71,8 +71,8 @@ def activeGroup(request, pk):
 
     elif group.name == "Yonetim":
         member = DirectoryMember(person=person, communication=communication, user=user,
-                                 role=DirectoryMemberRoleService(request,None)[0],
-                                 commission=DirectoryCommissionService(request,None)[0])
+                                 role=DirectoryMemberRoleService(request,None).first(),
+                                 commission=DirectoryCommissionService(request,None).first())
         member.save()
         user.groups.add(group)
         user.save()

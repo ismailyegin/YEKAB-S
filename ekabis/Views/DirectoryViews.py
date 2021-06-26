@@ -93,7 +93,7 @@ def add_directory_member(request):
             groupfilter={
                 'name':'Yonetim'
             }
-            group = GroupService(request,groupfilter)[0]
+            group = GroupService(request,groupfilter).first()
             password = User.objects.make_random_password()
             user.set_password(password)
             user.save()
@@ -119,7 +119,7 @@ def add_directory_member(request):
         else:
 
             for x in user_form.errors.as_data():
-                messages.warning(request, user_form.errors[x][0])
+                messages.warning(request, user_form.errors[x].first())
 
     return render(request, 'yonetim/kurul-uyesi-ekle.html',
                   {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
@@ -168,7 +168,7 @@ def delete_directory_member(request, pk):
             memberfilter={
                 'pk':pk
             }
-            obj = DirectoryMemberService(request,memberfilter)[0]
+            obj = DirectoryMemberService(request,memberfilter).first()
 
             log = str(obj.user.get_full_name()) + " kurul uyesi silindi"
             log = general_methods.logwrite(request, request.user, log)
@@ -192,12 +192,12 @@ def update_directory_member(request, pk):
     memberfilter = {
         'pk': pk
     }
-    member = DirectoryMemberService(request, memberfilter)[0]
+    member = DirectoryMemberService(request, memberfilter).first()
     if not member.user.groups.all():
         groupfilter={
             'name':'Yonetim'
         }
-        member.user.groups.add(GroupService(request,groupfilter)[0])
+        member.user.groups.add(GroupService(request,groupfilter).first())
         member.save()
     groups = GroupService(request,None)
 
@@ -311,7 +311,7 @@ def delete_member_role(request, pk):
             memberrolefilter={
                 'pk':pk
             }
-            obj = DirectoryMemberRoleService(request,memberrolefilter)[0]
+            obj = DirectoryMemberRoleService(request,memberrolefilter).first()
             obj.delete()
             return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
         except DirectoryMemberRole.DoesNotExist:
@@ -331,7 +331,7 @@ def update_member_role(request, pk):
     memberrolefilter={
         'pk':pk
     }
-    memberRole = DirectoryMemberRoleService(request,memberrolefilter)[0]
+    memberRole = DirectoryMemberRoleService(request,memberrolefilter).first()
     member_role_form = DirectoryMemberRoleForm(request.POST or None, instance=memberRole)
 
     if request.method == 'POST':
@@ -389,7 +389,7 @@ def delete_commission(request, pk):
             commissonfilter={
                 'pk':pk
             }
-            obj = DirectoryCommissionService(request,commissonfilter)[0]
+            obj = DirectoryCommissionService(request,commissonfilter).first()
             log = str(obj.name) + " kurul silindi"
             log = general_methods.logwrite(request, request.user, log)
             obj.delete()
@@ -411,7 +411,7 @@ def update_commission(request, pk):
     commissonfilter = {
         'pk': pk
     }
-    commission = DirectoryCommissionService(request,commissonfilter)[0]
+    commission = DirectoryCommissionService(request,commissonfilter).first()
     commission_form = DirectoryCommissionForm(request.POST or None, instance=commission)
 
     if request.method == 'POST':
@@ -443,7 +443,7 @@ def updateDirectoryProfile(request):
     memberfilter={
         'user':user
     }
-    member = DirectoryMemberService(request,memberfilter)[0]
+    member = DirectoryMemberService(request,memberfilter).first()
     person = member.person
     communication = member.communication
     user_form = DisabledUserForm(request.POST or None, instance=user)

@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from unicode_tr import unicode_tr
 
 from ekabis.Forms.CategoryItemForm import CategoryItemForm
 from ekabis.Forms.CommunicationForm import CommunicationForm
@@ -48,7 +49,7 @@ def add_employee(request):
     if request.method == 'POST':
 
         user_form = UserForm(request.POST)
-        person_form = PersonForm(request.POST , request.FILES or None)
+        person_form = PersonForm(request.POST , request.FILES)
         communication_form = CommunicationForm(request.POST, request.FILES)
 
         employe_form = EmployeeForm(request.POST)
@@ -56,8 +57,8 @@ def add_employee(request):
         if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and employe_form.is_valid():
             user = User()
             user.username = user_form.cleaned_data['email']
-            user.first_name = user_form.cleaned_data['first_name']
-            user.last_name = user_form.cleaned_data['last_name']
+            user.firstName = unicode_tr(user_form.cleaned_data['first_name']).upper()
+            user.lastName = unicode_tr(user_form.cleaned_data['last_name']).upper()
             user.email = user_form.cleaned_data['email']
             group = Group.objects.get(name=request.POST.get('group'))
             password = User.objects.make_random_password()
@@ -88,7 +89,7 @@ def add_employee(request):
         else:
 
             for x in user_form.errors.as_data():
-                messages.warning(request, user_form.errors[x][0])
+                messages.warning(request, user_form.errors[x].first())
 
     return render(request, 'personel/personel-ekle.html',
                   {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
@@ -105,7 +106,7 @@ def edit_employee(request, pk):
     employefilter={
         'pk':pk
     }
-    employee = EmployeeService(request,employefilter)[0]
+    employee = EmployeeService(request,employefilter).first()
     user_form = UserForm(request.POST or None, instance=employee.user)
     person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
     communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
@@ -131,7 +132,7 @@ def edit_employee(request, pk):
             employee_form.save()
 
             log = str(user.get_full_name()) + " personel güncellendi"
-            log = general_methods.logwrite(request, log)
+            log = general_methods.logwrite(request,request.user, log)
 
             messages.success(request, 'Personel Başarıyla Güncellenmiştir.')
 
@@ -140,7 +141,7 @@ def edit_employee(request, pk):
         else:
 
             for x in user_form.errors.as_data():
-                messages.warning(request, user_form.errors[x][0])
+                messages.warning(request, user_form.errors[x].first())
 
     return render(request, 'personel/personel-duzenle.html',
                   {'user_form': user_form, 'communication_form': communication_form,
@@ -159,7 +160,7 @@ def delete_employee(request, pk):
             empoyefilter={
                 'pk':pk
             }
-            obj = EmployeeService(request,empoyefilter)[0]
+            obj = EmployeeService(request,empoyefilter).first()
             obj.delete()
             return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
         except :
@@ -260,7 +261,7 @@ def delete_workdefinition(request, pk):
             categoryfilter={
                 'pk':pk
             }
-            obj = CategoryItemService(request,categoryfilter)[0]
+            obj = CategoryItemService(request,categoryfilter).first()
 
             log = str(obj.name) + " unvani sildi"
             log = general_methods.logwrite(request, log)
@@ -285,7 +286,7 @@ def edit_workdefinition(request, pk):
     categoryfilter = {
         'pk': pk
     }
-    categoryItem = CategoryItemService(request, categoryfilter)[0]
+    categoryItem = CategoryItemService(request, categoryfilter).first()
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
     if request.method == 'POST':
         if request.POST.get('name') is not None:
@@ -313,7 +314,7 @@ def edit_workdefinitionUnvan(request, pk):
     categoryfilter = {
         'pk': pk
     }
-    categoryItem = CategoryItemService(request, categoryfilter)[0]
+    categoryItem = CategoryItemService(request, categoryfilter).first()
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
     if request.method == 'POST':
         if request.POST.get('name') is not None:
@@ -342,7 +343,7 @@ def delete_employeetitle(request, pk):
             categoryfilter = {
                 'pk': pk
             }
-            obj = CategoryItemService(request, categoryfilter)[0]
+            obj = CategoryItemService(request, categoryfilter).first()
             obj.delete()
             return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
         except CategoryItem.DoesNotExist:
@@ -365,7 +366,7 @@ def updateRefereeProfile(request):
     employeefilter = {
         'user':request.user
     }
-    employee = EmployeeService(request,employeefilter)[0]
+    employee = EmployeeService(request,employeefilter).first()
     user_form = DisabledUserForm(request.POST or None, instance=employee.user)
     person_form = DisabledPersonForm(request.POST or None, request.FILES or None, instance=employee.person)
     communication_form = DisabledCommunicationForm(request.POST or None, instance=employee.communication)

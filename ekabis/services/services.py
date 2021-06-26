@@ -19,7 +19,6 @@ from ekabis.models.Notification import Notification
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Claim import Claim
 
-
 def UserService(request,filter):
     try:
         if filter:
@@ -195,7 +194,6 @@ def ClaimService(request, filter):
                 return Claim.objects.filter(**filter)
             else:
                 return Claim.objects.filter(filter)
-
         else:
             return Claim.objects.all()
     except Exception as e:

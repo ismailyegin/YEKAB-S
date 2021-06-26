@@ -2,7 +2,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from ekabis.services import general_methods
-from ekabis.services.services import ActiveGroupService, GroupService
+from ekabis.services.services import ActiveGroupService, GroupService, EmployeeService
 
 
 @login_required
@@ -46,7 +46,6 @@ def return_admin_dashboard(request):
         logout(request)
         return redirect('accounts:login')
 
-
     return render(request, 'anasayfa/admin.html',
                   {
 
@@ -62,7 +61,7 @@ def activeGroup(request, pk):
     groupfilter={
         'pk':pk
     }
-    group = GroupService(request,groupfilter)[0]
+    group = GroupService(request,groupfilter).first()
     userActive.group = group
     userActive.save()
     if group.name == "Admin":

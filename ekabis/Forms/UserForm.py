@@ -10,7 +10,7 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'is_active')
-        labels = {'first_name': 'İsim*', 'last_name': 'Soyisim*', 'email': 'Email*'}
+        labels = {'first_name': 'İsim', 'last_name': 'Soyisim', 'email': 'Email'}
         widgets = {
             'first_name': forms.TextInput(
                 attrs={'class': 'form-control ', 'value': '', "style": "text-transform:uppercase",

@@ -45,7 +45,7 @@ def return_update_group(request, pk):
     groupfilter={
         'pk':pk
     }
-    groups = GroupService(request,groupfilter)[0]
+    groups = GroupService(request,groupfilter).first()
     group_form = GroupForm(request.POST or None, instance=groups)
     if request.method == 'POST':
         if group_form.is_valid():

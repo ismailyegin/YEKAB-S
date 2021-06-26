@@ -56,7 +56,7 @@ def return_update_Company(request, pk):
         'pk':pk
 
     }
-    company = CompanyService(request,companyfilter)[0]
+    company = CompanyService(request,companyfilter).first()
     company_form = CompanyForm(request.POST or None, instance=company)
     communication_form = CommunicationForm(request.POST or None, instance=company.communication)
 

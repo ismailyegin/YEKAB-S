@@ -50,7 +50,7 @@ def update_user(request, pk):
     userfilter={
         'pk':pk
     }
-    user = UserService(request,userfilter)[0]
+    user = UserService(request,userfilter).first()
     user_form = UserForm(request.POST or None, instance=user)
     if request.method == 'POST':
         if user_form.is_valid() :
@@ -81,7 +81,7 @@ def active_user(request, pk):
             'pk': pk
         }
 
-        obj = UserService(request,userfilter)[0]
+        obj = UserService(request,userfilter).first()
         if obj.is_active:
             obj.is_active = False
             obj.save()

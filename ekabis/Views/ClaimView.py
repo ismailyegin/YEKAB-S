@@ -105,7 +105,7 @@ def claim_delete(request, pk):
         'pk':pk
     }
 
-    clain = ClaimService(request,claimfilter)[0]
+    clain = ClaimService(request,claimfilter).first()
     clain.delete()
 
     messages.success(request, 'Destek Talep  Silindi.')
