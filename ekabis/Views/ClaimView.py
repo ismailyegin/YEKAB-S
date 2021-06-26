@@ -2,10 +2,8 @@ from builtins import classmethod
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.models import User, Group
+
 from django.contrib import messages
-from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -13,11 +11,11 @@ from django.shortcuts import render, redirect
 from ekabis.Forms.ClaimForm import ClaimForm
 from ekabis.services import general_methods
 from ekabis.models.Claim import Claim
+
 from ekabis.Forms.DestekSearchForm import DestekSearchform
 from unicode_tr import unicode_tr
 from ekabis.Forms.UserSearchForm import UserSearchForm
 
-from ekabis.models import MenuDirectory, MenuAdmin
 
 
 @login_required
