@@ -23,7 +23,7 @@ from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Country import Country
 from ekabis.models.Employee import Employee
 from ekabis.services import general_methods
-
+from ekabis.services.services import CategoryItemService, EmployeeService
 
 
 @login_required
@@ -37,12 +37,13 @@ def add_employee(request):
     user_form = UserForm()
     person_form = PersonForm()
     communication=Communication()
-    country=Country.objects.get(name__icontains='TÜRKİYE')
-    communication.country=country
-    communication_form = CommunicationForm(instance=communication)
-
+    communication_form = CommunicationForm()
     employee_form = EmployeeForm()
-    employee_form.fields['workDefinition'].queryset = CategoryItem.objects.filter(forWhichClazz="EMPLOYEE_WORKDEFINITION")
+    categorItemfilter={
+        'forWhichClazz' : "EMPLOYEE_WORKDEFINITION"
+
+    }
+    employee_form.fields['workDefinition'].queryset = CategoryItemService(request,categorItemfilter)
 
     if request.method == 'POST':
 
@@ -50,9 +51,9 @@ def add_employee(request):
         person_form = PersonForm(request.POST , request.FILES or None)
         communication_form = CommunicationForm(request.POST, request.FILES)
 
-        sportClubUser_form = EmployeeForm(request.POST)
+        employe_form = EmployeeForm(request.POST)
 
-        if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and sportClubUser_form.is_valid():
+        if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and employe_form.is_valid():
             user = User()
             user.username = user_form.cleaned_data['email']
             user.first_name = user_form.cleaned_data['first_name']
@@ -72,7 +73,7 @@ def add_employee(request):
 
             personel = Employee(
                 user=user, person=person, communication=communication,
-                workDefinition=sportClubUser_form.cleaned_data['workDefinition'],
+                workDefinition=employe_form.cleaned_data['workDefinition'],
 
             )
 
@@ -94,16 +95,6 @@ def add_employee(request):
                    'employee_form': employee_form,
                    })
 
-
-
-
-
-
-
-
-
-
-
 @login_required
 def edit_employee(request, pk):
     perm = general_methods.control_access(request)
@@ -111,28 +102,19 @@ def edit_employee(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    employee = Employee.objects.get(pk=pk)
-    user = User.objects.get(pk=employee.user.pk)
-    person = Person.objects.get(pk=employee.person.pk)
-
-    communication = Communication.objects.get(pk=employee.communication.pk)
-    user_form = UserForm(request.POST or None, instance=user)
-    person_form = PersonForm(request.POST or None, request.FILES or None, instance=person)
-    communication_form = CommunicationForm(request.POST or None, instance=communication)
+    employefilter={
+        'pk':pk
+    }
+    employee = EmployeeService(request,employefilter)[0]
+    user_form = UserForm(request.POST or None, instance=employee.user)
+    person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
+    communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
 
     employee_form = EmployeeForm(request.POST or None, instance=employee)
-    employee_form.fields['workDefinition'].queryset = CategoryItem.objects.filter(
-        forWhichClazz="EMPLOYEE_WORKDEFINITION")
-
-    # # bildirimden  gelinmisse ve sistem deki  kisinin ise true yap daha görülmesin
-    # get = request.GET.get('notification')
-    # if get:
-    #     notification = Notification.objects.get(pk=int(get))
-    #     if notification.users == request.user:
-    #         notification.is_show = True
-    #         notification.save()
-
-
+    categoryfilter={
+        'forWhichClazz' : "EMPLOYEE_WORKDEFINITION"
+    }
+    employee_form.fields['workDefinition'].queryset = CategoryItemService(request,categoryfilter)
 
     if request.method == 'POST':
 
@@ -174,7 +156,10 @@ def delete_employee(request, pk):
         return redirect('accounts:login')
     if request.method == 'POST' and request.is_ajax():
         try:
-            obj = Employee.objects.get(pk=pk)
+            empoyefilter={
+                'pk':pk
+            }
+            obj = EmployeeService(request,empoyefilter)[0]
             obj.delete()
             return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
         except :
@@ -194,13 +179,11 @@ def return_employees(request):
         return redirect('accounts:login')
 
     user_form = UserSearchForm()
-    employees = Employee.objects.none()
+    employees = None
     get = request.GET.get('get')
     if get:
         if get == 'hepsi':
-            employees = Employee.objects.all()
-
-
+            employees = EmployeeService(request,None)
 
     if request.method == 'POST':
         user_form = UserSearchForm(request.POST)
@@ -213,7 +196,7 @@ def return_employees(request):
             workDefinition=user_form.cleaned_data.get('workDefinition')
             group=request.POST.get('group')
             if not (firstName or lastName or email or workDefinition or group):
-                employees = Employee.objects.all()
+                employees = EmployeeService(request,None)
 
             else:
                 query = Q()
@@ -227,7 +210,7 @@ def return_employees(request):
                     query &= Q(workDefinition=workDefinition)
                 if group:
                     query &=Q(user__groups__name=group)
-                employees = Employee.objects.filter(query).distinct()
+                employees = EmployeeService(request,query)
 
     return render(request, 'personel/personeller.html',
                   {'employees': employees, 'user_form': user_form,})
@@ -259,12 +242,12 @@ def return_workdefinitionslist(request):
         else:
 
             messages.warning(request, 'Alanları Kontrol Ediniz')
-    categoryitem = CategoryItem.objects.filter(forWhichClazz="EMPLOYEE_WORKDEFINITION")
+    categoryfilter={
+        'forWhichClazz' : "EMPLOYEE_WORKDEFINITION"
+    }
+    categoryitem = CategoryItemService(request,categoryfilter)
     return render(request, 'personel/unvanListesi.html',
                   {'category_item_form': category_item_form, 'categoryitem': categoryitem})
-
-
-
 @login_required
 def delete_workdefinition(request, pk):
     perm = general_methods.control_access(request)
@@ -274,7 +257,10 @@ def delete_workdefinition(request, pk):
         return redirect('accounts:login')
     if request.method == 'POST' and request.is_ajax():
         try:
-            obj = CategoryItem.objects.get(pk=pk)
+            categoryfilter={
+                'pk':pk
+            }
+            obj = CategoryItemService(request,categoryfilter)[0]
 
             log = str(obj.name) + " unvani sildi"
             log = general_methods.logwrite(request, log)
@@ -296,7 +282,10 @@ def edit_workdefinition(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    categoryItem = CategoryItem.objects.get(id=pk)
+    categoryfilter = {
+        'pk': pk
+    }
+    categoryItem = CategoryItemService(request, categoryfilter)[0]
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
     if request.method == 'POST':
         if request.POST.get('name') is not None:
@@ -321,7 +310,10 @@ def edit_workdefinitionUnvan(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    categoryItem = CategoryItem.objects.get(id=pk)
+    categoryfilter = {
+        'pk': pk
+    }
+    categoryItem = CategoryItemService(request, categoryfilter)[0]
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
     if request.method == 'POST':
         if request.POST.get('name') is not None:
@@ -347,7 +339,10 @@ def delete_employeetitle(request, pk):
         return redirect('accounts:login')
     if request.method == 'POST' and request.is_ajax():
         try:
-            obj = CategoryItem.objects.get(pk=pk)
+            categoryfilter = {
+                'pk': pk
+            }
+            obj = CategoryItemService(request, categoryfilter)[0]
             obj.delete()
             return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
         except CategoryItem.DoesNotExist:
@@ -367,31 +362,28 @@ def updateRefereeProfile(request):
         logout(request)
         return redirect('accounts:login')
 
-    user = request.user
-    referee_user = Employee.objects.get(user=user)
-    person = Person.objects.get(pk=referee_user.person.pk)
-    communication = Communication.objects.get(pk=referee_user.communication.pk)
-    user_form = DisabledUserForm(request.POST or None, instance=user)
-    person_form = DisabledPersonForm(request.POST or None, request.FILES or None, instance=person)
-    communication_form = DisabledCommunicationForm(request.POST or None, instance=communication)
+    employeefilter = {
+        'user':request.user
+    }
+    employee = EmployeeService(request,employeefilter)[0]
+    user_form = DisabledUserForm(request.POST or None, instance=employee.user)
+    person_form = DisabledPersonForm(request.POST or None, request.FILES or None, instance=employee.person)
+    communication_form = DisabledCommunicationForm(request.POST or None, instance=employee.communication)
     password_form = SetPasswordForm(request.user, request.POST)
 
     if request.method == 'POST':
         person_form = DisabledPersonForm(request.POST, request.FILES)
         try:
             if request.FILES['profileImage']:
-                print('deger var ')
-                person.profileImage = request.FILES['profileImage']
-                person.save()
+                employee.person.profileImage = request.FILES['profileImage']
+                employee.person.save()
                 messages.success(request, 'Resim güncellendi.')
-        except:
-            print('hata' )
-
-
+        except Exception as e:
+            print(e)
         if password_form.is_valid():
-            user.set_password(password_form.cleaned_data['new_password2'])
-            user.save()
-            update_session_auth_hash(request, user)
+            employee.user.set_password(password_form.cleaned_data['new_password2'])
+            employee.user.save()
+            update_session_auth_hash(request,employee.user)
             messages.success(request, 'Şifre Başarıyla Güncellenmiştir.')
             return redirect('ekabis:personel-profil-guncelle')
 

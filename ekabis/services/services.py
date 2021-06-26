@@ -23,7 +23,10 @@ from ekabis.models.Claim import Claim
 def UserService(request,filter):
     try:
         if filter:
-            return User.objects.filter(**filter)
+            if type(filter) !=type(Q()):
+               return User.objects.filter(**filter)
+            else:
+                return User.objects.filter(filter)
         else:
             return User.objects.all()
     except User.DoesNotExist:
@@ -107,7 +110,10 @@ def DirectoryMemberRoleService(request, filter):
 def EmployeeService(request, filter):
     try:
         if filter:
-            return Employee.objects.filter(**filter)
+            if type(filter) != type (Q()):
+                return Employee.objects.filter(**filter)
+            else:
+                Employee.objects.filter(filter)
         else:
             return Employee.objects.all()
     except Exception as e:
@@ -115,7 +121,10 @@ def EmployeeService(request, filter):
 def LogsService(request, filter):
     try:
         if filter:
-            return Logs.objects.filter(**filter)
+            if type(filter) !=type(Q()):
+                return Logs.objects.filter(**filter)
+            else:
+                return Logs.objects.filter(filter)
         else:
             return Logs.objects.all()
     except Exception as e:

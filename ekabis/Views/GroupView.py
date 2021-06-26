@@ -1,35 +1,26 @@
-from django.contrib.auth import logout, update_session_auth_hash
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.models import User, Group
 from django.contrib import messages
-from django.core.mail import EmailMultiAlternatives
-from django.db.models import Q
-from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.urls import reverse
-from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.GroupForm import GroupForm
 from ekabis.services import general_methods
-from django.contrib.auth.models import Group, Permission, User
+from ekabis.services.services import GroupService
 @login_required
 def add_group(request):
     perm = general_methods.control_access(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
     group_form = GroupForm()
-
     if request.method == 'POST':
         group_form = GroupForm(request.POST)
         if group_form.is_valid():
-            group_form.save()
-
-            # log yazılacak
-
+            group =group_form.save(commit=False)
+            group.save()
+            log= group.name+' Grubunu Kaydetti'
+            log = general_methods.logwrite(request, request.user, log)
             messages.success(request, 'Grup Kayıt Edilmiştir.')
-            return redirect('ekabis:group-list')
+            return redirect('ekabis:view_group')
         else:
             messages.warning(request, 'Alanları Kontrol Ediniz')
     return render(request, 'Group/GrupEkle.html',
@@ -42,17 +33,19 @@ def return_list_group(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    groups = Group.objects.all()
+    groups = GroupService(request,None)
     return render(request, 'Group/GrupListe.html',
                   {'groups': groups})
-
 @login_required
 def return_update_group(request, pk):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    groups = Group.objects.get(pk=pk)
+    groupfilter={
+        'pk':pk
+    }
+    groups = GroupService(request,groupfilter)[0]
     group_form = GroupForm(request.POST or None, instance=groups)
     if request.method == 'POST':
         if group_form.is_valid():

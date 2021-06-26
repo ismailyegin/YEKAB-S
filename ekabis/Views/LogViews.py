@@ -1,14 +1,10 @@
-from builtins import print, set, property, int
-from datetime import timedelta, datetime
+from datetime import  datetime
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
-
 from ekabis.Forms.UserSearchForm import UserSearchForm
 from ekabis.services import general_methods
-from ekabis.models.Logs import Logs
 from ekabis.services.services import LogsService
 
 
@@ -19,7 +15,7 @@ def return_log(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    logs = Logs.objects.none()
+    logs = None
     user_form = UserSearchForm()
     if request.method == 'POST':
 
@@ -38,7 +34,6 @@ def return_log(request):
 
         if not (firstName or lastName or email or playDate or finishDate):
             logs = LogsService(request,None)
-
         else:
             query = Q()
             if lastName:
@@ -52,6 +47,6 @@ def return_log(request):
             if finishDate:
                 query &= Q(creationDate__lt=finishDate)
 
-            logs = Logs.objects.filter(query).order_by('-creationDate')
+            logs = LogsService(request,query)
 
     return render(request, 'Log/Logs.html', {'logs': logs, 'user_form': user_form})
