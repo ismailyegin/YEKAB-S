@@ -10,5 +10,5 @@ class GroupForm(forms.ModelForm):
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
-            'permissions':forms.CheckboxSelectMultiple(),
+            'permissions':forms.CheckboxSelectMultiple(attrs={'class':'form-check-input'}),
         }
