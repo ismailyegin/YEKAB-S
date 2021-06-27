@@ -56,9 +56,8 @@ def getPersonelMenu(request):
 
 def control_access(request):
     print(request.resolver_match.url_name)
-    groups = request.user.groups.all()
     is_exist = False
-    for group in groups:
+    for group in request.user.groups.all():
         permissions = group.permissions.all()
         for perm in permissions:
             if request.resolver_match.url_name == perm.codename:

@@ -1,6 +1,4 @@
-from django.conf.urls import url
 from django.urls import path
-
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
     CompanyView, EmployeeViews,GroupView
 

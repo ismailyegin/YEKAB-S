@@ -6,7 +6,7 @@ class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ('name','permissions')
-        labels = {'name': 'İsim ', 'permissions': 'izinleri Seçiniz'}
+        labels = {'name': 'İsim ', 'permissions': 'İzinleri Seçiniz'}
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),

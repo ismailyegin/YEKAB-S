@@ -13,10 +13,11 @@
     {#    <!-- Theme style -->#}
     <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
     {#    <!-- iCheck -->#}
-
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- Google Font -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
 </head>
 <body class="hold-transition login-page">
 
@@ -69,7 +70,7 @@
 
 <div class="login-box">
     <div class="login-logo">
-{#        <span class="logo-lg"><img width="80%" src="/media/" alt="User Image" style="margin-bottom: 5px;"> </span>#}
+        {#        <span class="logo-lg"><img width="80%" src="/media/" alt="User Image" style="margin-bottom: 5px;"> </span>#}
     </div>
     <!-- /.login-logo -->
     <div class="login-card-body">
@@ -107,14 +108,24 @@
             </div>
 
 
+            {#            test icin kullanildi data-sitekey subdomain adresine alınacak#}
+            {#            https://www.google.com/recaptcha/admin/create#}
+            <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+            <br>
+
+
             <div class="row">
                 <div class="col-8">
 
                 </div>
                 <!-- /.col -->
                 <div class="col-4">
-                    <button type="submit" class="btn btn-primary ">Giriş Yap</button>
-
+                    {#                    <button type="submit" class="btn btn-primary js-captcha-refresh ">Giriş Yap</button>#}
+                    <button class="g-recaptcha btn btn-primary"
+                            data-callback="onSubmit"
+                            data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                            type="submit">Login
+                    </button>
                 </div>
 
                 <!-- /.col -->
@@ -126,7 +137,6 @@
         </a>
 
 
-
     </div>
 
 
@@ -136,5 +146,6 @@
 <!-- /.login-card-body -->
 </div>
 <!-- /.login-card -->
+
 </body>
 </html>

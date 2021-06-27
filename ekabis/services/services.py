@@ -31,7 +31,9 @@ def UserService(request,filter):
     except User.DoesNotExist:
         return None
     except Exception as e:
-        traceback.print_exception(e)
+        print(e)
+        pass
+    traceback.print_exception()
 
 def GroupService(request, filter):
     try:
@@ -42,7 +44,9 @@ def GroupService(request, filter):
     # except Group.DoesNotExist:
     #     return None
     except Exception as e:
-        traceback.print_exception(e)
+        print(e)
+        pass
+    traceback.print_exception()
 
 def PersonService(request, filter):
     try:
@@ -53,7 +57,9 @@ def PersonService(request, filter):
     # except Person.DoesNotExist:
     #     return None
     except Exception as e:
-        traceback.print_exception(e)
+        print(e)
+        pass
+    traceback.print_exception()
 def CommunicationService(request, filter):
     try:
         if filter:
@@ -61,7 +67,9 @@ def CommunicationService(request, filter):
         else:
             return Communication.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 
 def CategoryItemService(request, filter):
     try:
@@ -70,7 +78,9 @@ def CategoryItemService(request, filter):
         else:
             return CategoryItem.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def CompanyService(request, filter):
     try:
         if filter:
@@ -78,7 +88,9 @@ def CompanyService(request, filter):
         else:
             return Company.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def DirectoryMemberService(request, filter):
     try:
         if filter:
@@ -89,7 +101,9 @@ def DirectoryMemberService(request, filter):
         else:
             return DirectoryMember.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def DirectoryCommissionService(request, filter):
     try:
         if filter:
@@ -97,7 +111,9 @@ def DirectoryCommissionService(request, filter):
         else:
             return DirectoryCommission.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def DirectoryMemberRoleService(request, filter):
     try:
         if filter:
@@ -105,7 +121,9 @@ def DirectoryMemberRoleService(request, filter):
         else:
             return DirectoryMemberRole.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def EmployeeService(request, filter):
     try:
         if filter:
@@ -116,7 +134,9 @@ def EmployeeService(request, filter):
         else:
             return Employee.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def LogsService(request, filter):
     try:
         if filter:
@@ -127,7 +147,9 @@ def LogsService(request, filter):
         else:
             return Logs.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def MenuService(request, filter):
     try:
         if filter:
@@ -135,7 +157,9 @@ def MenuService(request, filter):
         else:
             return Menu.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def MenuAdminService(request, filter):
     try:
         if filter:
@@ -143,7 +167,9 @@ def MenuAdminService(request, filter):
         else:
             return MenuAdmin.objects.all().order_by("sorting")
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def MenuDirectoryService(request, filter):
     try:
         if filter:
@@ -151,7 +177,9 @@ def MenuDirectoryService(request, filter):
         else:
             return MenuDirectory.objects.all().order_by("sorting")
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def MenuPersonelService(request, filter):
     try:
         if filter:
@@ -159,7 +187,9 @@ def MenuPersonelService(request, filter):
         else:
             return MenuPersonel.objects.all().order_by("sorting")
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def NotificationService(request, filter):
     try:
         if filter:
@@ -167,8 +197,9 @@ def NotificationService(request, filter):
         else:
             return Notification.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
-
+            print(e)
+            pass
+    traceback.print_exception()
 def ActiveGroupService(request, filter):
     try:
         if filter:
@@ -176,7 +207,9 @@ def ActiveGroupService(request, filter):
         else:
             return ActiveGroup.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 def PermissionService(request, filter):
     try:
         if filter:
@@ -184,7 +217,9 @@ def PermissionService(request, filter):
         else:
             return Permission.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
 
 
 def ClaimService(request, filter):
@@ -197,4 +232,6 @@ def ClaimService(request, filter):
         else:
             return Claim.objects.all()
     except Exception as e:
-        traceback.print_exception(e)
+            print(e)
+            pass
+    traceback.print_exception()
