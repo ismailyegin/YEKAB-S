@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
-
-
-class Notification(models.Model):
+from ekabis.models.BaseModel import BaseModel
+class Notification(BaseModel):
     notification = models.CharField(blank=True, null=True, max_length=200, verbose_name='Adı')
     creationDate = models.DateTimeField(auto_now_add=True)
     modificationDate = models.DateTimeField(auto_now=True)

@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     # Admin yönetimi sistem den engelendi
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('yekabis/', include('ekabis.urls')),
 ]

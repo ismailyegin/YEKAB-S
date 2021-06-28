@@ -1,7 +1,8 @@
 from django.db import models
+from ekabis.models.BaseModel import BaseModel
 
 
-class Country(models.Model):
+class Country(BaseModel):
     name = models.TextField(blank=True, null=True, verbose_name='Ülke')
 
     def __str__(self):

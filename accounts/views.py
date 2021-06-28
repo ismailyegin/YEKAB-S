@@ -2,10 +2,16 @@ from django.contrib import auth, messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group, User
 from django.core.mail import EmailMultiAlternatives
+from django.db import transaction
 from django.shortcuts import render, redirect
 from accounts.models import Forgot
 from ekabis.services import general_methods
 # from accounts.forms import LoginForm
+
+from ekabis.urls import urlpatterns
+
+from ekabis.models.Permission import Permission
+from ekabis.models.PermissionGroup import PermissionGroup
 
 from ekabis.services.services import UserService
 
@@ -91,3 +97,16 @@ def forgot(request):
 
     return render(request, 'registration/forgot-password.html')
 
+def show_urls(request):
+    for entry in urlpatterns:
+        perm = Permission(codename=entry.name, codeurl=entry.pattern.regex.pattern)
+        if Permission.objects.filter(name=entry.name).count() == 0:
+            perm.save()
+
+        # admine bütün yetkiler verildi
+        for item in Permission.objects.all():
+            perm=PermissionGroup(group_id=1,
+                            permissions=item)
+            perm.save()
+
+    return redirect('accounts:login')

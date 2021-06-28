@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import auth, Permission, User
+from ekabis.models.BaseModel import BaseModel
 
-
-class MenuAdmin(models.Model):
+class MenuAdmin(BaseModel):
     name = models.CharField(max_length=120, null=True)
     url = models.CharField(max_length=120, null=True, blank=True)
     permission = models.ManyToManyField(User)

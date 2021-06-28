@@ -1,7 +1,8 @@
 from datetime import datetime
 from ekabis.services.services import ActiveGroupService,MenuAdminService,MenuDirectoryService,MenuPersonelService,MenuService,EmployeeService,DirectoryMemberService,UserService
 from ekabis.models.Logs import Logs
-from  ekabis.models.ActiveGroup import ActiveGroup
+from ekabis.models.ActiveGroup import ActiveGroup
+from ekabis.models.PermissionGroup import PermissionGroup
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -34,6 +35,9 @@ def logwrite(request, user, log):
 
 def getMenu(request):
     menus = MenuService(request,None)
+
+    for item in menus:
+        print(item)
     return {'menus': menus}
 
 
@@ -55,12 +59,11 @@ def getPersonelMenu(request):
     return {'coachmenus': coachmenus}
 
 def control_access(request):
-    print(request.resolver_match.url_name)
     is_exist = False
     for group in request.user.groups.all():
-        permissions = group.permissions.all()
+        permissions = PermissionGroup.objects.filter(group=group)
         for perm in permissions:
-            if request.resolver_match.url_name == perm.codename:
+            if request.resolver_match.url_name == perm.permissions.codename:
                 print('Okey')
                 is_exist = True
 

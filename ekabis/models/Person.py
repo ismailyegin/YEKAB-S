@@ -1,7 +1,6 @@
 from django.db import models
-
-
-class Person(models.Model):
+from ekabis.models.BaseModel import BaseModel
+class Person(BaseModel):
     MALE = 0
     FEMALE = 1
 
@@ -42,13 +41,8 @@ class Person(models.Model):
     birthDate = models.DateField(null=True, blank=True, verbose_name='Doğum Tarihi')
     bloodType = models.CharField(max_length=128, verbose_name='Kan Grubu', choices=BLOODTYPE, default=AB1)
     gender = models.IntegerField(blank=True, null=True, choices=GENDER_CHOICES)
-    kobilid = models.IntegerField(null=True, blank=True, default=1)
+
 
     class Meta:
         default_permissions = ()
 
-    def save(self, force_insert=False, force_update=False):
-        self.birthplace = self.birthplace.upper()
-        self.motherName = self.motherName.upper()
-        self.fatherName = self.fatherName.upper()
-        super(Person, self).save(force_insert, force_update)

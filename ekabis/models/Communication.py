@@ -1,8 +1,9 @@
 from django.db import models
 from ekabis.models.City import City
 from ekabis.models.Country import Country
+from ekabis.models.BaseModel import BaseModel
 
-class Communication(models.Model):
+class Communication(BaseModel):
     postalCode = models.CharField(max_length=120, null=True, blank=True)
     phoneNumber = models.CharField(max_length=120, null=True, blank=True)
     phoneNumber2 = models.CharField(max_length=120, null=True, blank=True)

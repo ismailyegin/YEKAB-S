@@ -1,11 +1,10 @@
-from urllib import request
 
-from random import choices
 from django.db import models
 from ekabis.models.EnumFields import EnumFields
+from ekabis.models.BaseModel import BaseModel
 
 
-class CategoryItem(models.Model):
+class CategoryItem(BaseModel):
     name = models.CharField(blank=False, null=False, max_length=255)
     forWhichClazz = models.CharField(blank=False, null=False, max_length=255)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
