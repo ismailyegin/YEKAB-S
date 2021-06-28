@@ -12,5 +12,10 @@ class Menu(BaseModel):
     sorting=models.IntegerField()
 
 
-    # class Meta:
-    #     default_permissions = ()
+    def __str__(self):
+        return '%s ' % self.name
+
+
+    class Meta:
+        ordering = ['sorting']
+        default_permissions = ()
