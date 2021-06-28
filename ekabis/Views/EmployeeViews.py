@@ -1,8 +1,11 @@
+import traceback
+
 from django.contrib import messages
 from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User, Group
+from django.db import transaction
 from django.db.models import Q
 from django.db.models import Sum
 from django.http import JsonResponse
@@ -37,64 +40,68 @@ def add_employee(request):
 
     user_form = UserForm()
     person_form = PersonForm()
-    communication=Communication()
+    communication = Communication()
     communication_form = CommunicationForm()
     employee_form = EmployeeForm()
-    categorItemfilter={
-        'forWhichClazz' : "EMPLOYEE_WORKDEFINITION"
+    categorItemfilter = {
+        'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
 
     }
-    employee_form.fields['workDefinition'].queryset = CategoryItemService(request,categorItemfilter)
+    employee_form.fields['workDefinition'].queryset = CategoryItemService(request, categorItemfilter)
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
+                user_form = UserForm(request.POST)
+                person_form = PersonForm(request.POST, request.FILES)
+                communication_form = CommunicationForm(request.POST, request.FILES)
 
-    if request.method == 'POST':
+                employe_form = EmployeeForm(request.POST)
 
-        user_form = UserForm(request.POST)
-        person_form = PersonForm(request.POST , request.FILES)
-        communication_form = CommunicationForm(request.POST, request.FILES)
+                if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and employe_form.is_valid():
+                    user = User()
+                    user.username = user_form.cleaned_data['email']
+                    user.firstName = unicode_tr(user_form.cleaned_data['first_name']).upper()
+                    user.lastName = unicode_tr(user_form.cleaned_data['last_name']).upper()
+                    user.email = user_form.cleaned_data['email']
+                    group = Group.objects.get(name=request.POST.get('group'))
+                    password = User.objects.make_random_password()
+                    user.set_password(password)
+                    user.save()
+                    user.groups.add(group)
+                    user.save()
 
-        employe_form = EmployeeForm(request.POST)
+                    person = person_form.save(commit=False)
+                    communication = communication_form.save(commit=False)
+                    person.save()
+                    communication.save()
 
-        if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and employe_form.is_valid():
-            user = User()
-            user.username = user_form.cleaned_data['email']
-            user.firstName = unicode_tr(user_form.cleaned_data['first_name']).upper()
-            user.lastName = unicode_tr(user_form.cleaned_data['last_name']).upper()
-            user.email = user_form.cleaned_data['email']
-            group = Group.objects.get(name=request.POST.get('group'))
-            password = User.objects.make_random_password()
-            user.set_password(password)
-            user.save()
-            user.groups.add(group)
-            user.save()
+                    personel = Employee(
+                        user=user, person=person, communication=communication,
+                        workDefinition=employe_form.cleaned_data['workDefinition'],
 
-            person = person_form.save(commit=False)
-            communication = communication_form.save(commit=False)
-            person.save()
-            communication.save()
+                    )
 
-            personel = Employee(
-                user=user, person=person, communication=communication,
-                workDefinition=employe_form.cleaned_data['workDefinition'],
+                    personel.save()
 
-            )
+                    log = str(user.get_full_name()) + " personelini  kaydetti"
+                    log = general_methods.logwrite(request, request.user, log)
+                    messages.success(request, 'Personel Başarıyla Kayıt Edilmiştir.')
 
-            personel.save()
+                    return redirect('ekabis:personeller')
 
-            log = str(user.get_full_name()) + " personelini  kaydetti"
-            log = general_methods.logwrite(request,request.user, log)
-            messages.success(request, 'Personel Başarıyla Kayıt Edilmiştir.')
+                else:
 
-            return redirect('ekabis:personeller')
+                    for x in user_form.errors.as_data():
+                        messages.warning(request, user_form.errors[x].first())
 
-        else:
+            return render(request, 'personel/personel-ekle.html',
+                          {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
+                           'employee_form': employee_form,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
-            for x in user_form.errors.as_data():
-                messages.warning(request, user_form.errors[x].first())
-
-    return render(request, 'personel/personel-ekle.html',
-                  {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                   'employee_form': employee_form,
-                   })
 
 @login_required
 def edit_employee(request, pk):
@@ -103,50 +110,57 @@ def edit_employee(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    employefilter={
-        'pk':pk
+    employefilter = {
+        'pk': pk
     }
-    employee = EmployeeService(request,employefilter).first()
+    employee = EmployeeService(request, employefilter).first()
     user_form = UserForm(request.POST or None, instance=employee.user)
     person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
     communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
 
     employee_form = EmployeeForm(request.POST or None, instance=employee)
-    categoryfilter={
-        'forWhichClazz' : "EMPLOYEE_WORKDEFINITION"
+    categoryfilter = {
+        'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
     }
-    employee_form.fields['workDefinition'].queryset = CategoryItemService(request,categoryfilter)
+    employee_form.fields['workDefinition'].queryset = CategoryItemService(request, categoryfilter)
 
-    if request.method == 'POST':
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
 
-        if user_form.is_valid() and communication_form.is_valid() and person_form.is_valid() and employee_form.is_valid():
+                if user_form.is_valid() and communication_form.is_valid() and person_form.is_valid() and employee_form.is_valid():
 
-            user = user_form.save(commit=False)
-            user.username = user_form.cleaned_data['email']
-            user.first_name = user_form.cleaned_data['first_name']
-            user.last_name = user_form.cleaned_data['last_name']
-            user.email = user_form.cleaned_data['email']
-            user.save()
-            person_form.save()
-            communication_form.save()
-            employee_form.save()
+                    user = user_form.save(commit=False)
+                    user.username = user_form.cleaned_data['email']
+                    user.first_name = user_form.cleaned_data['first_name']
+                    user.last_name = user_form.cleaned_data['last_name']
+                    user.email = user_form.cleaned_data['email']
+                    user.save()
+                    person_form.save()
+                    communication_form.save()
+                    employee_form.save()
 
-            log = str(user.get_full_name()) + " personel güncellendi"
-            log = general_methods.logwrite(request,request.user, log)
+                    log = str(user.get_full_name()) + " personel güncellendi"
+                    log = general_methods.logwrite(request, request.user, log)
 
-            messages.success(request, 'Personel Başarıyla Güncellenmiştir.')
+                    messages.success(request, 'Personel Başarıyla Güncellenmiştir.')
 
-            # return redirect('ekabis:personeller')
+                    # return redirect('ekabis:personeller')
 
-        else:
+                else:
 
-            for x in user_form.errors.as_data():
-                messages.warning(request, user_form.errors[x].first())
+                    for x in user_form.errors.as_data():
+                        messages.warning(request, user_form.errors[x].first())
 
-    return render(request, 'personel/personel-duzenle.html',
-                  {'user_form': user_form, 'communication_form': communication_form,
-                   'person_form': person_form, 'employee_form': employee_form
-                   })
+            return render(request, 'personel/personel-duzenle.html',
+                          {'user_form': user_form, 'communication_form': communication_form,
+                           'person_form': person_form, 'employee_form': employee_form
+                           })
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+
 
 @login_required
 def delete_employee(request, pk):
@@ -155,25 +169,28 @@ def delete_employee(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    if request.method == 'POST' and request.is_ajax():
-        try:
-            empoyefilter={
-                'pk':pk
-            }
-            obj = EmployeeService(request,empoyefilter).first()
-            obj.delete()
-            return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
-        except :
-            return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
 
-    else:
-        return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+                empoyefilter = {
+                    'pk': pk
+                }
+                obj = EmployeeService(request, empoyefilter).first()
+                obj.delete()
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
 
 @login_required
 def return_employees(request):
     perm = general_methods.control_access(request)
-
 
     if not perm:
         logout(request)
@@ -184,37 +201,42 @@ def return_employees(request):
     get = request.GET.get('get')
     if get:
         if get == 'hepsi':
-            employees = EmployeeService(request,None)
+            employees = EmployeeService(request, None)
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
 
-    if request.method == 'POST':
-        user_form = UserSearchForm(request.POST)
+                user_form = UserSearchForm(request.POST)
 
+                if user_form.is_valid():
+                    firstName = user_form.cleaned_data.get('first_name')
+                    lastName = user_form.cleaned_data.get('last_name')
+                    email = user_form.cleaned_data.get('email')
+                    workDefinition = user_form.cleaned_data.get('workDefinition')
+                    group = request.POST.get('group')
+                    if not (firstName or lastName or email or workDefinition or group):
+                        employees = EmployeeService(request, None)
 
-        if user_form.is_valid() :
-            firstName = user_form.cleaned_data.get('first_name')
-            lastName = user_form.cleaned_data.get('last_name')
-            email = user_form.cleaned_data.get('email')
-            workDefinition=user_form.cleaned_data.get('workDefinition')
-            group=request.POST.get('group')
-            if not (firstName or lastName or email or workDefinition or group):
-                employees = EmployeeService(request,None)
+                    else:
+                        query = Q()
+                        if lastName:
+                            query &= Q(user__last_name__icontains=lastName)
+                        if firstName:
+                            query &= Q(user__first_name__icontains=firstName)
+                        if email:
+                            query &= Q(user__email__icontains=email)
+                        if workDefinition:
+                            query &= Q(workDefinition=workDefinition)
+                        if group:
+                            query &= Q(user__groups__name=group)
+                        employees = EmployeeService(request, query)
 
-            else:
-                query = Q()
-                if lastName:
-                    query &= Q(user__last_name__icontains=lastName)
-                if firstName:
-                    query &= Q(user__first_name__icontains=firstName)
-                if email:
-                    query &= Q(user__email__icontains=email)
-                if workDefinition:
-                    query &= Q(workDefinition=workDefinition)
-                if group:
-                    query &=Q(user__groups__name=group)
-                employees = EmployeeService(request,query)
+        return render(request, 'personel/personeller.html',
+                      {'employees': employees, 'user_form': user_form, })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
-    return render(request, 'personel/personeller.html',
-                  {'employees': employees, 'user_form': user_form,})
 
 @login_required
 def return_workdefinitionslist(request):
@@ -224,31 +246,38 @@ def return_workdefinitionslist(request):
         logout(request)
         return redirect('accounts:login')
     category_item_form = CategoryItemForm()
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
 
-    if request.method == 'POST':
+                category_item_form = CategoryItemForm(request.POST)
+                name = request.POST.get('name')
+                if name is not None:
+                    categoryItem = CategoryItem(name=name)
+                    categoryItem.forWhichClazz = "EMPLOYEE_WORKDEFINITION"
+                    categoryItem.isFirst = False
+                    categoryItem.save()
 
-        category_item_form = CategoryItemForm(request.POST)
-        name = request.POST.get('name')
-        if name is not None:
-            categoryItem = CategoryItem(name=name)
-            categoryItem.forWhichClazz = "EMPLOYEE_WORKDEFINITION"
-            categoryItem.isFirst = False
-            categoryItem.save()
+                    log = str(name) + " unvanini ekledi"
+                    log = general_methods.logwrite(request, request.user, log)
 
-            log = str(name) + " unvanini ekledi"
-            log = general_methods.logwrite(request,request.user, log)
+                    return redirect('ekabis:view_categoryitem')
 
-            return redirect('ekabis:view_categoryitem')
+                else:
 
-        else:
+                    messages.warning(request, 'Alanları Kontrol Ediniz')
 
-            messages.warning(request, 'Alanları Kontrol Ediniz')
-    categoryfilter={
-        'forWhichClazz' : "EMPLOYEE_WORKDEFINITION"
-    }
-    categoryitem = CategoryItemService(request,categoryfilter)
-    return render(request, 'personel/unvanListesi.html',
-                  {'category_item_form': category_item_form, 'categoryitem': categoryitem})
+        categoryfilter = {
+            'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
+        }
+        categoryitem = CategoryItemService(request, categoryfilter)
+        return render(request, 'personel/unvanListesi.html',
+                      {'category_item_form': category_item_form, 'categoryitem': categoryitem})
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+
+
 @login_required
 def delete_workdefinition(request, pk):
     perm = general_methods.control_access(request)
@@ -256,24 +285,27 @@ def delete_workdefinition(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    if request.method == 'POST' and request.is_ajax():
-        try:
-            categoryfilter={
-                'pk':pk
-            }
-            obj = CategoryItemService(request,categoryfilter).first()
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
 
-            log = str(obj.name) + " unvani sildi"
-            log = general_methods.logwrite(request, log)
+                categoryfilter = {
+                    'pk': pk
+                }
+                obj = CategoryItemService(request, categoryfilter).first()
 
-            obj.delete()
+                log = str(obj.name) + " unvani sildi"
+                log = general_methods.logwrite(request, log)
 
-            return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
-        except CategoryItem.DoesNotExist:
-            return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+                obj.delete()
 
-    else:
-        return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except CategoryItem.DoesNotExist:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
 
 @login_required
@@ -288,20 +320,26 @@ def edit_workdefinition(request, pk):
     }
     categoryItem = CategoryItemService(request, categoryfilter).first()
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
-    if request.method == 'POST':
-        if request.POST.get('name') is not None:
-            categoryItem.name = request.POST.get('name')
-            categoryItem.save()
-            messages.success(request, 'Başarıyla Güncellendi')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
 
-            log = str(request.POST.get('name')) + " is tanimi güncelledi"
-            log = general_methods.logwrite(request, log)
-            return redirect('ekabis:istanimiListesi')
-        else:
-            messages.warning(request, 'Alanları Kontrol Ediniz')
+                if request.POST.get('name') is not None:
+                    categoryItem.name = request.POST.get('name')
+                    categoryItem.save()
+                    messages.success(request, 'Başarıyla Güncellendi')
 
-    return render(request, 'personel/istanimi-duzenle.html',
-                  {'category_item_form': category_item_form})
+                    log = str(request.POST.get('name')) + " is tanimi güncelledi"
+                    log = general_methods.logwrite(request, log)
+                    return redirect('ekabis:istanimiListesi')
+                else:
+                    messages.warning(request, 'Alanları Kontrol Ediniz')
+
+            return render(request, 'personel/istanimi-duzenle.html',
+                          {'category_item_form': category_item_form})
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
 
 @login_required
@@ -316,20 +354,27 @@ def edit_workdefinitionUnvan(request, pk):
     }
     categoryItem = CategoryItemService(request, categoryfilter).first()
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
-    if request.method == 'POST':
-        if request.POST.get('name') is not None:
-            categoryItem.name = request.POST.get('name')
-            categoryItem.save()
-            messages.success(request, 'Başarıyla Güncellendi')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
 
-            log = str(request.POST.get('name')) + " Unvan güncelledi"
-            log = general_methods.logwrite(request,request.user, log)
-            return redirect('ekabis:view_categoryitem')
-        else:
-            messages.warning(request, 'Alanları Kontrol Ediniz')
+                if request.POST.get('name') is not None:
+                    categoryItem.name = request.POST.get('name')
+                    categoryItem.save()
+                    messages.success(request, 'Başarıyla Güncellendi')
 
-    return render(request, 'personel/unvan-duzenle.html',
-                  {'category_item_form': category_item_form})
+                    log = str(request.POST.get('name')) + " Unvan güncelledi"
+                    log = general_methods.logwrite(request, request.user, log)
+                    return redirect('ekabis:view_categoryitem')
+                else:
+                    messages.warning(request, 'Alanları Kontrol Ediniz')
+
+        return render(request, 'personel/unvan-duzenle.html',
+                      {'category_item_form': category_item_form})
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+
 
 @login_required
 def delete_employeetitle(request, pk):
@@ -340,19 +385,19 @@ def delete_employeetitle(request, pk):
         return redirect('accounts:login')
     if request.method == 'POST' and request.is_ajax():
         try:
-            categoryfilter = {
-                'pk': pk
-            }
-            obj = CategoryItemService(request, categoryfilter).first()
-            obj.delete()
-            return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+            with transaction.atomic():
+                categoryfilter = {
+                    'pk': pk
+                }
+                obj = CategoryItemService(request, categoryfilter).first()
+                obj.delete()
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
         except CategoryItem.DoesNotExist:
+            traceback.print_exc()
             return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
     else:
         return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
-
-
 
 
 @login_required
@@ -364,9 +409,9 @@ def updateRefereeProfile(request):
         return redirect('accounts:login')
 
     employeefilter = {
-        'user':request.user
+        'user': request.user
     }
-    employee = EmployeeService(request,employeefilter).first()
+    employee = EmployeeService(request, employeefilter).first()
     user_form = DisabledUserForm(request.POST or None, instance=employee.user)
     person_form = DisabledPersonForm(request.POST or None, request.FILES or None, instance=employee.person)
     communication_form = DisabledCommunicationForm(request.POST or None, instance=employee.communication)
@@ -375,16 +420,17 @@ def updateRefereeProfile(request):
     if request.method == 'POST':
         person_form = DisabledPersonForm(request.POST, request.FILES)
         try:
-            if request.FILES['profileImage']:
-                employee.person.profileImage = request.FILES['profileImage']
-                employee.person.save()
-                messages.success(request, 'Resim güncellendi.')
+            with transaction.atomic():
+                if request.FILES['profileImage']:
+                    employee.person.profileImage = request.FILES['profileImage']
+                    employee.person.save()
+                    messages.success(request, 'Resim güncellendi.')
         except Exception as e:
             print(e)
         if password_form.is_valid():
             employee.user.set_password(password_form.cleaned_data['new_password2'])
             employee.user.save()
-            update_session_auth_hash(request,employee.user)
+            update_session_auth_hash(request, employee.user)
             messages.success(request, 'Şifre Başarıyla Güncellenmiştir.')
             return redirect('ekabis:personel-profil-guncelle')
 
@@ -394,8 +440,3 @@ def updateRefereeProfile(request):
     return render(request, 'personel/Personel-Profil-güncelle.html',
                   {'user_form': user_form, 'communication_form': communication_form,
                    'person_form': person_form, 'password_form': password_form})
-
-
-
-
-

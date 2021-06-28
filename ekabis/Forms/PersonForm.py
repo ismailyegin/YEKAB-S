@@ -26,10 +26,10 @@ class PersonForm(ModelForm):
                 attrs={'class': 'form-control ', 'value': '', 'required': 'required'}),
 
             'motherName': forms.TextInput(
-                attrs={'class': 'form-control ', 'value': '', 'required': 'required'}),
+                attrs={'class': 'form-control ', 'value': ''}),
 
             'fatherName': forms.TextInput(
-                attrs={'class': 'form-control ', 'value': '', 'required': 'required'}),
+                attrs={'class': 'form-control ', 'value': ''}),
 
             'birthDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
