@@ -1,7 +1,8 @@
 from django.db import models
+from ekabis.models.BaseModel import BaseModel
 
 
-class City(models.Model):
+class City(BaseModel):
     name = models.TextField(blank=True, null=True, verbose_name='Şehir')
     plateNo = models.IntegerField()
 

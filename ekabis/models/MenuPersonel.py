@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import auth, Permission, User
+from django.contrib.auth.models import  User
+from ekabis.models.BaseModel import BaseModel
 
-
-class MenuPersonel(models.Model):
+class MenuPersonel(BaseModel):
 
     name = models.CharField(max_length=120, null=True)
     url = models.CharField(max_length=120, null=True, blank=True)

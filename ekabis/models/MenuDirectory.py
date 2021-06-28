@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import auth, Permission, User
-
-
-class MenuDirectory(models.Model):
+from ekabis.models.BaseModel import BaseModel
+class MenuDirectory(BaseModel):
     name = models.CharField(max_length=120, null=True)
     url = models.CharField(max_length=120, null=True, blank=True)
     permission = models.ManyToManyField(User)

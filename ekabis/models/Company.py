@@ -3,8 +3,10 @@ from django.db import models
 from ekabis.models.Communication import Communication
 from ekabis.models.CategoryItem import CategoryItem
 
+from ekabis.models.BaseModel import BaseModel
 
-class Company(models.Model):
+
+class Company(BaseModel):
     IsFormal = (
         (True, 'Bireysel'),
         (False, 'Kurumsal'),

@@ -1,7 +1,6 @@
 from django.db import models
-
-
-class Person(models.Model):
+from ekabis.models.BaseModel import BaseModel
+class Person(BaseModel):
     MALE = 0
     FEMALE = 1
 

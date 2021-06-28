@@ -5,9 +5,10 @@ from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
 from ekabis.models.Person import Person
 from ekabis.models.Communication import Communication
+from ekabis.models.BaseModel import BaseModel
 
 
-class DirectoryMember(models.Model):
+class DirectoryMember(BaseModel):
     person = models.OneToOneField(Person, on_delete=models.CASCADE)
     communication = models.OneToOneField(Communication, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)

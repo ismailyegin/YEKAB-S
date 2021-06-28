@@ -1,8 +1,6 @@
-import enum
-
 from django.db import models
-
-class Claim(models.Model):
+from ekabis.models.BaseModel import BaseModel
+class Claim(BaseModel):
     WAITED = 'Beklemede'
     APPROVED = 'Onaylandı'
     PROPOUND = 'İşlem Devam Ediliyor'

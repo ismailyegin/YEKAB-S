@@ -1,8 +1,9 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
 from ekabis.services import general_methods
-from ekabis.services.services import ActiveGroupService, GroupService, EmployeeService
+from ekabis.services.services import ActiveGroupService, GroupService
 
 
 @login_required
@@ -40,8 +41,6 @@ def return_personel_dashboard(request):
 @login_required
 def return_admin_dashboard(request):
     perm = general_methods.control_access(request)
-    # x = general_methods.import_csv()
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
@@ -61,7 +60,7 @@ def activeGroup(request, pk):
     groupfilter={
         'pk':pk
     }
-    group = GroupService(request,groupfilter).first()
+    group = GroupService(request,groupfilter)[0]
     userActive.group = group
     userActive.save()
     if group.name == "Admin":

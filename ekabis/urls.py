@@ -10,7 +10,6 @@ urlpatterns = [
     path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
     path('anasayfa/personel/', DashboardViews.return_personel_dashboard, name='view_personel'),
 
-
     #profil güncelle
     path('admin/admin-profil-guncelle/', AdminViews.updateProfile,
          name='admin-profil-guncelle'),
@@ -35,8 +34,6 @@ urlpatterns = [
     path('yonetim/kurullar/', DirectoryViews.return_commissions, name='view_directorycommission'),
     path('yonetim/kurullar/sil/<int:pk>/', DirectoryViews.delete_commission,name='delete_directorycommission'),
     path('yonetim/kurul-duzenle/<int:pk>/', DirectoryViews.update_commission,name='change_directorycommission'),
-
-
 
     # Kullanıcılar
     path('kullanici/kullanicilar/', UserViews.return_users, name='view_user'),
