@@ -17,7 +17,6 @@ class DirectoryMember(BaseModel):
     role = models.ForeignKey(DirectoryMemberRole, on_delete=models.CASCADE, verbose_name='Üye Rolü')
     commission = models.ForeignKey(DirectoryCommission, on_delete=models.DO_NOTHING, verbose_name='Kurulu')
 
-    oldpk = models.IntegerField(null=True, blank=True)
 
     class Meta:
         default_permissions = ()

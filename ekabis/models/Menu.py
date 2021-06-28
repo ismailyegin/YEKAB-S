@@ -10,7 +10,6 @@ class Menu(BaseModel):
     fa_icon = models.CharField(max_length=120, null=True , blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     sorting=models.IntegerField()
-    kobilid = models.IntegerField(null=True, blank=True, default=1)
 
 
     # class Meta:
