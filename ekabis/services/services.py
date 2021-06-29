@@ -1,26 +1,27 @@
 import traceback
-from django.contrib.auth.models import  User, Group
+
+from django.contrib.auth.models import User, Group
 from django.db.models import Q
 
+from ekabis.models.ActiveGroup import ActiveGroup
+from ekabis.models.CategoryItem import CategoryItem
+from ekabis.models.Claim import Claim
+from ekabis.models.Communication import Communication
+from ekabis.models.Company import Company
+from ekabis.models.DirectoryCommission import DirectoryCommission
+from ekabis.models.DirectoryMember import DirectoryMember
+from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
+from ekabis.models.Employee import Employee
 from ekabis.models.Logs import Logs
+from ekabis.models.Menu import Menu
 from ekabis.models.MenuAdmin import MenuAdmin
 from ekabis.models.MenuDirectory import MenuDirectory
 from ekabis.models.MenuPersonel import MenuPersonel
-from ekabis.models.Menu import Menu
-from ekabis.models.Person import Person
-from ekabis.models.Communication import Communication
-from ekabis.models.CategoryItem import CategoryItem
-from ekabis.models.Company import Company
-from ekabis.models.DirectoryMember import DirectoryMember
-from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
-from ekabis.models.DirectoryCommission import DirectoryCommission
-from ekabis.models.Employee import Employee
 from ekabis.models.Notification import Notification
-from ekabis.models.ActiveGroup import ActiveGroup
-from ekabis.models.Claim import Claim
-
-from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.models.Permission import Permission
+from ekabis.models.PermissionGroup import PermissionGroup
+from ekabis.models.Person import Person
+
 
 def UserService(request,filter):
     try:
@@ -44,8 +45,8 @@ def GroupService(request, filter):
             return Group.objects.filter(**filter)
         else:
             return Group.objects.all()
-    # except Group.DoesNotExist:
-    #     return None
+    except Group.DoesNotExist:
+        return None
     except Exception as e:
         print(e)
         pass
@@ -250,5 +251,4 @@ def PermissionGroupService(request, filter):
         else:
             return PermissionGroup.objects.all()
     except Exception as e:
-            pass
-    traceback.print_exception()
+            traceback.print_exception()

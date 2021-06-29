@@ -98,15 +98,18 @@ def forgot(request):
     return render(request, 'registration/forgot-password.html')
 
 def show_urls(request):
+
     for entry in urlpatterns:
         perm = Permission(codename=entry.name, codeurl=entry.pattern.regex.pattern)
         if Permission.objects.filter(name=entry.name).count() == 0:
             perm.save()
 
-    # admine bütün yetkiler verildi
-    grup=Group.objects.filter(name="Admin")[0]
-    for item in Permission.objects.all():
-        if not (PermissionGroup.objects.filter(group=grup,permissions=item)):
-            perm = PermissionGroup(group=grup,permissions=item)
-            perm.save()
+    # bütün yetkiler verildi
+    groups=Group.objects.all()
+    for group in groups:
+        for item in Permission.objects.all():
+            if not (PermissionGroup.objects.filter(group=group, permissions=item)):
+                perm = PermissionGroup(group=group, permissions=item)
+                perm.save()
+
     return redirect('accounts:login')

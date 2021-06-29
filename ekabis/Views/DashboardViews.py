@@ -56,7 +56,7 @@ def activeGroup(request, pk):
     activefilter={
         'user':request.user
     }
-    userActive = ActiveGroupService(request,activefilter)
+    userActive = ActiveGroupService(request,activefilter)[0]
     groupfilter={
         'pk':pk
     }

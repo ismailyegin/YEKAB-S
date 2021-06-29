@@ -168,6 +168,7 @@
                                             class="fa fa-edit"></i> Yeni Grup Ekle
                                     </a>
 
+
                                 </div>
                             </div>
                         {% endif %}
@@ -189,11 +190,19 @@
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ group.name }}</td>
                                             <td>
-                                                <div class="btn-group">
-                                                    <a href="{% url "ekabis:change_group" group.pk %}"
-                                                       type="button" class="btn btn-warning"><i
-                                                            class="fa fa-edit"></i>İncele
-                                                    </a>
+                                                {% for item in perm %}
+                                                    {% if item == 'change_group' %}
+                                                        <div class="btn-group">
+                                                        <a href="{% url "ekabis:change_group" group.pk %}"
+                                                           type="button" class="btn btn-warning"><i
+                                                                class="fa fa-edit"></i>İncele
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <a href="{% url "ekabis:change_groupPermission"  group.pk %}"
+                                                   type="button" class="btn btn-success"><i
+                                                        class="fa fa-edit"></i> İzinler
+                                                </a>
                                                 </div>
                                             </td>
 
