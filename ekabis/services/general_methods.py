@@ -1,8 +1,13 @@
 from datetime import datetime
-from ekabis.services.services import ActiveGroupService,MenuAdminService,MenuDirectoryService,MenuPersonelService,MenuService,EmployeeService,DirectoryMemberService,UserService
-from ekabis.models.Logs import Logs
+
 from ekabis.models.ActiveGroup import ActiveGroup
+from ekabis.models.Logs import Logs
 from ekabis.models.PermissionGroup import PermissionGroup
+from ekabis.models.Permission import Permission
+from ekabis.services.services import ActiveGroupService, MenuAdminService, MenuDirectoryService, MenuPersonelService, \
+    MenuService, EmployeeService, DirectoryMemberService, UserService, PermissionGroupService
+
+from ekabis.models.Menu import Menu
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -34,16 +39,33 @@ def logwrite(request, user, log):
 
 
 def getMenu(request):
+    print('getMenu')
     menus = MenuService(request,None)
+    active = controlGroup(request)
+    activefilter={
+        'group__name' : active,
 
+    }
+    permGrup=PermissionGroupService(request,activefilter)
+    menu=[]
     for item in menus:
         print(item)
+        if item.is_parent == False:
+            if item.url:
+                for tk in permGrup:
+                    if tk.permissions.codename == item.url.split(":")[1]:
+                        print(item.url.split(":")[1])
+                        menu.append(item.pk)
+                        menu.append(item.parent.pk)
+
+    menus = Menu.objects.filter(id__in=menu).distinct()
+    print(menus)
     return {'menus': menus}
 
 
 def getAdminMenu(request):
     adminmenus = MenuAdminService(request,None)
-    return {'adminmenus': adminmenus}
+    return {'adminmenus1': adminmenus}
 
 
 
@@ -112,7 +134,7 @@ def controlGroup(request):
         if not (ActiveGroupService(request,activfilter)):
             aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
             aktive.save()
-            active = request.user.groups.all()[0]
+            active = request.user.groups.all()[0].name
 
         else:
             activfilter = {

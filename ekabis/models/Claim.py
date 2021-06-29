@@ -35,8 +35,6 @@ class Claim(BaseModel):
         (AZONEMLİ, 'AZ ÖNEMLİ'),
     )
 
-    creationDate = models.DateTimeField(auto_now_add=True)
-    modificationDate = models.DateTimeField(auto_now=True)
     # baslık
     title = models.CharField(blank=False, null=False, max_length=1000)
     # proje durumu

@@ -5,6 +5,7 @@ class BaseModel(models.Model):
     isDeleted = models.BooleanField(default=False)
     creationDate = models.DateTimeField(auto_now_add=True)
     modificationDate = models.DateTimeField(auto_now=True)
+    kobilid = models.IntegerField(null=True, blank=True, default=1)
 
     class Meta:
         abstract = True  # Set this model as Abstract

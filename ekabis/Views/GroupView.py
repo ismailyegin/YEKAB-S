@@ -17,6 +17,9 @@ def add_group(request):
         if group_form.is_valid():
             group =group_form.save(commit=False)
             group.save()
+
+
+
             log= group.name+' Grubunu Kaydetti'
             log = general_methods.logwrite(request, request.user, log)
             messages.success(request, 'Grup Kayıt Edilmiştir.')

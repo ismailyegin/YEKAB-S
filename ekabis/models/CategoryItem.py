@@ -11,8 +11,6 @@ class CategoryItem(BaseModel):
     branch = models.CharField(max_length=128, choices=EnumFields.BRANCH.value, null=True, blank=True,
                               verbose_name='Seçiniz')
     isFirst = models.BooleanField(null=True, blank=True)
-    creationDate = models.DateTimeField(auto_now_add=True)
-    operationDate = models.DateTimeField(auto_now=True)
 
     def locationSet(self, location, deger):
         deger =  str(location.name)+"/"+deger

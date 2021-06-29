@@ -103,10 +103,10 @@ def show_urls(request):
         if Permission.objects.filter(name=entry.name).count() == 0:
             perm.save()
 
-        # admine bütün yetkiler verildi
-        for item in Permission.objects.all():
-            perm=PermissionGroup(group_id=1,
-                            permissions=item)
+    # admine bütün yetkiler verildi
+    grup=Group.objects.filter(name="Admin")[0]
+    for item in Permission.objects.all():
+        if not (PermissionGroup.objects.filter(group=grup,permissions=item)):
+            perm = PermissionGroup(group=grup,permissions=item)
             perm.save()
-
     return redirect('accounts:login')
