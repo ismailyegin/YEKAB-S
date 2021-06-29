@@ -17,7 +17,7 @@ class Employee(BaseModel):
     creationDate = models.DateTimeField(auto_now_add=True)
     operationDate = models.DateTimeField(auto_now=True)
     workDefinition = models.ForeignKey(CategoryItem, on_delete=models.DO_NOTHING)
-    kobilid = models.IntegerField(null=True, blank=True, default=1)
+
 
     def __str__(self):
         return '%s %s' % (self.user.first_name, self.user.last_name)

@@ -17,6 +17,7 @@ def add_group(request):
         logout(request)
         return redirect('accounts:login')
     group_form = GroupForm()
+
     try:
       with transaction.atomic():
         if request.method == 'POST':
@@ -35,6 +36,7 @@ def add_group(request):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+
 
 
 @login_required

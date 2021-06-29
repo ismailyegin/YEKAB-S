@@ -322,7 +322,7 @@
                     data-accordion="false">
 
                     {% if aktif == 'Admin' %}
-                        {% for menu in adminmenus %}
+                        {% for menu in menus %}
                             {% if menu.is_parent %}
                                 <li class="nav-item">
                                     <a href="#" class="nav-link">
@@ -333,54 +333,7 @@
                                         </p>
                                     </a>
                                     <ul class="nav nav-treeview">
-                                        {% for menusub in adminmenus %}
-                                            {% if menusub.parent.id is menu.id %}
-                                                <li class="nav-item">
-                                                    <a href="{% url menusub.url %}" class="nav-link">
-                                                        <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                        <p>{{ menusub.name }}</p>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    {% elif aktif == 'Personel' %}
-                        {% for menu in arsivmenus %}
-                            {% if menu.is_parent %}
-                                <li class="nav-item menu-is-opening menu-open">
-
-                                    <ul class="nav nav-treeview">
-                                        {% for menusub in arsivmenus %}
-                                            {% if menusub.parent.id is menu.id %}
-                                                <li class="nav-item">
-                                                    <a href="{% url menusub.url %}" class="nav-link">
-                                                        <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                        <p>{{ menusub.name }}</p>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-
-                    {% elif aktif == 'Yonetim' %}
-                        {% for menu in directorymenus %}
-                            {% if menu.is_parent %}
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas {{ menu.fa_icon }}"></i>
-                                        <p>
-                                            {{ menu.name }}
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        {% for menusub in directorymenus %}
+                                        {% for menusub in menus %}
                                             {% if menusub.parent.id is menu.id %}
                                                 <li class="nav-item">
                                                     <a href="{% url menusub.url %}" class="nav-link">
@@ -506,6 +459,9 @@
 <script src="{% static 'plugins/raphael/raphael.min.js' %}"></script>
 <script src="{% static 'plugins/jquery-mapael/jquery.mapael.min.js' %}"></script>
 <script src="{% static 'plugins/jquery-mapael/maps/usa_states.min.js' %}"></script>
+
+
+
 <!-- ChartJS -->
 <script src="{% static 'eski/chart.js/Chart.min.js' %}"></script>
 

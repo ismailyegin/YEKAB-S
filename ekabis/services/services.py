@@ -1,6 +1,8 @@
 import traceback
+
 from django.contrib.auth.models import User, Group, Permission
 from django.db import transaction
+
 from django.db.models import Q
 
 from ekabis.models.Logs import Logs
@@ -21,7 +23,11 @@ from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Claim import Claim
 
 
-def UserService(request, filter):
+from ekabis.models.PermissionGroup import PermissionGroup
+from ekabis.models.Permission import Permission
+
+def UserService(request,filter):
+
     try:
         with transaction.atomic():
             if filter:
@@ -284,6 +290,23 @@ def ClaimService(request, filter):
             else:
                 return Claim.objects.all()
     except Exception as e:
+
         traceback.print_exc()
         print(e)
         pass
+
+
+
+def PermissionGroupService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return PermissionGroup.objects.filter(**filter)
+            else:
+                return PermissionGroup.objects.filter(filter)
+        else:
+            return PermissionGroup.objects.all()
+    except Exception as e:
+            pass
+    traceback.print_exception()
+
