@@ -80,4 +80,8 @@ urlpatterns = [
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
     path('grup/grup-listesi/', GroupView.return_list_group, name='view_group'),
     path('grup/grup-guncelleme/<int:pk>/', GroupView.return_update_group, name='change_group'),
+    #grup izinleri
+
+    path('grup/grup-izin-ekle/<int:pk>', GroupView.change_groupPermission, name='change_groupPermission'),
+
 ]

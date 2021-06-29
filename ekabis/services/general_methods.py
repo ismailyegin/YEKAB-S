@@ -2,11 +2,10 @@ from datetime import datetime
 
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
+from ekabis.models.Menu import Menu
 from ekabis.models.PermissionGroup import PermissionGroup
-from ekabis.models.Permission import Permission
 from ekabis.services.services import ActiveGroupService, MenuAdminService, MenuDirectoryService, MenuPersonelService, \
     MenuService, EmployeeService, DirectoryMemberService, UserService, PermissionGroupService
-
 from ekabis.models.Menu import Menu
 
 def get_client_ip(request):
@@ -39,37 +38,33 @@ def logwrite(request, user, log):
 
 
 def getMenu(request):
-    print('getMenu')
+
     menus = MenuService(request,None)
     active = controlGroup(request)
     activefilter={
         'group__name' : active,
+        'is_active': True
 
     }
     permGrup=PermissionGroupService(request,activefilter)
     menu=[]
+    activ_urls=None
     for item in menus:
-        print(item)
         if item.is_parent == False:
             if item.url:
                 for tk in permGrup:
                     if tk.permissions.codename == item.url.split(":")[1]:
-                        print(item.url.split(":")[1])
+                        if request.resolver_match.url_name == item.url.split(":")[1]:
+                            activ_urls=item
                         menu.append(item.pk)
                         menu.append(item.parent.pk)
 
+
     menus = Menu.objects.filter(id__in=menu).distinct()
-    print(menus)
-    return {'menus': menus}
-
-
+    return {'menus': menus,'activ_url':activ_urls}
 def getAdminMenu(request):
     adminmenus = MenuAdminService(request,None)
     return {'adminmenus1': adminmenus}
-
-
-
-
 
 def getDirectoryMenu(request):
     refereemenus = MenuDirectoryService(request,None)
@@ -104,21 +99,37 @@ def aktif(request):
         activfilter={
             'user' : request.user
         }
+
+        aktifgroup=None
+
         if not (ActiveGroupService(request,activfilter)):
-            aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
-            aktive.save()
-            aktif =aktive
+            aktifgroup = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
+            aktifgroup.save()
+            aktif =aktifgroup.name
         else:
             activfilter={
-                'user' : request.user
+                'user':request.user
             }
-            aktif = ActiveGroupService(request,activfilter)[0]
-            aktif=aktif.group.name
+            aktifgroup=ActiveGroupService(request,activfilter)[0]
+            # aktifgroup = ActiveGroupService(request, activfilter)[0]
+            aktif=aktifgroup.group.name
+        perm=[]
+
+        groupfilter={
+            'group_id':aktifgroup.pk,
+            'is_active':True
+        }
+        permission = PermissionGroupService(request,groupfilter)
+        for item in permission:
+            perm.append(item.permissions.codename)
+
+
         group = request.user.groups.all()
         return {'aktif': aktif,
                 'group': group,
-                }
+                'perm':perm,
 
+                }
     else:
         return {}
 

@@ -6,7 +6,7 @@ from ekabis.models.BaseModel import BaseModel
 
 
 class ActiveGroup(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='aktivUser')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='aktivUser')
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, verbose_name='aktivGroup')
 
     def __str__(self):

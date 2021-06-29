@@ -66,9 +66,11 @@ def activeGroup(request, pk):
                 return redirect('ekabis:view_admin')
         activefilter={
         'user':request.user
-        }
-        userActive = ActiveGroupService(request,activefilter)
-        groupfilter={
+
+    }
+    userActive = ActiveGroupService(request,activefilter)[0]
+    groupfilter={
+
         'pk':pk
         }
         group = GroupService(request,groupfilter)[0]

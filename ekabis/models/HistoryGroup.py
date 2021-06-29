@@ -1,10 +1,11 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User, Group
 from django.db import models
+from ekabis.models.BaseModel import BaseModel
 
 
-class HistoryGroup(models.Model):
-    group = models.OneToOneField(Group, on_delete=models.CASCADE, db_column='grup')
-    user = models.OneToOneField(User, on_delete=models.CASCADE, db_column='user')
+class HistoryGroup(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='aktivUser')
+    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, verbose_name='aktivGroup')
 
     def __str__(self):
-        return '%s %s %s' % (self.user.first_name, self.user.last_name, self.group)
+        return '%s %s' % (self.user.first_name, self.user.last_name)
