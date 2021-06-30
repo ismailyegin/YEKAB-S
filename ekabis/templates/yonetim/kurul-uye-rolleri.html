@@ -154,7 +154,7 @@
                                         <td>{{ memberRole.name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{% url "ekabis:kurul-uye-rol-duzenle" memberRole.pk %}"
+                                                <a href="{% url "ekabis:change_directorymemberrole" memberRole.pk %}"
                                                    type="button" class="btn btn-warning"><i
                                                         class="fa fa-edit"></i>Güncelle
                                                 </a>
@@ -282,7 +282,7 @@
             $("#modal-danger").on("shown.bs.modal", function (e) {
                 $("#btn-conf").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:kurul_uye_rol_sil" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:delete_directorymemberrole" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -296,7 +296,7 @@
                             $('#modal-success').on("shown.bs.modal", function (e) {
                                 $(".btn-ok").click(function () {
 
-                                    window.location.replace("{% url "ekabis:kurul-uye-rolleri" %}");
+                                    window.location.replace("{% url "ekabis:view_directorymemberrole" %}");
 
                                 });
 

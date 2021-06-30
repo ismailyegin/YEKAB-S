@@ -50,41 +50,24 @@ def return_admin_dashboard(request):
 
 @login_required
 def activeGroup(request, pk):
-    try:
-        with transaction.atomic():
-            activefilter = {
-                'user': request.user
-            }
-            userActive = ActiveGroupService(request, activefilter)
-            groupfilter = {
-                'pk': pk
-            }
-            group = GroupService(request, groupfilter).first()
-            userActive.group = group
-            userActive.save()
-            if group.name == "Admin":
-                return redirect('ekabis:view_admin')
-        activefilter={
+    activefilter={
         'user':request.user
-
     }
     userActive = ActiveGroupService(request,activefilter)[0]
     groupfilter={
-
         'pk':pk
-        }
-        group = GroupService(request,groupfilter)[0]
-        userActive.group = group
-        userActive.save()
-        if group.name == "Admin":
-            return redirect('ekabis:view_admin')
+    }
+    group = GroupService(request,groupfilter)[0]
+    userActive.group = group
+    userActive.save()
+    if group.name == "Admin":
+        return redirect('ekabis:view_admin')
 
-        elif group.name == 'Yonetim':
-                return redirect('ekabis:view_federasyon')
+    elif group.name == 'Yonetim':
+        return redirect('ekabis:view_federasyon')
 
-        elif group.name == 'Personel':
-                return redirect('ekabis:view_personel')
-        else:
-                return {}
-    except Exception as e:
-        traceback.print_exc()
+    elif group.name == 'Personel':
+        return redirect('ekabis:view_personel')
+    else:
+        return redirect('ekabis:view_admin')
+
