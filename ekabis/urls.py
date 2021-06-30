@@ -40,6 +40,7 @@ urlpatterns = [
     path('kullanici/kullanici-duzenle/<int:pk>/', UserViews.update_user, name='change_user'),
     path('kullanici/kullanicilar/aktifet<int:pk>/', UserViews.active_user, name='view_status'),
     path('kullanici/kullanici-mail-gonder/<int:pk>/', UserViews.send_information, name='view_email'),
+    path('kullanici/kullanici-group-guncelle/<int:pk>/', UserViews.change_group_function, name='change_user_group'),
 
     # Personeller
     path('personel/personel-listesi/', EmployeeViews.return_employees, name='view_employee'),
