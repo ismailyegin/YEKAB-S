@@ -16,7 +16,6 @@ class CommunicationForm(ModelForm):
     #                                      attrs={'class': 'form-control select2 select2-hidden-accessible',
     #                                             'style': 'width: 100%; '}))
     class Meta:
-
         model = Communication
 
         fields = (
@@ -40,9 +39,12 @@ class CommunicationForm(ModelForm):
                 attrs={'class': 'form-control ', 'rows': '2', "style": "text-transform:uppercase"}),
 
             'phoneNumber': forms.TextInput(
-                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
+                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
+                       'minlength': '11','required': 'required'}),
 
-            'phoneNumber2': forms.TextInput(attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
+            'phoneNumber2': forms.TextInput(
+                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
+                       'minlength': '11'}),
 
             'postalCode': forms.TextInput(attrs={'class': 'form-control '}),
 
@@ -52,8 +54,12 @@ class CommunicationForm(ModelForm):
             'country': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                            'style': 'width: 100%;'}),
 
-            'phoneHome': forms.TextInput(attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
+            'phoneHome': forms.TextInput(
+                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
+                       'minlength': '11'}),
 
-            'phoneJop': forms.TextInput(attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
+            'phoneJop': forms.TextInput(
+                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
+                       'minlength': '11'}),
 
         }

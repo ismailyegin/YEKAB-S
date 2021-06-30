@@ -38,8 +38,8 @@ class CompanyForm(ModelForm):
             'sorumlu': forms.TextInput(attrs={'class': 'form-control '}),
             'degree': forms.TextInput(attrs={'class': 'form-control '}),
             'taxOffice': forms.TextInput(attrs={'class': 'form-control '}),
-            'taxnumber': forms.TextInput(attrs={'class': 'form-control '}),
+            'taxnumber': forms.TextInput(attrs={'class': 'form-control ','onkeypress': 'validate(event)'}),
             # 'taxnumber': forms.TextInput(attrs={'class': 'form-control ','pattern':'^\$\d{1.}(.\d{3})*(\,\d+)?$','data-type':'currency'}),
-            'mail': forms.TextInput(attrs={'class': 'form-control '}),
+            'mail': forms.EmailInput(attrs={'class': 'form-control '}),
 
         }

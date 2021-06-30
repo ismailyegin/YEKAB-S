@@ -17,9 +17,11 @@ class DisabledCommunicationForm(ModelForm):
             'address': forms.Textarea(
                 attrs={'class': 'form-control ', 'rows': '2', 'readonly': 'readonly'}),
 
-            'phoneNumber': forms.TextInput(attrs={'class': 'form-control ', 'readonly': 'readonly'}),
+            'phoneNumber': forms.TextInput(
+                attrs={'class': 'form-control ', 'readonly': 'readonly', 'maxlength': '11', 'minlength': '11','onkeypress': 'validate(event)'}),
 
-            'phoneNumber2': forms.TextInput(attrs={'class': 'form-control ', 'readonly': 'readonly'}),
+            'phoneNumber2': forms.TextInput(
+                attrs={'class': 'form-control ', 'readonly': 'readonly', 'maxlength': '11', 'minlength': '11','onkeypress': 'validate(event)'}),
 
             'postalCode': forms.TextInput(attrs={'class': 'form-control ', 'readonly': 'readonly'}),
 
