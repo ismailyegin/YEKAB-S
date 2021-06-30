@@ -9,7 +9,6 @@ from ekabis.services import general_methods
 # from accounts.forms import LoginForm
 
 from ekabis.urls import urlpatterns
-
 from ekabis.models.Permission import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
 
@@ -111,5 +110,4 @@ def show_urls(request):
             if not (PermissionGroup.objects.filter(group=group, permissions=item)):
                 perm = PermissionGroup(group=group, permissions=item)
                 perm.save()
-
     return redirect('accounts:login')
