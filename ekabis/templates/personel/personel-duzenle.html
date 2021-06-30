@@ -9,7 +9,7 @@
 
                 <div class="alert alert-danger alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+                    <h4><i class="icon fa fa-warning"></i> Hata!</h4>
 
 
                     <ul class="messages">
@@ -66,7 +66,7 @@
         </section>
     <section class="content">
 
-        <form method="post" enctype="multipart/form-data" role="form">
+        <form method="post" enctype="multipart/form-data" role="form" onsubmit="tckimlikkontorolu()">
             {% csrf_token %}
             <div class="row">
 
@@ -124,33 +124,9 @@
                                     </div>
 
 
-                                    <div class="form-group">
-                                        <label> {{ person_form.bloodType.label }}</label>
-                                        {{ person_form.bloodType }}
-                                    </div>
-
-
                                 </div>
                                 <br>
                                 <div class="col-lg-6">
-
-
-                                    <div class="form-group">
-                                        <label> {{ person_form.motherName.label }}</label>
-                                        {{ person_form.motherName }}
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label> {{ person_form.fatherName.label }}</label>
-                                        {{ person_form.fatherName }}
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label> {{ person_form.birthplace.label }}</label>
-                                        {{ person_form.birthplace }}
-                                    </div>
-
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthDate.label }}</label>
@@ -251,7 +227,80 @@
 
 
     </section>
+    <script>
+    function tckimlikkontorolu() {
 
+        // geleni her zaman String'e çevirelim!
+        tcno = String($('#tc').val());
+
+        // tcno '0' karakteri ile başlayamaz!
+        if (tcno.substring(0, 1) === '0') {
+            alert('T.C Degerinin ilk degeri 0 olamaz ');
+            document.getElementById("tc").style.color = "red";
+            return false;
+
+
+        }
+        // Tcno 11 karakter uzunluğunda olmalı!
+        if (tcno.length !== 11) {
+            alert('Tc 11 degerden  küçük olamaz');
+            document.getElementById("tc").style.color = "red";
+            return false;
+
+        }
+
+        /**
+         Aşağıdaki iki kontrol için toplamları hazır ediyoruz
+         - o anki karakteri sayıya dönüştür
+         - tek haneleri ayrıca topla (1,3,5,7,9)
+         - çift haneleri ayrıca topla (2,4,6,8)
+         - bütün haneleri ayrıca topla
+         **/
+        var ilkon_array = tcno.substr(0, 10).split('');
+        var ilkon_total = hane_tek = hane_cift = 0;
+
+        for (var i = j = 0; i < 9; ++i) {
+            j = parseInt(ilkon_array[i], 10);
+            if (i & 1) { // tek ise, tcnin çift haneleri toplanmalı!
+                hane_cift += j;
+            } else {
+                hane_tek += j;
+            }
+            ilkon_total += j;
+        }
+
+        /**
+         KONTROL 1:
+         1. 3. 5. 7. ve 9. hanelerin toplamının 7 katından,
+         2. 4. 6. ve 8. hanelerin toplamı çıkartıldığında,
+         elde edilen sonucun Mod10'u bize 10. haneyi verir
+         **/
+        if ((hane_tek * 7 - hane_cift) % 10 !== parseInt(tcno.substr(-2, 1), 10)) {
+            alert('Lütfen geçerli bir T.c numarasi giriniz.')
+            return false;
+        }
+
+        /**
+         KONTROL 2:
+         1. 2. 3. 4. 5. 6. 7. 8. 9. ve 10. hanelerin toplamından
+         elde edilen sonucun Mod10'u bize 11. haneyi vermelidir.
+         NOT: ilk 9 haneyi üstteki FOR döndüsünde zaten topladık!
+         **/
+        ilkon_total += parseInt(ilkon_array[9], 10);
+        if (ilkon_total % 10 !== parseInt(tcno.substr(-1), 10)) {
+            alert('Lütfen geçerli bir T.c numarasi giriniz.')
+            return false;
+        }
+
+        return true;
+
+
+    }
+
+
+
+
+    </script>
 
 
 {% endblock %}

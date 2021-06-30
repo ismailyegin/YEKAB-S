@@ -15,7 +15,8 @@ class DisabledPersonForm(ModelForm):
 
         widgets = {
 
-            'tc': forms.TextInput(attrs={'class': 'form-control ', 'readonly': 'readonly'}),
+            'tc': forms.TextInput(
+                attrs={'class': 'form-control ', 'readonly': 'readonly', 'maxlength': '11', 'minlength': '11','onkeypress': 'validate(event)'}),
 
             'height': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
 
@@ -32,7 +33,7 @@ class DisabledPersonForm(ModelForm):
 
             'birthDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datemask', 'id': 'datepicker', 'autocomplete': 'off',
-                        'readonly': 'readonly'}),
+                       'readonly': 'readonly'}),
 
             'bloodType': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                              'style': 'width: 100%; ', 'disabled': 'disabled'}),

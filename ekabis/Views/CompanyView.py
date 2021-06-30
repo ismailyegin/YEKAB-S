@@ -42,6 +42,7 @@ def return_add_Company(request):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_company')
 
 
 @login_required
@@ -92,3 +93,4 @@ def return_update_Company(request, pk):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:change_company', pk)

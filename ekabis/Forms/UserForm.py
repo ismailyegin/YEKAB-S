@@ -17,7 +17,7 @@ class UserForm(ModelForm):
                        'required': 'required'}),
             'last_name': forms.TextInput(
                 attrs={'class': 'form-control ', 'required': 'required', "style": "text-transform:uppercase"}),
-            'email': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control ', 'required': 'required'}),
 
             'is_active': forms.CheckboxInput(attrs={'class': 'iCheck-helper'}),
 

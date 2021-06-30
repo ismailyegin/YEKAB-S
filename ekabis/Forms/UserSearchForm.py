@@ -14,7 +14,7 @@ class UserSearchForm(ModelForm):
                        "style": "text-transform:uppercase"}),
             'last_name': forms.TextInput(
                 attrs={'class': 'form-control ', 'placeholder': ' Soyad', "style": "text-transform:uppercase"}),
-            'email': forms.TextInput(attrs={'class': 'form-control ', 'placeholder': 'Email'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control ', 'placeholder': 'Email'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'iCheck-helper'}),
             # 'password': forms.PasswordInput(attrs={'class': 'form-control ', 'placeholder': 'Şifre',}),
 

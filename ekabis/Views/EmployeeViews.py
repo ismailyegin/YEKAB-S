@@ -87,7 +87,7 @@ def add_employee(request):
                     log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Personel Başarıyla Kayıt Edilmiştir.')
 
-                    return redirect('ekabis:personeller')
+                    return redirect('ekabis:view_employee')
 
                 else:
 
@@ -101,6 +101,7 @@ def add_employee(request):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:add_employee')
 
 
 @login_required
@@ -145,7 +146,7 @@ def edit_employee(request, pk):
 
                     messages.success(request, 'Personel Başarıyla Güncellenmiştir.')
 
-                    # return redirect('ekabis:personeller')
+                    return redirect('ekabis:view_employee')
 
                 else:
 
@@ -160,6 +161,7 @@ def edit_employee(request, pk):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:change_employee', pk)
 
 
 @login_required
@@ -276,6 +278,7 @@ def return_workdefinitionslist(request):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_categoryitem')
 
 
 @login_required
@@ -374,6 +377,7 @@ def edit_workdefinitionUnvan(request, pk):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_categoryitem')
 
 
 @login_required
