@@ -21,6 +21,7 @@ from ekabis.models.Notification import Notification
 from ekabis.models.Permission import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.models.Person import Person
+from ekabis.models.Settings import Settings
 
 
 def UserService(request,filter):
@@ -250,5 +251,16 @@ def PermissionGroupService(request, filter):
                 return PermissionGroup.objects.filter(filter)
         else:
             return PermissionGroup.objects.all()
+    except Exception as e:
+            traceback.print_exception()
+def SettingsService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return Settings.objects.filter(**filter)
+            else:
+                return Settings.objects.filter(filter)
+        else:
+            return Settings.objects.all()
     except Exception as e:
             traceback.print_exception()

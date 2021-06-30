@@ -1,6 +1,6 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews,GroupView
+    CompanyView, EmployeeViews,GroupView,SettingsViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -83,5 +83,8 @@ urlpatterns = [
     #grup izinleri
 
     path('grup/grup-izin-ekle/<int:pk>', GroupView.change_groupPermission, name='change_groupPermission'),
+    #Ayarlar
+    path('ayar/ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
+    path('ayar/ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
 
 ]
