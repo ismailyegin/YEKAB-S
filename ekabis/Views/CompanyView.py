@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.CompanyForm import CompanyForm
@@ -46,6 +47,33 @@ def return_add_Company(request):
 
 
 @login_required
+def delete_company(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+
+                companyfilter = {
+                    'uuid': uuid
+                }
+                obj = CompanyService(request, companyfilter).first()
+                obj.delete()
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+@login_required
 def return_list_Company(request):
     perm = general_methods.control_access(request)
     if not perm:
@@ -57,14 +85,14 @@ def return_list_Company(request):
 
 
 @login_required
-def return_update_Company(request, pk):
+def return_update_Company(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
         logout(request)
         return redirect('accounts:login')
     companyfilter = {
-        'pk': pk
+        'uuid': uuid
 
     }
     company = CompanyService(request, companyfilter).first()
@@ -93,4 +121,4 @@ def return_update_Company(request, pk):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:change_company', pk)
+        return redirect('ekabis:change_company', uuid)
