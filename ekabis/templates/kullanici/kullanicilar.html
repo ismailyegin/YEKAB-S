@@ -300,6 +300,11 @@
                                                     <a class="btn btn-danger"
                                                        data-toggle="modal" onclick=activeUser({{ user.pk }})><i
                                                             class="fa fa-lock"></i>Aktif/Pasifleştir</a>
+
+                                                        <a href="{% url "ekabis:change_user_group" user.pk %}"
+                                                       type="button" class="btn btn-warning"><i
+                                                            class="fa fa-edit"></i>Grup İncele
+                                                    </a>
                                                 </div>
                                             </td>
 
