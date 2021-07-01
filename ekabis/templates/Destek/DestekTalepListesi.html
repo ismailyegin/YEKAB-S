@@ -275,18 +275,22 @@
                         <div class="card-header with-border">
                             <h3 class="card-title">Destek ve Talep</h3>
                         </div>
+                        {% for item in perm %}
+                            {% if item == 'add_claim' %}
+                                <div class="card-header with-border">
 
-                        <div class="card-header with-border">
-                            <div class="btn-group">
-                                {% if aktif == "Admin" or aktif == "Arsiv" %}
-                                    <a href="{% url "ekabis:add_claim" %}"
-                                       type="button" class="btn btn-success"><i
-                                            class="fa fa-edit"></i> Destek Talep Ekle
-                                    </a>
-                                {% endif %}
-                            </div>
+                                    <div class="btn-group">
 
-                        </div>
+                                        <a href="{% url "ekabis:add_claim" %}"
+                                           type="button" class="btn btn-success"><i
+                                                class="fa fa-edit"></i> Destek Talep Ekle
+                                        </a>
+
+                                    </div>
+
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                         <div class="card-body">
                             <table id="kullanicilar" class="table table-bordered table-hover">
                                 <thead>
@@ -317,28 +321,32 @@
                                             <td>{{ log.creationDate }}</td>
                                             <td>{{ log.modificationDate }}</td>
                                             <td>{{ log.title }} </td>
-
                                             <td>{{ log.definition }}  </td>
                                             <td>{{ log.status }} </td>
-
                                             <td>{{ log.user.first_name }} {{ log.user.last_name }}</td>
-
                                             <td>{{ log.importanceSort }}</td>
-                                            {% if aktif == 'Admin' %}
-                                                <td>
-                                                    <div class="btn-group">
 
-                                                        <a href="{% url "ekabis:change_claim" log.pk %}"
-                                                           type="button" class="btn btn-warning"><i
-                                                                class="fa fa-edit"></i>İncele
-                                                        </a>
-                                                        <a href="{% url "ekabis:delete_claim" log.pk %}"
-                                                           type="button" class="btn btn-danger"><i
-                                                                class="fa fa-edit"></i>Sil
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            {% endif %}
+                                            <td>
+                                                <div class="btn-group">
+                                                    {% for item in perm %}
+                                                        {% if item == 'change_claim' %}
+                                                            <a href="{% url "ekabis:change_claim" log.pk %}"
+                                                               type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-edit"></i>İncele
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% for item in perm %}
+                                                        {% if item == 'delete_claim' %}
+                                                            <a href="{% url "ekabis:delete_claim" log.pk %}"
+                                                               type="button" class="btn btn-danger"><i
+                                                                    class="fa fa-edit"></i>Sil
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+
 
                                         </tr>
 
@@ -393,7 +401,7 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
 
 
                     },
@@ -407,7 +415,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -415,7 +423,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                     },
                     {
                         text: 'Json',

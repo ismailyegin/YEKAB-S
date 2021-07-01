@@ -1,7 +1,6 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 
-
     <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
@@ -147,22 +146,34 @@
 
 
                             {% if categoryitem.all %}
-                                {% for item in categoryitem %}
+                                {% for category_item in categoryitem %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>{{ item.name }}</td>
+                                        <td>{{ category_item.name }}</td>
                                         <td>
-                                            <div class="btn-group">
-                                                <a href="{% url "ekabis:change_categoryitem" item.pk %}"
-                                                   type="button" class="btn btn-warning" style="margin-right: 5px"><i
-                                                        class="fa fa-edit"></i>Güncelle
-                                                </a>
+                                            {% for item in perm %}
+                                                {% if item == 'change_categoryitem' %}
+                                                    <div class="btn-group">
+                                                        <a href="{% url "ekabis:change_categoryitem" category_item.pk %}"
+                                                           type="button" class="btn btn-warning"
+                                                           style="margin-right: 5px"><i
+                                                                class="fa fa-edit"></i>Güncelle
+                                                        </a>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
 
-                                                <a class="btn btn-danger" style="margin-right: 5px"
-                                                   data-toggle="modal" onclick=deleteClubRole({{ item.pk }})><i
-                                                        class="fa fa-trash"></i>Sil</a>
+                                            {% for item in perm %}
+                                                {% if item == 'delete_categoryitem' %}
+                                                    <div class="btn-group">
 
-                                            </div>
+                                                        <a class="btn btn-danger" style="margin-right: 5px"
+                                                           data-toggle="modal" onclick=deleteClubRole({{ category_item.pk }})><i
+                                                                class="fa fa-trash"></i>Sil</a>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+
                                         </td>
 
                                     </tr>

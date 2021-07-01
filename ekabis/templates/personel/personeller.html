@@ -128,56 +128,60 @@
         <div class="row">
             <section class="col-lg-12 ">
 
+                {% for item in perm %}
+                    {% if item == 'view_employee' %}
+                        <div class="card-body">
 
-                <div class="card-body">
 
-
-                    <div class="card card-primary">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Personel Filtrele</h3>
-                        </div>
-                        <form method="post" role="form">
-                            <div class="card-body">
-                                {% csrf_token %}
-
-                                <div class="row">
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label> {{ user_form.first_name.label }}</label>
-                                            {{ user_form.first_name }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label> {{ user_form.last_name.label }}</label>
-                                            {{ user_form.last_name }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label> {{ user_form.email.label }}</label>
-                                            {{ user_form.email }}
-                                        </div>
-                                    </div>
-
+                            <div class="card card-primary">
+                                <div class="card-header with-border">
+                                    <h3 class="card-title">Personel Filtrele</h3>
                                 </div>
+                                <form method="post" role="form">
+                                    <div class="card-body">
+                                        {% csrf_token %}
+
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label> {{ user_form.first_name.label }}</label>
+                                                    {{ user_form.first_name }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label> {{ user_form.last_name.label }}</label>
+                                                    {{ user_form.last_name }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label> {{ user_form.email.label }}</label>
+                                                    {{ user_form.email }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                    <!-- /.card-body -->
+
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary">Ara</button>
+                                    </div>
+                                </form>
 
 
                             </div>
-                            <!-- /.card-body -->
-
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Ara</button>
-                            </div>
-                        </form>
+                            <!-- /.card -->
 
 
-                    </div>
-                    <!-- /.card -->
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-
-                </div>
             </section>
         </div>
 
@@ -190,13 +194,13 @@
                 <div class="card-body">
 
 
-                    <div class="card card-primary card-outline direct-chat direct-chat-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Personeller</h3>
                         </div>
 
-                        <div class="card-body">
-                            {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}
+                        {% for item in perm %}
+                            {% if item == 'add_employee' %}
                                 <div class="card-header with-border ">
                                     <div class="btn-group">
                                         <a href="{% url "ekabis:add_employee" %}"
@@ -205,8 +209,9 @@
                                         </a>
                                     </div>
                                 </div>
+
                             {% endif %}
-                        </div>
+                        {% endfor %}
                         <div class="card-body">
                             <table id="personel" class="table table-bordered table-hover">
                                 <thead>
@@ -253,17 +258,17 @@
                                 </tbody>
                             </table>
                         </div>
-                        </div>
                     </div>
-                    <!-- /.card -->
-
-
                 </div>
-            </section>
+                <!-- /.card -->
 
 
         </div>
-        <!-- /.row (main row) -->
+    </section>
+
+
+    </div>
+    <!-- /.row (main row) -->
 
     </section>
 

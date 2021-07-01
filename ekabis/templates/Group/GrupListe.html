@@ -155,7 +155,7 @@
                 <div class="card-body">
 
 
-                    <div class=" card card-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Gruplar</h3>
                         </div>
@@ -193,17 +193,24 @@
                                                 {% for item in perm %}
                                                     {% if item == 'change_group' %}
                                                         <div class="btn-group">
-                                                        <a href="{% url "ekabis:change_group" group.pk %}"
-                                                           type="button" class="btn btn-warning"><i
-                                                                class="fa fa-edit"></i>İncele
-                                                        </a>
+                                                            <a href="{% url "ekabis:change_group" group.pk %}"
+                                                               type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-edit"></i>İncele
+                                                            </a>
+                                                        </div>
                                                     {% endif %}
                                                 {% endfor %}
-                                                <a href="{% url "ekabis:change_groupPermission"  group.pk %}"
-                                                   type="button" class="btn btn-success"><i
-                                                        class="fa fa-edit"></i> İzinler
-                                                </a>
-                                                </div>
+                                                {% for item in perm %}
+                                                    {% if item == 'change_group' %}
+                                                        <div class="btn-group">
+
+                                                            <a href="{% url "ekabis:change_groupPermission"  group.pk %}"
+                                                               type="button" class="btn btn-success"><i
+                                                                    class="fa fa-edit"></i> İzinler
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
                                             </td>
 
                                         </tr>
