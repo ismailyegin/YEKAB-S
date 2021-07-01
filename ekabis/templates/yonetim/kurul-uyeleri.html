@@ -183,20 +183,24 @@
                 <div class="card-body">
 
 
-                    <div class="card card-primary card-outline direct-chat direct-chat-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Yönetim Kurulu Üyeleri</h3>
                         </div>
-                        <div class="card-body">
-                            <div class="card-header with-border">
-                                <div class="btn-group">
-                                    <a href="{% url "ekabis:add_directorymember" %}"
-                                       type="button" class="btn btn-success"><i
-                                            class="fa fa-edit"></i> Üye Ekle
-                                    </a>
+                        {% for item in perm %}
+                            {% if item == 'add_directorymember' %}
+                                <div class="card-header with-border">
+
+                                    <div class="btn-group">
+                                        <a href="{% url "ekabis:add_directorymember" %}"
+                                           type="button" class="btn btn-success"><i
+                                                class="fa fa-edit"></i> Üye Ekle
+                                        </a>
+                                    </div>
+
                                 </div>
-                            </div>
-                        </div>
+                            {% endif %}
+                        {% endfor %}
                         <div class="card-body">
                             <table id="members" class="table table-bordered table-hover">
                                 <thead>

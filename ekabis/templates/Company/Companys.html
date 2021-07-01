@@ -125,22 +125,22 @@
     <section class="content-header">
 
 
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>
-                            Firma Listesi</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Firma Listesi</a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                        </ol>
-                    </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Firma Listesi</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Firma Listesi</a></li>
+                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                    </ol>
                 </div>
             </div>
+        </div>
 
-        </section>
+    </section>
 
 
 
@@ -154,21 +154,23 @@
 
                 <div class="card-body">
 
-
-                    <div class=" card card-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Firmalar</h3>
                         </div>
-                        <div class="card-header with-border">
-                            <div class="btn-group">
-                                {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}
-                                    <a href="{% url "ekabis:add_company" %}"
-                                       type="button" class="btn btn-success"><i
-                                            class="fa fa-edit"></i> Yeni Firma Ekle
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
+                        {% for item in perm %}
+                            {% if item == 'add_company' %}
+                                <div class="card-header with-border">
+
+                                    <div class="btn-group">
+                                        <a href="{% url "ekabis:add_company" %}"
+                                           type="button" class="btn btn-success"><i
+                                                class="fa fa-edit"></i> Yeni Firma Ekle
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                         <div class="card-body">
                             <table id="company" class="table table-bordered table-hover">
                                 <thead>
@@ -190,14 +192,18 @@
                                             <td>{{ company.name }}</td>
                                             <td>{{ company.degree }}</td>
                                             <td>{{ company.sorumlu }}</td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a href="{% url "ekabis:change_company" company.pk %}"
-                                                       type="button" class="btn btn-warning"><i
-                                                            class="fa fa-edit"></i>İncele
-                                                    </a>
-                                                </div>
-                                            </td>
+                                            {% for item in perm %}
+                                                {% if item == 'change_company' %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a href="{% url "ekabis:change_company" company.pk %}"
+                                                               type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-edit"></i>İncele
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                {% endif %}
+                                            {% endfor %}
 
                                         </tr>
 
@@ -210,7 +216,6 @@
 
                         </div>
                     </div>
-                    <!-- /.card -->
 
 
                 </div>
@@ -218,7 +223,6 @@
 
 
         </div>
-        <!-- /.row (main row) -->
 
     </section>
 

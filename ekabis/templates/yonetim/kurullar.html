@@ -153,15 +153,23 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ commission.name }}</td>
                                         <td>
-                                            <div class="btn-group">
-                                                <a href="{% url "ekabis:change_directorycommission" commission.pk %}"
-                                                   type="button" class="btn btn-warning"><i
-                                                        class="fa fa-edit"></i>Güncelle
-                                                </a>
 
+                                            <div class="btn-group">
+                                                {% for item in perm %}
+                                                    {% if item == 'change_directorycommission' %}
+                                                        <a href="{% url "ekabis:change_directorycommission" commission.pk %}"
+                                                           type="button" class="btn btn-warning"><i
+                                                                class="fa fa-edit"></i>Güncelle
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% for item in perm %}
+                                                    {% if item == 'delete_directorycommission' %}
                                                 <a class="btn btn-danger"
                                                    data-toggle="modal" onclick=deleteClubRole({{ commission.pk }})><i
                                                         class="fa fa-trash"></i>Sil</a>
+                                                  {% endif %}
+                                                {% endfor %}
                                             </div>
                                         </td>
 
@@ -221,7 +229,7 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
 
 
                     },
@@ -235,7 +243,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -243,7 +251,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                     },
                     {
                         text: 'Json',
