@@ -31,8 +31,7 @@
     <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
-
-
+ <link rel="stylesheet" href="{% static "plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css" %}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
 
@@ -593,6 +592,8 @@
 
 
         })
+           //Bootstrap Duallistbox
+    $('.duallistbox').bootstrapDualListbox()
 
     });
 

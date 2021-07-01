@@ -16,7 +16,7 @@ from ekabis.services import general_methods
 from ekabis.services.services import UserService, GroupService
 
 from django.contrib.auth.models import User, Group
-
+from ekabis.models.HistoryGroup import HistoryGroup
 
 @login_required
 def return_users(request):
@@ -197,6 +197,15 @@ def change_group_function(request,pk):
 
                 user.groups.add(group)
                 user.save()
+                history=HistoryGroup(
+                    user=user,
+                    group=group,
+                    is_active=True
+                )
+                history.save()
+
+
+
         #silme durumu
         for item in user_group:
             is_active=True
@@ -206,6 +215,12 @@ def change_group_function(request,pk):
             if is_active:
                 user.groups.remove(item)
                 user.save()
+                history=HistoryGroup(
+                    user=user,
+                    group=group,
+                    is_active=False
+                )
+                history.save()
     user_group=Group.objects.filter(user=user)
     user_none_group=Group.objects.exclude(user=user)
 
