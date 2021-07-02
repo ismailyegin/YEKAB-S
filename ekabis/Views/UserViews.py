@@ -127,7 +127,7 @@ def active_user(request, pk):
 
 
 @login_required
-def send_information(request, pk):
+def send_information(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -138,7 +138,7 @@ def send_information(request, pk):
             if request.method == 'POST' and request.is_ajax():
 
                 userfilter = {
-                    'pk': pk
+                    'uuid': uuid
                 }
 
                 user = UserService(request, userfilter)

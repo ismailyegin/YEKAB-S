@@ -112,7 +112,7 @@ def edit_employee(request, pk):
         logout(request)
         return redirect('accounts:login')
     employefilter = {
-        'pk': pk
+        'uuid': pk
     }
     employee = EmployeeService(request, employefilter).first()
     user_form = UserForm(request.POST or None, instance=employee.user)
@@ -165,7 +165,7 @@ def edit_employee(request, pk):
 
 
 @login_required
-def delete_employee(request, pk):
+def delete_employee(request):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -174,9 +174,10 @@ def delete_employee(request, pk):
     try:
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
 
                 empoyefilter = {
-                    'pk': pk
+                    'uuid': uuid
                 }
                 obj = EmployeeService(request, empoyefilter).first()
                 obj.delete()
@@ -346,14 +347,14 @@ def edit_workdefinition(request, pk):
 
 
 @login_required
-def edit_workdefinitionUnvan(request, pk):
+def edit_workdefinitionUnvan(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
         logout(request)
         return redirect('accounts:login')
     categoryfilter = {
-        'pk': pk
+        'uuid': uuid
     }
     categoryItem = CategoryItemService(request, categoryfilter).first()
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
@@ -381,7 +382,7 @@ def edit_workdefinitionUnvan(request, pk):
 
 
 @login_required
-def delete_employeetitle(request, pk):
+def delete_employeetitle(request):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -390,8 +391,9 @@ def delete_employeetitle(request, pk):
     if request.method == 'POST' and request.is_ajax():
         try:
             with transaction.atomic():
+                uuid = request.POST['uuid']
                 categoryfilter = {
-                    'pk': pk
+                    'uuid': uuid
                 }
                 obj = CategoryItemService(request, categoryfilter).first()
                 obj.delete()

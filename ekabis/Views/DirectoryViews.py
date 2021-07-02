@@ -1,3 +1,5 @@
+import traceback
+
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
@@ -79,14 +81,14 @@ def add_directory_member(request):
         year = request.POST.get('birthDate')
         year = year.split('/')
 
-        client = Client('https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?WSDL')
-        if not (client.service.TCKimlikNoDogrula(tc, name, surname, year[2])):
-            messages.warning(request,
-                             'Tc kimlik numarasi ile isim  soyisim dogum yılı  bilgileri uyuşmamaktadır. ')
-            return render(request, 'yonetim/kurul-uyesi-ekle.html',
-                          {'user_form': user_form, 'person_form': person_form,
-                           'communication_form': communication_form,
-                           'member_form': member_form})
+        # client = Client('https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?WSDL')
+        # if not (client.service.TCKimlikNoDogrula(tc, name, surname, year[2])):
+        #     messages.warning(request,
+        #                      'Tc kimlik numarasi ile isim  soyisim dogum yılı  bilgileri uyuşmamaktadır. ')
+        #     return render(request, 'yonetim/kurul-uyesi-ekle.html',
+        #                   {'user_form': user_form, 'person_form': person_form,
+        #                    'communication_form': communication_form,
+        #                    'member_form': member_form})
 
         if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and member_form.is_valid():
             user = User()
@@ -118,7 +120,7 @@ def add_directory_member(request):
 
             messages.success(request, 'Kurul Üyesi Başarıyla Kayıt Edilmiştir.')
 
-            return redirect('ekabis:change_directorymember', directoryMember.pk)
+            return redirect('ekabis:change_directorymember', directoryMember.uuid)
 
         else:
 
@@ -168,7 +170,7 @@ def return_directory_members(request):
 
 
 @login_required
-def delete_directory_member(request, pk):
+def delete_directory_member(request):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -177,11 +179,11 @@ def delete_directory_member(request, pk):
     try:
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
-
+                uuid = request.POST['uuid']
                 memberfilter = {
-                    'pk': pk
+                    'uuid': uuid
                 }
-                obj = DirectoryMemberService(request, memberfilter).first()
+                obj = DirectoryMemberService(request, memberfilter)[0]
 
                 log = str(obj.user.get_full_name()) + " kurul uyesi silindi"
                 log = general_methods.logwrite(request, request.user, log)
@@ -197,14 +199,14 @@ def delete_directory_member(request, pk):
 
 
 @login_required
-def update_directory_member(request, pk):
+def update_directory_member(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
         logout(request)
         return redirect('accounts:login')
     memberfilter = {
-        'pk': pk
+        'uuid': uuid
     }
     member = DirectoryMemberService(request, memberfilter).first()
     if not member.user.groups.all():
@@ -313,10 +315,9 @@ def return_member_roles(request):
                     memberRole = DirectoryMemberRole(name=member_role_form.cleaned_data['name'])
                     memberRole.save()
                     messages.success(request, 'Kurul Üye Rolü Başarıyla Kayıt Edilmiştir.')
-                    return redirect('ekabis:kurul-uye-rolleri')
+                    return redirect('ekabis:view_directorymemberrole')
 
                 else:
-
                     messages.warning(request, 'Alanları Kontrol Ediniz')
 
             memberRoles = DirectoryMemberRoleService(request, None)
@@ -328,7 +329,7 @@ def return_member_roles(request):
 
 
 @login_required
-def delete_member_role(request, pk):
+def delete_member_role(request):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -336,9 +337,9 @@ def delete_member_role(request, pk):
     try:
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
-
+                uuid = request.POST['uuid']
                 memberrolefilter = {
-                    'pk': pk
+                    'uuid': uuid
                 }
                 obj = DirectoryMemberRoleService(request, memberrolefilter).first()
                 obj.delete()
@@ -352,14 +353,14 @@ def delete_member_role(request, pk):
 
 
 @login_required
-def update_member_role(request, pk):
+def update_member_role(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
         logout(request)
         return redirect('accounts:login')
     memberrolefilter = {
-        'pk': pk
+        'uuid': uuid
     }
 
     memberRole = DirectoryMemberRoleService(request, memberrolefilter).first()
@@ -371,7 +372,7 @@ def update_member_role(request, pk):
                 if member_role_form.is_valid():
                     member_role_form.save()
                     messages.success(request, 'Başarıyla Güncellendi')
-                    return redirect('ekabis:kurul-uye-rolleri')
+                    return redirect('ekabis:view_directorymemberrole')
                 else:
                     messages.warning(request, 'Alanları Kontrol Ediniz')
 
@@ -421,7 +422,7 @@ def return_commissions(request):
 
 
 @login_required
-def delete_commission(request, pk):
+def delete_commission(request):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -430,9 +431,9 @@ def delete_commission(request, pk):
     try:
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
-
+                uuid=request.POST['uuid']
                 commissonfilter = {
-                    'pk': pk
+                    'uuid': uuid
                 }
                 obj = DirectoryCommissionService(request, commissonfilter).first()
                 log = str(obj.name) + " kurul silindi"
@@ -457,7 +458,7 @@ def update_commission(request, pk):
         logout(request)
         return redirect('accounts:login')
     commissonfilter = {
-        'pk': pk
+        'uuid': pk
     }
     commission = DirectoryCommissionService(request, commissonfilter).first()
     commission_form = DirectoryCommissionForm(request.POST or None, instance=commission)

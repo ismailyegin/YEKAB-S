@@ -2,14 +2,14 @@
 {% block content %}
 
 
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">İşlem Başarılı</h4>
+
                 </div>
                 <div class="modal-body successModal">
                     ...
@@ -24,30 +24,31 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Uyarı</h4>
+
                 </div>
                 <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz?</p>
+                    <p>Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
                             data-dismiss="modal">Evet
                     </button>
-                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
     </div>
-
 
 
     {% if messages %}
@@ -153,25 +154,25 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ memberRole.name }}</td>
                                         <td>
-                                            <div class="btn-group">
+
                                                 {% for item in perm %}
                                                     {% if item == 'add_directorymember' %}
-                                                        <a href="{% url "ekabis:change_directorymemberrole" memberRole.pk %}"
-                                                           type="button" class="btn btn-warning"><i
-                                                                class="fa fa-edit"></i>Güncelle
-                                                        </a>
-                                                    {% endif %}
-                                                {% endfor %}
-                                                {% for item in perm %}
-                                                    {% if item == 'delete_directorymemberrole' %}
-                                                        <a class="btn btn-danger"
-                                                           data-toggle="modal"
-                                                           onclick=deleteClubRole({{ memberRole.pk }})><i
-                                                                class="fa fa-trash"></i>Sil</a>
+                                                        <div class="btn-group">
+                                                            <a href="{% url "ekabis:change_directorymemberrole" memberRole.uuid %}"
+                                                               type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-edit"></i>Güncelle
+                                                            </a>
+                                                        </div>
+                                                    {% elif item == 'delete_directorymemberrole' %}
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-danger"
+                                                               data-toggle="modal"
+                                                               onclick=deleteClubRole('{{ memberRole.uuid }}')><i
+                                                                    class="fa fa-trash"></i>Sil</a></div>
                                                     {% endif %}
                                                 {% endfor %}
 
-                                            </div>
+
                                         </td>
 
                                     </tr>
@@ -288,14 +289,15 @@
 
             console.log(id);
             var html = ''
-            $("#modal-danger").on("shown.bs.modal", function (e) {
-                $("#btn-conf").click(function () {
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:delete_directorymemberrole" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:delete_directorymemberrole" %}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            isActive: 'False'
+                            isActive: 'False',
+                            uuid: id
                         },
                         success: function (result) {
 

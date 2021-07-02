@@ -57,7 +57,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                      <h4 class="modal-title">Uyarı</h4>
+                    <h4 class="modal-title">Uyarı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
 
@@ -86,7 +86,7 @@
 
 
                     <h4 class="modal-title">Uyarı</h4>
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
@@ -195,43 +195,44 @@
                                 {% csrf_token %}
                                 <div class="row">
 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label> {{ user_form.first_name.label }}</label>
-                                        {{ user_form.first_name }}
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label> {{ user_form.first_name.label }}</label>
+                                            {{ user_form.first_name }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label> {{ user_form.last_name.label }}</label>
+                                            {{ user_form.last_name }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label> {{ user_form.email.label }}</label>
+                                            {{ user_form.email }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Aktiflik Durumu </label>
+                                            <select name="is_active"
+                                                    class="form-control select2 select2-hidden-accessible"
+                                                    style="width: 100%; " id="is_active" tabindex="-1"
+                                                    aria-hidden="true">
+                                                <option value="" selected="">Seçiniz</option>
+
+                                                <option value="False">Pasif</option>
+
+                                                <option value="True">Aktif</option>
+
+                                            </select>
+
+
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label> {{ user_form.last_name.label }}</label>
-                                        {{ user_form.last_name }}
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label> {{ user_form.email.label }}</label>
-                                        {{ user_form.email }}
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Aktiflik Durumu </label>
-                                        <select name="is_active" class="form-control select2 select2-hidden-accessible"
-                                                style="width: 100%; " id="is_active" tabindex="-1"
-                                                aria-hidden="true">
-                                            <option value="" selected="">Seçiniz</option>
-
-                                            <option value="False">Pasif</option>
-
-                                            <option value="True">Aktif</option>
-
-                                        </select>
-
-
-                                    </div>
-                                </div>
-                                    </div>
 
 
                             </div>
@@ -291,21 +292,29 @@
                                                 <td>Pasif</td>
                                             {% endif %}
                                             <td>
-                                                <div class="btn-group">
-
-                                                    <a class="btn btn-success"
-                                                       data-toggle="modal" onclick=sendInform({{ user.pk }})><i
-                                                            class="fa  fa-arrow-circle-right"></i>Şifre Gönder</a>
-
-                                                    <a class="btn btn-danger"
-                                                       data-toggle="modal" onclick=activeUser({{ user.pk }})><i
-                                                            class="fa fa-lock"></i>Aktif/Pasifleştir</a>
-
-                                                        <a href="{% url "ekabis:change_user_group" user.pk %}"
-                                                       type="button" class="btn btn-warning"><i
-                                                            class="fa fa-edit"></i>Grup İncele
-                                                    </a>
-                                                </div>
+                                                {% for item in perm %}
+                                                    {% if item == 'view_email' %}
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-success"
+                                                               data-toggle="modal" onclick=sendInform({{ user.pk }})><i
+                                                                    class="fa  fa-arrow-circle-right"></i>Şifre
+                                                                Gönder</a>
+                                                        </div>
+                                                    {% elif item == 'view_status' %}
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-danger"
+                                                               data-toggle="modal" onclick=activeUser({{ user.pk }})><i
+                                                                    class="fa fa-lock"></i>Aktif/Pasifleştir</a>
+                                                        </div>
+                                                    {% elif item == 'change_user_group' %}
+                                                        <div class="btn-group">
+                                                            <a href="{% url "ekabis:change_user_group" user.pk %}"
+                                                               type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-edit"></i>Grup İncele
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
                                             </td>
 
                                         </tr>
@@ -362,7 +371,7 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'Yekabis',
+                        title: 'Yekabis',
 
 
                     },
@@ -376,7 +385,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'Yekabis',
+                        title: 'Yekabis',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -384,7 +393,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'Yekabis',
+                        title: 'Yekabis',
                     },
                     {
                         text: 'Json',
@@ -431,7 +440,7 @@
                         success: function (result) {
 
                             html = 'Kullanıcı Durumu Değiştirildi';
-                        debugger;
+                            debugger;
                             $(".successModal").html(html);
                             $('#modal-success').on("shown.bs.modal", function (e) {
                                 $(".btn-ok").click(function () {
@@ -452,7 +461,7 @@
         }
 
         function sendInform(id) {
-        debugger;
+            debugger;
             console.log(id);
             var html = ''
             $("#modal-mail").on("shown.bs.modal", function (e) {
@@ -468,7 +477,7 @@
 
                                 if (result.status == 'Fail') {
                                     html = result.msg;
-                                debugger;
+                                    debugger;
                                     $(".successModalD").html(html);
                                     $('#modal-success-danger').on("shown.bs.modal", function (e) {
                                         $(".btn-ok").click(function () {
@@ -481,7 +490,7 @@
 
                                 } else {
                                     html = result.msg;
-                                debugger;
+                                    debugger;
                                     $(".successModal").html(html);
                                     $('#modal-success').on("shown.bs.modal", function (e) {
                                         $(".btn-ok").click(function () {
