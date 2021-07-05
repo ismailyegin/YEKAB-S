@@ -1,6 +1,4 @@
 django
 dj-database-url
-djangorestframework
-django-rest-framework
 pillow
-psycopg2
+

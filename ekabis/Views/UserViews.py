@@ -13,10 +13,12 @@ from ekabis.Forms.UserForm import UserForm
 from ekabis.Forms.UserSearchForm import UserSearchForm
 from accounts.models import Forgot
 from ekabis.services import general_methods
+from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import UserService, GroupService
 
 from django.contrib.auth.models import User, Group
 from ekabis.models.HistoryGroup import HistoryGroup
+
 
 @login_required
 def return_users(request):
@@ -82,10 +84,12 @@ def update_user(request, pk):
                     messages.success(request, 'Kullanıcı Başarıyla Güncellendi')
                     return redirect('ekabis:view_user')
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
+                    error_messages = get_error_messages(user_form)
+                    return render(request, 'kullanici/kullanici-duzenle.html',
+                                  {'user_form': user_form, 'error_messages': error_messages, })
 
         return render(request, 'kullanici/kullanici-duzenle.html',
-                      {'user_form': user_form})
+                      {'user_form': user_form, 'error_messages': '' })
 
     except Exception as e:
         traceback.print_exc()
@@ -171,63 +175,57 @@ def send_information(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
 
-def change_group_function(request,pk):
+def change_group_function(request, pk):
     perm = general_methods.control_access(request)
 
     # if not perm:
     #     logout(request)
     #     return redirect('accounts:login')
-    userfilter={
+    userfilter = {
         'pk': pk
     }
-    user=UserService(request,userfilter)[0]
-    user_group=Group.objects.filter(user=user)
-
+    user = UserService(request, userfilter)[0]
+    user_group = Group.objects.filter(user=user)
 
     if request.POST:
-        list=request.POST.getlist('test')
-        #eklenme durumu -
+        list = request.POST.getlist('test')
+        # eklenme durumu -
 
         for item in list:
             if Group.objects.exclude(pk=item):
-                groupfilter={
-                    'pk':item
+                groupfilter = {
+                    'pk': item
                 }
-                group=GroupService(request,groupfilter)[0]
+                group = GroupService(request, groupfilter)[0]
 
                 user.groups.add(group)
                 user.save()
-                history=HistoryGroup(
+                history = HistoryGroup(
                     user=user,
                     group=group,
                     is_active=True
                 )
                 history.save()
 
-
-
-        #silme durumu
+        # silme durumu
         for item in user_group:
-            is_active=True
+            is_active = True
             for i in list:
                 if i == str(item.pk):
-                    is_active=False
+                    is_active = False
             if is_active:
                 user.groups.remove(item)
                 user.save()
-                history=HistoryGroup(
+                history = HistoryGroup(
                     user=user,
                     group=group,
                     is_active=False
                 )
                 history.save()
-    user_group=Group.objects.filter(user=user)
-    user_none_group=Group.objects.exclude(user=user)
-
-
-
+    user_group = Group.objects.filter(user=user)
+    user_none_group = Group.objects.exclude(user=user)
 
     return render(request, 'kullanici/kullniciGrupEkle.html',
-                  {"user_none_group":user_none_group,
-                   "user_group":user_group,
-                   'user':user})
+                  {"user_none_group": user_none_group,
+                   "user_group": user_group,
+                   'user': user})

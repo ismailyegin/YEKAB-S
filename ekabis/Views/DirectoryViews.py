@@ -29,6 +29,7 @@ from ekabis.services import general_methods
 from zeep import Client
 from unicode_tr import unicode_tr
 
+from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import PersonService, UserService, GroupService, DirectoryMemberService, \
     DirectoryMemberRoleService, DirectoryCommissionService
 
@@ -126,6 +127,15 @@ def add_directory_member(request):
 
             for x in user_form.errors.as_data():
                 messages.warning(request, user_form.errors[x].first())
+
+            error_message_company = get_error_messages(user_form)
+            error_messages_person = get_error_messages(person_form)
+            error_messages_communication = get_error_messages(communication_form)
+            error_messages_member = get_error_messages(member_form)
+            error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_member
+            return render(request, 'yonetim/kurul-uyesi-ekle.html',
+                          {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
+                           'member_form': member_form, 'error_messages': error_messages})
 
     return render(request, 'yonetim/kurul-uyesi-ekle.html',
                   {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
@@ -284,11 +294,20 @@ def update_directory_member(request, uuid):
 
                     messages.success(request, 'Kurul Üyesi Başarıyla Güncellendi')
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
-
+                    error_message_company = get_error_messages(user_form)
+                    error_messages_person = get_error_messages(person_form)
+                    error_messages_communication = get_error_messages(communication_form)
+                    error_messages_member = get_error_messages(member_form)
+                    error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_member
+                    return render(request, 'yonetim/kurul-uyesi-duzenle.html',
+                                  {'user_form': user_form, 'communication_form': communication_form, 'member': member,
+                                   'person_form': person_form, 'member_form': member_form, 'groups': groups,
+                                   'error_messages': error_messages
+                                   })
             return render(request, 'yonetim/kurul-uyesi-duzenle.html',
                           {'user_form': user_form, 'communication_form': communication_form, 'member': member,
                            'person_form': person_form, 'member_form': member_form, 'groups': groups,
+                           'error_messages': ''
 
                            })
     except Exception as e:
@@ -318,11 +337,14 @@ def return_member_roles(request):
                     return redirect('ekabis:view_directorymemberrole')
 
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
-
+                    error_messages = get_error_messages(member_role_form)
+                    memberRoles = DirectoryMemberRoleService(request, None)
+                    return render(request, 'yonetim/kurul-uye-rolleri.html',
+                                  {'member_role_form': member_role_form, 'memberRoles': memberRoles,
+                                   'error_messages': error_messages})
             memberRoles = DirectoryMemberRoleService(request, None)
             return render(request, 'yonetim/kurul-uye-rolleri.html',
-                          {'member_role_form': member_role_form, 'memberRoles': memberRoles})
+                          {'member_role_form': member_role_form, 'memberRoles': memberRoles, 'error_messages': ''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -431,7 +453,7 @@ def delete_commission(request):
     try:
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
-                uuid=request.POST['uuid']
+                uuid = request.POST['uuid']
                 commissonfilter = {
                     'uuid': uuid
                 }
@@ -529,11 +551,23 @@ def updateDirectoryProfile(request):
 
                 else:
 
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
+                    error_message_password = get_error_messages(password_form)
+                    error_messages_communication = get_error_messages(communication_form)
+                    error_messages_person = get_error_messages(person_form)
+                    error_messages_member = get_error_messages(member_form)
+                    error_messages_user = get_error_messages(user_form)
+
+                    error_messages = error_messages_user + error_message_password + error_messages_communication + error_messages_person + error_messages_member
+                    return render(request, 'yonetim/yonetim-kurul-profil-guncelle.html',
+                                  {'user_form': user_form, 'communication_form': communication_form,
+                                   'person_form': person_form, 'password_form': password_form,
+                                   'member_form': member_form,
+                                   'error_messages': error_messages})
 
             return render(request, 'yonetim/yonetim-kurul-profil-guncelle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
-                           'person_form': person_form, 'password_form': password_form, 'member_form': member_form})
+                           'person_form': person_form, 'password_form': password_form, 'member_form': member_form,
+                           'error_messages': ''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

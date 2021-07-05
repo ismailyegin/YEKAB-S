@@ -11,9 +11,9 @@ from ekabis.models.CategoryItem import CategoryItem
 
 
 class Employee(BaseModel):
-    person = models.OneToOneField(Person, on_delete=models.CASCADE, db_column='person')
+    person = models.OneToOneField(Person, on_delete=models.CASCADE, db_column='person',null=False,blank=False)
     communication = models.OneToOneField(Communication, on_delete=models.CASCADE, db_column='communication')
-    user = models.OneToOneField(User, on_delete=models.CASCADE, db_column='user')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, db_column='user',null=False,blank=False)
     creationDate = models.DateTimeField(auto_now_add=True)
     operationDate = models.DateTimeField(auto_now=True)
     workDefinition = models.ForeignKey(CategoryItem, on_delete=models.DO_NOTHING)

@@ -73,6 +73,8 @@
                                     <div class="form-group">
                                         <label> {{ person_form.profileImage.label }}</label>
                                         {{ person_form.profileImage }}
+                                        <label  for="" id="label_profileImage"></label>
+
                                     </div>
 
                                 </div>
@@ -81,38 +83,58 @@
                                     <div class="form-group">
                                         <label> {{ person_form.tc.label }}</label>
                                         {{ person_form.tc }}
+                                        <label  for="" id="label_tc"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
+                                        <label for="" id="label_first_name"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ user_form.last_name.label }}</label>
                                         {{ user_form.last_name }}
+                                        <label id="label_last_name"></label>
+
                                     </div>
+
 
                                     <div class="form-group">
                                         <label> {{ person_form.gender.label }}</label>
                                         {{ person_form.gender }}
+                                        <label  for="" id="label_gender"></label>
+
                                     </div>
 
 
                                 </div>
-                                <br>
+
                                 <div class="col-lg-6">
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthDate.label }}</label>
                                         {{ person_form.birthDate }}
+                                        <label  for="" id="label_birthDate"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ employee_form.workDefinition.label }}</label>
                                         {{ employee_form.workDefinition }}
+                                        <label  for="" id="label_workDefinition"></label>
+
                                     </div>
+                                    <div class="form-group">
+                                        <label> {{ person_form.bloodType.label }}</label>
+                                        {{ person_form.bloodType }}
+                                        <label  for="" id="label_bloodType"></label>
+
+                                    </div>
+
                                     <div class="form-group">
                                         <label>Grubunu Seçiniz</label>
                                         <select name="group" class="form-control select2 select2-hidden-accessible"
@@ -148,29 +170,43 @@
                                     <div class="form-group">
                                         <label> {{ user_form.email.label }}</label>
                                         {{ user_form.email }}
+                                        <label for="" id="label_email"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber.label }}</label>
                                         {{ communication_form.phoneNumber }}
+                                        <label  for="" id="label_phoneNumber"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber2.label }}</label>
                                         {{ communication_form.phoneNumber2 }}
+                                        <label  for="" id="label_phoneNumber2"></label>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label> {{ communication_form.country.label }}</label>
                                         {{ communication_form.country }}
+                                        <label  for="" id="label_country"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.city.label }}</label>
                                         {{ communication_form.city }}
+                                        <label  for="" id="label_city"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.postalCode.label }}</label>
                                         {{ communication_form.postalCode }}
+                                        <label  for="" id="label_postalCode"></label>
+
                                     </div>
+
+
                                 </div>
                             </div>
                             <div class="row">
@@ -178,6 +214,8 @@
                                     <div class="form-group">
                                         <label> {{ communication_form.address.label }}</label>
                                         {{ communication_form.address }}
+                                        <label  for="" id="label_address"></label>
+
                                     </div>
                                 </div>
                             </div>
@@ -216,7 +254,7 @@
             if (tcno.length !== 11) {
                 debugger;
                 alert('Tc 11 degerden  küçük olamaz');
-                document.getElementById("tc").style.borderStyle= "red";
+                document.getElementById("tc").style.borderStyle = "red";
 
                 return false;
 
@@ -272,6 +310,19 @@
         }
 
 
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+
+        debugger;
+        let messages =
+        {{ error_messages | safe }}
+        if (messages !== '') {
+            errors_messages({{ error_messages |safe }})
+        }
+    });
     </script>
 {% endblock %}
 

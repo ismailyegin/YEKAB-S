@@ -19,6 +19,7 @@ from ekabis.models.Claim import Claim
 from ekabis.Forms.DestekSearchForm import DestekSearchform
 from unicode_tr import unicode_tr
 from ekabis.Forms.UserSearchForm import UserSearchForm
+from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import ClaimService
 
 
@@ -87,8 +88,10 @@ def claim_add(request):
                     messages.success(request, 'Destek Talep  Eklendi.')
                     return redirect('ekabis:view_claim')
                 else:
-                    messages.warning(request, 'Form Bilgilerini Kontrol Ediniz Lütfen .')
-            return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, })
+                    error_messages = get_error_messages(claim_form)
+                    return render(request, 'Destek/Desktek-ekle.html',
+                                  {'claim_form': claim_form, 'error_messages': error_messages})
+            return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, 'error_messages': ''})
 
     except Exception as e:
         traceback.print_exc()
@@ -112,8 +115,12 @@ def claim_update(request, pk):
                     claim_form.save()
                     messages.success(request, 'Destek Talep  Güncellendi.')
                     return redirect('ekabis:view_claim')
+                else:
+                    error_messages = get_error_messages(claim_form)
+                    return render(request, 'Destek/Desktek-ekle.html',
+                                  {'claim_form': claim_form, 'error_messages': error_messages})
 
-            return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, })
+            return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, 'error_messages': ''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

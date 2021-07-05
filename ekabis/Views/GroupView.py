@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from ekabis.Forms.GroupForm import GroupForm
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.services import general_methods
+from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import GroupService, PermissionService, PermissionGroupService
 from ekabis.models.Permission import Permission
 
@@ -41,9 +42,11 @@ def add_group(request):
                     messages.success(request, 'Grup Kayıt Edilmiştir.')
                     return redirect('ekabis:view_group')
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
+                    error_messages = get_error_messages(group_form)
+                    return render(request, 'Group/GrupEkle.html',
+                                  {'group_form': group_form, 'error_messages': error_messages, })
             return render(request, 'Group/GrupEkle.html',
-                          {'group_form': group_form, })
+                          {'group_form': group_form})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -80,10 +83,13 @@ def return_update_group(request, pk):
                     return redirect('ekabis:view_group')
 
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
+                    error_messages = get_error_messages(group_form)
+                    return render(request, 'Group/grupGuncelle.html',
+                                  {'group_form': group_form,'error_messages': error_messages
+                                   })
 
             return render(request, 'Group/grupGuncelle.html',
-                          {'group_form': group_form,
+                          {'group_form': group_form,'error_messages': ''
                            })
     except Exception as e:
         traceback.print_exc()

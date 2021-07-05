@@ -9,7 +9,7 @@ class PersonForm(ModelForm):
         model = Person
 
         fields = (
-            'tc', 'profileImage', 'birthDate', 'gender', 'birthplace', 'bloodType')
+            'tc', 'profileImage', 'birthDate', 'gender', 'birthplace', 'bloodType','motherName','fatherName')
         labels = {'tc': 'T.C.', 'gender': 'Cinsiyet', 'profileImage': 'Profil Resmi'}
 
         widgets = {
@@ -26,6 +26,10 @@ class PersonForm(ModelForm):
             'gender': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                           'style': 'width: 100%; ', 'required': 'required'}),
             'birthplace': forms.TextInput(
+                attrs={'class': 'form-control '}),
+            'motherName': forms.TextInput(
+                attrs={'class': 'form-control '}),
+            'fatherName': forms.TextInput(
                 attrs={'class': 'form-control '}),
             'bloodType': forms.TextInput(
                 attrs={'class': 'form-control '}),

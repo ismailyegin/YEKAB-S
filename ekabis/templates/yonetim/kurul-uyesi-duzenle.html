@@ -134,26 +134,42 @@
                                     <div class="form-group">
                                         <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
+                                        <label id="label_first_name"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ user_form.last_name.label }}</label>
                                         {{ user_form.last_name }}
+                                        <label id="label_last_name"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthplace.label }}</label>
                                         {{ person_form.birthplace }}
+                                        <label id="label_birthplace"></label>
+
                                     </div>
 
                                     <div class="form-group">
-                                        <label style="padding-top: 16px"> {{ person_form.bloodType.label }}</label>
+                                        <label> {{ person_form.bloodType.label }}</label>
                                         {{ person_form.bloodType }}
+                                        <label id="label_bloodType"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ member_form.role.label }}</label>
                                         {{ member_form.role }}
+                                        <label id="label_role"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ member_form.commission.label }}</label>
+                                        {{ member_form.commission }}
+                                        <label id="label_commission"></label>
+
                                     </div>
                                 </div>
 
@@ -161,43 +177,51 @@
                                     <div class="form-group">
                                         <label> {{ person_form.tc.label }}</label>
                                         {{ person_form.tc }}
+                                        <label id="label_tc"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ user_form.email.label }}</label>
                                         {{ user_form.email }}
+                                        <label id="label_email"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.motherName.label }}</label>
                                         {{ person_form.motherName }}
+                                        <label id="label_motherName"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.fatherName.label }}</label>
                                         {{ person_form.fatherName }}
+                                        <label id="label_fatherName"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthDate.label }}</label>
                                         {{ person_form.birthDate }}
+                                        <label id="label_birthDate"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.gender.label }}</label>
                                         {{ person_form.gender }}
+                                        <label id="label_gender"></label>
+
                                     </div>
 
 
-                                    <div class="form-group">
-                                        <label> {{ member_form.commission.label }}</label>
-                                        {{ member_form.commission }}
-                                    </div>
                                 </div>
 
                             </div>
@@ -330,7 +354,7 @@
                                 <h3 class="card-title">NUFUS BİLGİLERİ</h3>
 
                                 <div class="card-tools pull-right">
-                                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                                             class="fas fa-plus"></i>
                                     </button>
 
@@ -389,7 +413,7 @@
                                 <h3 class="card-title">İŞ BİLGİLERİ</h3>
 
                                 <div class="card-tools pull-right">
-                                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                                             class="fas fa-plus"></i>
                                     </button>
 
@@ -445,7 +469,7 @@
                                 <h3 class="card-title">EGİTİM BİLGİLERİ</h3>
 
                                 <div class="card-tools pull-right">
-                                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                                             class="fas fa-plus"></i>
                                     </button>
 
@@ -497,7 +521,7 @@
                                 <h3 class="card-title">BEDEN BİLGİLERİ</h3>
 
                                 <div class="card-tools pull-right">
-                                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                                             class="fas fa-plus"></i>
                                     </button>
 
@@ -573,17 +597,17 @@
 
                                     <div class="card-tools pull-right">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                            class="fas fa-plus"></i>
-                                    </button>
+                                                class="fas fa-plus"></i>
+                                        </button>
 
 
-                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
-                                        <i class="fas fa-expand"></i>
-                                    </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                            <i class="fas fa-expand"></i>
+                                        </button>
 
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
                                     </div>
                                     <!-- /.card-tools -->
                                 </div>
@@ -683,6 +707,18 @@
         });
 
 
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            debugger;
+            let messages =
+            {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
     </script>
 
 {% endblock %}

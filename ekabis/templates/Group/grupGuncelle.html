@@ -51,51 +51,23 @@
     <section class="content-header">
 
 
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>{{ aktif }}-
-                            Grup Güncelle</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Grup Güncelle</a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                        </ol>
-                    </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ aktif }}-
+                        Grup Güncelle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Grup Güncelle</a></li>
+                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                    </ol>
                 </div>
             </div>
+        </div>
 
-        </section>
+    </section>
     <section class="content">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <form method="post" enctype="multipart/form-data" role="form">
@@ -109,45 +81,55 @@
 
                 <div class="card-body">
 
-            <div class="row">
-                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
 
-                    <div class="form-group">
-                     <label>   {{ group_form.name.label }}</label>
-                        {{ group_form.name }}
-                    </div>
+                            <div class="form-group">
+                                <label>   {{ group_form.name.label }}</label>
+                                {{ group_form.name }}
+                                <label id="label_name"></label>
 
-                    <div class="form-group clearfix">
-                    <label>    {{ group_form.permissions.label }}</label>
-                       {% for perm in group_form.permissions %}
-                           <div class="custom-control custom-checkbox">
-                         {{ perm}}
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label>    {{ group_form.permissions.label }}</label>
+                                {% for perm in group_form.permissions %}
+                                    <div class="custom-control custom-checkbox">
+                                        {{ perm }}
+
+                                    </div>
+
+
+                                {% endfor %}
+                            </div>
+
+                            <div class="card-footer">
+                                <button class="btn btn-primary pull-right" type="submit">Kaydet</button>
+                            </div>
+
 
                         </div>
 
 
-                        {% endfor %}
                     </div>
-
-                   <div class="card-footer">
-                            <button class="btn btn-primary pull-right" type="submit">Kaydet</button>
-                        </div>
-
-
                 </div>
-
-
-
-
-            </div>
-                    </div>
             </div>
         </form>
 
 
     </section>
 
+    <script>
+        $(document).ready(function () {
 
+            debugger;
+            let messages =
+            {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
+    </script>
 
 {% endblock %}
 

@@ -3,10 +3,11 @@ from ekabis.models.City import City
 from ekabis.models.Country import Country
 from ekabis.models.BaseModel import BaseModel
 
+
 class Communication(BaseModel):
     postalCode = models.CharField(max_length=120, null=True, blank=True)
-    phoneNumber = models.CharField(max_length=120, null=True, blank=True)
-    phoneNumber2 = models.CharField(max_length=120, null=True, blank=True)
+    phoneNumber = models.CharField(max_length=11, null=False, blank=False, default='56546564654')
+    phoneNumber2 = models.CharField(max_length=11, null=True, blank=True)
     phoneHome = models.CharField(max_length=120, null=True, blank=True)
     phoneJop = models.CharField(max_length=120, null=True, blank=True)
     address = models.TextField(blank=True, null=True, verbose_name='Adres')

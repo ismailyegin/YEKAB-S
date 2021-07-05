@@ -79,11 +79,11 @@ def getPersonelMenu(request):
 
 def control_access(request):
     is_exist = False
-    groupfilter={
-        'user':request.user
+    groupfilter = {
+        'user': request.user
     }
-    aktifgroup = ActiveGroupService(request,groupfilter)[0].group
-    for perm in PermissionGroup.objects.filter(group=aktifgroup ,is_active=True):
+    aktifgroup = ActiveGroupService(request, groupfilter)[0].group
+    for perm in PermissionGroup.objects.filter(group=aktifgroup, is_active=True):
         if request.resolver_match.url_name == perm.permissions.codename:
             print('Okey')
             is_exist = True
@@ -187,4 +187,17 @@ def get_notification(request):
     #     if current_user.groups.filter(name='Admin').exists():
     #         print('Admin bildirimleri')
     #         return {}
+    return {}
+
+
+def get_error_messages(form):
+    if form:
+        print(form.errors)
+        error_messages = []
+        for key in form.errors:
+            for field in form.fields:
+                if key == field:
+                    entry = {'key': field, 'value': form.errors[key][0]}
+                    error_messages.append(entry)
+        return error_messages
     return {}

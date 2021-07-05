@@ -4,11 +4,12 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.CompanyForm import CompanyForm
 from ekabis.services import general_methods
+from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import CategoryItemService, CompanyService
 
 
@@ -35,11 +36,17 @@ def return_add_Company(request):
                     messages.success(request, 'Firma Kayıt Edilmiştir.')
                     return redirect('ekabis:view_company')
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
+                    error_message_company = get_error_messages(company_form)
+                    error_messages_communication = get_error_messages(communication_form)
+                    error_messages = error_messages_communication + error_message_company
+
+                    return render(request, 'Company/Company.html',
+                                  {'company_form': company_form, 'communication_form': communication_form,
+                                   'error_messages': error_messages, })
 
             return render(request, 'Company/Company.html',
-                          {'company_form': company_form, 'communication_form': communication_form,
-                           })
+                          {'company_form': company_form, 'communication_form': communication_form, 'form': company_form,
+                           'error_messages': '', })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -102,7 +109,7 @@ def return_update_Company(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
 
-                if company_form.is_valid():
+                if company_form.is_valid() and communication_form.is_valid():
                     communication = communication_form.save(commit=False)
                     communication.save()
                     company = company_form.save(commit=False)
@@ -111,11 +118,19 @@ def return_update_Company(request, uuid):
 
                     messages.success(request, 'Firma Güncellenmiştir.')
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
+                    error_message_company = get_error_messages(company_form)
+                    error_messages_communication = get_error_messages(communication_form)
+                    error_messages = error_messages_communication + error_message_company
+                    return render(request, 'Company/CompanyUpdate.html',
+                                  {'company_form': company_form,
+                                   'communication_form': communication_form,
+                                   'company': company, 'error_messages': error_messages,
+
+                                   })
             return render(request, 'Company/CompanyUpdate.html',
                           {'company_form': company_form,
                            'communication_form': communication_form,
-                           'company': company,
+                           'company': company, 'error_messages': '',
 
                            })
     except Exception as e:
