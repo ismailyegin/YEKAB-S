@@ -6,7 +6,7 @@ from ekabis.models.Settings import Settings
 class SettingsForm(forms.ModelForm):
     class Meta:
         model = Settings
-        fields = ('logincount','capchakey')
+        fields = ('key', 'value')
 
         # labels = {'name': 'İsim '}
         # widgets = {

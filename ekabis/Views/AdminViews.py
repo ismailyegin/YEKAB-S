@@ -6,6 +6,8 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render, redirect
+from requests import request
+
 from ekabis.Forms.DisabledUserForm import DisabledUserForm
 from ekabis.services import general_methods
 from ekabis.models import DirectoryMember, Employee
@@ -87,3 +89,7 @@ def activeGroup(request, pk):
         user.save()
         return redirect('ekabis:view_directoryMember', pk=member.pk)
     return {}
+
+def viewRepairPage(request):
+    return render(request, 'maintenancePage.html')
+

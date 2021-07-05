@@ -5,6 +5,8 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
 app_name = 'ekabis'
 urlpatterns = [
 
+    path('maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
+
     # Dashboard
     path('anasayfa/admin/', DashboardViews.return_admin_dashboard, name='view_admin'),
     path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
