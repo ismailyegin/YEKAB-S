@@ -91,22 +91,30 @@
                                     <div class="form-group">
                                         <label> {{ person_form.tc.label }}</label>
                                         {{ person_form.tc }}
+                                        <label id="label_tc"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ user_form.last_name.label }}</label>
                                         {{ user_form.last_name }}
+                                        <label id="label_last_name"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthplace.label }}</label>
                                         {{ person_form.birthplace }}
+                                        <label id="label_birthplace"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ member_form.role.label }}</label>
                                         {{ member_form.role }}
+                                        <label id="label_birthDate"></label>
+
                                     </div>
                                 </div>
 
@@ -115,22 +123,31 @@
                                     <div class="form-group">
                                         <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
+                                        <label id="label_first_name"></label>
+
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ person_form.birthDate.label }}</label>
                                         {{ person_form.birthDate }}
+                                        <label id="label_birthDate"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.gender.label }}</label>
                                         {{ person_form.gender }}
+                                        <label id="label_gender"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ member_form.commission.label }}</label>
                                         {{ member_form.commission }}
+                                        <label id="label_commission"></label>
+
                                     </div>
                                 </div>
 
@@ -153,10 +170,14 @@
                                     <div class="form-group">
                                         <label> {{ user_form.email.label }}</label>
                                         {{ user_form.email }}
+                                        <label id="label_email"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber.label }}</label>
                                         {{ communication_form.phoneNumber }}
+                                        <label id="label_phoneNumber"></label>
+
                                     </div>
 
 
@@ -165,12 +186,15 @@
                                     <div class="form-group">
                                         <label> {{ communication_form.country.label }}</label>
                                         {{ communication_form.country }}
+                                        <label id="label_country"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.city.label }}</label>
                                         {{ communication_form.city }}
-                                    </div>
+                                        <label id="label_city"></label>
 
+                                    </div>
 
 
                                 </div>
@@ -182,13 +206,15 @@
                                     <div class="form-group">
                                         <label> {{ communication_form.address.label }}</label>
                                         {{ communication_form.address }}
+                                        <label id="label_address"></label>
+
                                     </div>
                                 </div>
                             </div>
-                             <div class="col-lg-12">
-                                    <p class="text-success"> Lütfen (*) zorunlu alanları dordurunuz.</p>
+                            <div class="col-lg-12">
+                                <p class="text-success"> Lütfen (*) zorunlu alanları dordurunuz.</p>
 
-                                </div>
+                            </div>
 
                         </div>
                         <div class="card-footer">
@@ -204,6 +230,18 @@
 
         </form>
     </section>
+
+    <script>
+        $(document).ready(function () {
+
+            debugger;
+            let messages =
+            {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
+    </script>
 
 {% endblock %}
 

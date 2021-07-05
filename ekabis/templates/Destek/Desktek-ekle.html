@@ -153,17 +153,22 @@
                                 <div class="form-group">
                                     <label> {{ claim_form.project.label }}</label>
                                     {{ claim_form.project }}
-                                </div>
+                                    <label id="label_project"></label>
 
+                                </div>
 
                                 <div class="form-group">
                                     <label> {{ claim_form.title.label }}</label>
                                     {{ claim_form.title }}
+                                    <label id="label_title"></label>
+
                                 </div>
 
                                 <div class="form-group">
                                     <label> {{ claim_form.importanceSort.label }}</label>
                                     {{ claim_form.importanceSort }}
+                                    <label id="label_importanceSort"></label>
+
                                 </div>
 
 
@@ -172,16 +177,22 @@
                                     <div class="form-group">
                                         <label> {{ claim_form.pay.label }}</label>
                                         {{ claim_form.pay }}
+                                        <label id="label_pay"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ claim_form.status.label }}</label>
                                         {{ claim_form.status }}
+                                        <label id="label_status"></label>
+
                                     </div>
                                 {% endif %}
 
                                 <div class="form-group">
                                     <label> {{ claim_form.definition.label }}</label>
                                     {{ claim_form.definition }}
+                                    <label id="label_definition"></label>
+
                                 </div>
                                 <div class=" pull-right">
                                     <button type="submit" class="btn btn-primary">Kaydet</button>
@@ -208,5 +219,15 @@
         <!-- /.row (main row) -->
 
     </section>
+    <script>
+        $(document).ready(function () {
 
+            debugger;
+            let messages =
+            {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
+    </script>
 {% endblock %}

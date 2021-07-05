@@ -46,24 +46,24 @@
 
     {% endif %}
 
-   <section class="content-header">
+    <section class="content-header">
 
 
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>Personel Güncelle</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Personel Güncelle</a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                        </ol>
-                    </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Personel Güncelle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Personel Güncelle</a></li>
+                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                    </ol>
                 </div>
             </div>
+        </div>
 
-        </section>
+    </section>
     <section class="content">
 
         <form method="post" enctype="multipart/form-data" role="form" onsubmit="tckimlikkontorolu()">
@@ -95,6 +95,8 @@
                                         </center>
 
                                         {{ person_form.profileImage }}
+                                        <label id="label_profileImage"></label>
+
                                     </div>
 
 
@@ -105,22 +107,30 @@
                                     <div class="form-group">
                                         <label> {{ person_form.tc.label }}</label>
                                         {{ person_form.tc }}
+                                        <label id="label_tc"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
+                                        <label id="label_first_name"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ user_form.last_name.label }}</label>
                                         {{ user_form.last_name }}
+                                        <label id="label_last_name"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ person_form.gender.label }}</label>
                                         {{ person_form.gender }}
+                                        <label id="label_agender"></label>
+
                                     </div>
 
 
@@ -131,11 +141,15 @@
                                     <div class="form-group">
                                         <label> {{ person_form.birthDate.label }}</label>
                                         {{ person_form.birthDate }}
+                                        <label id="label_birthDate"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ employee_form.workDefinition.label }}</label>
                                         {{ employee_form.workDefinition }}
+                                        <label id="label_workDefinition"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label>Grubu</label>
@@ -171,28 +185,40 @@
                                     <div class="form-group">
                                         <label> {{ user_form.email.label }}</label>
                                         {{ user_form.email }}
+                                        <label id="label_email"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber.label }}</label>
                                         {{ communication_form.phoneNumber }}
+                                        <label id="label_phoneNumber"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber2.label }}</label>
                                         {{ communication_form.phoneNumber2 }}
+                                        <label id="label_phoneNumber2"></label>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label> {{ communication_form.country.label }}</label>
                                         {{ communication_form.country }}
+                                        <label id="label_country"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.city.label }}</label>
                                         {{ communication_form.city }}
+                                        <label id="label_city"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.postalCode.label }}</label>
                                         {{ communication_form.postalCode }}
+                                        <label id="label_postalCode"></label>
+
                                     </div>
                                 </div>
                             </div>
@@ -201,6 +227,8 @@
                                     <div class="form-group">
                                         <label> {{ communication_form.address.label }}</label>
                                         {{ communication_form.address }}
+                                        <label id="label_address"></label>
+
                                     </div>
                                 </div>
                             </div>
@@ -213,12 +241,7 @@
                     </div>
 
 
-
-
                 </div>
-
-
-
 
 
             </div>
@@ -228,81 +251,89 @@
 
     </section>
     <script>
-    function tckimlikkontorolu() {
+        function tckimlikkontorolu() {
 
-        // geleni her zaman String'e çevirelim!
-        tcno = String($('#tc').val());
+            // geleni her zaman String'e çevirelim!
+            tcno = String($('#tc').val());
 
-        // tcno '0' karakteri ile başlayamaz!
-        if (tcno.substring(0, 1) === '0') {
-            alert('T.C Degerinin ilk degeri 0 olamaz ');
-            document.getElementById("tc").style.color = "red";
-            return false;
+            // tcno '0' karakteri ile başlayamaz!
+            if (tcno.substring(0, 1) === '0') {
+                alert('T.C Degerinin ilk degeri 0 olamaz ');
+                document.getElementById("tc").style.color = "red";
+                return false;
 
 
-        }
-        // Tcno 11 karakter uzunluğunda olmalı!
-        if (tcno.length !== 11) {
-            alert('Tc 11 degerden  küçük olamaz');
-            document.getElementById("tc").style.color = "red";
-            return false;
-
-        }
-
-        /**
-         Aşağıdaki iki kontrol için toplamları hazır ediyoruz
-         - o anki karakteri sayıya dönüştür
-         - tek haneleri ayrıca topla (1,3,5,7,9)
-         - çift haneleri ayrıca topla (2,4,6,8)
-         - bütün haneleri ayrıca topla
-         **/
-        var ilkon_array = tcno.substr(0, 10).split('');
-        var ilkon_total = hane_tek = hane_cift = 0;
-
-        for (var i = j = 0; i < 9; ++i) {
-            j = parseInt(ilkon_array[i], 10);
-            if (i & 1) { // tek ise, tcnin çift haneleri toplanmalı!
-                hane_cift += j;
-            } else {
-                hane_tek += j;
             }
-            ilkon_total += j;
+            // Tcno 11 karakter uzunluğunda olmalı!
+            if (tcno.length !== 11) {
+                alert('Tc 11 degerden  küçük olamaz');
+                document.getElementById("tc").style.color = "red";
+                return false;
+
+            }
+
+            /**
+             Aşağıdaki iki kontrol için toplamları hazır ediyoruz
+             - o anki karakteri sayıya dönüştür
+             - tek haneleri ayrıca topla (1,3,5,7,9)
+             - çift haneleri ayrıca topla (2,4,6,8)
+             - bütün haneleri ayrıca topla
+             **/
+            var ilkon_array = tcno.substr(0, 10).split('');
+            var ilkon_total = hane_tek = hane_cift = 0;
+
+            for (var i = j = 0; i < 9; ++i) {
+                j = parseInt(ilkon_array[i], 10);
+                if (i & 1) { // tek ise, tcnin çift haneleri toplanmalı!
+                    hane_cift += j;
+                } else {
+                    hane_tek += j;
+                }
+                ilkon_total += j;
+            }
+
+            /**
+             KONTROL 1:
+             1. 3. 5. 7. ve 9. hanelerin toplamının 7 katından,
+             2. 4. 6. ve 8. hanelerin toplamı çıkartıldığında,
+             elde edilen sonucun Mod10'u bize 10. haneyi verir
+             **/
+            if ((hane_tek * 7 - hane_cift) % 10 !== parseInt(tcno.substr(-2, 1), 10)) {
+                alert('Lütfen geçerli bir T.c numarasi giriniz.')
+                return false;
+            }
+
+            /**
+             KONTROL 2:
+             1. 2. 3. 4. 5. 6. 7. 8. 9. ve 10. hanelerin toplamından
+             elde edilen sonucun Mod10'u bize 11. haneyi vermelidir.
+             NOT: ilk 9 haneyi üstteki FOR döndüsünde zaten topladık!
+             **/
+            ilkon_total += parseInt(ilkon_array[9], 10);
+            if (ilkon_total % 10 !== parseInt(tcno.substr(-1), 10)) {
+                alert('Lütfen geçerli bir T.c numarasi giriniz.')
+                return false;
+            }
+
+            return true;
+
+
         }
-
-        /**
-         KONTROL 1:
-         1. 3. 5. 7. ve 9. hanelerin toplamının 7 katından,
-         2. 4. 6. ve 8. hanelerin toplamı çıkartıldığında,
-         elde edilen sonucun Mod10'u bize 10. haneyi verir
-         **/
-        if ((hane_tek * 7 - hane_cift) % 10 !== parseInt(tcno.substr(-2, 1), 10)) {
-            alert('Lütfen geçerli bir T.c numarasi giriniz.')
-            return false;
-        }
-
-        /**
-         KONTROL 2:
-         1. 2. 3. 4. 5. 6. 7. 8. 9. ve 10. hanelerin toplamından
-         elde edilen sonucun Mod10'u bize 11. haneyi vermelidir.
-         NOT: ilk 9 haneyi üstteki FOR döndüsünde zaten topladık!
-         **/
-        ilkon_total += parseInt(ilkon_array[9], 10);
-        if (ilkon_total % 10 !== parseInt(tcno.substr(-1), 10)) {
-            alert('Lütfen geçerli bir T.c numarasi giriniz.')
-            return false;
-        }
-
-        return true;
-
-
-    }
-
-
 
 
     </script>
 
+    <script>
+        $(document).ready(function () {
 
+            debugger;
+            let messages =
+            {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
+    </script>
 {% endblock %}
 
 

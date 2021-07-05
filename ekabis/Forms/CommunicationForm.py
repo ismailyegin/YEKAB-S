@@ -40,7 +40,7 @@ class CommunicationForm(ModelForm):
 
             'phoneNumber': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
-                       'minlength': '11','required': 'required'}),
+                       'minlength': '11'}),
 
             'phoneNumber2': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',

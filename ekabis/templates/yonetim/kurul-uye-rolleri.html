@@ -123,6 +123,8 @@
                                 <div class="form-group">
                                     <label> {{ member_role_form.name.label }}</label>
                                     {{ member_role_form.name }}
+                                    <label id="label_name"></label>
+
                                 </div>
 
 
@@ -155,22 +157,22 @@
                                         <td>{{ memberRole.name }}</td>
                                         <td>
 
-                                                {% for item in perm %}
-                                                    {% if item == 'add_directorymember' %}
-                                                        <div class="btn-group">
-                                                            <a href="{% url "ekabis:change_directorymemberrole" memberRole.uuid %}"
-                                                               type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-edit"></i>Güncelle
-                                                            </a>
-                                                        </div>
-                                                    {% elif item == 'delete_directorymemberrole' %}
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-danger"
-                                                               data-toggle="modal"
-                                                               onclick=deleteClubRole('{{ memberRole.uuid }}')><i
-                                                                    class="fa fa-trash"></i>Sil</a></div>
-                                                    {% endif %}
-                                                {% endfor %}
+                                            {% for item in perm %}
+                                                {% if item == 'add_directorymember' %}
+                                                    <div class="btn-group">
+                                                        <a href="{% url "ekabis:change_directorymemberrole" memberRole.uuid %}"
+                                                           type="button" class="btn btn-warning"><i
+                                                                class="fa fa-edit"></i>Güncelle
+                                                        </a>
+                                                    </div>
+                                                {% elif item == 'delete_directorymemberrole' %}
+                                                    <div class="btn-group">
+                                                        <a class="btn btn-danger"
+                                                           data-toggle="modal"
+                                                           onclick=deleteClubRole('{{ memberRole.uuid }}')><i
+                                                                class="fa fa-trash"></i>Sil</a></div>
+                                                {% endif %}
+                                            {% endfor %}
 
 
                                         </td>
@@ -326,7 +328,17 @@
         }
     </script>
 
+    <script>
+        $(document).ready(function () {
 
+            debugger;
+            let messages =
+            {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
+    </script>
 
 
 

@@ -27,6 +27,7 @@ from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Country import Country
 from ekabis.models.Employee import Employee
 from ekabis.services import general_methods
+from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import CategoryItemService, EmployeeService
 
 
@@ -94,6 +95,18 @@ def add_employee(request):
                     for x in user_form.errors.as_data():
                         messages.warning(request, user_form.errors[x].first())
 
+                    error_message_company = get_error_messages(user_form)
+                    error_messages_person = get_error_messages(person_form)
+                    error_messages_communication = get_error_messages(communication_form)
+                    error_messages_employee = get_error_messages(employe_form)
+                    error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_employee
+
+                    return render(request, 'personel/personel-ekle.html',
+                                  {'user_form': user_form, 'person_form': person_form,
+                                   'communication_form': communication_form,
+                                   'employee_form': employee_form, 'error_messages': error_messages,
+                                   })
+
             return render(request, 'personel/personel-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
                            'employee_form': employee_form,
@@ -153,9 +166,21 @@ def edit_employee(request, pk):
                     for x in user_form.errors.as_data():
                         messages.warning(request, user_form.errors[x].first())
 
+                    error_message_company = get_error_messages(user_form)
+                    error_messages_communication = get_error_messages(communication_form)
+                    error_messages_person = get_error_messages(person_form)
+                    error_messages_employee = get_error_messages(employee_form)
+
+                    error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_employee
+                    return render(request, 'personel/personel-duzenle.html',
+                                  {'user_form': user_form, 'communication_form': communication_form,
+                                   'person_form': person_form, 'employee_form': employee_form,
+                                   'error_messages': error_messages,
+                                   })
+
             return render(request, 'personel/personel-duzenle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
-                           'person_form': person_form, 'employee_form': employee_form
+                           'person_form': person_form, 'employee_form': employee_form, 'error_messages': '',
                            })
 
     except Exception as e:
@@ -441,8 +466,16 @@ def updateRefereeProfile(request):
             return redirect('ekabis:personel-profil-guncelle')
 
         else:
-            return redirect('ekabis:personel-profil-guncelle')
+            error_message_company = get_error_messages(password_form)
+            # error_messages_communication = get_error_messages(communication_form)
+            # error_messages_person = get_error_messages(person_form)
+            # error_messages_employee = get_error_messages(communication_form)
 
+            error_messages = password_form
+            return render(request, 'personel/Personel-Profil-güncelle.html',
+                          {'user_form': user_form, 'communication_form': communication_form,
+                           'person_form': person_form, 'password_form': password_form,
+                           'error_messages': error_messages})
     return render(request, 'personel/Personel-Profil-güncelle.html',
                   {'user_form': user_form, 'communication_form': communication_form,
-                   'person_form': person_form, 'password_form': password_form})
+                   'person_form': person_form, 'password_form': password_form, 'error_messages':''})

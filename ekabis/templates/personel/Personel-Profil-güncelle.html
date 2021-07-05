@@ -49,11 +49,11 @@
 
     <section class="content-header">
         <h1>
-            Personel  Güncelle
+            Personel Güncelle
 
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i>Personel  Düzenle</a></li>
+            <li><a href="#"><i class="fa fa-dashboard"></i>Personel Düzenle</a></li>
 
         </ol>
     </section>
@@ -76,18 +76,18 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                       <label> {{ person_form.profileImage.label }}</label>
+                                        <label> {{ person_form.profileImage.label }}</label>
 
                                         <center>
 
                                             {% if person_form.instance.profileImage %}
                                                 <img
-                                                    src="{{ MEDIA_URL }}{{ person_form.instance.profileImage }}"
-                                                    class="img-responsive img-bordered " alt="Resim Yok"
-                                            ><br>
+                                                        src="{{ MEDIA_URL }}{{ person_form.instance.profileImage }}"
+                                                        class="img-responsive img-bordered " alt="Resim Yok"
+                                                ><br>
                                             {% endif %}
                                         </center>
-                                    {{ person_form.profileImage }}
+                                        {{ person_form.profileImage }}
 
                                     </div>
 
@@ -109,9 +109,6 @@
                     </div>
 
 
-
-
-
                 </div>
 
 
@@ -128,27 +125,37 @@
                                     <div class="form-group">
                                         <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
+                                        <label id="label_first_name"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.motherName.label }}</label>
                                         {{ person_form.motherName }}
+                                        <label id="label_motherName"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthplace.label }}</label>
                                         {{ person_form.birthplace }}
+                                        <label id="label_birthplace"></label>
+                                        v
                                     </div>
 
                                     <div class="form-group">
                                         <label style="padding-top: 16px"> {{ person_form.bloodType.label }}</label>
                                         {{ person_form.bloodType }}
+                                        <label id="label_bloodType"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ person_form.gender.label }}</label>
                                         {{ person_form.gender }}
+                                        <label id="label_gender"></label>
+
                                     </div>
 
                                 </div>
@@ -159,24 +166,32 @@
                                     <div class="form-group">
                                         <label> {{ person_form.tc.label }}</label>
                                         {{ person_form.tc }}
+                                        <label id="label_tc"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ user_form.last_name.label }}</label>
                                         {{ user_form.last_name }}
+                                        <label id="label_last_name"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.fatherName.label }}</label>
                                         {{ person_form.fatherName }}
+                                        <label id="label_fatherName"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthDate.label }}</label>
                                         {{ person_form.birthDate }}
+                                        <label id="label_birthDate"></label>
+
                                     </div>
 
 
@@ -189,7 +204,7 @@
                     </div>
 
 
-                     <div class="box box-primary">
+                    <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title">İletişim Bilgileri</h3>
                         </div>
@@ -199,28 +214,40 @@
                                     <div class="form-group">
                                         <label> {{ user_form.email.label }}</label>
                                         {{ user_form.email }}
+                                        <label id="label_email"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber.label }}</label>
                                         {{ communication_form.phoneNumber }}
+                                        <label id="label_phoneNumber"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber2.label }}</label>
                                         {{ communication_form.phoneNumber2 }}
+                                        <label id="label_phoneNumber2"></label>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label> {{ communication_form.country.label }}</label>
                                         {{ communication_form.country }}
+                                        <label id="label_country"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.city.label }}</label>
                                         {{ communication_form.city }}
+                                        <label id="label_city"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.postalCode.label }}</label>
                                         {{ communication_form.postalCode }}
+                                        <label id="label_postalCode"></label>
+
                                     </div>
                                 </div>
                             </div>
@@ -229,6 +256,8 @@
                                     <div class="form-group">
                                         <label> {{ communication_form.address.label }}</label>
                                         {{ communication_form.address }}
+                                        <label id="label_address"></label>
+
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +280,17 @@
 
 
     </section>
+    <script>
+        $(document).ready(function () {
 
+            debugger;
+            let messages =
+            {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
+    </script>
 {% endblock %}
 
 
