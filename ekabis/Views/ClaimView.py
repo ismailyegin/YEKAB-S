@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from ekabis.Forms.ClaimForm import ClaimForm
@@ -99,13 +100,13 @@ def claim_add(request):
 
 
 @login_required
-def claim_update(request, pk):
+def claim_update(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    clain = Claim.objects.get(pk=pk)
+    clain = Claim.objects.get(uuid=uuid)
     claim_form = ClaimForm(request.POST or None, instance=clain)
     try:
         with transaction.atomic():
@@ -125,20 +126,29 @@ def claim_update(request, pk):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
-
 @login_required
-def claim_delete(request, pk):
+def delete_claim(request):
     perm = general_methods.control_access(request)
+
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    claimfilter = {
-        'pk': pk
-    }
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
 
-    clain = ClaimService(request, claimfilter).first()
-    clain.delete()
+                claimfilter = {
+                    'uuid': uuid
+                }
+                obj = ClaimService(request, claimfilter).first()
+                obj.delete()
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
-    messages.success(request, 'Destek Talep  Silindi.')
 
-    return redirect('ekabis:view_claim')
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
