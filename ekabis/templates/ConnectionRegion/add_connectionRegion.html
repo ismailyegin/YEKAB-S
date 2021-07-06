@@ -230,7 +230,11 @@
                                                                         class="fa fa-edit"></i>Güncelle
                                                                 </a>
                                                             </div>
-                                                        {% elif  item == 'delete_region' %}
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                    {% for item in perm %}
+                                                        {% if item == 'delete_region' %}
                                                             <div class="btn-group">
                                                                 <a class="btn btn-danger"
                                                                    data-toggle="modal"
@@ -239,17 +243,21 @@
                                                             </div>
 
                                                             </td>
-                                                        {% elif item == 'view_region_capacity' %}
-                                                            <td>
-                                                                <div class="btn-group">
-                                                                    <a href="{% url 'ekabis:view_capacity'  region.uuid %}"
-                                                                       type="button" class="btn btn-primary"><i
-                                                                            class="fa fa-plus"></i> Bağlantı Kapasitesi
-                                                                    </a>
-                                                                </div>
-                                                            </td>
                                                         {% endif %}
                                                     {% endfor %}
+                                                {% for item in perm %}
+                                                    {% if item == 'view_capacity' %}
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a href="{% url 'ekabis:view_capacity'  region.uuid %}"
+                                                                   type="button" class="btn btn-primary"><i
+                                                                        class="fa fa-plus"></i> Bağlantı Kapasitesi
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    {% endif %}
+                                                {% endfor %}
+
                                             </tr>
 
                                         {% endfor %}
