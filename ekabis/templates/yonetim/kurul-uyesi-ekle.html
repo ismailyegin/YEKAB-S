@@ -102,6 +102,13 @@
                                         <label id="label_last_name"></label>
 
                                     </div>
+                                    <div class="form-group">
+                                        <label> {{ user_form.first_name.label }}</label>
+                                        {{ user_form.first_name }}
+                                        <label id="label_first_name"></label>
+
+
+                                    </div>
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthplace.label }}</label>
@@ -120,13 +127,7 @@
 
                                 <div class="col-lg-6">
 
-                                    <div class="form-group">
-                                        <label> {{ user_form.first_name.label }}</label>
-                                        {{ user_form.first_name }}
-                                        <label id="label_first_name"></label>
 
-
-                                    </div>
                                     <div class="form-group">
                                         <label> {{ person_form.birthDate.label }}</label>
                                         {{ person_form.birthDate }}
@@ -139,6 +140,12 @@
                                         <label> {{ person_form.gender.label }}</label>
                                         {{ person_form.gender }}
                                         <label id="label_gender"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ person_form.bloodType.label }}</label>
+                                        {{ person_form.bloodType }}
+                                        <label id="label_bloodType"></label>
 
                                     </div>
 

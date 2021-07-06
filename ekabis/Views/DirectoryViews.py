@@ -161,7 +161,10 @@ def return_directory_members(request):
                     lastName = unicode_tr(user_form.cleaned_data['last_name']).upper()
                     email = user_form.cleaned_data.get('email')
                     if not (firstName or lastName or email):
-                        members = DirectoryMemberService(request, None)
+                        userfilter = {
+                            'isDeleted': False
+                        }
+                        members = DirectoryMemberService(request, userfilter)
                     else:
                         query = Q()
                         if lastName:
@@ -198,7 +201,8 @@ def delete_directory_member(request):
                 log = str(obj.user.get_full_name()) + " kurul uyesi silindi"
                 log = general_methods.logwrite(request, request.user, log)
 
-                obj.delete()
+                obj.isDeleted = True
+                obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
@@ -342,7 +346,10 @@ def return_member_roles(request):
                     return render(request, 'yonetim/kurul-uye-rolleri.html',
                                   {'member_role_form': member_role_form, 'memberRoles': memberRoles,
                                    'error_messages': error_messages})
-            memberRoles = DirectoryMemberRoleService(request, None)
+            memberfilter = {
+                'isDeleted': False
+            }
+            memberRoles = DirectoryMemberRoleService(request, memberfilter)
             return render(request, 'yonetim/kurul-uye-rolleri.html',
                           {'member_role_form': member_role_form, 'memberRoles': memberRoles, 'error_messages': ''})
     except Exception as e:
@@ -364,7 +371,8 @@ def delete_member_role(request):
                     'uuid': uuid
                 }
                 obj = DirectoryMemberRoleService(request, memberrolefilter).first()
-                obj.delete()
+                obj.isDeleted = True
+                obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
             else:
@@ -433,8 +441,10 @@ def return_commissions(request):
                 else:
 
                     messages.warning(request, 'Alanları Kontrol Ediniz')
-
-            commissions = DirectoryCommissionService(request, None)
+            commissionfilter = {
+                'isDeleted': False
+            }
+            commissions = DirectoryCommissionService(request, commissionfilter)
             return render(request, 'yonetim/kurullar.html',
                           {'commission_form': commission_form, 'commissions': commissions})
 
@@ -460,7 +470,8 @@ def delete_commission(request):
                 obj = DirectoryCommissionService(request, commissonfilter).first()
                 log = str(obj.name) + " kurul silindi"
                 log = general_methods.logwrite(request, request.user, log)
-                obj.delete()
+                obj.isDeleted = True
+                obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 

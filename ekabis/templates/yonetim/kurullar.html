@@ -2,7 +2,6 @@
 {% block content %}
 
 
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -25,7 +24,6 @@
         <!-- /.modal-dialog -->
     </div>
 
-
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -37,7 +35,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz ?</p>
+                    <p>Kurulu silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -50,6 +48,7 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+
 
 
     {% if messages %}
@@ -96,7 +95,6 @@
 
 
     {% endif %}
-
 
 
     <section class="content">
@@ -157,25 +155,25 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ commission.name }}</td>
                                         <td>
-                                                {% for item in perm %}
-                                                    {% if item == 'change_directorycommission' %}
-                                                        <div class="btn-group">
-                                                            <a href="{% url "ekabis:change_directorycommission" commission.uuid %}"
-                                                               type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-edit"></i>Güncelle
-                                                            </a>
+                                            {% for item in perm %}
+                                                {% if item == 'change_directorycommission' %}
+                                                    <div class="btn-group">
+                                                        <a href="{% url "ekabis:change_directorycommission" commission.uuid %}"
+                                                           type="button" class="btn btn-warning"><i
+                                                                class="fa fa-edit"></i>Güncelle
+                                                        </a>
 
-                                                        </div>
+                                                    </div>
 
-                                                    {% elif item == 'delete_directorycommission' %}
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-danger"
-                                                               data-toggle="modal"
-                                                               onclick=deleteClubRole('{{ commission.uuid }}')><i
-                                                                    class="fa fa-trash"></i>Sil</a>
-                                                        </div>
-                                                    {% endif %}
-                                                {% endfor %}
+                                                {% elif item == 'delete_directorycommission' %}
+                                                    <div class="btn-group">
+                                                        <a class="btn btn-danger"
+                                                           data-toggle="modal"
+                                                           onclick=deleteClubRole('{{ commission.uuid }}')><i
+                                                                class="fa fa-trash"></i>Sil</a>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
 
                                         </td>
 
@@ -290,11 +288,13 @@
 
     <script>
         function deleteClubRole(id) {
-
+            debugger;
             console.log(id);
             var html = ''
             $("#modal-delete").on("shown.bs.modal", function (e) {
-                $("#btn-conf").click(function () {
+                $("#btn-conf1").click(function () {
+                    debugger;
+
                     $.ajax({
                         url: "{% url "ekabis:delete_directorycommission"%}",
                         type: "POST",

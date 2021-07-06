@@ -70,8 +70,8 @@ urlpatterns = [
 
     path('destek-talep-listesi/', ClaimView.return_claim, name='view_claim'),
     path('destek/Destek-Ekle', ClaimView.claim_add, name='add_claim'),
-    path('destek/destek-sil/<int:pk>/', ClaimView.claim_delete, name='delete_claim'),
-    path('destek/destek-guncelle/<int:pk>/', ClaimView.claim_update, name='change_claim'),
+    path('destek/destek-sil/', ClaimView.delete_claim, name='delete_claim'),
+    path('destek/destek-guncelle/<uuid:uuid>/', ClaimView.claim_update, name='change_claim'),
 
     #     Yardım
     path('yardim', HelpViews.help, name='view_help'),

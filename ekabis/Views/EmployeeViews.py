@@ -205,7 +205,8 @@ def delete_employee(request):
                     'uuid': uuid
                 }
                 obj = EmployeeService(request, empoyefilter).first()
-                obj.delete()
+                obj.isDeleted = True
+                obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 
@@ -243,7 +244,10 @@ def return_employees(request):
                     workDefinition = user_form.cleaned_data.get('workDefinition')
                     group = request.POST.get('group')
                     if not (firstName or lastName or email or workDefinition or group):
-                        employees = EmployeeService(request, None)
+                        personfilter = {
+                            'isDeleted': False
+                        }
+                        employees = EmployeeService(request, personfilter)
 
                     else:
                         query = Q()
@@ -257,6 +261,7 @@ def return_employees(request):
                             query &= Q(workDefinition=workDefinition)
                         if group:
                             query &= Q(user__groups__name=group)
+
                         employees = EmployeeService(request, query)
 
         return render(request, 'personel/personeller.html',
@@ -264,6 +269,7 @@ def return_employees(request):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_employee')
 
 
 @login_required
@@ -296,7 +302,8 @@ def return_workdefinitionslist(request):
                     messages.warning(request, 'Alanları Kontrol Ediniz')
 
         categoryfilter = {
-            'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
+            'forWhichClazz': "EMPLOYEE_WORKDEFINITION",
+            'isDeleted': False
         }
         categoryitem = CategoryItemService(request, categoryfilter)
         return render(request, 'personel/unvanListesi.html',
@@ -421,7 +428,8 @@ def delete_employeetitle(request):
                     'uuid': uuid
                 }
                 obj = CategoryItemService(request, categoryfilter).first()
-                obj.delete()
+                obj.isDeleted = True
+                obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
         except CategoryItem.DoesNotExist:
             traceback.print_exc()
@@ -478,4 +486,4 @@ def updateRefereeProfile(request):
                            'error_messages': error_messages})
     return render(request, 'personel/Personel-Profil-güncelle.html',
                   {'user_form': user_form, 'communication_form': communication_form,
-                   'person_form': person_form, 'password_form': password_form, 'error_messages':''})
+                   'person_form': person_form, 'password_form': password_form, 'error_messages': ''})

@@ -69,7 +69,8 @@ def delete_company(request):
                     'uuid': uuid
                 }
                 obj = CompanyService(request, companyfilter).first()
-                obj.delete()
+                obj.isDeleted = True
+                obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 
@@ -86,7 +87,11 @@ def return_list_Company(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    company_form = CompanyService(request, None)
+    companyfilter = {
+        'isDeleted': False
+
+    }
+    company_form = CompanyService(request, companyfilter)
     return render(request, 'Company/Companys.html',
                   {'company_form': company_form})
 
