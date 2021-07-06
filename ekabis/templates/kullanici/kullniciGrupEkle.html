@@ -1,0 +1,126 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ aktif }}-
+                        Grup Ekle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Grup Ekle</a></li>
+                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+
+
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">Kullanıcı </h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <form method="post" enctype="multipart/form-data" role="form">
+                            {% csrf_token %}
+                            <div class="form-group">
+
+                                <div class="bootstrap-duallistbox-container row moveonselect moveondoubleclick">
+
+                                </div>
+                                <select class="duallistbox" multiple="multiple" name="test">
+
+                                    {% for gr in user_group %}
+                                        <option value="{{ gr.pk }}" selected=""
+                                                data-sortindex="{{ gr.pk }}">{{ gr.name }}</option>
+
+                                    {% endfor %}
+                                    {% for gr in user_none_group %}
+                                        <option value="{{ gr.pk }}" data-sortindex="{{ gr.pk }}">{{ gr.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-primary" type="submit"> Kaydet</button>
+                            </div>
+                        </form>
+                            <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.card-body -->
+
+        </div>
+
+
+    </section>
+
+
+
+{% endblock %}
+

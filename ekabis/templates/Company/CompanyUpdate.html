@@ -72,51 +72,22 @@
             {% csrf_token %}
             <div class="row">
 
-                <div class="col-lg-6">
-                    <div class="card card-primary">
+                <div class="col-lg-5">
+                    <div class="card card-info  card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Genel Bilgiler</h3>
                         </div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <label> {{ company_form.isFormal.label }}</label>
-                                {{ company_form.isFormal }}
-                                <label id="label_isFormal"></label>
 
-                            </div>
+                            {% for item in company_form %}
+                                <div class="form-group">
+                                    <label>{{ item.label }}</label><br>
 
-                            <div class="form-group">
-                                <label> {{ company_form.name.label }}</label>
-                                {{ company_form.name }}
-                                <label id="label_name"></label>
+                                    {{ item }}
+                                    <label for="" id="label_{{ item.name }}"></label>
+                                </div>
+                            {% endfor %}
 
-                            </div>
-                            <div class="form-group">
-                                <label> {{ company_form.degree.label }}</label>
-                                {{ company_form.degree }}
-                                <label id="label_degree"></label>
-
-                            </div>
-
-
-                            <div class="form-group">
-                                <label> {{ company_form.taxOffice.label }}</label>
-                                {{ company_form.taxOffice }}
-                                <label id="label_taxOffice"></label>
-
-                            </div>
-                            <div class="form-group">
-                                <label id="labelTaxNumber"> {{ company_form.taxnumber.label }}</label>
-                                {{ company_form.taxnumber }}
-                                <label id="label_taxnumber"></label>
-
-                            </div>
-                            <div class="form-group">
-                                <label>{{ company_form.sorumlu.label }}</label>
-                                {{ company_form.sorumlu }}
-                                <label id="label_sorumlu"></label>
-
-                            </div>
                         </div>
                         <div class="card-footer">
                             <button class="btn btn-primary" type="submit">Kaydet</button>
@@ -126,74 +97,212 @@
                     </div>
 
                 </div>
-                <div class="col-lg-6">
-                    <div class="card card-primary">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">İletişim Bilgileri</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ company_form.mail.label }}</label>
-                                        {{ company_form.mail }}
-                                        <label id="label_mail"></label>
+                <div class="col-lg-7">
+                    <div class="col-lg-12">
 
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber.label }}</label>
-                                        {{ communication_form.phoneNumber }}
-                                        <label id="label_phoneNumber"></label>
+                        <div class="card card-info collapsed-card">
 
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber2.label }}</label>
-                                        {{ communication_form.phoneNumber2 }}
-                                        <label id="label_phoneNumber2"></label>
 
-                                    </div>
+                            <div class="card-header with-border">
+                                <h3 class="card-title">İLETİŞİM BİLGİLERİ</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.country.label }}</label>
-                                        {{ communication_form.country }}
-                                        <label id="label_country"></label>
 
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.city.label }}</label>
-                                        {{ communication_form.city }}
-                                        <label id="label_city"></label>
 
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.postalCode.label }}</label>
-                                        {{ communication_form.postalCode }}
-                                        <label id="label_postalCode"></label>
-
-                                    </div>
-                                </div>
+                                <!-- /.card-tools -->
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.address.label }}</label>
-                                        {{ communication_form.address }}
-                                        <label id="label_address"></label>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
 
-                                    </div>
+
+                                <div class="row">
+                                    {{ communication_form }}
                                 </div>
+
+
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Kaydet</button>
+
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button class="btn btn-primary" type="submit">Kaydet</button>
+                            </div>
                         </div>
 
 
                     </div>
+                    <div class="col-lg-12">
+
+                        <div class="card card-info collapsed-card">
 
 
+                            <div class="card-header with-border">
+                                <h3 class="card-title">DÖKÜMAN BİLGİLERİ</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+
+
+                                <!-- /.card-tools -->
+                                <div class="card-footer">
+                                    <button class="btn btn-primary" type="submit">Kaydet</button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <table id="dokuman" class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Dosya</th>
+                                                <th>İşlemler</th>
+
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+
+                                            {% if company.files.all %}
+                                                {% for item in company.files.all %}
+                                                    <tr id="documents-{{ item.pk }}">
+                                                        <td>{{ forloop.counter }} </td>
+                                                        <td>{{ item.filename.name }}</td>
+
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-success"
+                                                                   data-toggle="modal"
+                                                                   href="/media/{{ item.file }}" download><i
+                                                                        class="fa fa-download"></i></a>
+
+                                                                {#                                                        delete kısmı eklenecek#}
+                                                                <a class="btn btn-danger"
+                                                                   data-toggle="modal"
+                                                                   onclick=deletedocument({{ item.pk }})><i
+                                                                        class="fa fa-trash"></i></a>
+
+                                                            </div>
+                                                        </td>
+
+                                                    </tr>
+
+                                                {% endfor %}
+                                            {% endif %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary" type="submit">Kaydet</button>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-12">
+
+                        <div class="card card-info collapsed-card">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">KULLANICI BİLGİLERİ</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+
+
+                                <!-- /.card-tools -->
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+                                        {% for item in user_form %}
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label><br>
+
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        {% for item in person_form %}
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label><br>
+
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        {% endfor %}
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <button class="btn btn-primary" type="submit">Kaydet</button>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
+
 
             </div>
 
@@ -206,45 +315,27 @@
     <script>
 
         $(document).ready(function () {
-            var jop = new Array();
-            {% for item in company.JopDescription.all %}
-                jop.push("{{ item.pk }}");
-            {% endfor %}
-            $('#multipleSelect').val(jop);
 
 
-            isFormal = $("#id_isFormal option:selected").text();
+            {% if error_messages %}
 
-            if (isFormal == 'Bireysel') {
-                $('#labelTaxNumber').html('TC Kimlik Numarasi');
-
-            } else {
-                $('#labelTaxNumber').html('Vergi Numarası');
-            }
-
-            $('#id_isFormal').change(function () {
-                selected = $("#id_isFormal option:selected").text();
-                if (selected == 'Kurumsal') {
-                    $('#labelTaxNumber').html('Vergi Numarası');
-                } else {
-                    $('#labelTaxNumber').html('TC Kimlik Numarasi');
+                let messages =
+                {{ error_messages | safe }}
+                if (messages !== '') {
+                    errors_messages({{ error_messages |safe }})
                 }
 
-            });
+            {% endif %}
 
-            $('#projects').DataTable({
 
+             $('#dokuman').DataTable({
                 dom: 'Bfrtip',
-                {#orderFixed: [[6, 'asc']],#}
-                {#rowGroup: {#}
-                {#    dataSrc: 6#}
-                {# },#}
 
                 language: {
                     buttons: {
                         pageLength: {
-                            _: " %d  Tane Göster",
-                            '-1': "Hepsini Göster"
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
                         }
                     }
                 },
@@ -256,10 +347,11 @@
 
                 buttons: [
 
+                    {#'copy',#}
+                    {#'csv',#}
 
                     {
                         extend: "pageLength",
-
                     },
 
 
@@ -272,38 +364,34 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Projeler',
+                        title: 'Firmalar  ',
                         text: '<i class="fa  fa-print"></i>',
                         exportOptions: {
                             columns: [0, 1, ':visible']
                         },
-
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: '<i class="fa fa-file-pdf-o"></i>',
-                        orientation: 'landscape',
-                        pageSize: 'LEGAL',
                         exportOptions: {
-                            columns: [0, 1, ':visible'],
-
-
+                            columns: [0, 1, ':visible']
                         },
-
-                        titleAttr: 'Pdf Kaydet'
+                        titleAttr: 'Pfd Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Projeler',
+                        title: 'Ekabis',
                         text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Etüt Bilgi Sistemi ',
+                        messageTop: 'Firmalar',
+                        {#footer: true,#}
                         exportOptions: {
+                            {#     yer degisimi de yapilabilir.#}
                             columns: [0, 1, ':visible']
-                        },
 
+                        },
                         titleAttr: 'Excel Kaydet'
                     },
                     {
@@ -313,7 +401,7 @@
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'Projeler.json'
+                                'Firmalar.json'
                             );
                         }
                     }
@@ -325,43 +413,16 @@
                 'searching': true,
                 'ordering': true,
                 'info': true,
-                'autoWidth': true, "columnDefs": [
-                    {responsivePriority: 1, targets: 1},
-                    {responsivePriority: 2, targets: 7},
-                ],
-                'responsive': {
-                    'details': {
-
-
-                        'display': $.fn.dataTable.Responsive.display.modal({
-                            'header': function (row) {
-                                var data = row.data();
-                                return data[1];
-                            }
-                        }),
-                        'renderer': $.fn.dataTable.Responsive.renderer.tableAll(),
-                    }
-                },
-
-
-            });
+                'autoWidth': true,
+                'responsive': true,
+            })
 
 
         });
 
 
     </script>
-    <script>
-        $(document).ready(function () {
 
-            debugger;
-            let messages =
-            {{ error_messages | safe }}
-            if (messages !== '') {
-                errors_messages({{ error_messages |safe }})
-            }
-        });
-    </script>
 
 {% endblock %}
 

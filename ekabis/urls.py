@@ -82,6 +82,12 @@ urlpatterns = [
     path('firma/firma-guncelle/<uuid:uuid>/', CompanyView.return_update_Company, name='change_company'),
     path('firma/firma-sil/', CompanyView.delete_company, name='delete_company'),
 
+
+    # Dokuman isim ekleme
+    path('firma/dokumanisim-ekle/', CompanyView.add_companyfilename, name='add_companyfilename'),
+    path('firma/dokumanisim-listesi/', CompanyView.view_companyfilename, name='view_companyfilename'),
+    path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename, name='change_companyfilename'),
+
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
     path('grup/grup-listesi/', GroupView.return_list_group, name='view_group'),
