@@ -77,6 +77,7 @@
                                 <div class="form-group">
                                     <label> {{ member_role_form.name.label }}</label>
                                     {{ member_role_form.name }}
+                                    <label for="" id="label_name"></label>
                                 </div>
 
 
@@ -102,8 +103,14 @@
 
     </section>
 
+ <script>
+        $(document).ready(function () {
 
-
+          {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
+    </script>
 
 
 

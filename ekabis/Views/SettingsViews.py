@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from ekabis.services import general_methods
+from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import SettingsService
 from ekabis.Forms.SettingsForm import SettingsForm
+
 
 @login_required
 def view_settinsList(request):
@@ -12,19 +14,21 @@ def view_settinsList(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    setting = SettingsService(request,None)[0]
+    setting = SettingsService(request, None)[0]
     return render(request, 'Ayar/ayarlistesi.html',
                   {'settings': setting})
+
+
 @login_required
 def change_serttings(request, pk):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    groupfilter={
-        'pk':pk
+    groupfilter = {
+        'pk': pk
     }
-    setting = SettingsService(request,groupfilter)[0] if SettingsService(request,groupfilter) else None
+    setting = SettingsService(request, groupfilter)[0] if SettingsService(request, groupfilter) else None
     settings_form = SettingsForm(request.POST or None, instance=setting)
     if request.method == 'POST':
         if settings_form.is_valid():
@@ -33,10 +37,11 @@ def change_serttings(request, pk):
             return redirect('ekabis:view_settings')
 
         else:
-            messages.warning(request, 'Alanları Kontrol Ediniz')
+            error_messages = get_error_messages(settings_form)
+            return render(request, 'Ayar/ayarguncelle.html',
+                          {'settings_form': settings_form, 'error_messages': error_messages
+                           })
 
     return render(request, 'Ayar/ayarguncelle.html',
-                  {'settings_form': settings_form,
+                  {'settings_form': settings_form, 'error_messages': ''
                    })
-
-

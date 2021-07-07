@@ -330,7 +330,16 @@
         }
     </script>
 
+    <script>
+        $(document).ready(function () {
 
+            debugger;
+            let messages = {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
+    </script>
 
 
 

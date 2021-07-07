@@ -109,7 +109,7 @@ def add_employee(request):
 
             return render(request, 'personel/personel-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                           'employee_form': employee_form,
+                           'employee_form': employee_form, 'error_messages': '',
                            })
     except Exception as e:
         traceback.print_exc()
@@ -331,7 +331,7 @@ def delete_workdefinition(request, pk):
                 obj = CategoryItemService(request, categoryfilter).first()
 
                 log = str(obj.name) + " unvani sildi"
-                log = general_methods.logwrite(request, log)
+                log = general_methods.logwrite(request, request.user, log)
 
                 obj.delete()
 

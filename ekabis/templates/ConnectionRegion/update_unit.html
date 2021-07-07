@@ -169,7 +169,14 @@
 
     </section>
 
+    <script>
+        $(document).ready(function () {
 
+            {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
+    </script>
 
 {% endblock %}
 
