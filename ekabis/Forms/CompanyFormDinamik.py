@@ -31,13 +31,13 @@ class CompanyFormDinamik(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CompanyFormDinamik, self).__init__(*args, **kwargs)
-        parametre = CompanyFileNames.objects.all()
+        parametre = CompanyFileNames.objects.filter(is_active=True)
         for item in parametre:
             print(item.name)
             self.fields['file'+str(item.pk)] = forms.FileField()
             self.fields['file'+str(item.pk)].label= item.name
     def save(self,communication,company_user):
-        parametre = CompanyFileNames.objects.all()
+        parametre = CompanyFileNames.objects.filter(is_active=True)
         company=Company(
             name = self.data['name'],
             degree = self.data['degree'],

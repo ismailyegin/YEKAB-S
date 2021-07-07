@@ -10,10 +10,12 @@ from django.shortcuts import render, redirect
 from unicode_tr import unicode_tr
 
 from ekabis.Forms.CommunicationForm import CommunicationForm
+from ekabis.Forms.CompanyFileNameForm import CompanyFileNameForm
 from ekabis.Forms.CompanyForm import CompanyForm
 from ekabis.Forms.CompanyFormDinamik import CompanyFormDinamik
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
+from ekabis.models.CompanyFileNames import CompanyFileNames
 from ekabis.models.CompanyUser import CompanyUser
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
@@ -186,11 +188,111 @@ def return_update_Company(request, uuid):
 
 @login_required
 def add_companyfilename(request):
-    return render(request, 'Company/CompanyUpdate.html')
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    company_form = CompanyFileNameForm()
 
+    try:
+        if request.method == 'POST':
+            with transaction.atomic():
+                company_form = CompanyFileNameForm(request.POST)
+
+                if company_form.is_valid():
+                   company_form.save()
+                   messages.success(request, 'Döküman İsim Eklenmiştir.')
+                   return redirect('ekabis:view_companyfilename')
+                else:
+                    error_messages = get_error_messages(company_form)
+                    return render(request, 'Company/CompanyFileNameAdd.html',
+                                  {'company_form': company_form,
+                                   'error_messages':error_messages
+                                   })
+
+        return render(request, 'Company/CompanyFileNameAdd.html',
+                      {'company_form': company_form,
+
+                       })
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_company')
+    return render(request, 'Company/CompanyFileNameAdd.html')
 @login_required
 def view_companyfilename(request):
-    return render(request, 'Company/CompanyUpdate.html')
+    companyNameList=CompanyFileNames.objects.all()
+    return render(request, 'Company/CompanyFileNameList.html',{'companyNameList':companyNameList})
 @login_required
-def change_companyfilename(request):
-    return render(request, 'Company/CompanyUpdate.html')
+def change_companyfilename(request,uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    names=CompanyFileNames.objects.get(uuid=uuid)
+    company_form = CompanyFileNameForm(request.POST or None ,instance=names)
+
+    try:
+        if request.method == 'POST':
+            with transaction.atomic():
+
+                if company_form.is_valid():
+                    company_form.save()
+                    messages.success(request, 'Döküman İsim Eklenmiştir.')
+                    return redirect('ekabis:view_companyfilename')
+                else:
+                    error_messages = get_error_messages(company_form)
+                    return render(request, 'Company/CompanyFileNameUpdate.html',
+                                  {'company_form': company_form,
+                                   'error_messages': error_messages
+                                   })
+
+        return render(request, 'Company/CompanyFileNameUpdate.html',
+                      {'company_form': company_form,
+
+                       })
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_companyfilename')
+    return render(request, 'Company/CompanyFileNameUpdate.html')
+
+
+
+
+@login_required
+def delete_companyfilename(request,uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+
+                obj = CompanyFileNames.objects.get(uuid=uuid)
+                #
+                log = str(obj.name) + " firma dokuman uyesi silindi"
+                log = general_methods.logwrite(request, request.user, log)
+
+                obj.isDeleted = True
+                obj.save()
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+
+
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+
+        return redirect('ekabis:view_companyfilename')
+
+# servis katmanına eklenmeleri yazılacak
+#silme islemi eklencek ajax filename alanı

@@ -4,9 +4,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
 
 app_name = 'ekabis'
 urlpatterns = [
-
     path('maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
-
     # Dashboard
     path('anasayfa/admin/', DashboardViews.return_admin_dashboard, name='view_admin'),
     path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
@@ -87,6 +85,8 @@ urlpatterns = [
     path('firma/dokumanisim-ekle/', CompanyView.add_companyfilename, name='add_companyfilename'),
     path('firma/dokumanisim-listesi/', CompanyView.view_companyfilename, name='view_companyfilename'),
     path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename, name='change_companyfilename'),
+    path('firma/dokumanisim-sil/<uuid:uuid>/', CompanyView.delete_companyfilename,
+         name='delete_companyfilename'),
 
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
@@ -95,10 +95,10 @@ urlpatterns = [
     # grup izinleri
 
     path('grup/grup-izin-ekle/<int:pk>', GroupView.change_groupPermission, name='change_groupPermission'),
+
     # Ayarlar
     path('ayar/ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
-
 
     #Baglanti Bolgeleri
     path('baglanti/birim-ekle/', ConnectionRegionViews.return_connectionRegionUnit, name='view_units'),

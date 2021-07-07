@@ -317,15 +317,8 @@
 
 
             {% if error_messages %}
-
-                let messages =
-                {{ error_messages | safe }}
-                if (messages !== '') {
                     errors_messages({{ error_messages |safe }})
-                }
-
             {% endif %}
-
 
              $('#dokuman').DataTable({
                 dom: 'Bfrtip',

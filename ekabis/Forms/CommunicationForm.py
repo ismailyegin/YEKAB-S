@@ -6,15 +6,7 @@ from ekabis.models.Country import Country
 
 
 class CommunicationForm(ModelForm):
-    # country = forms.ModelChoiceField(queryset=Country.objects.all(),
-    #                                  to_field_name='name',
-    #                                  empty_label="Seçiniz",
-    #                                  label="Ülke",
-    #                                  initial=Country.objects.filter(name="TÜRKİYE")[0],
-    #                                  # required=True,
-    #                                  widget=forms.Select(
-    #                                      attrs={'class': 'form-control select2 select2-hidden-accessible',
-    #                                             'style': 'width: 100%; '}))
+
     class Meta:
         model = Communication
 

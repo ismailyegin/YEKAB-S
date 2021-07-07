@@ -5,16 +5,14 @@
 
 
 
-
     <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">İşlem Başarılı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-
+                    <h4 class="modal-title">İşlem Başarılı</h4>
                 </div>
                 <div class="modal-body successModal">
                     ...
@@ -29,31 +27,30 @@
         <!-- /.modal-dialog -->
     </div>
 
-
-    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header primary">
-                    <h4 class="modal-title">Uyarı</h4>
+                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-
+                    <h4 class="modal-title">Uyarı</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz ?</p>
+                    <p>Silmek istediğinizden emin misiniz?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
                             data-dismiss="modal">Evet
                     </button>
-                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
     </div>
+
 
 
     {% if messages %}
@@ -102,6 +99,29 @@
     {% endif %}
 
 
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
     <section class="content-header">
 
 
@@ -109,11 +129,11 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Firma Listesi</h1>
+                       Dokuman  İsim Listesi </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Firma Listesi</a></li>
+                        <li class="breadcrumb-item"><a href="#">Dokuman  İsim Listesi </a></li>
                         {#              <li class="breadcrumb-item active">Advanced Form</li>#}
                     </ol>
                 </div>
@@ -121,6 +141,10 @@
         </div>
 
     </section>
+
+
+
+
     <section class="content">
 
         <div class="row">
@@ -130,63 +154,59 @@
 
                 <div class="card-body">
 
+
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Firmalar</h3>
+                            <h3 class="card-title">Dokuman İsimleri</h3>
                         </div>
                         {% for item in perm %}
-                            {% if item == 'add_company' %}
-                                <div class="card-header with-border">
+                                                    {% if item == 'change_companyfilename' %}
+                            <div class="card-header with-border">
+                                <div class="btn-group">
 
-                                    <div class="btn-group">
-                                        <a href="{% url "ekabis:add_company" %}"
-                                           type="button" class="btn btn-success"><i
-                                                class="fa fa-edit"></i> Yeni Firma Ekle
-                                        </a>
-                                    </div>
+                                    <a href="{% url "ekabis:add_companyfilename" %}"
+                                       type="button" class="btn btn-success"><i
+                                            class="fa fa-edit"></i> Yeni Dokuman İsmi
+                                    </a>
+
+
                                 </div>
-                            {% endif %}
-                        {% endfor %}
+                            </div>
+                        {% endif %}
+                                                {% endfor %}
                         <div class="card-body">
                             <table id="company" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>İsim</th>
-                                    <th>Ünvan</th>
-                                    <th>Sorumlu</th>
+                                    <th>Zorunlu Alan</th>
                                     <td>işlemler</td>
+
+
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% if company_form.all %}
-                                    {% for company in company_form %}
+                                {% if companyNameList.all %}
+                                    {% for gr in companyNameList %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ company.name }}</td>
-                                            <td>{{ company.degree }}</td>
-                                            <td>{{ company.companyuser.user.first_name }} {{ company.companyuser.user.last_name }}</td>
+                                            <td>{{ gr.name }}</td>
+                                        <td>{{ gr.is_active }}</td>
                                             <td>
                                                 {% for item in perm %}
-                                                    {% if item == 'change_company' %}
+                                                    {% if item == 'change_companyfilename' %}
                                                         <div class="btn-group">
-                                                            <a href="{% url "ekabis:change_company" company.uuid %}"
+                                                            <a href="{% url "ekabis:change_companyfilename" gr.uuid %}"
                                                                type="button" class="btn btn-warning"><i
                                                                     class="fa fa-edit"></i>İncele
                                                             </a>
                                                         </div>
-
-                                                    {% elif item == 'delete_company' %}
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-danger"
-                                                               data-toggle="modal"
-                                                               onclick=deleteCompany('{{ company.uuid }}')><i
-                                                                    class="fa fa-trash"></i>Sil</a>
-                                                        </div>
-
                                                     {% endif %}
                                                 {% endfor %}
+
                                             </td>
+
                                         </tr>
 
                                     {% endfor %}
@@ -198,6 +218,7 @@
 
                         </div>
                     </div>
+                    <!-- /.card -->
 
 
                 </div>
@@ -205,6 +226,7 @@
 
 
         </div>
+        <!-- /.row (main row) -->
 
     </section>
 
@@ -221,11 +243,17 @@
                         }
                     }
                 },
+
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
+
                 buttons: [
+
+                    {#'copy',#}
+                    {#'csv',#}
+
                     {
                         extend: "pageLength",
                     },
@@ -240,7 +268,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar  ',
+                        title: 'Gruplar  ',
                         text: '<i class="fa  fa-print"></i>',
                         exportOptions: {
                             columns: [0, 1, ':visible']
@@ -261,7 +289,7 @@
                         extend: 'excelHtml5',
                         title: 'Ekabis',
                         text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Firmalar',
+                        messageTop: 'Gruplar',
                         {#footer: true,#}
                         exportOptions: {
                             {#     yer degisimi de yapilabilir.#}
@@ -277,7 +305,7 @@
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'Firmalar.json'
+                                'grup.json'
                             );
                         }
                     }
@@ -294,45 +322,12 @@
             })
 
         })
-
-        function deleteCompany(id) {
-            debugger;
-            console.log(id);
-            var html = ''
-            $("#modal-delete").on("shown.bs.modal", function (e) {
-                $("#btn-conf1").click(function () {
-                    $.ajax({
-                        url: "{% url "ekabis:delete_company" %}",
-                        type: "POST",
-                        data: {
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            uuid: id,
-                        },
-                        success: function (result) {
-
-                            html = 'Firma Başarıyla Silindi';
-                            debugger;
-                            $(".successModal").html(html);
-                            $('#modal-success').on("shown.bs.modal", function (e) {
-                                $(".btn-ok").click(function () {
-
-                                    window.location.replace("{% url "ekabis:view_company" %}");
-
-                                });
-
-                            }).modal('show');
-
-                            console.log(result.status)
-                        }
-                    });
-                });
-            }).modal('show');
-            $('#btn-close1').click(function () {
-                $('#modal-active').modal('hide');
-            });
-
-        }
     </script>
+
+
+
+
+
 
 
 {% endblock %}
