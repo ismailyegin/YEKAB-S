@@ -1,6 +1,6 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews
+    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -22,23 +22,23 @@ urlpatterns = [
     path('personel/personel-profil-guncelle/', EmployeeViews.updateRefereeProfile, name='personel-profil-güncelle'),
 
     # Yönetim
-    path('yonetim/kurul-uyeleri/', DirectoryViews.return_directory_members, name='view_directoryMember'),
-    path('yonetim/kurul-uyesi-ekle/', DirectoryViews.add_directory_member, name='add_directorymember'),
-    path('yonetim/kurul-uyesi-duzenle/<uuid:uuid>/', DirectoryViews.update_directory_member,
+    path('kurul-uyeleri/', DirectoryViews.return_directory_members, name='view_directoryMember'),
+    path('kurul-uyesi-ekle/', DirectoryViews.add_directory_member, name='add_directorymember'),
+    path('kurul-uyesi-duzenle/<uuid:uuid>/', DirectoryViews.update_directory_member,
          name='change_directorymember'),
-    path('yonetim/kurul-uyeleri/sil/', DirectoryViews.delete_directory_member, name='delete_directorymember'),
+    path('kurul-uyeleri/sil/', DirectoryViews.delete_directory_member, name='delete_directorymember'),
 
     # yönetim rol
-    path('yonetim/kurul-uye-rolleri/', DirectoryViews.return_member_roles, name='view_directorymemberrole'),
-    path('yonetim/kurul-uye-rolleri/sil/', DirectoryViews.delete_member_role,
+    path('kurul-uye-rolleri/', DirectoryViews.return_member_roles, name='view_directorymemberrole'),
+    path('kurul-uye-rolleri/sil/', DirectoryViews.delete_member_role,
          name='delete_directorymemberrole'),
-    path('yonetim/kurul-uye-rol-duzenle/<uuid:uuid>/', DirectoryViews.update_member_role,
+    path('kurul-uye-rol-duzenle/<uuid:uuid>/', DirectoryViews.update_member_role,
          name='change_directorymemberrole'),
     # yönetim kurul
 
-    path('yonetim/kurullar/', DirectoryViews.return_commissions, name='view_directorycommission'),
-    path('yonetim/kurullar/sil/', DirectoryViews.delete_commission, name='delete_directorycommission'),
-    path('yonetim/kurul-duzenle/<uuid:pk>/', DirectoryViews.update_commission, name='change_directorycommission'),
+    path('kurullar/', DirectoryViews.return_commissions, name='view_directorycommission'),
+    path('kurullar/sil/', DirectoryViews.delete_commission, name='delete_directorycommission'),
+    path('kurul-duzenle/<uuid:pk>/', DirectoryViews.update_commission, name='change_directorycommission'),
 
     # Kullanıcılar
     path('kullanici/kullanicilar/', UserViews.return_users, name='view_user'),
@@ -92,5 +92,18 @@ urlpatterns = [
     # Ayarlar
     path('ayar/ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
+
+
+    #Baglanti Bolgeleri
+    path('baglanti/birim-ekle/', ConnectionRegionViews.return_connectionRegionUnit, name='view_units'),
+    path('baglanti/birim-sil/', ConnectionRegionViews.delete_unit, name='delete_unit'),
+    path('baglanti/birim-guncelle/<uuid:uuid>/', ConnectionRegionViews.update_unit, name='update_unit'),
+    path('baglanti/bolge-ekle/', ConnectionRegionViews.return_connectionRegion, name='view_region'),
+    path('baglanti/bölge-sil/', ConnectionRegionViews.delete_region, name='delete_region'),
+    path('baglanti/bolge-guncelle/<uuid:uuid>/', ConnectionRegionViews.update_region, name='update_region'),
+    path('baglanti/kapasite-ekle/<uuid:uuid>', ConnectionRegionViews.return_connectionCapacity, name='view_capacity'),
+    path('baglanti/kapasite-guncelle/<uuid:uuid>', ConnectionRegionViews.update_capacity,
+         name='update-region-capacity'),
+    path('baglanti/kapasite-sil/', ConnectionRegionViews.delete_capacity, name='delete_capacity'),
 
 ]

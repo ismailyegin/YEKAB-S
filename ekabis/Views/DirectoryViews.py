@@ -139,7 +139,7 @@ def add_directory_member(request):
 
     return render(request, 'yonetim/kurul-uyesi-ekle.html',
                   {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                   'member_form': member_form})
+                   'member_form': member_form, 'error_messages': ''})
 
 
 @login_required
@@ -404,10 +404,12 @@ def update_member_role(request, uuid):
                     messages.success(request, 'Başarıyla Güncellendi')
                     return redirect('ekabis:view_directorymemberrole')
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
+                    error_messages = get_error_messages(member_role_form)
+                    return render(request, 'yonetim/kurul-uye-rol-duzenle.html',
+                                  {'member_role_form': member_role_form, 'error_messages': error_messages})
 
             return render(request, 'yonetim/kurul-uye-rol-duzenle.html',
-                          {'member_role_form': member_role_form})
+                          {'member_role_form': member_role_form, 'error_messages': ''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -424,6 +426,11 @@ def return_commissions(request):
 
     try:
         with transaction.atomic():
+            commissionfilter = {
+                'isDeleted': False
+            }
+            commissions = DirectoryCommissionService(request, commissionfilter)
+
             if request.method == 'POST':
 
                 commission_form = DirectoryCommissionForm(request.POST)
@@ -440,13 +447,13 @@ def return_commissions(request):
 
                 else:
 
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
-            commissionfilter = {
-                'isDeleted': False
-            }
-            commissions = DirectoryCommissionService(request, commissionfilter)
+                    error_messages = get_error_messages(commission_form)
+                    return render(request, 'yonetim/kurullar.html',
+                                  {'commission_form': commission_form, 'commissions': commissions,
+                                   'error_messages': error_messages})
+
             return render(request, 'yonetim/kurullar.html',
-                          {'commission_form': commission_form, 'commissions': commissions})
+                          {'commission_form': commission_form, 'commissions': commissions, 'error_messages': ''})
 
     except Exception as e:
         traceback.print_exc()
@@ -508,10 +515,12 @@ def update_commission(request, pk):
 
                     return redirect('ekabis:view_directorycommission')
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
+                    error_messages = get_error_messages(commission_form)
+                    return render(request, 'yonetim/kurul-duzenle.html',
+                                  {'commission_form': commission_form, 'error_messages': error_messages})
 
             return render(request, 'yonetim/kurul-duzenle.html',
-                          {'commission_form': commission_form})
+                          {'commission_form': commission_form, 'error_messages': ''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

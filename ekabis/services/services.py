@@ -4,11 +4,13 @@ from django.contrib.auth.models import User, Group
 from django.db import transaction
 from django.db.models import Q
 
+from ekabis.models import ConnectionRegion, ConnectionCapacity
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
 from ekabis.models.Communication import Communication
 from ekabis.models.Company import Company
+from ekabis.models.ConnectionUnit import ConnectionUnit
 from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMember import DirectoryMember
 from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
@@ -317,3 +319,42 @@ def SettingsService(request, filter):
             return Settings.objects.all()
     except Exception as e:
         traceback.print_exc()
+
+
+def UnitService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ConnectionUnit.objects.filter(**filter)
+            else:
+                return ConnectionUnit.objects.all()
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+        pass
+
+
+def RegionService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ConnectionRegion.objects.filter(**filter)
+            else:
+                return ConnectionRegion.objects.all()
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+        pass
+
+
+def CapacityService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ConnectionCapacity.objects.filter(**filter)
+            else:
+                return ConnectionCapacity.objects.all()
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+        pass

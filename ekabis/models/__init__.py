@@ -20,3 +20,6 @@ from .Notification import Notification
 from .Person import Person
 from .PermissionGroup import PermissionGroup
 from .Permission import Permission
+from .ConnectionUnit import ConnectionUnit
+from .ConnectionRegion import ConnectionRegion
+from .ConnectionCapacity import ConnectionCapacity

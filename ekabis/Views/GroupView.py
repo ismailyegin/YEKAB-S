@@ -46,7 +46,7 @@ def add_group(request):
                     return render(request, 'Group/GrupEkle.html',
                                   {'group_form': group_form, 'error_messages': error_messages, })
             return render(request, 'Group/GrupEkle.html',
-                          {'group_form': group_form})
+                          {'group_form': group_form, 'error_messages': ''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -85,11 +85,11 @@ def return_update_group(request, pk):
                 else:
                     error_messages = get_error_messages(group_form)
                     return render(request, 'Group/grupGuncelle.html',
-                                  {'group_form': group_form,'error_messages': error_messages
+                                  {'group_form': group_form, 'error_messages': error_messages
                                    })
 
             return render(request, 'Group/grupGuncelle.html',
-                          {'group_form': group_form,'error_messages': ''
+                          {'group_form': group_form, 'error_messages': ''
                            })
     except Exception as e:
         traceback.print_exc()

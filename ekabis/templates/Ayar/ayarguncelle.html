@@ -51,22 +51,22 @@
     <section class="content-header">
 
 
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>{{ aktif }}-
-                            Ayar Güncelle</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Ayar Güncelle</a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                        </ol>
-                    </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ aktif }}-
+                        Ayar Güncelle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Ayar Güncelle</a></li>
+                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                    </ol>
                 </div>
             </div>
+        </div>
 
-        </section>
+    </section>
     <section class="content">
 
 
@@ -81,32 +81,54 @@
 
                 <div class="card-body">
 
-            <div class="row">
-                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
 
-                    <div class="form-group">
-                     {{ settings_form }}
-                    </div>
+                            <div class="form-group">
+                                <label> {{ settings_form.key.label }}</label>
+                                {{ settings_form.key }}
+                                <label id="label_key }}"></label>
 
-                   <div class="card-footer">
-                            <button class="btn btn-primary pull-right" type="submit">Kaydet</button>
+
+                            </div>
+                            <div class="form-group">
+                                <label> {{ settings_form.value.label }}</label>
+                                {{ settings_form.value }}
+                                <label id="label_value"></label>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label> {{ settings_form.is_active.label }}</label>
+                                {{ settings_form.is_active }}
+                                <label id="label_is_active"></label>
+
+                            </div>
+
+
+                            <div class="card-footer">
+                                <button class="btn btn-primary pull-right" type="submit">Kaydet</button>
+                            </div>
+
+
                         </div>
 
 
-                </div>
-
-
-
-
-            </div>
                     </div>
+                </div>
             </div>
         </form>
 
 
     </section>
 
-
+    <script>
+        $(document).ready(function () {
+            {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
+    </script>
 
 {% endblock %}
 

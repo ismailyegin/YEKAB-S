@@ -5,14 +5,16 @@
 
 
 
+
     <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">İşlem Başarılı</h4>
+
                 </div>
                 <div class="modal-body successModal">
                     ...
@@ -27,30 +29,31 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Uyarı</h4>
+
                 </div>
                 <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz?</p>
+                    <p>Bölgeyi Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
                             data-dismiss="modal">Evet
                     </button>
-                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
     </div>
-
 
 
     {% if messages %}
@@ -99,42 +102,18 @@
     {% endif %}
 
 
-
-
-
-
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-
-
-            <div class="modal-content" style="height:fit-content">
-
-                <div class="modal-header" style="background-color:#3c8dbc ">
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body bodys">
-                    ...
-                </div>
-            </div>
-        </div>
-    </div>
     <section class="content-header">
-
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Grup Listesi</h1>
+                        Bağlantı Kapasiteleri Listesi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Grup Listesi</a></li>
-                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        <li class="breadcrumb-item"><a href="#">Kapacite Listesi</a></li>
+                        {#<li class="breadcrumb-item active">Advanced Form</li>#}
                     </ol>
                 </div>
             </div>
@@ -154,75 +133,106 @@
 
                 <div class="card-body">
 
-
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Gruplar</h3>
+                            <h3 class="card-title">Bağlantı Kapasite Listesi</h3>
                         </div>
-                        {% if aktif == 'Yonetim' or aktif == 'Admin' %}
-                            <div class="card-header with-border">
-                                <div class="btn-group">
 
-                                    <a href="{% url "ekabis:add_group" %}"
-                                       type="button" class="btn btn-success"><i
-                                            class="fa fa-edit"></i> Yeni Grup Ekle
-                                    </a>
+                        <div class="card-body">
+                            <form method="post" role="form">
+                                <div class="card-body">
+                                    {% csrf_token %}
 
+                                    <div class="form-group">
+                                        <label> {{ capacity_form.name.label }}</label>
+                                        {{ capacity_form.name }}
+                                        <label id="label_name"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label> {{ capacity_form.value.label }}</label>
+                                                {{ capacity_form.value }}
+                                                <label id="label_value"></label>
+                                            </div>
+
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label> {{ capacity_form.unit.label }}</label>
+                                                    {{ capacity_form.unit }}
+                                                    <label id="label_unit"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
 
                                 </div>
-                            </div>
-                        {% endif %}
-                        <div class="card-body">
-                            <table id="company" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>İsim</th>
-                                    <td>işlemler</td>
+                                <!-- /.card-body -->
+
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% if capacities %}
+                            <div class="card-body">
+
+                                <table id="capacity" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Bağlantı Bölgesi</th>
+                                        <th>Miktar</th>
+                                        <th>Güncelleme/Silme</th>
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
 
 
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% if groups.all %}
-                                    {% for group in groups %}
+                                    {% for capacity in capacities %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ group.name }}</td>
+                                            <td>{{ capacity.name }}</td>
+                                            <td>{{ capacity.value }} {{ capacity.unit }}</td>
+
                                             <td>
                                                 {% for item in perm %}
-                                                    {% if item == 'change_group' %}
+                                                    {% if item == 'update-region-capacity' %}
                                                         <div class="btn-group">
-                                                            <a href="{% url "ekabis:change_group" group.pk %}"
+                                                            <a href="{% url 'ekabis:update-region-capacity' capacity.uuid %}"
                                                                type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-edit"></i>İncele
+                                                                    class="fa fa-edit"></i>Güncelle
                                                             </a>
                                                         </div>
+                                                    {% elif item == 'delete_capacity'%}
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-danger"
+                                                               data-toggle="modal"
+                                                               onclick=deleteCapacity('{{ capacity.uuid }}')><i
+                                                                    class="fa fa-trash"></i>Sil</a>
+                                                        </div>
+
                                                     {% endif %}
                                                 {% endfor %}
-                                                {% if aktif == 'Yonetim' or aktif == 'Admin' %}
-                                                    <!-- izin kontrolü yapılacak ! -->
-                                                    <div class="btn-group">
-                                                        <a href="{% url "ekabis:change_groupPermission"  group.pk %}"
-                                                           type="button" class="btn btn-success"><i
-                                                                class="fa fa-edit"></i> İzinler
-                                                        </a>
-                                                    </div>
-                                                {% endif %}
                                             </td>
 
                                         </tr>
 
                                     {% endfor %}
-                                {% endif %}
 
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
 
-                        </div>
+
+                            </div>
+                        {% endif %}
                     </div>
-                    <!-- /.card -->
 
 
                 </div>
@@ -230,13 +240,12 @@
 
 
         </div>
-        <!-- /.row (main row) -->
 
     </section>
 
     <script>
         $(function () {
-            $('#company').DataTable({
+            $('#capacity').DataTable({
                 dom: 'Bfrtip',
 
                 language: {
@@ -272,7 +281,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Gruplar  ',
+                        title: 'Firmalar  ',
                         text: '<i class="fa  fa-print"></i>',
                         exportOptions: {
                             columns: [0, 1, ':visible']
@@ -293,7 +302,7 @@
                         extend: 'excelHtml5',
                         title: 'Ekabis',
                         text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Gruplar',
+                        messageTop: 'Firmalar',
                         {#footer: true,#}
                         exportOptions: {
                             {#     yer degisimi de yapilabilir.#}
@@ -309,7 +318,7 @@
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'grup.json'
+                                'Firmalar.json'
                             );
                         }
                     }
@@ -328,11 +337,56 @@
         })
     </script>
 
+    <script>
+        function deleteCapacity(id) {
+            debugger;
+            console.log(id);
+            var html = ''
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    debugger;
+
+                    $.ajax({
+                        url: "{% url "ekabis:delete_capacity"%}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            uuid: id
+                        },
+                        success: function (result) {
+
+                            html = 'Kapasite Başarıyla Silindi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:view_region" %}");
+
+                                });
+
+                            }).modal('show');
 
 
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
 
-
-
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+           {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
+    </script>
 
 {% endblock %}
 

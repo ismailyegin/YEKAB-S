@@ -315,14 +315,10 @@
     <script>
         $(document).ready(function () {
 
-
-        debugger;
-        let messages =
-        {{ error_messages | safe }}
-        if (messages !== '') {
-            errors_messages({{ error_messages |safe }})
-        }
-    });
+          {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
     </script>
 {% endblock %}
 
