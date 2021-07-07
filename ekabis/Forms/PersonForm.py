@@ -31,7 +31,7 @@ class PersonForm(ModelForm):
                 attrs={'class': 'form-control '}),
             'fatherName': forms.TextInput(
                 attrs={'class': 'form-control '}),
-            'bloodType': forms.TextInput(
-                attrs={'class': 'form-control '}),
+            'bloodType': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                          'style': 'width: 100%; ', 'required': 'required'}),
 
         }

@@ -46,9 +46,6 @@
 
     {% endif %}
 
-
-
-
     <section class="content-header">
 
         <div class="container-fluid">
@@ -79,58 +76,45 @@
                             <h3 class="card-title">Genel Bilgiler</h3>
                         </div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <label> {{ company_form.isFormal.label }}</label>
-                                {{ company_form.isFormal }}
-                                <label  for="" id="label_isFormal"></label>
-                            </div>
 
-                            <div class="form-group">
-                                <label> {{ company_form.name.label }}</label>
-                                {{ company_form.name }}
-                                <label  for="" id="label_name"></label>
-                            </div>
-                            <div class="form-group">
-                                <label> {{ company_form.degree.label }}</label>
-                                {{ company_form.degree }}
-                                <label for="" id="label_degree"></label>
-                            </div>
+                            {% for item in company_form %}
+                                <div class="form-group">
+                                    <label>{{ item.label }}</label><br>
 
-                            <div class="form-group">
-                                <label> {{ company_form.taxOffice.label }}</label>
-                                {{ company_form.taxOffice }}
-                                <label  for="" id="label_taxOffice"></label>
-                            </div>
-                            <div class="form-group">
-                                <label id="labelTaxNumber"> {{ company_form.taxnumber.label }}</label>
-                                {{ company_form.taxnumber }}
-                                <label  for="" id="label_taxnumber"></label>
-                            </div>
-                            <div class="form-group">
-                                <label>{{ company_form.sorumlu.label }}</label>
-                                {{ company_form.sorumlu }}
-                                <label  for="" id="label_sorumlu"></label>
-
-                            </div>
-
-
-                            {#                            <div class="form-group">#}
-                            {#                                <label>İş Tanımları</label>#}
-                            {#                                <select class="form-control select2" name="jobDesription" multiple="multiple "#}
-                            {#                                        id="multipleSelect"#}
-                            {#                                        data-placeholder="İş Tanımlarini  Seçiniz">#}
-                            {#                                    {% for item in  jobDescription %}#}
-                            {#                                        <option value="{{ item.pk }}">{{ item.name }}</option>#}
-                            {#                                    {% endfor %}#}
-                            {##}
-                            {#                                </select>#}
-                            {#                            </div>#}
-
+                                    {{ item }}
+                                    <label for="" id="label_{{ item.name }}"></label>
+                                </div>
+                            {% endfor %}
 
                         </div>
                         <div class="card-footer">
                             <button class="btn btn-primary" type="submit">Kaydet</button>
                         </div>
+
+
+                    </div>
+                  <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">User Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+
+                            {% for item in user_form %}
+                                <div class="form-group">
+                                    <label>{{ item.label }}</label><br>
+
+                                    {{ item }}
+                                    <label for="" id="label_{{ item.name }}"></label>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+
 
 
                     </div>
@@ -144,12 +128,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ company_form.mail.label }}</label>
-                                        {{ company_form.mail }}
-                                        <label  for="" id="label_mail"></label>
 
-                                    </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber.label }}</label>
                                         {{ communication_form.phoneNumber }}
@@ -160,21 +139,19 @@
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber2.label }}</label>
                                         {{ communication_form.phoneNumber2 }}
-                                        <label  for="" id="label_phoneNumber2"></label>
-
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label> {{ communication_form.country.label }}</label>
                                         {{ communication_form.country }}
-                                        <label  for="" id="label_country"></label>
+                                        <label for="" id="label_country"></label>
 
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.city.label }}</label>
                                         {{ communication_form.city }}
-                                        <label  for="" id="label_city"></label>
+                                        <label for="" id="label_city"></label>
 
 
                                     </div>
@@ -191,7 +168,7 @@
                                     <div class="form-group">
                                         <label> {{ communication_form.address.label }}</label>
                                         {{ communication_form.address }}
-                                        <label  for="" id="label_address"></label>
+                                        <label for="" id="label_address"></label>
 
                                     </div>
                                 </div>
@@ -203,8 +180,31 @@
 
 
                     </div>
+                     <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Person Bilgiler</h3>
+                        </div>
+                        <div class="card-body">
+
+                            {% for item in person_form %}
+                                <div class="form-group">
+                                    <label>{{ item.label }}</label><br>
+
+                                    {{ item }}
+                                    <label for="" id="label_{{ item.name }}"></label>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+
+                    </div>
 
                 </div>
+
 
             </div>
 
@@ -228,19 +228,14 @@
 
 
             });
-            debugger;
-            let messages ={{ error_messages | safe }}
-            if (messages !=='') {
-                errors_messages({{ error_messages |safe }})
-            }
 
+            {% if error_messages %}
 
-            {#var jsonData = JSON.parse(document.getElementById('error').value);#}
-            {#for (let i = 0; i < jsonData.length; i++) {#}
-            {#    var counter = jsonData.counters[i];#}
-            {#    console.log(counter.counter_name);#}
-
-
+                let messages ={{ error_messages | safe }}
+                if (messages !== '') {
+                    errors_messages({{ error_messages |safe }})
+                }
+            {% endif %}
         });
 
 

@@ -161,25 +161,68 @@
 
                             {% csrf_token %}
                             <div class="row">
-                                <div class="form-group">
-                                    {% for perm in permGroup %}
-                                        <div class="custom-control custom-switch form-control-lg">
-                                            {% if perm.is_active %}
-                                                <input type="checkbox" checked class="custom-control-input"
-                                                       id="item-{{ perm.pk }}"
-                                                       name="{{ perm.pk }}">
-                                            {% else %}
-                                                <input type="checkbox"  class="custom-control-input"
-                                                       id="item-{{ perm.pk }}"
-                                                       name="{{ perm.pk }}">
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+
+                                        {% for perm in  permGroup %}
+                                            {% if not   forloop.counter|divisibleby:2 %}
+                                                <div class="custom-control custom-switch form-control-lg">
+                                                    {% if perm.is_active %}
+
+                                                        <input type="checkbox" checked class="custom-control-input"
+                                                               id="item-{{ perm.pk }}"
+                                                               name="{{ perm.pk }}">
+                                                    {% else %}
+                                                        <input type="checkbox" class="custom-control-input"
+                                                               id="item-{{ perm.pk }}"
+                                                               name="{{ perm.pk }}">
+                                                    {% endif %}
+                                                    <label class="custom-control-label"
+                                                           for="item-{{ perm.pk }}">{{ perm.permissions.codename }}</label>
+                                                </div>
                                             {% endif %}
-                                            <label class="custom-control-label"
-                                                   for="item-{{ perm.pk }}">{{ perm.permissions.codename }}</label>
-                                        </div>
-                                    {% endfor %}
+                                        {% endfor %}
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-6">
+
+
+                                    <div class="form-group">
+
+
+                                        {% for perm in  permGroup %}
+                                            {% if  forloop.counter|divisibleby:2 %}
+                                                <div class="custom-control custom-switch form-control-lg">
+                                                    {% if perm.is_active %}
+
+                                                        {{ perm.loop }}
+                                                        <input type="checkbox" checked class="custom-control-input"
+                                                               id="item-{{ perm.pk }}"
+                                                               name="{{ perm.pk }}">
+                                                    {% else %}
+                                                        <input type="checkbox" class="custom-control-input"
+                                                               id="item-{{ perm.pk }}"
+                                                               name="{{ perm.pk }}">
+                                                    {% endif %}
+                                                    <label class="custom-control-label"
+                                                           for="item-{{ perm.pk }}">{{ perm.permissions.codename }}</label>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+
                                 </div>
 
+
                             </div>
+
+
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary pull-right">Kaydet</button>
                             </div>
