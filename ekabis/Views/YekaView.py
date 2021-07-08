@@ -6,15 +6,19 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from ekabis.services import general_methods
+from ekabis.services.general_methods import get_error_messages
 
 # form
 from ekabis.Forms.BusinessBlogForm import BusinessBlogForm
 from ekabis.Forms.BusinessBlogParametreForm import BusinessBlogParametreForm
+
 # model
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
-from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages
+
+from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
+from ekabis.models.YekaBussiness import YekaBusiness
 
 
 @login_required
@@ -208,6 +212,23 @@ def delete_businessBlogParametre(request):
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
     except Exception as e:
 
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_businessBlog')
+
+
+
+
+@login_required
+def add_yekabusiness(request):
+    business=BusinessBlog.objects.filter(isDeleted=False)
+    try:
+        if request.method == 'POST':
+            with transaction.atomic():
+                pass
+
+        return render(request, 'Yeka/yekabusinessAdd.html', {'business': business, })
+    except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_businessBlog')

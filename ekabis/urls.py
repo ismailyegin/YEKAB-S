@@ -123,4 +123,10 @@ urlpatterns = [
     path('isBlogu/parametre-sil/', YekaView.delete_businessBlogParametre, name='delete_businessBlogParametre'),
 
 
+    # yekabusiness
+    path('yekaIsBlogu/yekaIsBlogu-ekle/', YekaView.add_yekabusiness, name='add_yekabusiness'),
+
+
+
+
 ]
