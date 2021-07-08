@@ -1,6 +1,6 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews
+    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaView
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -111,5 +111,16 @@ urlpatterns = [
     path('baglanti/kapasite-guncelle/<uuid:uuid>', ConnectionRegionViews.update_capacity,
          name='update-region-capacity'),
     path('baglanti/kapasite-sil/', ConnectionRegionViews.delete_capacity, name='delete_capacity'),
+
+    # Yeka
+    path('isBlogu/isBlogu-listesi/', YekaView.view_businessBlog, name='view_businessBlog'),
+    path('isBlogu/isBlogu-ekle/', YekaView.add_businessBlog, name='add_businessBlog'),
+    path('isBlogu/isBlogu-guncelleme/<uuid:uuid>/', YekaView.change_businessBlog,name='change_businessBlog'),
+    path('isBlogu/isBlogu-sil/', YekaView.delete_businessBlog,name='delete_businessBlog'),
+
+    path('isBlogu/parametre-ekle/<uuid:uuid>', YekaView.add_businessBlogParametre, name='add_businessBlogParametre'),
+    path('isBlogu/parametre-guncelleme/<uuid:uuid>/<uuid:uuidparametre>',YekaView.change_businessBlogParametre, name='change_businessBlogParametre'),
+    path('isBlogu/parametre-sil/', YekaView.delete_businessBlogParametre, name='delete_businessBlogParametre'),
+
 
 ]

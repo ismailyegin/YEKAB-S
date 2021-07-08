@@ -16,6 +16,7 @@ from ekabis.Forms.CompanyFormDinamik import CompanyFormDinamik
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
 from ekabis.models.CompanyFileNames import CompanyFileNames
+from ekabis.models.CompanyFiles import CompanyFiles
 from ekabis.models.CompanyUser import CompanyUser
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
@@ -43,14 +44,12 @@ def return_add_Company(request):
                 if company_form.is_valid() and communication_form and user_form and person_form:
                     communication = communication_form.save(commit=False)
                     communication.save()
-
                     user = User()
                     user.username = request.POST.get('email')
                     user.first_name = unicode_tr(request.POST.get('first_name')).upper()
                     user.last_name = unicode_tr(request.POST.get('last_name')).upper()
                     user.email = request.POST.get('email')
                     user.save()
-
                     person = person_form.save(commit=False)
                     person.save()
                     company_user = CompanyUser(
@@ -145,10 +144,19 @@ def return_update_Company(request, uuid):
     communication_form = CommunicationForm(request.POST or None, instance=company.communication)
     person_form = PersonForm(request.POST or None,request.FILES or None,  instance=company.companyuser.person)
     user_form = UserForm(request.POST or None, instance=company.companyuser.user)
+    companyDocumentName=CompanyFileNames.objects.all()
     try:
         with transaction.atomic():
             if request.method == 'POST':
 
+                if request.FILES.get('documanfile') and request.POST.get('documanname'):
+                    companyfile=CompanyFiles(
+                        file=request.FILES.get('documanfile'),
+                        filename_id=request.POST.get('documanname')
+                    )
+                    companyfile.save()
+                    company.files.add(companyfile)
+                    company.save()
                 if company_form.is_valid() and communication_form.is_valid() and user_form and person_form:
                     communication = communication_form.save(commit=False)
                     communication.save()
@@ -157,7 +165,6 @@ def return_update_Company(request, uuid):
                     company.save()
                     user_form.save()
                     person_form.save()
-
                     messages.success(request, 'Firma Güncellenmiştir.')
                 else:
                     error_message_company = get_error_messages(company_form)
@@ -167,7 +174,8 @@ def return_update_Company(request, uuid):
                                   {'company_form': company_form,
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
-                                   'person_form': person_form, 'user_form': user_form
+                                   'person_form': person_form, 'user_form': user_form,
+                                   'companyDocumentName':companyDocumentName
                                    })
 
         return render(request, 'Company/CompanyUpdate.html',
@@ -175,7 +183,8 @@ def return_update_Company(request, uuid):
                        'communication_form': communication_form,
                        'company': company, 'error_messages': '',
                        'person_form': person_form,
-                       'user_form': user_form
+                       'user_form': user_form,
+                       'companyDocumentName': companyDocumentName
 
                        })
 
@@ -232,7 +241,6 @@ def change_companyfilename(request,uuid):
         return redirect('accounts:login')
     names=CompanyFileNames.objects.get(uuid=uuid)
     company_form = CompanyFileNameForm(request.POST or None ,instance=names)
-
     try:
         if request.method == 'POST':
             with transaction.atomic():
@@ -250,22 +258,15 @@ def change_companyfilename(request,uuid):
 
         return render(request, 'Company/CompanyFileNameUpdate.html',
                       {'company_form': company_form,
-
                        })
-
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_companyfilename')
     return render(request, 'Company/CompanyFileNameUpdate.html')
-
-
-
-
 @login_required
 def delete_companyfilename(request,uuid):
     perm = general_methods.control_access(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
