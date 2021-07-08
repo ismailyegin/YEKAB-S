@@ -12,11 +12,12 @@ class CompanyFileNameForm(ModelForm):
             'is_active',
 
         )
-        labels = {'name': 'Dokuam- İsmi',
-                  'is_active': 'Ön kayıtta olsun mu ?',
+        labels = {'name': 'İsim',
+                  'is_active': 'Alan Türü',
 
                   }
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
-            'is_active':forms.BooleanField(attr={'class': 'form-control ', 'required': 'required'})
+            'is_active': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                          'style': 'width: 100%; ', 'required': 'required'}),
         }

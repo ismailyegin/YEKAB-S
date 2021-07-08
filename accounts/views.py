@@ -97,10 +97,9 @@ def forgot(request):
     return render(request, 'registration/forgot-password.html')
 
 def show_urls(request):
-
     for entry in urlpatterns:
-        perm = Permission(codename=entry.name, codeurl=entry.pattern.regex.pattern)
-        if Permission.objects.filter(name=entry.name).count() == 0:
+        perm = Permission(codename=entry.name, codeurl=entry.pattern.regex.pattern,name=entry.name)
+        if not (Permission.objects.filter(codename=entry.name)):
             perm.save()
 
     # bütün yetkiler verildi

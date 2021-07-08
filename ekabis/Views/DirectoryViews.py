@@ -25,8 +25,6 @@ from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMember import DirectoryMember
 from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
 from ekabis.services import general_methods
-
-from zeep import Client
 from unicode_tr import unicode_tr
 
 from ekabis.services.general_methods import get_error_messages

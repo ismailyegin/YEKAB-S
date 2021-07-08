@@ -1,12 +1,10 @@
 from django.urls import path
-from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews
+from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews,CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews
+
 
 app_name = 'ekabis'
 urlpatterns = [
-
     path('maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
-
     # Dashboard
     path('anasayfa/admin/', DashboardViews.return_admin_dashboard, name='view_admin'),
     path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
@@ -85,8 +83,14 @@ urlpatterns = [
     # Dokuman isim ekleme
     path('firma/dokumanisim-ekle/', CompanyView.add_companyfilename, name='add_companyfilename'),
     path('firma/dokumanisim-listesi/', CompanyView.view_companyfilename, name='view_companyfilename'),
+
+    path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename, name='change_companyfilename'),
+    path('firma/dokumanisim-sil/<uuid:uuid>/', CompanyView.delete_companyfilename,
+         name='delete_companyfilename'),
+
     path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename,
          name='change_companyfilename'),
+
 
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
@@ -95,11 +99,12 @@ urlpatterns = [
     # grup izinleri
 
     path('grup/grup-izin-ekle/<int:pk>', GroupView.change_groupPermission, name='change_groupPermission'),
+
     # Ayarlar
     path('ayar/ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
 
-    # Baglanti Bolgeleri
+
     path('baglanti/birim-ekle/', ConnectionRegionViews.return_connectionRegionUnit, name='view_units'),
     path('baglanti/birim-sil/', ConnectionRegionViews.delete_unit, name='delete_unit'),
     path('baglanti/birim-guncelle/<uuid:uuid>/', ConnectionRegionViews.update_unit, name='update_unit'),
@@ -112,9 +117,27 @@ urlpatterns = [
     path('baglanti/kapasite-sil/', ConnectionRegionViews.delete_capacity, name='delete_capacity'),
 
     # Yeka
+
+    path('isBlogu/isBlogu-listesi/', YekaView.view_businessBlog, name='view_businessBlog'),
+    path('isBlogu/isBlogu-ekle/', YekaView.add_businessBlog, name='add_businessBlog'),
+    path('isBlogu/isBlogu-guncelleme/<uuid:uuid>/', YekaView.change_businessBlog,name='change_businessBlog'),
+    path('isBlogu/isBlogu-sil/', YekaView.delete_businessBlog,name='delete_businessBlog'),
+
+    path('isBlogu/parametre-ekle/<uuid:uuid>', YekaView.add_businessBlogParametre, name='add_businessBlogParametre'),
+    path('isBlogu/parametre-guncelleme/<uuid:uuid>/<uuid:uuidparametre>',YekaView.change_businessBlogParametre, name='change_businessBlogParametre'),
+    path('isBlogu/parametre-sil/', YekaView.delete_businessBlogParametre, name='delete_businessBlogParametre'),
+
+
+    # yekabusiness
+    path('yekaIsBlogu/yekaIsBlogu-ekle/', YekaView.add_yekabusiness, name='add_yekabusiness'),
+
+
+
+
     path('yeka/yeka-ekle/', YekaViews.return_yeka, name='view_yeka'),
     path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
+
 
 ]

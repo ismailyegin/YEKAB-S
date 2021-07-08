@@ -1,0 +1,108 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ aktif }}-
+                        Dokuman İsim Ekle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Dokuman İsim  Ekle</a></li>
+                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+
+                     {% for item in company_form %}
+                                <div class="form-group">
+                                    <label>{{ item.label }}</label><br>
+
+                                    {{ item }}
+                                    <label for="" id="label_{{ item.name }}"></label>
+                                </div>
+                            {% endfor %}
+
+                    <div class="card-footer">
+                        <button class="btn btn-primary" type="submit">Kaydet</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </form>
+
+
+    </section>
+
+    <script>
+        $(document).ready(function () {
+
+            {% if error_messages %}
+                errors_messages({{ error_messages |safe }}
+            {% endif %}
+        });
+    </script>
+
+{% endblock %}
+
+

@@ -1,0 +1,189 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+<style>
+@import url(https://fonts.googleapis.com/css?family=Lato);
+
+html, body {
+  font-family: Lato, Arial, sans-serif;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+p {
+  font-size: 16px;
+}
+
+#left, #right {
+  margin-top: 20px;
+  padding-top: 20px;
+  background-color : #E8615F;
+  min-height: 400px;
+
+  border-radius: 3px;
+}
+
+#left {
+  width: 49%;
+  float: left;
+}
+
+#right {
+  width: 49%;
+  float: right;
+}
+
+.card {
+  background-color: #fff;
+  margin: 7px;
+  border-radius: 5px;
+
+  box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+.card-header {
+  padding: 5px 0 0 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+  padding: 10px 0 10px 5px;
+}
+</style>
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <section class="content">
+        <form method="post" role="form">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title"> İş Blogu Ekle </h3>
+                        </div>
+                        <div class="card-body">
+
+
+                            <div class="col-lg-12">
+
+                                <div id="container"></div>
+
+{#                                {% for item in business %}#}
+{#                                    <div class="form-group">#}
+{#                                        {{ item }}#}
+{#                                    </div>#}
+{#                                {% endfor %}#}
+{#                                <div class="card-footer">#}
+{#                                    <button type="submit" class="btn btn-primary">Kaydet</button>#}
+{#                                </div>#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </section>
+
+    <script>
+        $(function () {
+          class App extends React.Component {
+            componentDidMount() {
+                let left = document.getElementById('left');
+                let right = document.getElementById('right');
+                dragula([left, right]);
+            }
+
+            render() {
+                return (
+                    <div className="container">
+                        <div id="left" className="container">
+                            <Card body="Card 3"/>
+                            <Card body="Card 4"/>
+                        </div>
+                        <div id="right" className="container">
+                            <Card body="Card 1"/>
+                            <Card body="Card 2"/>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
+        class Card extends React.Component {
+            constructor(props) {
+                super(props);
+            }
+
+            render() {
+                return (
+                    <div className="card">
+                        <div className="card-header">
+                            <h3>Example Card</h3>
+                        </div>
+                        <div className="card-body">
+                            <p>{this.props.body}</p>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
+        React.render(<App/>, document.getElementById('container'));
+         });
+
+
+    </script>
+{% endblock %}

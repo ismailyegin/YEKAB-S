@@ -45,30 +45,65 @@
 
 
     {% endif %}
+    <form method="post" enctype="multipart/form-data" role="form">
+        <div class="modal modal-warning fade in deneme23" tabindex="-1" role="dialog" id="addDocument"
+             aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">Bilgileri Giriniz</h4>
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <label for="documanname">Döküman İsmi </label>
+                        <select id="documanname" name="documanname" class="form-control">
+                            <option value="" selected>Seçiniz...</option>
+                            {% for item  in companyDocumentName %}
+                                <option value="{{ item.pk }}">{{ item.name }}</option>
+                            {% endfor %}
+                        </select>
+                    <label for="id_file1">Döküman İsmi </label><br>
+                    <input type="file" name="documanfile"  id="id_file">
+
+                    </div>
 
 
-
-    <section class="content-header">
-
-
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Firma Güncelle</h1>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline pull-left">Kaydet
+                        </button>
+                        <button type="button" class="btn btn-outline" id="edit-btn-closereddet">Geri Dön</button>
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Firma Güncelle</a></li>
-                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                    </ol>
-                </div>
+                <!-- /.modal-content -->
             </div>
+            <!-- /.modal-dialog -->
         </div>
 
-    </section>
-    <section class="content">
 
-        <form method="post" enctype="multipart/form-data" role="form">
+        <section class="content-header">
+
+
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Firma Güncelle</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Firma Güncelle</a></li>
+                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <section class="content">
+
+
             {% csrf_token %}
             <div class="row">
 
@@ -169,11 +204,17 @@
 
 
                                 <!-- /.card-tools -->
-                                <div class="card-footer">
-                                    <button class="btn btn-primary" type="submit">Kaydet</button>
-                                </div>
+
                             </div>
                             <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+
+                                <button class="btn btn-success" id="btnDokuman" type="button"> Döküman Ekle</button>
+
+
+                            </div>
                             <div class="card-body" style="display: none;">
 
 
@@ -204,7 +245,7 @@
                                                             <div class="btn-group">
                                                                 <a class="btn btn-success"
                                                                    data-toggle="modal"
-                                                                   href="/media/{{ item.file }}" download><i
+                                                                   href="/media/{{ item.file }}"><i
                                                                         class="fa fa-download"></i></a>
 
                                                                 {#                                                        delete kısmı eklenecek#}
@@ -289,8 +330,6 @@
                                     </div>
 
                                 </div>
-
-
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
@@ -305,29 +344,33 @@
 
             </div>
 
-        </form>
 
-
-    </section>
-
+        </section>
+    </form>
 
     <script>
 
         $(document).ready(function () {
 
 
+            $('#btnDokuman').click(function (e) {
+                    $("#addDocument").modal('show');
+                    $('#edit-btn-closereddet').click(function () {
+
+
+                        $('#addDocument').modal('hide');
+                        $('.modal').modal('hide');
+
+                    });
+
+            });
+
+
             {% if error_messages %}
-
-                let messages =
-                {{ error_messages | safe }}
-                if (messages !== '') {
-                    errors_messages({{ error_messages |safe }})
-                }
-
+                errors_messages({{ error_messages |safe }})
             {% endif %}
 
-
-             $('#dokuman').DataTable({
+            $('#dokuman').DataTable({
                 dom: 'Bfrtip',
 
                 language: {
@@ -413,7 +456,7 @@
                 'ordering': true,
                 'info': true,
                 'autoWidth': true,
-                'responsive': true,
+
             })
 
 

@@ -73,7 +73,7 @@
                 <div class="col-lg-6">
                     <div class="card card-primary">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Genel Bilgiler</h3>
+                            <h3 class="card-title">Firma Bilgileri</h3>
                         </div>
                         <div class="card-body">
 
@@ -94,34 +94,6 @@
 
                     </div>
                   <div class="card card-primary">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">User Bilgiler</h3>
-                        </div>
-                        <div class="card-body">
-
-                            {% for item in user_form %}
-                                <div class="form-group">
-                                    <label>{{ item.label }}</label><br>
-
-                                    {{ item }}
-                                    <label for="" id="label_{{ item.name }}"></label>
-                                </div>
-                            {% endfor %}
-
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Kaydet</button>
-                        </div>
-
-
-
-
-
-                    </div>
-
-                </div>
-                <div class="col-lg-6">
-                    <div class="card card-primary">
                         <div class="card-header with-border">
                             <h3 class="card-title">İletişim Bilgileri</h3>
                         </div>
@@ -180,9 +152,34 @@
 
 
                     </div>
-                     <div class="card card-primary">
+
+
+                </div>
+                <div class="col-lg-6">
+                      <div class="card card-primary">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Person Bilgiler</h3>
+                            <h3 class="card-title">Kullanici Bilgileri</h3>
+                        </div>
+                        <div class="card-body">
+
+                            {% for item in user_form %}
+                                <div class="form-group">
+                                    <label>{{ item.label }}</label><br>
+                                    {{ item }}
+                                    <label for="" id="label_{{ item.name }}"></label>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+
+                    </div>
+                     <div class="card card-primary">
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Kullanici Bilgileri</h3>
                         </div>
                         <div class="card-body">
 
