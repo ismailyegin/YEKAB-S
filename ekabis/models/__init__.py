@@ -23,3 +23,11 @@ from .Permission import Permission
 from .ConnectionUnit import ConnectionUnit
 from .ConnectionRegion import ConnectionRegion
 from .ConnectionCapacity import ConnectionCapacity
+from .Yeka import Yeka
+from .YekaPerson import YekaPerson
+from .YekaConnectionRegion import YekaConnectionRegion
+from .HistoryGroup import HistoryGroup
+from .CompanyFileNames import CompanyFileNames
+from .CompanyUser import CompanyUser
+from .CompanyFiles import CompanyFiles
+from .YekaPerson import YekaPerson

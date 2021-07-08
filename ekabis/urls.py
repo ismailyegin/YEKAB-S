@@ -1,6 +1,6 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews
+    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -82,11 +82,11 @@ urlpatterns = [
     path('firma/firma-guncelle/<uuid:uuid>/', CompanyView.return_update_Company, name='change_company'),
     path('firma/firma-sil/', CompanyView.delete_company, name='delete_company'),
 
-
     # Dokuman isim ekleme
     path('firma/dokumanisim-ekle/', CompanyView.add_companyfilename, name='add_companyfilename'),
     path('firma/dokumanisim-listesi/', CompanyView.view_companyfilename, name='view_companyfilename'),
-    path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename, name='change_companyfilename'),
+    path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename,
+         name='change_companyfilename'),
 
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
@@ -99,8 +99,7 @@ urlpatterns = [
     path('ayar/ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
 
-
-    #Baglanti Bolgeleri
+    # Baglanti Bolgeleri
     path('baglanti/birim-ekle/', ConnectionRegionViews.return_connectionRegionUnit, name='view_units'),
     path('baglanti/birim-sil/', ConnectionRegionViews.delete_unit, name='delete_unit'),
     path('baglanti/birim-guncelle/<uuid:uuid>/', ConnectionRegionViews.update_unit, name='update_unit'),
@@ -111,5 +110,11 @@ urlpatterns = [
     path('baglanti/kapasite-guncelle/<uuid:uuid>', ConnectionRegionViews.update_capacity,
          name='update-region-capacity'),
     path('baglanti/kapasite-sil/', ConnectionRegionViews.delete_capacity, name='delete_capacity'),
+
+    # Yeka
+    path('yeka/yeka-ekle/', YekaViews.return_yeka, name='view_yeka'),
+    path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
+    path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
+    path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
 
 ]
