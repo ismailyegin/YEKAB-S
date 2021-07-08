@@ -7,8 +7,9 @@ from ekabis.models.BaseModel import BaseModel
 
 
 class CompanyUser(BaseModel):
-    person = models.OneToOneField(Person, on_delete=models.CASCADE)
-    communication = models.OneToOneField(Communication, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    person = models.OneToOneField(Person, on_delete=models.CASCADE, null=True, blank=True)
+    communication = models.OneToOneField(Communication, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+
     class Meta:
         default_permissions = ()

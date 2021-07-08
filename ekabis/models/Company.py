@@ -10,7 +10,8 @@ from ekabis.models.BaseModel import BaseModel
 
 class Company(BaseModel):
     name = models.CharField(blank=False, null=False, max_length=120, verbose_name='İsim')
-    communication = models.OneToOneField(Communication, on_delete=models.CASCADE, db_column='communication')
+    communication = models.OneToOneField(Communication, on_delete=models.CASCADE, db_column='communication', null=True,
+                                         blank=True)
     sorumlu = models.CharField(blank=True, null=True, max_length=120, verbose_name='Sorumlu')
     isFormal = models.BooleanField(default=False)
     degree = models.CharField(blank=True, null=True, max_length=120, verbose_name='Unvan')
