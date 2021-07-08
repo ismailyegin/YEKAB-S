@@ -136,5 +136,6 @@ urlpatterns = [
     # yekabusiness
     path('yekaIsBlogu/yekaIsBlogu-ekle/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
     path('yekaIsBlogu/yekaIsBlogu-listesi/', BusinessBlogViews.view_yekabusiness, name='view_yekabusiness'),
+    path('yekaIsBlogu/yekaIsBlogu-guncelle/<uuid:uuid>/', BusinessBlogViews.change_yekabusiness, name='change_yekabusiness'),
 
 ]
