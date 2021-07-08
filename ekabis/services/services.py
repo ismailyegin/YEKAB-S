@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, Group
 from django.db import transaction
 from django.db.models import Q
 
-from ekabis.models import ConnectionRegion, ConnectionCapacity
+from ekabis.models import ConnectionRegion, ConnectionCapacity, Yeka
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
@@ -358,3 +358,17 @@ def CapacityService(request, filter):
         traceback.print_exc()
         print(e)
         pass
+
+
+def YekaService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Yeka.objects.filter(**filter)
+            else:
+                return Yeka.objects.all()
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+        pass
+

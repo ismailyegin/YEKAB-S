@@ -31,10 +31,10 @@
     <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
- <link rel="stylesheet" href="{% static "plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css" %}">
+    <link rel="stylesheet" href="{% static "plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css" %}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
-
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
 
     <!-- summernote -->
     <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
@@ -322,43 +322,42 @@
                     data-accordion="false">
 
 
-                        {% for menu in menus %}
-                            {% if menu.is_parent %}
-                                {% if  menu.pk == activ_url.parent.pk %}
-                                    <li class="nav-item  menu-is-opening menu-open">
-                                        {% else %}
-                                    <li class="nav-item">
-                                {% endif %}
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas {{ menu.fa_icon }}"></i>
-                                <p>
-                                    {{ menu.name }}
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                {% for menusub in menus %}
-                                    {% if menusub.parent.id is menu.id %}
-                                        <li class="nav-item">
-                                            {% if  menusub.pk == activ_url.pk %}
-                                                <a href="{% url menusub.url %}" class="nav-link active">
-                                                    <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                    <p>{{ menusub.name }}</p>
-                                                </a>
-                                            {% else %}
-                                                <a href="{% url menusub.url %}" class="nav-link">
-                                                    <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                    <p>{{ menusub.name }}</p>
-                                                </a>
-                                            {% endif %}
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                            </li>
+                    {% for menu in menus %}
+                        {% if menu.is_parent %}
+                            {% if  menu.pk == activ_url.parent.pk %}
+                                <li class="nav-item  menu-is-opening menu-open">
+                                    {% else %}
+                                <li class="nav-item">
                             {% endif %}
-                        {% endfor %}
-
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas {{ menu.fa_icon }}"></i>
+                            <p>
+                                {{ menu.name }}
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            {% for menusub in menus %}
+                                {% if menusub.parent.id is menu.id %}
+                                    <li class="nav-item">
+                                        {% if  menusub.pk == activ_url.pk %}
+                                            <a href="{% url menusub.url %}" class="nav-link active">
+                                                <i class="far {{ menusub.fa_icon }} nav-icon"></i>
+                                                <p>{{ menusub.name }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url menusub.url %}" class="nav-link">
+                                                <i class="far {{ menusub.fa_icon }} nav-icon"></i>
+                                                <p>{{ menusub.name }}</p>
+                                            </a>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
 
 
                 </ul>
@@ -471,7 +470,6 @@
 <script src="{% static 'plugins/jquery-mapael/jquery.mapael.min.js' %}"></script>
 <script src="{% static 'plugins/jquery-mapael/maps/usa_states.min.js' %}"></script>
 <script src="{% static 'errors_message.js' %}"></script>
-
 
 
 <!-- ChartJS -->
@@ -594,8 +592,8 @@
 
 
         })
-           //Bootstrap Duallistbox
-    $('.duallistbox').bootstrapDualListbox()
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
 
     });
 
