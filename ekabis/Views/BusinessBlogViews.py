@@ -259,13 +259,13 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
 def view_yekabusiness(request):
 
     try:
-        yekabusiness = YekaBusiness.objects.filter(isDeleted=False)
-        return render(request, 'Yeka/YekabusinessList.html', {'yeka_business': yekabusiness,
+        yeka= YekaBusiness.objects.filter(isDeleted=False)
+        return render(request, 'Yeka/YekabusinessList.html', {'yeka_business':yeka,
                                                              'error_messages': '',
                                                              })
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request , 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_businessBlog')
 
 @login_required
