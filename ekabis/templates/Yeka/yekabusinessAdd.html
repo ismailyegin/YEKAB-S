@@ -1,60 +1,23 @@
 {% extends 'base_layout.html' %}
 {% block content %}
-<style>
-@import url(https://fonts.googleapis.com/css?family=Lato);
 
-html, body {
-  font-family: Lato, Arial, sans-serif;
-}
+    <style>
 
-h3 {
-  font-size: 18px;
-}
+        #right {
+            height: 500px;
+            margin-top: 10px;
+            padding-top: 10px;
+            background-color: #037BFF;
+        }
 
-p {
-  font-size: 16px;
-}
+        #left {
 
-#left, #right {
-  margin-top: 20px;
-  padding-top: 20px;
-  background-color : #E8615F;
-  min-height: 400px;
+            margin-top: 10px;
+            padding-top: 10px;
+            background-color: #037BFF;
+        }
 
-  border-radius: 3px;
-}
-
-#left {
-  width: 49%;
-  float: left;
-}
-
-#right {
-  width: 49%;
-  float: right;
-}
-
-.card {
-  background-color: #fff;
-  margin: 7px;
-  border-radius: 5px;
-
-  box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2);
-}
-
-.card:hover {
-  cursor: pointer;
-}
-
-.card-header {
-  padding: 5px 0 0 5px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-.card-body {
-  padding: 10px 0 10px 5px;
-}
-</style>
+    </style>
 
 
     {% if messages %}
@@ -74,7 +37,6 @@ p {
                         {% endfor %}
                     </ul>
 
-
                 </div>
 
             {% endif %}
@@ -85,7 +47,6 @@ p {
                 <div class="alert alert-success alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
 
                     <ul class="messages">
                         {% for message in messages %}
@@ -103,10 +64,35 @@ p {
     {% endif %}
 
     <section class="content">
-        <form method="post" role="form">
+        <form method="Post" role="form" onsubmit="businesscontrol()">
+
             {% csrf_token %}
 
+        <input type="hidden" id="businessblog" name="businessblog" value="">
+
+
+
             <div class="row">
+
+
+
+            <div class="col-lg-12">
+                 <div class="card card-primary">
+                        <div class="card-header with-border">
+                            <h3 class="card-title"> Yeka İş Blogu Ekle </h3>
+                        </div>
+                        <div class="card-body">
+
+{{ yekabusiness_form }}
+
+
+                        </div>
+            </div>
+
+
+
+
+
                 <div class="col-lg-12">
                     <div class="card card-primary">
                         <div class="card-header with-border">
@@ -115,74 +101,184 @@ p {
                         <div class="card-body">
 
 
-                            <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <ul class="list-group mt-auto" id="left">
+                                        {% for busi in business %}
+                                            <li class="list-group-item" value="{{ busi.pk }}">{{ busi.name }}</li>
+                                        {% endfor %}
 
-                                <div id="container"></div>
+                                    </ul>
+                                </div>
 
-{#                                {% for item in business %}#}
-{#                                    <div class="form-group">#}
-{#                                        {{ item }}#}
-{#                                    </div>#}
-{#                                {% endfor %}#}
-{#                                <div class="card-footer">#}
-{#                                    <button type="submit" class="btn btn-primary">Kaydet</button>#}
-{#                                </div>#}
+                                <div class="col-lg-6">
+                                    <ul class="list-group mt-auto" id="right">
+
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 ">
+                                     <button class="btn btn-success mt-5" type="submit">kaydet</button>
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </form>
     </section>
+    <script src="https://cdn.jsdelivr.net/gh/RubaXa/Sortable/Sortable.min.js"></script>
 
     <script>
         $(function () {
-          class App extends React.Component {
-            componentDidMount() {
-                let left = document.getElementById('left');
-                let right = document.getElementById('right');
-                dragula([left, right]);
-            }
+            Sortable.create(left, {
+                animation: 100,
+                group: 'list-1',
+                draggable: '.list-group-item',
+                handle: '.list-group-item',
+                filter: '.sortable-disabled',
+                chosenClass: 'active',
+                removeCloneOnHide: false,
+            });
 
-            render() {
-                return (
-                    <div className="container">
-                        <div id="left" className="container">
-                            <Card body="Card 3"/>
-                            <Card body="Card 4"/>
-                        </div>
-                        <div id="right" className="container">
-                            <Card body="Card 1"/>
-                            <Card body="Card 2"/>
-                        </div>
-                    </div>
-                );
-            }
-        }
+            Sortable.create(right, {
+                group: 'list-1',
+                handle: '.list-group-item',
 
-        class Card extends React.Component {
-            constructor(props) {
-                super(props);
-            }
+                setData: function (/** DataTransfer */dataTransfer, /** HTMLElement*/dragEl) {
+                    dataTransfer.setData('Text', dragEl.textContent); // `dataTransfer` object of HTML5 DragEvent
+                    console.log('setdata')
+                    console.log(dataTransfer)
+                },
 
-            render() {
-                return (
-                    <div className="card">
-                        <div className="card-header">
-                            <h3>Example Card</h3>
-                        </div>
-                        <div className="card-body">
-                            <p>{this.props.body}</p>
-                        </div>
-                    </div>
-                );
-            }
-        }
+                // Element is chosen
+                onChoose: function (/**Event*/evt) {
+                    evt.oldIndex;  // element index within parent
+                    console.log('onchoose')
+                    console.log(evt)
+                },
 
-        React.render(<App/>, document.getElementById('container'));
-         });
+
+                onUnchoose: function (/**Event*/evt) {
+                    // same properties as onEnd
+                    console.log('onunckoose')
+                    console.log(evt)
+                },
+
+                // Element dragging started
+                onStart: function (/**Event*/evt) {
+                    evt.oldIndex;  // element index within parent
+                    console.log('onstart')
+                    console.log(evt)
+                },
+
+                // Element dragging ended
+                onEnd: function (/**Event*/evt) {
+                    var itemEl = evt.item;  // dragged HTMLElement
+                    evt.to;    // target list
+                    evt.from;  // previous list
+                    evt.oldIndex;  // element's old index within old parent
+                    evt.newIndex;  // element's new index within new parent
+                    evt.oldDraggableIndex; // element's old index within old parent, only counting draggable elements
+                    evt.newDraggableIndex; // element's new index within new parent, only counting draggable elements
+                    evt.clone // the clone element
+                    evt.pullMode;  // when item is in another sortable: `"clone"` if cloning, `true` if moving
+
+                    console.log('onend')
+                    console.log(evt)
+                },
+
+                // Element is dropped into the list from another list
+                onAdd: function (/**Event*/evt) {
+                    // same properties as onEnd
+                    console.log('onadd')
+                    console.log(evt)
+                },
+
+                // Changed sorting within list
+                onUpdate: function (/**Event*/evt) {
+                    // same properties as onEnd
+                    console.log('onupdate')
+                    console.log(evt)
+                },
+
+                // Called by any change to the list (add / update / remove)
+                onSort: function (/**Event*/evt) {
+                    // same properties as onEnd
+                    console.log('onshort')
+                    console.log(evt)
+                },
+
+                // Element is removed from the list into another list
+                onRemove: function (/**Event*/evt) {
+                    // same properties as onEnd
+                    console.log('onremove')
+                    console.log(evt)
+                },
+
+                // Attempt to drag a filtered element
+                onFilter: function (/**Event*/evt) {
+                    var itemEl = evt.item;  // HTMLElement receiving the `mousedown|tapstart` event.
+                    console.log('onfilter')
+                    console.log(evt)
+                },
+
+                // Event when you move an item in the list or between lists
+                onMove: function (/**Event*/evt, /**Event*/originalEvent) {
+                    // Example: https://jsbin.com/nawahef/edit?js,output
+                    evt.dragged; // dragged HTMLElement
+                    evt.draggedRect; // DOMRect {left, top, right, bottom}
+                    evt.related; // HTMLElement on which have guided
+                    evt.relatedRect; // DOMRect
+                    evt.willInsertAfter; // Boolean that is true if Sortable will insert drag element after target by default
+                    originalEvent.clientY; // mouse position
+                    // return false; — for cancel
+                    // return -1; — insert before target
+                    // return 1; — insert after target
+                    // return true; — keep default insertion point based on the direction
+                    // return void; — keep default insertion point based on the direction
+                    console.log('onmove')
+                    console.log(evt)
+                },
+
+                // Called when creating a clone of element
+                onClone: function (/**Event*/evt) {
+                    var origEl = evt.item;
+                    var cloneEl = evt.clone;
+                    console.log('onclone')
+                    console.log(evt)
+                },
+
+                // Called when dragging element changes position
+                onChange: function (/**Event*/evt) {
+                    evt.newIndex // most likely why this event is used is to get the dragging element's current index
+                    // same properties as onEnd
+                    console.log('onchange')
+                    console.log(evt)
+                }
+            });
+        });
+
+        function businesscontrol() {
+            var liArr = [];
+            var businessblog = $("#businessblog");
+
+
+            $('#right li').each(function () {
+                console.log($(this));
+                var current = $(this).val();
+                console.log(current);
+                liArr.push(current);
+
+            })
+
+
+            businessblog.val(liArr.join('-'));
+            debugger
+        };
 
 
     </script>

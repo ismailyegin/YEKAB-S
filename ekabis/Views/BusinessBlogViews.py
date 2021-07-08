@@ -14,16 +14,48 @@ from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 
+from ekabis.models.YekaBussiness import YekaBusiness
+from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
+from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
+
 
 @login_required
-def add_yekabusiness(request):
+def add_yekabusiness(request,):
     business = BusinessBlog.objects.filter(isDeleted=False)
+    form=YekaBusinessForm()
+
     try:
         if request.method == 'POST':
             with transaction.atomic():
-                pass
+                form = YekaBusinessForm(request.POST)
+                if form.is_valid():
+                    yekabusiness=form.save(commit=False)
+                    yekabusiness.save()
+                    if request.POST.get('businessblog'):
+                         blogs= request.POST.get('businessblog').split("-")
+                         parent=YekaBusinessBlog.objects.none()
+                         blog=None
+                         for i in range(len(blogs)):
+                             if i==0:
+                                 blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]))
+                                 blog.save()
+                                 parent = blog
 
-        return render(request, 'Yeka/yekabusinessAdd.html', {'business': business, })
+                             else:
+
+                                 blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i-1]),
+                                                         parent=parent
+                                                         )
+                                 blog.save()
+                                 parent = blog
+                             yekabusiness.businessblogs.add(blog)
+                             yekabusiness.save()
+
+
+
+
+        return render(request, 'Yeka/yekabusinessAdd.html', {'business': business,
+                                                             'yekabusiness_form':form})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -183,7 +215,6 @@ def change_businessBlog(request, uuid):
                                                                             'business': business,
                                                                             'parametre': parametre
                                                                             })
-
         return render(request, 'Yeka/businessBlogUpdate.html', {'business_form': business_form,
                                                                 'error_messages': '',
                                                                 'business': business,
@@ -216,6 +247,37 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
                                                                          'error_messages': error_messages,
                                                                          })
         return render(request, 'Yeka/parametreUpdate.html', {'business_form': business_form,
+                                                             'error_messages': '',
+                                                             })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_businessBlog')
+
+
+
+
+def view_yekabusiness(request):
+    yeka_business = YekaBusiness.objects.all()
+    try:
+        # if request.method == 'POST':
+        #     pass
+        #     # with transaction.atomic():
+        #
+        #         # if business_form.is_valid():
+        #         #     businessparametre = business_form.save(commit=False)
+        #         #     businessparametre.save()
+        #         #     messages.success(request, 'Parametre  güncellenmiştir.')
+        #         #     log = str(businessparametre.title) + "'Paremetre  güncellenmiştir."
+        #         #     log = general_methods.logwrite(request, request.user, log)
+        #         #     business = BusinessBlog.objects.get(uuid=uuid)
+        #         #     return redirect('ekabis:change_businessBlog', business.uuid)
+        #         # else:
+        #         #     error_messages = get_error_messages(business_form)
+        #         #     return render(request, 'Yeka/parametreUpdate.html', {'business_form': business_form,
+        #         #                                                          'error_messages': error_messages,
+        #         #                                                          })
+        return render(request, 'Yeka/YekabusinessList.html', {'yeka_business': yeka_business,
                                                              'error_messages': '',
                                                              })
     except Exception as e:

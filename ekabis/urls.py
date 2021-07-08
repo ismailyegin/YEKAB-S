@@ -92,14 +92,13 @@ urlpatterns = [
     path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename,
          name='change_companyfilename'),
 
+
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
     path('grup/grup-listesi/', GroupView.return_list_group, name='view_group'),
     path('grup/grup-guncelleme/<int:pk>/', GroupView.return_update_group, name='change_group'),
     # grup izinleri
-
     path('grup/grup-izin-ekle/<int:pk>', GroupView.change_groupPermission, name='change_groupPermission'),
-
     # Ayarlar
     path('ayar/ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
@@ -115,19 +114,17 @@ urlpatterns = [
     path('baglanti/kapasite-guncelle/<uuid:uuid>', ConnectionRegionViews.update_capacity,
          name='update-region-capacity'),
     path('baglanti/kapasite-sil/', ConnectionRegionViews.delete_capacity, name='delete_capacity'),
-
     # Yeka
     path('yeka/yeka-ekle/', YekaViews.return_yeka, name='view_yeka'),
     path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
 
-    # yekabusiness
+    # business
     path('isBlogu/isBlogu-listesi/', BusinessBlogViews.view_businessBlog, name='view_businessBlog'),
     path('isBlogu/isBlogu-ekle/', BusinessBlogViews.add_businessBlog, name='add_businessBlog'),
     path('isBlogu/isBlogu-guncelleme/<uuid:uuid>/', BusinessBlogViews.change_businessBlog, name='change_businessBlog'),
     path('isBlogu/isBlogu-sil/', BusinessBlogViews.delete_businessBlog, name='delete_businessBlog'),
-
     path('isBlogu/parametre-ekle/<uuid:uuid>', BusinessBlogViews.add_businessBlogParametre,
          name='add_businessBlogParametre'),
     path('isBlogu/parametre-guncelleme/<uuid:uuid>/<uuid:uuidparametre>',
@@ -135,6 +132,9 @@ urlpatterns = [
          name='change_businessBlogParametre'),
     path('isBlogu/parametre-sil/', BusinessBlogViews.delete_businessBlogParametre, name='delete_businessBlogParametre'),
 
+
+    # yekabusiness
     path('yekaIsBlogu/yekaIsBlogu-ekle/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
+    path('yekaIsBlogu/yekaIsBlogu-listesi/', BusinessBlogViews.view_yekabusiness, name='view_yekabusiness'),
 
 ]
