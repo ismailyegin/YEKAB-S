@@ -2,11 +2,6 @@
 
 {% block content %}
 
-
-
-
-
-
     <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -29,8 +24,6 @@
         <!-- /.modal-dialog -->
     </div>
 
-
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -52,7 +45,6 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
 
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
@@ -133,7 +125,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        YEKA Listesi</h1>
+                        YEKA</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -160,157 +152,44 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA LİSTESİ</h3>
+                            <h3 class="card-title">YEKA PERSONEL LİSTESİ</h3>
                         </div>
 
                         <div class="card-body">
-                            <form method="post" role="form">
-                                <div class="card-body">
-                                    {% csrf_token %}
 
-                                    <div class="form-group">
-                                        <label> {{ yeka_form.definition.label }}</label>
-                                        {{ yeka_form.definition }}
-                                        <label id="label_definition"></label>
+                            <table id="yekapersons" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Unvan</th>
 
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ yeka_form.date.label }}</label>
-                                        {{ yeka_form.date }}
-                                        <label id="label_date"></label>
+                                </tr>
+                                </thead>
 
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label> {{ yeka_form.capacity.label }}</label>
-                                                {{ yeka_form.capacity }}
-                                                <label id="label_capacity"></label>
-                                            </div>
+                                <tbody>
 
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label> {{ yeka_form.unit.label }}</label>
-                                                    {{ yeka_form.unit }}
-                                                    <label id="label_unit"></label>
-                                                </div>
-                                            </div>
-                                        </div>
+                                {% for employee in yeka.employee.all %}
 
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="">Firma</label>
-                                        {{ yeka_form.company }}
-                                        <label id="label_company"></label>
-
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="">Personel</label>
-                                        {{ yeka_form.employee }}
-                                        <label id="label_employee"></label>
-
-
-                                    </div>
-
-
-                                </div>
-                                <!-- /.card-body -->
-
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
-                                </div>
-                            </form>
-                        </div>
-                        {% if parent_yekalar %}
-                            <div class="card-body">
-
-                                <table id="yeka" class="table table-bordered table-hover">
-                                    <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Tanım</th>
-                                        <th>Tarih</th>
-                                        <th>Kapasite</th>
-                                        <th>Firmalar</th>
-                                        <th>Personeller</th>
-                                        <th>Güncelleme/Silme</th>
-                                        <th>Alt Yeka Ekle</th>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+                                        <td>{{ employee.workDefinition }}</td>
+
 
                                     </tr>
-                                    </thead>
-
-                                    <tbody>
 
 
-                                    {% if parent_yekalar.all %}
-                                        {% for yeka in parent_yekalar %}
-                                            <tr>
-                                                <td>{{ forloop.counter }} </td>
-                                                <td>{{ yeka.definition }}</td>
-                                                <td>{{ yeka.date }}</td>
-                                                <td>{{ yeka.capacity }} {{ yeka.unit.name }}</td>
-
-                                                <td>
-                                                    <ul>
-                                                        {% for company in yeka.company.all %}
-                                                            <li>{{ company.name }}</li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                </td>
-
-                                                <td>
-                                                    <a href="{% url 'ekabis:view_yeka_personel' yeka.uuid %}"
-                                                       type="button" class="btn btn-warning"><i
-                                                            class="fa fa-search"></i>İncele
-                                                    </a>
+                                {% endfor %}
 
 
-                                                </td>
-                                                <td>
+                                </tbody>
+                            </table>
 
 
-                                                    <div class="btn-group">
-                                                        <a href="{% url 'ekabis:change_yeka' yeka.uuid %}"
-                                                           type="button" class="btn btn-warning"><i
-                                                                class="fa fa-edit"></i>Güncelle
-                                                        </a>
+                        </div>
 
-                                                    </div>
-
-                                                    <div class="btn-group">
-                                                        <a class="btn btn-danger"
-                                                           data-toggle="modal"
-                                                           onclick=deleteYeka('{{ yeka.uuid }}')><i
-                                                                class="fa fa-trash"></i>Sil</a>
-                                                    </div>
-
-
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}"
-                                                           type="button" class="btn btn-primary"><i
-                                                                class="fa fa-plus"></i> Alt Yeka Ekle
-                                                        </a>
-
-                                                    </div>
-                                                </td>
-
-                                            </tr>
-
-                                        {% endfor %}
-                                    {% endif %}
-
-
-                                    </tbody>
-                                </table>
-
-
-                            </div>
-                        {% endif %}
                     </div>
 
 
@@ -324,7 +203,7 @@
 
     <script>
         $(function () {
-            $('#yeka').DataTable({
+            $('#yekapersons').DataTable({
                 dom: 'Bfrtip',
 
                 language: {

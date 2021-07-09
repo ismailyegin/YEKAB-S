@@ -220,29 +220,7 @@ def alt_yeka_ekle(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-    perm = general_methods.control_access(request)
 
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-
-    try:
-        with transaction.atomic():
-            if request.method == 'POST' and request.is_ajax():
-                uuid = request.POST['uuid']
-
-                obj = BusinessBlogParametreType.objects.get(uuid=uuid)
-                #
-                log = str(obj.pk) + " Parametre silindi"
-                log = general_methods.logwrite(request, request.user, log)
-                obj.isDeleted = True
-                obj.save()
-                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
-
-            else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
-    except Exception as e:
-
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_businessBlog')
+def yekaPerson_List(request, uuid):
+    yeka = Yeka.objects.get(uuid=uuid)
+    return render(request, 'Yeka/yekaPersonList.html', {'yeka': yeka})
