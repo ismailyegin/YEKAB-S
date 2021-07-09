@@ -371,7 +371,9 @@
                 $("#btn-conf").click(function () {
 
                     $.ajax({
-                        url: "{% url "ekabis:delete_businessBlog"  %}",
+
+
+                        url: "{% url "ekabis:delete_yekabusiness"  %}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
