@@ -1,7 +1,5 @@
 {% extends 'base_layout.html' %}
-
 {% block content %}
-
     <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -204,7 +202,6 @@
                                             <span class="time dropdown-toggle" data-toggle="dropdown">işlemler</span>
                                             <div class="dropdown-menu" role="menu" style="">
                                                 <a class="dropdown-item" href="{% url 'ekabis:change_yekabusinessBlog' yeka.uuid  yekabusinessblok.pk  yekabusinessblok.businessblog.pk %}">İncele</a>
-
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="#">Ekstra Zaman Ekle</a>
                                                 <div class="dropdown-divider"></div>
