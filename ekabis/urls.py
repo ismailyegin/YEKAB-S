@@ -115,11 +115,20 @@ urlpatterns = [
          name='update-region-capacity'),
     path('baglanti/kapasite-sil/', ConnectionRegionViews.delete_capacity, name='delete_capacity'),
     # Yeka
-    path('yeka/yeka-ekle/', YekaViews.return_yeka, name='view_yeka'),
+    path('yeka/yeka-listesi/', YekaViews.view_yeka, name='view_yeka'),
+    path('yeka/yeka-ekle/', YekaViews.add_yeka, name='add_yeka'),
     path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
+    #yekabusinessBlog
+    path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
+    path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<int:yekabusiness>/<int:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
+    # yekabusiness
+    path('yekaIsBlogu/yeka-IsBlogu-ekle/<uuid:uuid>/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
+    path('yekaIsBlogu/yeka-IsBlogu-guncelle/<uuid:uuid>/<uuid:yeka>/', BusinessBlogViews.change_yekabusiness,
+         name='change_yekabusiness'),
+    path('yekaIsBlogu/yekaIsBlogu-sil/', BusinessBlogViews.delete_yekabusiness, name='delete_yekabusiness'),
+#alt yeka
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
-
     # business
     path('isBlogu/isBlogu-listesi/', BusinessBlogViews.view_businessBlog, name='view_businessBlog'),
     path('isBlogu/isBlogu-ekle/', BusinessBlogViews.add_businessBlog, name='add_businessBlog'),
@@ -131,12 +140,4 @@ urlpatterns = [
          BusinessBlogViews.change_businessBlogParametre,
          name='change_businessBlogParametre'),
     path('isBlogu/parametre-sil/', BusinessBlogViews.delete_businessBlogParametre, name='delete_businessBlogParametre'),
-
-
-    # yekabusiness
-    path('yekaIsBlogu/yekaIsBlogu-ekle/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
-    path('yekaIsBlogu/yekaIsBlogu-listesi/', BusinessBlogViews.view_yekabusiness, name='view_yekabusiness'),
-    path('yekaIsBlogu/yekaIsBlogu-guncelle/<uuid:uuid>/', BusinessBlogViews.change_yekabusiness, name='change_yekabusiness'),
-    path('yekaIsBlogu/yekaIsBlogu-sil/', BusinessBlogViews.delete_yekabusiness, name='delete_yekabusiness'),
-
 ]

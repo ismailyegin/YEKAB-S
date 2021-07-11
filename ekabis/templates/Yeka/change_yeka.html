@@ -2,11 +2,6 @@
 
 {% block content %}
 
-
-
-
-
-
     <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -65,7 +60,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Bölgeyi Silmek istediğinizden emin misiniz ?</p>
+                    <p>Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -133,11 +128,29 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        YEKA Güncelleme</h1>
+                        Yeka Güncelleme</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">YEKA</a></li>
+                        <li class="breadcrumb-item">
+                            <div class="btn-group ">
+                                <button type="button" class="btn btn-default">İşlemler</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu" role="menu">
+
+                                    <a class="dropdown-item" onclick="yeka_delete()">Sil</a>
+                                       <div class="dropdown-divider"></div>
+
+                                    <a class="dropdown-item" href="#">Log Kayıtları</a>
+                                    <div class="dropdown-divider"></div>
+
+                                    <a class="dropdown-item" href="{% url 'ekabis:view_yekabusinessBlog' yeka.uuid %}">İs Blokları</a>
+                                </div>
+                            </div>
+
+                        </li>
                         {#              <li class="breadcrumb-item active">Advanced Form</li>#}
                     </ol>
                 </div>
@@ -153,81 +166,531 @@
 
         <div class="row">
 
-            <section class="col-lg-12 ">
 
-
-                <div class="card-body">
-
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">YEKA Güncelleme</h3>
-                        </div>
-
-                        <div class="card-body">
-                            <form method="post" role="form">
-                                <div class="card-body">
-                                    {% csrf_token %}
-
-                                    <div class="form-group">
-                                        <label> {{ yeka_form.definition.label }}</label>
-                                        {{ yeka_form.definition }}
-                                        <label id="label_definition"></label>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ yeka_form.date.label }}</label>
-                                        {{ yeka_form.date }}
-                                        <label id="label_date"></label>
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label> {{ yeka_form.capacity.label }}</label>
-                                                {{ yeka_form.capacity }}
-                                                <label id="label_capacity"></label>
-                                            </div>
-
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label> {{ yeka_form.unit.label }}</label>
-                                                    {{ yeka_form.unit }}
-                                                    <label id="label_unit"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> Firma </label>
-                                        {{ yeka_form.company }}
-                                        <label id="label_company"></label>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> Personel </label>
-                                        {{ yeka_form.employee }}
-                                        <label id="label_employee"></label>
-
-                                    </div>
-
-
-                                </div>
-                                <!-- /.card-body -->
-
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
-                                </div>
-                            </form>
-                        </div>
-
+            <div class="col-md-5">
+                <div class="card card-primary card-outline">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">YEKA Güncelleme</h3>
                     </div>
 
+                    <div class="card-body">
+                        <form method="post" role="form">
+                            <div class="card-body">
+                                {% csrf_token %}
+
+                                <div class="form-group">
+                                    <label> {{ yeka_form.definition.label }}</label>
+                                    {{ yeka_form.definition }}
+                                    <label id="label_definition"></label>
+
+                                </div>
+                                <div class="form-group">
+                                    <label> {{ yeka_form.date.label }}</label>
+                                    {{ yeka_form.date }}
+                                    <label id="label_date"></label>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label> {{ yeka_form.capacity.label }}</label>
+                                            {{ yeka_form.capacity }}
+                                            <label id="label_capacity"></label>
+                                        </div>
+
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label> {{ yeka_form.unit.label }}</label>
+                                                {{ yeka_form.unit }}
+                                                <label id="label_unit"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label> Firma </label>
+                                    {{ yeka_form.company }}
+                                    <label id="label_company"></label>
+
+                                </div>
+                                <div class="form-group">
+                                    <label> Personel </label>
+                                    {{ yeka_form.employee }}
+                                    <label id="label_employee"></label>
+
+                                </div>
+
+
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                {#                parent yeka bilgileri#}
+                <div class="col">
+
+                    <div class="card card-info collapsed-card">
+
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Üst Yeka Bilgileri</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-plus"></i>
+                                </button>
+
+
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+
+                            <!-- /.card-tools -->
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: none;">
+
+                            <a class="btn btn-success" href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}" type="button">Alt
+                                Yeka Ekle</a>
+
+                        </div>
+                        <div class="card-body" style="display: none;">
+
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                    <table id="sub_yeka" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>yeka</th>
+                                            <th>İşlemler</th>
+
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+
+                                        {% if sub_yeka %}
+                                            {% for item in sub_yeka %}
+                                                <tr id="subyeka-{{ item.pk }}">
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td>{{ item.definition }}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+
+                                                            <a class="btn btn-warning"
+                                                               href="{% url 'ekabis:change_yeka' item.uuid %}">
+                                                                İncele </a>
+
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
 
                 </div>
-            </section>
+                {##}
+                {#                alt yeka bilgileri#}
+                <div class="col">
+
+                    <div class="card card-info collapsed-card">
+
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Alt Yeka Bilgileri</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-plus"></i>
+                                </button>
+
+
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+
+                            <!-- /.card-tools -->
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: none;">
+
+                            <a class="btn btn-success" href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}" type="button">Alt
+                                Yeka Ekle</a>
+
+                        </div>
+                        <div class="card-body" style="display: none;">
+
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                    <table id="sub_yeka" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>yeka</th>
+                                            <th>İşlemler</th>
+
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+
+                                        {% if sub_yeka %}
+                                            {% for item in sub_yeka %}
+                                                <tr id="subyeka-{{ item.pk }}">
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td>{{ item.definition }}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+
+                                                            <a class="btn btn-warning"
+                                                               href="{% url 'ekabis:change_yeka' item.uuid %}">
+                                                                İncele </a>
+
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                </div>
+                {#   yekanın bölgeleri#}
+                <div class="col">
+
+                    <div class="card card-info collapsed-card">
+
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Yekanın Bölgeleri</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-plus"></i>
+                                </button>
+
+
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+
+                            <!-- /.card-tools -->
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: none;">
+
+                            <a class="btn btn-success" href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}" type="button">Alt
+                                Yeka Ekle</a>
+
+                        </div>
+                        <div class="card-body" style="display: none;">
+
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                    <table id="sub_yeka" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>yeka</th>
+                                            <th>İşlemler</th>
+
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+
+                                        {% if sub_yeka %}
+                                            {% for item in sub_yeka %}
+                                                <tr id="subyeka-{{ item.pk }}">
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td>{{ item.definition }}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+
+                                                            <a class="btn btn-warning"
+                                                               href="{% url 'ekabis:change_yeka' item.uuid %}">
+                                                                İncele </a>
+
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                </div>
+                {#            personel bilgileri#}
+                <div class="col">
+
+                    <div class="card card-info collapsed-card">
+
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Personel Bilgileri</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-plus"></i>
+                                </button>
+
+
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+
+                            <!-- /.card-tools -->
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: none;">
+
+                            <a class="btn btn-success" href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}" type="button">Alt
+                                Yeka Ekle</a>
+
+                        </div>
+                        <div class="card-body" style="display: none;">
+
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                    <table id="sub_yeka" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>yeka</th>
+                                            <th>İşlemler</th>
+
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+
+                                        {% if sub_yeka %}
+                                            {% for item in sub_yeka %}
+                                                <tr id="subyeka-{{ item.pk }}">
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td>{{ item.definition }}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+
+                                                            <a class="btn btn-warning"
+                                                               href="{% url 'ekabis:change_yeka' item.uuid %}">
+                                                                İncele </a>
+
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                </div>
+                {#            firma bilgileri#}
+                <div class="col">
+
+                    <div class="card card-info collapsed-card">
+
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Firma Bilgileri</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-plus"></i>
+                                </button>
+
+
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+
+                            <!-- /.card-tools -->
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: none;">
+
+                            <a class="btn btn-success" href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}" type="button">Alt
+                                Yeka Ekle</a>
+
+                        </div>
+                        <div class="card-body" style="display: none;">
+
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                    <table id="sub_yeka" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>yeka</th>
+                                            <th>İşlemler</th>
+
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+
+                                        {% if sub_yeka %}
+                                            {% for item in sub_yeka %}
+                                                <tr id="subyeka-{{ item.pk }}">
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td>{{ item.definition }}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+
+                                                            <a class="btn btn-warning"
+                                                               href="{% url 'ekabis:change_yeka' item.uuid %}">
+                                                                İncele </a>
+
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                </div>
+                {#            firma bilgileri#}
+
+
+            </div>
 
 
         </div>
@@ -243,6 +706,42 @@
                 errors_messages({{ error_messages |safe }})
             {% endif %}
         });
+
+
+
+        function yeka_delete(){
+
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:delete_yeka" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid:"{{yeka.uuid}}",
+                        },
+                        success: function (result) {
+                            html = 'Yeka Başarıyla Silindi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:view_yeka" %}");
+
+                                });
+
+                            }).modal('show');
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-delete').modal('hide');
+            });
+        }
     </script>
 
 {% endblock %}

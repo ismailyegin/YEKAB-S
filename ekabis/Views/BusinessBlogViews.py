@@ -13,14 +13,16 @@ from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
+from ekabis.models.Yeka import Yeka
 from ekabis.models.YekaBussiness import YekaBusiness
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 
 
 @login_required
-def add_yekabusiness(request, ):
+def add_yekabusiness(request,uuid):
     business = BusinessBlog.objects.filter(isDeleted=False)
+    yeka=Yeka.objects.get(uuid=uuid)
     form = YekaBusinessForm()
     try:
         if request.method == 'POST':
@@ -29,6 +31,8 @@ def add_yekabusiness(request, ):
                 if form.is_valid():
                     yekabusiness = form.save(commit=False)
                     yekabusiness.save()
+                    yeka.business=yekabusiness
+                    yeka.save()
                     if request.POST.get('businessblog'):
                         blogs = request.POST.get('businessblog').split("-")
                         parent = YekaBusinessBlog.objects.none()
@@ -49,7 +53,8 @@ def add_yekabusiness(request, ):
                                 parent = blog
                             yekabusiness.businessblogs.add(blog)
                             yekabusiness.save()
-                        return redirect('ekabis:view_yekabusiness')
+
+                        return redirect('ekabis:view_yekabusinessBlog', uuid)
                 else:
                     error_messages = get_error_messages(form)
                     return render(request, 'Yeka/yekabusinessAdd.html', {'business_form': form,
@@ -259,21 +264,10 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
         return redirect('ekabis:view_businessBlog')
 
 
-@login_required
-def view_yekabusiness(request):
-    try:
-        yeka = YekaBusiness.objects.filter(isDeleted=False)
-        return render(request, 'Yeka/YekabusinessList.html', {'yeka_business': yeka,
-                                                              'error_messages': '',
-                                                              })
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_businessBlog')
-
 
 @login_required
-def change_yekabusiness(request, uuid):
+def change_yekabusiness(request, uuid,yeka):
+
     yekabusiness = YekaBusiness.objects.get(uuid=uuid)
     business_form = YekaBusinessForm(request.POST or None, instance=yekabusiness)
 
@@ -346,7 +340,7 @@ def change_yekabusiness(request, uuid):
                         for i in removeBusiness:
                             i.isDeleted = True
                             i.save()
-                    return redirect('ekabis:view_yekabusiness')
+                    return redirect('ekabis:view_yekabusinessBlog',yeka)
                 else:
                     error_messages = get_error_messages(business_form)
 
