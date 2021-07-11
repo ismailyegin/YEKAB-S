@@ -10,6 +10,12 @@ urlpatterns = [
     path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
     path('anasayfa/personel/', DashboardViews.return_personel_dashboard, name='view_personel'),
 
+    # Takvim notları
+    path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendarName, name='add_calendarName'),
+
+    # Anasayfa Takvim notlar kaydet
+    path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendar, name='add_calendarfdk'),
+
     # profil güncelle
     path('admin/admin-profil-guncelle/', AdminViews.updateProfile,
          name='admin-profil-guncelle'),
