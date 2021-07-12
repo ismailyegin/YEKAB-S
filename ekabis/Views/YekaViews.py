@@ -305,3 +305,9 @@ def change_yekabusinessBlog(request,yeka,yekabusiness,business):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+def yekaPerson_List(request, uuid):
+    yeka = Yeka.objects.get(uuid=uuid)
+    return render(request, 'Yeka/yekaPersonList.html', {'yeka': yeka})
+

@@ -24,8 +24,6 @@
         <!-- /.modal-dialog -->
     </div>
 
-
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -47,7 +45,6 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
 
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
@@ -128,7 +125,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        YEKA Listesi</h1>
+                        YEKA</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -155,128 +152,44 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA LİSTESİ</h3>
+                            <h3 class="card-title">YEKA PERSONEL LİSTESİ</h3>
                         </div>
-                        {% for item in perm %}
-                            {% if item == 'add_yeka' %}
-                                <div class="card-header with-border">
-
-                                    <div class="btn-group">
-
-                                        <a href="{% url "ekabis:add_yeka" %}"
-                                           type="button" class="btn btn-success"><i
-                                                class="fa fa-edit"></i> Yeka Ekle
-                                        </a>
-
-                                    </div>
-
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-
 
                         <div class="card-body">
 
-                            {% if parent_yekalar %}
-                                <div class="card-body">
+                            <table id="yekapersons" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Unvan</th>
 
-                                    <table id="yeka" class="table table-bordered table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Tanım</th>
-                                            <th>Tarih</th>
-                                            <th>Kapasite</th>
-                                            <th>Firmalar</th>
-                                            <th>Personeller</th>
-                                            <th>İncele/İş Blokları</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
 
 
-                                        </tr>
-                                        </thead>
+                                {% for employee in yeka.employee.all %}
 
-                                        <tbody>
-
-
-                                        {% if parent_yekalar.all %}
-                                            {% for yeka in parent_yekalar %}
-                                                <tr>
-                                                    <td>{{ forloop.counter }} </td>
-                                                    <td>{{ yeka.definition }}</td>
-                                                    <td>{{ yeka.date }}</td>
-                                                    <td>{{ yeka.capacity }} {{ yeka.unit.name }}</td>
-
-                                                    <td>
-                                                        <ul>
-                                                            {% for company in yeka.company.all %}
-                                                                <li>{{ company.name }}</li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </td>
-
-                                                    <td>
-                                                        <ul> {% for employee in yeka.employee.all %}
-
-                                                            <li>{{ employee.user.first_name }} {{ employee.user.last_name }}</li>
-
-                                                        {% endfor %}
-                                                        </ul>
-                                                    </td>
-                                                    <td>
-                                                        {% for item in perm %}
-                                                            {% if item == 'change_yeka' %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+                                        <td>{{ employee.workDefinition }}</td>
 
 
-
-                                                                <div class="btn-group">
-                                                                    <a href="{% url 'ekabis:change_yeka' yeka.uuid %}"
-                                                                       type="button" class="btn btn-warning"><i
-                                                                            class="fa fa-edit"></i>İncele
-                                                                    </a>
-
-                                                                </div>
-                                                            {% endif %}
-                                                             {% if item == 'view_yekabusinessBlog' %}
-
-                                                <td>
-                                                    <a href="{% url 'ekabis:view_yeka_personel' yeka.uuid %}"
-                                                       type="button" class="btn btn-warning"><i
-                                                            class="fa fa-search"></i>İncele
-                                                    </a>
+                                    </tr>
 
 
-                                                </td>
-                                                <td>
-
-                                                                <div class="btn-group">
-                                                                    <a href="{% url 'ekabis:view_yekabusinessBlog' yeka.uuid %}"
-                                                                       type="button" class="btn btn-success"><i
-                                                                            class="fa fa-plus"></i> Time Line
-                                                                    </a>
-
-                                                                </div>
-                                                            {% endif %}
-
-                                                        {% endfor %}
+                                {% endfor %}
 
 
-                                                    </td>
+                                </tbody>
+                            </table>
 
 
-
-                                                </tr>
-
-                                            {% endfor %}
-                                        {% endif %}
-
-
-                                        </tbody>
-                                    </table>
-
-
-                                </div>
-                            {% endif %}
                         </div>
+
                     </div>
 
 
@@ -290,7 +203,7 @@
 
     <script>
         $(function () {
-            $('#yeka').DataTable({
+            $('#yekapersons').DataTable({
                 dom: 'Bfrtip',
 
                 language: {
