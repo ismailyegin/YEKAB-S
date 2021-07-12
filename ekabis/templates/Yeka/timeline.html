@@ -1,0 +1,290 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body errorModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Bölgeyi Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        TİME LİNE </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+
+
+                        {% for item in perm %}
+                            {% if item == 'add_yekabusiness' %}
+
+
+                                {% if not yekabusinessbloks %}
+
+
+
+                                    <li class="breadcrumb-item">
+
+                                        <a class="btn btn-success"
+                                           href="{% url 'ekabis:add_yekabusiness'  yeka.uuid %}">Yeka iş Blogunu
+                                            Ekle</a>
+                                    </li>
+                                {% endif %}
+
+                            {% endif %}
+                            {% if item == 'change_yekabusiness' %}
+                                {% if  yekabusinessbloks %}
+                                    <li class="breadcrumb-item">
+                                        <a class="btn btn-success"
+                                           href="{% url 'ekabis:change_yekabusiness'  yeka.business.uuid  yeka.uuid %}">Yeka
+                                            iş
+                                            Blogunu Güncelle</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <!-- Timelime example  -->
+            <div class="card card-primary card-outline">
+                <div class="card-header with-border">
+                    <h3 class="card-title">{{ yeka.definition }}</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- The time line -->
+
+
+                            <div class="timeline">
+
+
+                                {% for yekabusinessblok in yekabusinessbloks %}
+                                    <div class="time-label">
+                                        <span class="bg-green">{{ yekabusinessblok.startDate |date }}</span>
+                                    </div>
+
+                                    <div>
+                                        <i class="fas fa-user bg-blue"></i>
+                                        <div class="timeline-item">
+                                            <span class="time dropdown-toggle" data-toggle="dropdown">işlemler</span>
+                                            <div class="dropdown-menu" role="menu" style="">
+                                                <a class="dropdown-item" href="{% url 'ekabis:change_yekabusinessBlog' yeka.uuid  yekabusinessblok.pk  yekabusinessblok.businessblog.pk %}">İncele</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Ekstra Zaman Ekle</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Log Listesi</a>
+                                            </div>
+                                            <h3 class="timeline-header"><a
+                                                    href="#">{{ yekabusinessblok.businessblog.name }}</a>
+                                            </h3>
+                                            <div class="timeline-body">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Başlama Tarihi</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{{ yekabusinessblok.startDate |date }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Bitiş Tarihi</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{{ yekabusinessblok.finisDate | date }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Süresi</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{{ yekabusinessblok.businessTime }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Durumu</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{{ yekabusinessblok.status }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+
+                                                    {% for item in yekabusinessblok.paremetre.all %}
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>{{ item.parametre.title }}</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="{{ item.value }}"
+                                                                       disabled="">
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+
+                                                </div>
+
+                                            </div>
+                                            <div class="timeline-footer">
+{#                                                <a class="btn btn-primary btn-sm"#}
+{#                                                   href="{% url 'ekabis:change_yekabusinessBlog' yeka.uuid  yekabusinessblok.pk  yekabusinessblok.businessblog.pk %}">İncele</a>#}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="time-label">
+                                        <span class="bg-red">{{ yekabusinessblok.finisDate | date }}</span>
+                                    </div>
+
+                                {% endfor %}
+
+
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.timeline -->
+        </div>
+    </section>
+
+
+
+
+
+{% endblock %}
+

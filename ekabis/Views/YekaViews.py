@@ -15,30 +15,27 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaService
 from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 
+from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
+from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
+from ekabis.models.BusinessBlog import BusinessBlog
 
 @login_required
-def return_yeka(request):
+def add_yeka(request):
     perm = general_methods.control_access(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
     yeka_form = YekaForm()
-    parent_yekalar = Yeka.objects.filter(Q(isDeleted=False) & Q(yekaParent=None))
     companies = Company.objects.filter(isDeleted=False)
     try:
         with transaction.atomic():
             if request.method == 'POST':
-
                 yeka_form = YekaForm(request.POST)
-
                 if yeka_form.is_valid():
-
                     yeka = Yeka(definition=yeka_form.cleaned_data['definition'], date=yeka_form.cleaned_data['date'],
                                 unit=yeka_form.cleaned_data['unit'], capacity=yeka_form.cleaned_data['capacity']
                                 )
                     yeka.save()
-
                     for company in yeka_form.cleaned_data['company']:
                         yeka.company.add(company)
                     yeka.save()
@@ -59,14 +56,14 @@ def return_yeka(request):
                         'yekaParent': None
                     }
                     parent_yekalar = YekaService(request, yekafilter)
-                    return render(request, 'Yeka/view_yeka.html',
+                    return render(request, 'Yeka/yekaAdd.html',
                                   {'yeka_form': yeka_form, 'error_messages': error_message_unit,
-                                   'parent_yekalar': parent_yekalar, 'companies': companies,
+                                    'companies': companies,
                                    })
 
-            return render(request, 'Yeka/view_yeka.html',
+            return render(request, 'Yeka/yekaAdd.html',
                           {'yeka_form': yeka_form, 'error_messages': '',
-                           'parent_yekalar': parent_yekalar, 'companies': companies,
+                            'companies': companies,
                            })
 
     except Exception as e:
@@ -74,6 +71,29 @@ def return_yeka(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
+
+@login_required
+def view_yeka(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+
+    try:
+        parent_yekalar=Yeka.objects.filter(isDeleted=False , yekaParent=None)
+        with transaction.atomic():
+            if request.method == 'POST':
+                pass
+            return render(request, 'Yeka/view_yeka.html',
+                          {
+                              'parent_yekalar':parent_yekalar
+                           })
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
 
 @login_required
 def delete_yeka(request):
@@ -114,7 +134,9 @@ def update_yeka(request, uuid):
 
     yeka = Yeka.objects.get(uuid=uuid)
     yeka_form = YekaForm(request.POST or None, instance=yeka)
-    alt_yekalar = Yeka.objects.filter(isDeleted=False, yekaParent__uuid=uuid)
+    sub_yeka = Yeka.objects.filter(isDeleted=False, yekaParent__uuid=uuid)
+
+
     try:
         with transaction.atomic():
             if request.method == 'POST':
@@ -125,8 +147,8 @@ def update_yeka(request, uuid):
 
                     total_capacity = 0
 
-                    if alt_yekalar:
-                        for yeka in alt_yekalar:
+                    if sub_yeka:
+                        for yeka in sub_yeka:
                             total_capacity = total_capacity + yeka.capacity
 
                     if form_capacity >= total_capacity:
@@ -153,11 +175,17 @@ def update_yeka(request, uuid):
                 else:
                     error_message_unit = get_error_messages(yeka_form)
                     return render(request, 'Yeka/change_yeka.html',
-                                  {'yeka_form': yeka_form, 'error_messages': error_message_unit,
+                                  {'yeka_form': yeka_form,
+                                   'error_messages': error_message_unit,
+                                   'yeka':yeka,
+                                   'sub_yeka':sub_yeka
                                    })
 
             return render(request, 'Yeka/change_yeka.html',
-                          {'yeka_form': yeka_form, 'error_messages': '',
+                          {'yeka_form': yeka_form,
+                           'error_messages': '',
+                           'yeka': yeka,
+                           'sub_yeka': sub_yeka,
                            })
     except Exception as e:
         traceback.print_exc()
@@ -170,7 +198,6 @@ def alt_yeka_ekle(request, uuid):
     yeka_form = YekaForm()
     yeka = Yeka.objects.get(uuid=uuid)
     alt_yekalar = Yeka.objects.filter(yekaParent=yeka, isDeleted=False)
-
     try:
         with transaction.atomic():
             if request.method == 'POST':
@@ -181,6 +208,9 @@ def alt_yeka_ekle(request, uuid):
 
                     form_capacity = int(yeka_form.cleaned_data['capacity'])
                     total_capacity = 0
+
+
+                    # filtre ile sum alınabilir for gerek yok
                     if alt_yekalar:
 
                         for yeka in alt_yekalar:
@@ -202,7 +232,7 @@ def alt_yeka_ekle(request, uuid):
                     log = "Alt Yeka eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Yeka Başarıyla Kayıt Edilmiştir.')
-                    return redirect('ekabis:view_yeka')
+                    return redirect('ekabis:change_yeka',yeka.uuid)
 
                 else:
                     error_message_unit = get_error_messages(yeka_form)
@@ -212,7 +242,9 @@ def alt_yeka_ekle(request, uuid):
                                    })
 
             return render(request, 'Yeka/add_sub_yeka.html',
-                          {'yeka_form': yeka_form, 'error_messages': '', 'alt_yekalar': alt_yekalar
+                          {'yeka_form': yeka_form,
+                           'error_messages': '',
+                           'alt_yekalar': alt_yekalar,
                            })
 
     except Exception as e:
@@ -221,6 +253,61 @@ def alt_yeka_ekle(request, uuid):
         return redirect('ekabis:view_yeka')
 
 
+@login_required()
+def view_yekabusinessBlog(request,uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        yeka=Yeka.objects.get(uuid=uuid)
+        yekabusinessbloks=None
+        if yeka.business:
+            yekabusiness = yeka.business
+            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+        return render(request, 'Yeka/timeline.html',
+                      {'yekabusinessbloks':yekabusinessbloks,
+                       'yeka':yeka,
+                       })
+
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+@login_required()
+def change_yekabusinessBlog(request,yeka,yekabusiness,business):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        yeka=Yeka.objects.get(uuid=yeka)
+        yekabussiness=YekaBusinessBlog.objects.get(pk=yekabusiness)
+        business = BusinessBlog.objects.get(pk=business)
+        yekaBusinessBlogo_form=YekaBusinessBlogForm(business.pk,request.POST or None, instance=yekabussiness)
+        for item in yekabussiness.paremetre.all():
+            yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+        if request.POST:
+            if yekaBusinessBlogo_form.is_valid():
+                yekaBusinessBlogo_form.save(yekabussiness.pk,business.pk)
+                return redirect('ekabis:view_yekabusinessBlog' ,yeka.uuid)
+        return render(request, 'Yeka/YekabussinesBlogUpdate.html',
+                      {
+                       'yekaBusinessBlogo_form':yekaBusinessBlogo_form,
+                       'yeka':yeka
+                       })
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
 def yekaPerson_List(request, uuid):
     yeka = Yeka.objects.get(uuid=uuid)
     return render(request, 'Yeka/yekaPersonList.html', {'yeka': yeka})
+
