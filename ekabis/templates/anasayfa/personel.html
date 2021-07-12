@@ -1,307 +1,293 @@
 {% extends 'base_layout.html' %}
 {% block content %}
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
 
     <section class="content">
-
-
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>
-                Ana Sayfa
 
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Ana Sayfa</a></li>
 
-            </ol>
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>{{ aktif }}-
+                            Ana Sayfa</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Ana Sayfa</a></li>
+                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         <!-- Main content -->
         <section class="content">
-            <!-- Info cardes -->
             <div class="row">
-                <div class="col-lg-12 col-xs-12">
-                    <!-- small card -->
-                    <div class="small-card bg-aqua">
-                        <div class="inner">
-                            <h3>{{ total_athlete }}</h3>
-
-                            <p>Sporcu Sayısı</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa  fa-flag-checkered"></i>
-                        </div>
-                        <a href="" class="small-card-footer">
-                            Daha Fazla <i class="fa fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- ./col -->
-
-                <!-- ./col -->
-                <div class="col-lg-6 col-xs-6">
-                    <!-- small card -->
-                    <div class="small-card bg-yellow">
-                        <div class="inner">
-                            <h3>{{ total_club_user }}</h3>
-
-                            <p>Üye Sayısı</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-ios-people-outline"></i>
-                        </div>
-                        <a href="" class="small-card-footer">
-                            Daha Fazla <i class="fa fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-            <!-- /.row -->
-
-            <section class="content ">
-                <div class="row">
-
-                    {#            <div class="col-lg-6">#}
-                    {#                <div class="card card-primary">#}
-                    {#                    <div class="card-header with-border">#}
-                    {#                        <h3 class="card-title">Onay Bekleyen Kuşaklar</h3>#}
-                    {#                    </div>#}
-                    {#                    <div class="card-body">#}
-                    {#                     <table id="belt" class="table table-bordered table-hover">#}
-                    {#                            <thead>#}
-                    {#                            <tr>#}
-                    {#                                <th>#</th>#}
-                    {#                                <th> Ad</th>#}
-                    {#                                {% if user.groups.all.0 == 'Yonetim' or user.groups.all.0 == 'Admin' %}#}
-                    {#                                    <th>Kulüp</th>#}
-                    {#                                {% endif %}#}
-                    {##}
-                    {#                                <th> İşlemler</th>#}
-                    {##}
-                    {##}
-                    {#                            </tr>#}
-                    {#                            </thead>#}
-                    {#                            <tbody>#}
-                    {#                            {% if belts.all %}#}
-                    {#                                {% for belt in belts %}#}
-                    {#                                    <tr>#}
-                    {##}
-                    {#                                        <td>{{ forloop.counter }} </td>#}
-                    {##}
-                    {#                                        <td>#}
-                    {##}
-                    {#                                            <a target="_blank"> {{ belt.athlete_set.first }}</a>#}
-                    {##}
-                    {#                                        </td>#}
-                    {##}
-                    {#                                        {% if user.groups.all.0.name == 'Yonetim' or user.groups.all.0.name == 'Admin' %}#}
-                    {#                                            <td>{{ belt.athlete_set.first.licenses.last.sportsClub }}</td>#}
-                    {#                                        {% endif %}#}
-                    {##}
-                    {##}
-                    {#                                        <td>#}
-                    {#                                            <div class="btn-group">#}
-                    {#                                                <a href="#"#}
-                    {#                                                   type="button" class="btn btn-success"><i#}
-                    {#                                                        class="fa fa-check"></i>#}
-                    {#                                                </a>#}
-                    {#                                                <a class="btn btn-danger"#}
-                    {#                                                   data-toggle="modal"><i#}
-                    {#                                                        class="fa fa-times"></i></a>#}
-                    {##}
-                    {#                                            </div>#}
-                    {#                                        </td>#}
-                    {##}
-                    {##}
-                    {#                                    </tr>#}
-                    {##}
-                    {#                                {% endfor %}#}
-                    {#                            {% endif %}#}
-                    {##}
-                    {##}
-                    {#                            </tbody>#}
-                    {#                        </table>#}
-                    {#                    </div>#}
-                    {#                </div>#}
-                    {##}
-                    {##}
-                    {#            </div>#}
-                </div>
-                {% if athletes.all %}
-
-                    <div class="row">
-
-
-                        <div class="card card-primary">
-                            <div class="card-header with-border">
-                                <h3 class="card-title">Bilgileri Eksik Sporcular</h3>
+                <div class="col-md-3">
+                    <div class="sticky-top mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">İşaretler</h4>
                             </div>
-                            {#                        <div class="card-header with-border">#}
-                            {#                            <div class="btn-group">#}
-                            {#                                <a href="{% url "sbs:sporcu-ekle" %}"#}
-                            {#                                   type="button" class="btn btn-success"><i#}
-                            {#                                        class="fa fa-edit"></i> Yeni Sporcu Ekle#}
-                            {#                                </a>#}
-                            {#                            </div>#}
-                            {#                        </div>#}
-
-
                             <div class="card-body">
-                                <table id="sporcular" class="table table-bordered table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th> Ad Soyad</th>
-
-
-                                        <th>İşlemler</th>
-
-
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    {% for athlete in athletes %}
-                                        <tr>
-                                            <td>{{ forloop.counter }} </td>
-                                            <td>{{ athlete.user.first_name }} {{ athlete.user.last_name }} </td>
-
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a href=""
-                                                       type="button" class="btn btn-warning"><i
-                                                            class="fa fa-edit"></i>İncele
-                                                    </a>
-
-
-                                                </div>
-                                            </td>
-
-                                        </tr>
+                                <!-- the events -->
+                                <div id="external-events">
+                                    {% for cale in calendarNames %}
+                                        <div id="{{ cale.uuid }}"
+                                             class="external-event  ui-draggable ui-draggable-handle"
+                                             style="position: relative; background-color: {{ cale.color }}">{{ cale.name }}
+                                        </div>
 
                                     {% endfor %}
 
 
-                                    </tbody>
-                                </table>
-
+                                </div>
                             </div>
-
-
-                            <!-- /.card -->
-
-
+                            <!-- /.card-body -->
                         </div>
-
+                        <!-- /.card -->
 
                     </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-md-9">
+                    <div class="card card-primary">
+                        <div class="card-body p-1">
+                            <!-- THE CALENDAR -->
+                            <div id="calendar">
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+        </section>
 
 
-                    <script>
-                        $(function () {
-                            $('#sporcular').DataTable({
-
-
-                                dom: 'Bfrtip',
-
-                                language: {
-                                    buttons: {
-                                        pageLength: {
-                                            _: " %d  Tane Göster",
-                                            '-1': "Hepsini Göster"
-                                        }
-                                    }
-                                },
-
-                                lengthMenu: [
-                                    [10, 25, 50, 100, -1],
-                                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
-                                ],
-
-                                'buttons': [
-
-
-                                    {
-                                        extend: "pageLength",
-                                    },
-
-
-                                    {
-                                        extend: 'colvis',
-                                        text: '<i class=" fa  fa-th-list"></i>',
-                                        titleAttr: 'Ekle Çıkar'
-
-
-                                    },
-                                    {
-                                        extend: 'print',
-                                        title: 'Sporcular',
-                                        text: '<i class="fa  fa-print"></i>',
-                                        exportOptions: {
-                                            columns: [0, 1, 2, 3, 4, 5]
-                                        },
-                                        titleAttr: 'Yazdır'
-                                    },
-                                    {
-                                        extend: 'pdfHtml5',
-                                        download: 'open',
-                                        text: '<i class="fa fa-file-pdf-o"></i>',
-                                        exportOptions: {
-                                            columns: [0, 1, 2, 3, 4, 5]
-                                        },
-                                        titleAttr: 'Pdf Kaydet'
-                                    },
-
-                                    {
-                                        extend: 'excelHtml5',
-                                        title: 'Sporcular',
-                                        text: '<i class="fa fa-file-excel-o"></i>',
-                                        messageTop: 'Halter Bilgi Sistemi ',
-
-                                        exportOptions: {
-
-                                            columns: [0, 2, 1, 3, 4, 5]
-
-                                        },
-                                        titleAttr: 'Excel Kaydet'
-                                    },
-                                    {
-                                        text: '<i class="fa fa-file-text-o"></i>',
-                                        action: function (e, dt, button, config) {
-                                            var data = dt.buttons.exportData();
-
-                                            $.fn.dataTable.fileSave(
-                                                new Blob([JSON.stringify(data)]),
-                                                'Sporcular.json'
-                                            );
-                                        }
-                                    }
-
-
-                                ],
-                                'bubble': true,
-                                'paging': true,
-                                'lengthChange': true,
-                                'searching': true,
-                                'ordering': true,
-                                'info': true,
-                                'autoWidth': true,
-                                'responsive': true,
-                                {#'select': true,#}
-
-
-                            });
-
-                        });
-
-
-                    </script>
-
-
-                {% endif %}
-
-Anasayfa
     </section>
+
+
+    <script>
+
+        $(function () {
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+            function ini_events(ele) {
+                ele.each(function () {
+
+                    // create an Event Object (https://fullcalendar.io/docs/event-object)
+                    // it doesn't need to have a start or end
+                    var eventObject = {
+                        title: $.trim($(this).text()) // use the element's text as the event title
+                    }
+
+                    // store the Event Object in the DOM element so we can get to it later
+                    $(this).data('eventObject', eventObject)
+
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 1070,
+                        revert: true, // will cause the event to go back to its
+                        revertDuration: 0  //  original position after the drag
+                    })
+
+                })
+            }
+
+            ini_events($('#external-events div.external-event'))
+
+            /* initialize the calendar
+             -----------------------------------------------------------------*/
+            //Date for the calendar events (dummy data)
+            var date = new Date()
+            var d = date.getDate(),
+                m = date.getMonth(),
+                y = date.getFullYear()
+
+            var Calendar = FullCalendar.Calendar;
+            var Draggable = FullCalendar.Draggable;
+
+            var containerEl = document.getElementById('external-events');
+            var calendarEl = document.getElementById('calendar');
+
+            // initialize the external events
+            // -----------------------------------------------------------------
+
+            new Draggable(containerEl, {
+                itemSelector: '.external-event',
+                eventData: function (eventEl) {
+                    console.log(containerEl)
+                    return {
+                        title: eventEl.innerText,
+                        backgroundColor: window.getComputedStyle(eventEl, null).getPropertyValue('background-color'),
+                        borderColor: window.getComputedStyle(eventEl, null).getPropertyValue('background-color'),
+                        textColor: window.getComputedStyle(eventEl, null).getPropertyValue('color'),
+                    };
+                }
+            });
+
+            var calendar = new Calendar(calendarEl, {
+                locale: 'tr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                themeSystem: 'bootstrap',
+                //Random default events
+                events: [
+                    {
+                        title: 'Kobiltek Bilişim',
+                        start: new Date(y, m, 1),
+                        backgroundColor: '#f56954', //red
+                        borderColor: '#f56954', //red
+                        allDay: true
+                    },
+                    {
+                        title: 'Fatih berktug',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#f39c12', //yellow
+                        borderColor: '#f39c12' //yellow
+                    },
+                    {
+                        title: 'Tanışma',
+                        start: new Date(y, m, d, 10, 30),
+                        allDay: false,
+                        backgroundColor: '#0073b7', //Blue
+                        borderColor: '#0073b7' //Blue
+                    },
+                    {
+                        title: 'Akşam Yemegi',
+                        start: new Date(y, m, d, 12, 0),
+                        end: new Date(y, m, d, 14, 0),
+                        allDay: true,
+                        backgroundColor: '#00c0ef', //Info (aqua)
+                        borderColor: '#00c0ef' //Info (aqua)
+                    },
+                    {
+                        title: 'Dogum günü',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        allDay: false,
+                        backgroundColor: '#00a65a', //Success (green)
+                        borderColor: '#00a65a' //Success (green)
+                    },
+                    {
+                        title: 'Google',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        url: 'https://www.google.com/',
+                        backgroundColor: '#3c8dbc', //Primary (light-blue)
+                        borderColor: '#3c8dbc' //Primary (light-blue)
+                    }
+                ],
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar !!!
+                drop: function (info) {
+
+                    var tuuid = info.draggedEl.id;
+                    var tdates = info.dateStr;
+                    console.log(tuuid);
+                    console.log(tdates);
+                     $.ajax({
+                        url: "{% url "ekabis:add_calendarfdk" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid: tuuid,
+                            dates:tdates,
+                        },
+                        success: function (result) {
+                            console.log(result.status)
+                        }
+                    });
+
+                }
+
+            });
+
+            calendar.render();
+            // $('#calendar').fullCalendar()
+
+            /* ADDING EVENTS */
+            var currColor = '#3c8dbc' //Red by default
+            // Color chooser button
+            $('#color-chooser > li > a').click(function (e) {
+                e.preventDefault()
+                // Save color
+                currColor = $(this).css('color')
+                // Add color effect to button
+                $('#add-new-event').css({
+                    'background-color': currColor,
+                    'border-color': currColor
+                })
+            })
+            $('#add-new-event').click(function (e) {
+                e.preventDefault()
+                // Get value and make sure it is not null
+                var val = $('#new-event').val()
+                if (val.length == 0) {
+                    return
+                }
+
+                // Create events
+                var event = $('<div />')
+                event.css({
+                    'background-color': currColor,
+                    'border-color': currColor,
+                    'color': '#fff'
+                }).addClass('external-event')
+                event.text(val)
+                $('#external-events').prepend(event)
+
+                // Add draggable funtionality
+                ini_events(event)
+
+                // Remove event from text input
+                $('#new-event').val('')
+            })
+        })
+
+
+    </script>
+
+
+
+
+
+
 
 {% endblock %}

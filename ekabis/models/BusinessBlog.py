@@ -4,6 +4,6 @@ from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 
 
 class BusinessBlog(BaseModel):
-    name = models.CharField(max_length=255, null=False, blank=False, verbose_name='BusinessBlogName')
+    name = models.CharField(max_length=255, null=False, blank=False)
     parametre=models.ManyToManyField(BusinessBlogParametreType)
 

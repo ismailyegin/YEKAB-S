@@ -10,6 +10,12 @@ urlpatterns = [
     path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
     path('anasayfa/personel/', DashboardViews.return_personel_dashboard, name='view_personel'),
 
+    # Takvim notları
+    path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendarName, name='add_calendarName'),
+
+    # Anasayfa Takvim notlar kaydet
+    path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendar, name='add_calendarfdk'),
+
     # profil güncelle
     path('admin/admin-profil-guncelle/', AdminViews.updateProfile,
          name='admin-profil-guncelle'),
@@ -92,14 +98,13 @@ urlpatterns = [
     path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename,
          name='change_companyfilename'),
 
+
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
     path('grup/grup-listesi/', GroupView.return_list_group, name='view_group'),
     path('grup/grup-guncelleme/<int:pk>/', GroupView.return_update_group, name='change_group'),
     # grup izinleri
-
     path('grup/grup-izin-ekle/<int:pk>', GroupView.change_groupPermission, name='change_groupPermission'),
-
     # Ayarlar
     path('ayar/ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
@@ -115,29 +120,38 @@ urlpatterns = [
     path('baglanti/kapasite-guncelle/<uuid:uuid>', ConnectionRegionViews.update_capacity,
          name='update-region-capacity'),
     path('baglanti/kapasite-sil/', ConnectionRegionViews.delete_capacity, name='delete_capacity'),
-
     # Yeka
-    path('yeka/yeka-ekle/', YekaViews.return_yeka, name='view_yeka'),
+    path('yeka/yeka-listesi/', YekaViews.view_yeka, name='view_yeka'),
+    path('yeka/yeka-ekle/', YekaViews.add_yeka, name='add_yeka'),
     path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
+
+    #yekabusinessBlog
+    path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
+    path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<int:yekabusiness>/<int:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
+
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
     path('yeka/yeka-personeller/<uuid:uuid>', YekaViews.yekaPerson_List, name='view_yeka_personel'),
     path('yeka/personel-ata/', YekaViews.yekaPerson_assignment, name='yeka-personel-ata'),
     path('yeka/personel-cikar/', YekaViews.yekaPerson_remove, name='yeka-personel-kaldir'),
 
+
     # yekabusiness
+    path('yekaIsBlogu/yeka-IsBlogu-ekle/<uuid:uuid>/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
+    path('yekaIsBlogu/yeka-IsBlogu-guncelle/<uuid:uuid>/<uuid:yeka>/', BusinessBlogViews.change_yekabusiness,
+         name='change_yekabusiness'),
+    path('yekaIsBlogu/yekaIsBlogu-sil/', BusinessBlogViews.delete_yekabusiness, name='delete_yekabusiness'),
+#alt yeka
+    path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
+    # business
     path('isBlogu/isBlogu-listesi/', BusinessBlogViews.view_businessBlog, name='view_businessBlog'),
     path('isBlogu/isBlogu-ekle/', BusinessBlogViews.add_businessBlog, name='add_businessBlog'),
     path('isBlogu/isBlogu-guncelleme/<uuid:uuid>/', BusinessBlogViews.change_businessBlog, name='change_businessBlog'),
     path('isBlogu/isBlogu-sil/', BusinessBlogViews.delete_businessBlog, name='delete_businessBlog'),
-
     path('isBlogu/parametre-ekle/<uuid:uuid>', BusinessBlogViews.add_businessBlogParametre,
          name='add_businessBlogParametre'),
     path('isBlogu/parametre-guncelleme/<uuid:uuid>/<uuid:uuidparametre>',
          BusinessBlogViews.change_businessBlogParametre,
          name='change_businessBlogParametre'),
     path('isBlogu/parametre-sil/', BusinessBlogViews.delete_businessBlogParametre, name='delete_businessBlogParametre'),
-
-    path('yekaIsBlogu/yekaIsBlogu-ekle/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
-
 ]

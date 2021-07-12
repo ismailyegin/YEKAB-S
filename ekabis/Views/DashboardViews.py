@@ -3,11 +3,16 @@ import traceback
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from ekabis.services import general_methods
 from ekabis.services.services import ActiveGroupService, GroupService
 
+from ekabis.Forms.CalendarNameForm import CalendarNameForm
+from ekabis.models.CalendarName import CalendarName
+from django.contrib import messages
+import datetime
 
 @login_required
 def return_directory_dashboard(request):
@@ -31,8 +36,13 @@ def return_personel_dashboard(request):
         logout(request)
         return redirect('accounts:login')
 
+
+    calendarNames=CalendarName.objects.filter(isDeleted=False,user=request.user)
+
     return render(request, 'anasayfa/personel.html',
-                  {})
+                  {
+                      'calendarNames':calendarNames
+                  })
 
 
 @login_required
@@ -70,4 +80,51 @@ def activeGroup(request, pk):
         return redirect('ekabis:view_personel')
     else:
         return redirect('ekabis:view_admin')
+@login_required()
+def add_calendarName(request):
+    calender_form=CalendarNameForm()
 
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
+                  calender_form = CalendarNameForm(request.POST)
+                  if calender_form.is_valid():
+                      name=calender_form.save(commit=False)
+                      name.user=request.user
+                      name.save()
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+    calanders=CalendarName.objects.filter(isDeleted=False)
+
+    return render(request, 'anasayfa/CalendarNameAdd.html',
+                  {
+                      'calender_form':calender_form,
+                      'calanders':calanders
+                  })
+
+
+
+def add_calendar(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.GET['uuid']
+                date=request.GET['date']
+
+                datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S'").date()
+
+
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
