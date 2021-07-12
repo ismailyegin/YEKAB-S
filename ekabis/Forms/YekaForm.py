@@ -7,7 +7,7 @@ from ekabis.models.Yeka import Yeka
 class YekaForm(forms.ModelForm):
     class Meta:
         model = Yeka
-        fields = ('date', 'definition', 'capacity', 'unit', 'company', 'employee')
+        fields = ('date', 'definition', 'capacity', 'unit', 'company',)
 
         labels = {'definition': 'Tanım ', 'capacity': 'Kapasite', 'company': 'Firma'}
         widgets = {
@@ -23,7 +23,6 @@ class YekaForm(forms.ModelForm):
         }
 
     company = forms.ModelMultipleChoiceField(queryset=Company.objects.filter(isDeleted=False))
-    employee = forms.ModelMultipleChoiceField(queryset=Employee.objects.filter(isDeleted=False))
 
     # Overriding __init__ here allows us to provide initial
     # data for 'toppings' field
@@ -36,13 +35,10 @@ class YekaForm(forms.ModelForm):
             forms.ModelForm.__init__(self, *args, **kwargs)
             initial['company'] = [t.pk for t in kwargs['instance'].company.all()]
             self.fields['company'].initial = initial['company']
-            initial['employee'] = [t.pk for t in kwargs['instance'].employee.all()]
-            self.fields['employee'].initial = initial['employee']
+
 
         forms.ModelForm.__init__(self, *args, **kwargs)
         self.fields['company'].widget.attrs = {'class': 'select2 select2-hidden-accessible',
                                                'style': 'width: 100%;', 'data-select2-id': '7',
                                                'data-placeholder': 'Firma Seçiniz',}
-        self.fields['employee'].widget.attrs = {'class': 'select2 select2-hidden-accessible',
-                                                'style': 'width: 100%;', 'data-select2-id': '8',
-                                                'data-placeholder': 'Personel Seçiniz', }
+

@@ -31,3 +31,4 @@ from .CompanyFileNames import CompanyFileNames
 from .CompanyUser import CompanyUser
 from .CompanyFiles import CompanyFiles
 from .YekaPerson import YekaPerson
+from .YekaPersonHistory import YekaPersonHistory

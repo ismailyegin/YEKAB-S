@@ -174,7 +174,7 @@ def send_information(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
-
+@login_required
 def change_group_function(request, pk):
     perm = general_methods.control_access(request)
 

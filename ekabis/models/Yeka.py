@@ -20,5 +20,6 @@ class Yeka(BaseModel):
 
 
 
+
     def __str__(self):
         return '%s' % (self.definition)
