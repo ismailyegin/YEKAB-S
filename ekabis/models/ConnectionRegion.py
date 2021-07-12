@@ -9,7 +9,6 @@ class ConnectionRegion(BaseModel):
     value = models.IntegerField(null=False, blank=False, verbose_name='Miktar')
     unit = models.ForeignKey(ConnectionUnit, on_delete=models.DO_NOTHING, verbose_name='Birim', null=False, blank=False)
 
-
     def __str__(self):
         return '%s ' % self.name
 

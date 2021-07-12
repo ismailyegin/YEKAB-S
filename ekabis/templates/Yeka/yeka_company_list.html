@@ -24,7 +24,6 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -118,18 +117,20 @@
 
     {% endif %}
 
+
     <section class="content-header">
+
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        YEKA Listesi</h1>
+                        YEKA</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">YEKA</a></li>
-                        {#<li class="breadcrumb-item active">Advanced Form</li>#}
+                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
                     </ol>
                 </div>
             </div>
@@ -151,36 +152,63 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA LİSTESİ</h3>
+                            <h3 class="card-title">FİRMA LİSTESİ</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <table id="companies" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Firma</th>
+                                    <th>Sorumlu</th>
+                                    <th>Görevlendir</th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+
+                                {% for company in companies.all %}
+
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ company.name }}</td>
+                                        <td>{{ company.companyuser.user.first_name }} {{ company.companyuser.user.last_name }}</td>
+                                        <td>
+                                            <a onclick="yeka_company_assignment('{{ yeka_uuid }}','{{ company.uuid }}')"
+                                               type="button" class="btn btn-primary"><i
+                                                    class="fa fa-plus"></i> Görevlendir
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+
+
                         </div>
 
-                        {% for item in perm %}
-                            {% if item == 'add_yeka' %}
-                                <div class="card-header with-border">
-
-                                    <div class="btn-group">
-                                        <a href="{% url "ekabis:add_yeka" %}"
-                                           type="button" class="btn btn-success"><i
-                                                class="fa fa-edit"></i> Yeni YEKA Ekle
-                                        </a>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                        {% if parent_yekalar %}
+                        {% if yeka_companies %}
+                            <div class="card-header with-border">
+                                <h3 class="card-title">YEKA FİRMA LİSTESİ</h3>
+                            </div>
                             <div class="card-body">
 
-                                <table id="yeka" class="table table-bordered table-hover">
+                                <table id="yekacompanies" class="table table-bordered table-hover">
                                     <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Tanım</th>
-                                        <th>Tarih</th>
-                                        <th>Kapasite</th>
-                                        <th>Firmalar</th>
-                                        <th>Personeller</th>
-                                        <th>Güncelleme/Silme</th>
-                                        <th>Alt Yeka Ekle</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Unvan</th>
+                                        <th>İşlem</th>
 
                                     </tr>
                                     </thead>
@@ -188,78 +216,25 @@
                                     <tbody>
 
 
-                                    {% if parent_yekalar.all %}
-                                        {% for yeka in parent_yekalar %}
-                                            <tr>
-                                                <td>{{ forloop.counter }} </td>
-                                                <td>{{ yeka.definition }}</td>
-                                                <td>{{ yeka.date }}</td>
-                                                <td>{{ yeka.capacity }} {{ yeka.unit.name }}</td>
+                                    {% for yeka in yeka_companies %}
 
-                                                <td>
-                                                    {% for item in perm %}
-                                                        {% if item == 'view_yeka_company' %}
-                                                            <a href="{% url 'ekabis:view_yeka_company' yeka.uuid %}"
-                                                               type="button" class="btn btn-success"><i
-                                                                    class="fa fa-plus"></i> Firma Ata
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </td>
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ yeka.company.name }} </td>
+                                            <td>{{ yeka.company.companyuser.user.first_name }} {{ yeka.company.companyuser.user.last_name }}</td>
+                                            <td>
+                                                <a onclick="yeka_company_remove('{{ yeka.yeka.uuid }}','{{ yeka.company.uuid }}')"
+                                                   type="button" class="btn btn-danger"><i
+                                                        class="fa fa-times"></i> Yekadan Çıkar
+                                                </a>
 
-                                                <td>
-                                                    {% for item in perm %}
-                                                        {% if item == 'view_yeka_personel' %}
-                                                            <a href="{% url 'ekabis:view_yeka_personel' yeka.uuid %}"
-                                                               type="button" class="btn btn-success"><i
-                                                                    class="fa fa-plus"></i> Personel Ata
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
+                                            </td>
 
-                                                </td>
-                                                <td>
 
-                                                    <div class="btn-group">
-                                                        {% for item in perm %}
-                                                            {% if item == 'change_yeka' %}
-                                                                <a href="{% url 'ekabis:change_yeka' yeka.uuid %}"
-                                                                   type="button" class="btn btn-warning"><i
-                                                                        class="fa fa-edit"></i>Güncelle
-                                                                </a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </div>
+                                        </tr>
 
-                                                    <div class="btn-group">
-                                                        {% for item in perm %}
-                                                            {% if item == 'delete_yeka' %}
-                                                                <a class="btn btn-danger"
-                                                                   data-toggle="modal"
-                                                                   onclick=deleteYeka('{{ yeka.uuid }}')><i
-                                                                        class="fa fa-trash"></i>Sil</a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </div>
 
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        {% for item in perm %}
-                                                            {% if item == 'add_sub_yeka' %}
-                                                                <a href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}"
-                                                                   type="button" class="btn btn-primary"><i
-                                                                        class="fa fa-plus"></i> Alt Yeka Ekle
-                                                                </a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </div>
-                                                </td>
-
-                                            </tr>
-
-                                        {% endfor %}
-                                    {% endif %}
+                                    {% endfor %}
 
 
                                     </tbody>
@@ -267,6 +242,7 @@
 
 
                             </div>
+
                         {% endif %}
                     </div>
 
@@ -281,7 +257,7 @@
 
     <script>
         $(function () {
-            $('#yeka').DataTable({
+            $('#companies').DataTable({
                 dom: 'Bfrtip',
 
                 language: {
@@ -338,7 +314,7 @@
                         extend: 'excelHtml5',
                         title: 'Ekabis',
                         text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Firmalar',
+                        messageTop: 'Personeller',
                         {#footer: true,#}
                         exportOptions: {
                             {#     yer degisimi de yapilabilir.#}
@@ -369,61 +345,149 @@
                 'autoWidth': true,
                 'responsive': true,
             })
+            $('#yekacompanies').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+
+                    {#'copy',#}
+                    {#'csv',#}
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'YEKA Personelleri  ',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+                        titleAttr: 'Pfd Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Ekabis',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Yeka Firmaları',
+                        {#footer: true,#}
+                        exportOptions: {
+                            {#     yer degisimi de yapilabilir.#}
+                            columns: [0, 1, ':visible']
+
+                        },
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Firmalar.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+
+
         })
     </script>
 
     <script>
-        function deleteYeka(id) {
+
+
+        function yeka_company_assignment(yeka_id, company_id) {
             debugger;
-            console.log(id);
+            console.log(yeka_id);
             var html = ''
-            $("#modal-delete").on("shown.bs.modal", function (e) {
-                $("#btn-conf1").click(function () {
-                    $.ajax({
-                        url: "{% url "ekabis:delete_yeka" %}",
-                        type: "POST",
-                        data: {
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            uuid: id,
-                        },
-                        success: function (result) {
-                            if (result.status === 'Fail') {
+
+            $.ajax({
+                url: "{% url "ekabis:yeka_company_assignment" %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    yeka_uuid: yeka_id,
+                    company_uuid: company_id
+                },
+                success: function (result) {
+                    let url = '{% url 'ekabis:view_yeka_company' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
+                    url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_id)
+                    window.location.replace(url);
 
 
-                                html = result.msg;
-                                debugger;
-                                $(".errorModal").html(html);
-                                $('#modal-error').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:view_yeka" %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-                            } else {
-                                html = 'YEKA Başarıyla Silindi';
-                                $(".successModal").html(html);
-                                $('#modal-success').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:view_yeka" %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-
-                            }
-
-                        }
-                    });
-                });
-            }).modal('show');
-            $('#btn-close1').click(function () {
-                $('#modal-active').modal('hide');
+                }
             });
+
+
+        }
+
+        function yeka_company_remove(yeka_uuid, company_uuid) {
+            debugger;
+
+            $.ajax({
+                url: "{% url "ekabis:company_remove_yeka" %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+                    uuid: company_uuid,
+                    yeka_uuid: yeka_uuid
+                },
+                success: function (result) {
+
+                      let url = '{% url 'ekabis:view_yeka_company' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
+                    url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_uuid)
+                    window.location.replace(url);
+
+
+                }
+            });
+
 
         }
     </script>

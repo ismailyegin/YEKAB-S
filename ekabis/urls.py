@@ -117,11 +117,18 @@ urlpatterns = [
     path('baglanti/kapasite-sil/', ConnectionRegionViews.delete_capacity, name='delete_capacity'),
 
     # Yeka
-    path('yeka/yeka-ekle/', YekaViews.return_yeka, name='view_yeka'),
+    path('yeka/yeka-ekle/', YekaViews.add_yeka, name='add_yeka'),
+    path('yeka/yekalar/', YekaViews.return_yeka, name='view_yeka'),
+
     path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
-    path('yeka/yeka-personeller/<uuid:uuid>', YekaViews.yekaPerson_List, name='view_yeka_personel'),
+    path('yeka/yeka-personeller/<uuid:uuid>', YekaViews.yeka_person_list, name='view_yeka_personel'),
+    path('yeka/yeka-personel-ata/', YekaViews.yeka_person_assignment, name='yeka_person_assignment'),
+    path('yeka/yeka-personel-sil/', YekaViews.yeka_person_remove, name='yeka_person_remove'),
+    path('yeka/yeka-firmalar/<uuid:uuid>', YekaViews.yeka_company_list, name='view_yeka_company'),
+    path('yeka/yeka-firma-ata/', YekaViews.yeka_company_assignment, name='yeka_company_assignment'),
+    path('remove-yeka-company/', YekaViews.yeka_company_remove, name='company_remove_yeka'),
 
     # yekabusiness
     path('isBlogu/isBlogu-listesi/', BusinessBlogViews.view_businessBlog, name='view_businessBlog'),

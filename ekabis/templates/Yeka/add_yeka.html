@@ -2,11 +2,6 @@
 
 {% block content %}
 
-
-
-
-
-
     <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -28,7 +23,6 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
 
     <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
@@ -52,7 +46,6 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
 
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
@@ -125,20 +118,18 @@
 
     {% endif %}
 
-
     <section class="content-header">
-
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        YEKA Güncelleme</h1>
+                        YEKA Listesi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">YEKA</a></li>
-                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        {#<li class="breadcrumb-item active">Advanced Form</li>#}
                     </ol>
                 </div>
             </div>
@@ -160,7 +151,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA Güncelleme</h3>
+                            <h3 class="card-title">YEKA LİSTESİ</h3>
                         </div>
 
                         <div class="card-body">
@@ -180,29 +171,13 @@
                                         <label id="label_date"></label>
 
                                     </div>
-
                                     <div class="form-group">
-
-
-                                            <div class="col-md-12">
-                                                    <label> Bağlantı Bölgeleri</label>
-
-                                                    <select class="select2 select2-hidden-accessible" multiple=""
-                                                            data-placeholder="Select a State"
-                                                            data-dropdown-css-class="select2-purple"
-                                                            style="width: 100%;" id="region" name="region"
-                                                            data-select2-id="15" tabindex="-1" aria-hidden="true">
-                                                        {% for region in yeka_connections %}
-                                                            <option selected
-                                                                    data-select2-id="{{ region.connectionRegion.uuid }}" value="{{ region.connectionRegion.uuid }}">{{ region.connectionRegion.name }}</option>
-
-                                                        {% endfor %}
-
-                                                    </select>
-                                            </div>
-
+                                        <label> Bağlantı Bölgesi </label>
+                                        {{ yeka_connection_form.connectionRegion }}
+                                        <label id="label_date"></label>
 
                                     </div>
+
 
                                 </div>
                                 <!-- /.card-body -->
@@ -224,7 +199,98 @@
 
     </section>
 
+    <script>
+        $(function () {
+            $('#yeka').DataTable({
+                dom: 'Bfrtip',
 
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+
+                    {#'copy',#}
+                    {#'csv',#}
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Firmalar  ',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+                        titleAttr: 'Pfd Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Ekabis',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Firmalar',
+                        {#footer: true,#}
+                        exportOptions: {
+                            {#     yer degisimi de yapilabilir.#}
+                            columns: [0, 1, ':visible']
+
+                        },
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Firmalar.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+        })
+    </script>
 
     <script>
         $(document).ready(function () {
@@ -234,6 +300,14 @@
             {% endif %}
         });
     </script>
-
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+        });
+    </script>
 {% endblock %}
 

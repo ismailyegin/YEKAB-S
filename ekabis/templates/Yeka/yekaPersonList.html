@@ -152,17 +152,17 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA PERSONEL LİSTESİ</h3>
+                            <h3 class="card-title">PERSONEL LİSTESİ</h3>
                         </div>
-
                         <div class="card-body">
 
-                            <table id="yekapersons" class="table table-bordered table-hover">
+                            <table id="persons" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>Ad Soyad</th>
                                     <th>Unvan</th>
+                                    <th>Görevlendir</th>
 
                                 </tr>
                                 </thead>
@@ -170,13 +170,19 @@
                                 <tbody>
 
 
-                                {% for employee in yeka.employee.all %}
+                                {% for employee in persons.all %}
 
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
                                         <td>{{ employee.workDefinition }}</td>
+                                        <td>
+                                            <a onclick="yeka_person_assignment('{{ yeka_uuid }}','{{ employee.uuid }}')"
+                                               type="button" class="btn btn-primary"><i
+                                                    class="fa fa-plus"></i> Görevlendir
+                                            </a>
 
+                                        </td>
 
                                     </tr>
 
@@ -190,6 +196,58 @@
 
                         </div>
 
+                        {% if yeka_persons %}
+                            <div class="card-header with-border">
+                                <h3 class="card-title">YEKA PERSONEL LİSTESİ</h3>
+                            </div>
+                            <div class="card-body">
+
+                                <table id="yekapersons" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Unvan</th>
+                                        <th>İşlem</th>
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+
+                                    {% for yeka in yeka_persons %}
+
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ yeka.employee.user.first_name }} {{ yeka.employee.user.last_name }}</td>
+                                            <td>{{ yeka.employee.workDefinition }}</td>
+                                            <td>
+                                                {% for item in perm %}
+                                                    {% if item == 'yeka_person_remove' %}
+                                                        <a onclick="yeka_person_remove('{{ yeka.employee.uuid }}','{{ yeka.uuid }}')"
+                                                           type="button" class="btn btn-danger"><i
+                                                                class="fa fa-times"></i> Yekadan Çıkar
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                            </td>
+
+
+                                        </tr>
+
+
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+
+                        {% endif %}
                     </div>
 
 
@@ -203,6 +261,94 @@
 
     <script>
         $(function () {
+            $('#persons').DataTable({
+                dom: 'Bfrtip',
+
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                buttons: [
+
+                    {#'copy',#}
+                    {#'csv',#}
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: '<i class=" fa  fa-th-list"></i>',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Personeller  ',
+                        text: '<i class="fa  fa-print"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        exportOptions: {
+                            columns: [0, 1, ':visible']
+                        },
+                        titleAttr: 'Pfd Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Ekabis',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        messageTop: 'Personeller',
+                        {#footer: true,#}
+                        exportOptions: {
+                            {#     yer degisimi de yapilabilir.#}
+                            columns: [0, 1, ':visible']
+
+                        },
+                        titleAttr: 'Excel Kaydet'
+                    },
+                    {
+                        text: '<i class="fa fa-file-text-o"></i>',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Firmalar.json'
+                            );
+                        }
+                    }
+
+
+                ],
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
             $('#yekapersons').DataTable({
                 dom: 'Bfrtip',
 
@@ -239,7 +385,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar  ',
+                        title: 'YEKA Personelleri  ',
                         text: '<i class="fa  fa-print"></i>',
                         exportOptions: {
                             columns: [0, 1, ':visible']
@@ -260,7 +406,7 @@
                         extend: 'excelHtml5',
                         title: 'Ekabis',
                         text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Firmalar',
+                        messageTop: 'Yeka Personelleri',
                         {#footer: true,#}
                         exportOptions: {
                             {#     yer degisimi de yapilabilir.#}
@@ -292,61 +438,56 @@
                 'responsive': true,
             })
 
+
         })
     </script>
 
     <script>
-        function deleteYeka(id) {
+
+        function yeka_person_assignment(yeka_id, person_id) {
             debugger;
-            console.log(id);
+            console.log(yeka_id);
             var html = ''
-            $("#modal-delete").on("shown.bs.modal", function (e) {
-                $("#btn-conf1").click(function () {
-                    $.ajax({
-                        url: "{% url "ekabis:delete_yeka" %}",
-                        type: "POST",
-                        data: {
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            uuid: id,
-                        },
-                        success: function (result) {
-                            if (result.status === 'Fail') {
+
+            $.ajax({
+                url: "{% url "ekabis:yeka_person_assignment" %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    yeka_uuid: yeka_id,
+                    person_uuid: person_id
+                },
+                success: function (result) {
+
+                    window.location.replace("{% url "ekabis:view_yeka" %}");
 
 
-                                html = result.msg;
-                                debugger;
-                                $(".errorModal").html(html);
-                                $('#modal-error').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:view_yeka" %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-                            } else {
-                                html = 'YEKA Başarıyla Silindi';
-                                $(".successModal").html(html);
-                                $('#modal-success').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:view_yeka" %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-
-                            }
-
-                        }
-                    });
-                });
-            }).modal('show');
-            $('#btn-close1').click(function () {
-                $('#modal-active').modal('hide');
+                }
             });
+
+
+        }
+
+        function yeka_person_remove(person_id, yeka_uuid) {
+            debugger;
+
+            $.ajax({
+                url: "{% url "ekabis:yeka_person_remove" %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+                    uuid: person_id,
+                    yeka_uuid: yeka_uuid
+                },
+                success: function (result) {
+
+                    window.location.replace("{% url "ekabis:view_yeka" %}");
+
+
+                }
+            });
+
 
         }
     </script>
