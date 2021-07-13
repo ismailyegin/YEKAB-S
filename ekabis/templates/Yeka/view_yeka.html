@@ -58,7 +58,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Bölgeyi Silmek istediğinizden emin misiniz ?</p>
+                    <p>Yekayı Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -179,7 +179,7 @@
                                         <th>Kapasite</th>
                                         <th>Firmalar/Personeller</th>
                                         <th>Güncelleme/Silme</th>
-                                        <th>Alt Yeka Ekle</th>
+                                        <th>Alt Yekalar</th>
                                         <th>Zaman Çizelgesi</th>
 
                                     </tr>
@@ -251,9 +251,9 @@
                                                     <div class="btn-group">
                                                         {% for item in perm %}
                                                             {% if item == 'add_sub_yeka' %}
-                                                                <a href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}"
+                                                                <a href="{% url 'ekabis:view_sub_yeka' yeka.uuid %}"
                                                                    type="button" class="btn btn-primary"><i
-                                                                        class="fa fa-plus"></i> Alt Yeka Ekle
+                                                                        class="fa fa-plus"></i> Alt Yekalar
                                                                 </a>
                                                             {% endif %}
                                                         {% endfor %}

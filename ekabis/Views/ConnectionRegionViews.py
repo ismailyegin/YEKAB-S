@@ -319,7 +319,7 @@ def update_capacity(request, uuid):
         'uuid': uuid
     }
 
-    region_uuid = ConnectionCapacity.objects.get(uuid=uuid).uuid
+    region_uuid = ConnectionCapacity.objects.get(uuid=uuid)
 
     capacity = CapacityService(request, capacityfilter).first()
     capacity_form = ConnectionCapacityForm(request.POST or None, instance=capacity)
@@ -338,7 +338,7 @@ def update_capacity(request, uuid):
 
                     if len(region_capacities) > 1:
                         total = 0
-                        for capacity in region_capacities:
+                        for capacity in region_capacities.exclude(uuid=uuid):
                             total = total + capacity.value
                         total_capacity = total + capacity_value
                     else:

@@ -11,7 +11,8 @@ from django.shortcuts import redirect, render
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
-from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion
+from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, ConnectionCapacity, \
+    SubYekaCapacity
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaCompany import YekaCompany
@@ -23,7 +24,6 @@ from ekabis.models.YekaPersonHistory import YekaPersonHistory
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaService
-from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 
 
 @login_required
@@ -57,17 +57,18 @@ def add_yeka(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    yeka_form = YekaForm()
-    yeka_connection_form = YekaConnectionRegionForm()
 
     try:
         with transaction.atomic():
+            yeka_form = YekaForm()
+            yeka_connection_form = YekaConnectionRegionForm()
+
             if request.method == 'POST':
 
                 yeka_form = YekaForm(request.POST)
                 yeka_connection_form = YekaConnectionRegionForm(request.POST)
 
-                if yeka_form.is_valid() and yeka_connection_form.is_valid():
+                if yeka_form.is_valid() & yeka_connection_form.is_valid():
                     yeka = Yeka(definition=yeka_form.cleaned_data['definition'], date=yeka_form.cleaned_data['date'])
                     yeka.save()
 
@@ -101,6 +102,32 @@ def add_yeka(request):
             return render(request, 'Yeka/add_yeka.html',
                           {'yeka_form': yeka_form, 'error_messages': '', 'yeka_connection_form': yeka_connection_form})
 
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+@login_required
+def return_sub_yeka(request, uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    yeka = Yeka.objects.get(uuid=uuid)
+    alt_yekalar = Yeka.objects.filter(yekaParent=yeka, isDeleted=False)
+    yekalar = dict()
+    sub_yekalar = []
+    for alt_yeka in alt_yekalar:
+        capacities = SubYekaCapacity.objects.filter(yeka=alt_yeka)
+        yekalar['yeka'] = alt_yeka
+        yekalar['capacities'] = capacities
+        sub_yekalar.append(yekalar)
+
+    try:
+        return render(request, 'Yeka/view_sub_yeka.html',
+                      {'alt_yekalar': sub_yekalar, 'yeka': uuid, })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -168,16 +195,37 @@ def update_yeka(request, uuid):
                     current = []
                     for region in new_regions:
                         current.append(ConnectionRegion.objects.get(uuid=region))
-
+                    capacity = 0
                     for region in current:
+                        capacity = capacity + region.value
                         if not region in yeka_regions:
                             new = YekaConnectionRegion(yeka=yeka, connectionRegion=region)
                             new.save()
 
+                    sub_yeka = Yeka.objects.filter(Q(yekaParent=yeka) & Q(isDeleted=False))
+                    if sub_yeka:
+                        sub_capacity = 0
+                        for sub in sub_yeka:
+                            sub_capacity = sub_capacity + sub.capacity
+                        if capacity >= sub_capacity:
+                            yeka.capacity = capacity
+                            yeka.save()
+                        else:
+                            error_message_unit = get_error_messages(yeka_form)
+                            return render(request, 'Yeka/change_yeka.html',
+                                          {'yeka_form': yeka_form, 'error_messages': error_message_unit,
+                                           'yeka_connections': yeka_regions, 'connection_regions': connection_regions
+                                           })
+
+                    else:
+                        yeka.capacity = capacity
+                        yeka.save()
+
                     delete_yeka = list(set(yeka_regions) - set(current))
 
-                    for yeka in delete_yeka:
-                        delete = YekaConnectionRegion.objects.get(connectionRegion__uuid=yeka.uuid)
+                    for delete_yeka in delete_yeka:
+                        delete = YekaConnectionRegion.objects.get(
+                            Q(connectionRegion__uuid=delete_yeka.uuid) & Q(yeka=yeka))
                         delete.delete()
 
                     messages.success(request, 'Yeka Başarıyla Güncellendi')
@@ -204,44 +252,145 @@ def alt_yeka_ekle(request, uuid):
     yeka_form = YekaForm()
     yeka = Yeka.objects.get(uuid=uuid)
     alt_yekalar = Yeka.objects.filter(yekaParent=yeka, isDeleted=False)
+    yeka_connection = YekaConnectionRegion.objects.get(yeka=yeka)
+    yeka_connection_capacities = ConnectionCapacity.objects.filter(isDeleted=False,
+                                                                   connection_region=yeka_connection.connectionRegion)
 
     try:
         with transaction.atomic():
             if request.method == 'POST':
 
                 yeka_form = YekaForm(request.POST)
+                yeka_connection_form = YekaConnectionRegionForm(request.POST)
 
                 if yeka_form.is_valid():
+                    total_capacity = 0
+                    array_capacity = []
+                    for region_capacity in request.POST.getlist('region_capacity'):
+                        capacity = ConnectionCapacity.objects.get(uuid=region_capacity)
+                        array_capacity.append(capacity)
+                        total_capacity = total_capacity + capacity.value
 
-                    # form_capacity = int(yeka_form.cleaned_data['capacity'])
-                    # total_capacity = 0
-                    # if alt_yekalar:
-                    #
-                    #     for yeka in alt_yekalar:
-                    #         total_capacity = total_capacity + yeka.capacity
-                    #
-                    # if yeka.capacity >= total_capacity + form_capacity:
-                    new_yeka = Yeka(definition=yeka_form.cleaned_data['definition'],
-                                    date=yeka_form.cleaned_data['date']
-                                    )
-                    new_yeka.save()
-                    new_yeka.yekaParent = yeka
-                    new_yeka.save()
+                    if yeka.capacity >= total_capacity:
+                        new_yeka = Yeka(definition=yeka_form.cleaned_data['definition'],
+                                        date=yeka_form.cleaned_data['date']
+                                        )
+                        new_yeka.save()
+                        new_yeka.yekaParent = yeka
+                        new_yeka.business = yeka.business
+                        new_yeka.save()
+
+                        for new_capacity in array_capacity:
+                            yeka_region_capacity = SubYekaCapacity(yeka=new_yeka, capacity=new_capacity)
+                            yeka_region_capacity.save()
+
+                        new_yeka.capacity = total_capacity
+                        new_yeka.unit = array_capacity[0].unit
+                        new_yeka.save()
+                    else:
+                        messages.warning(request,
+                                         'Alt Yeka Toplam Kapasitesi Üst Yeka Toplam Kapasitesinden Büyük Olamaz.')
+                        return render(request, 'Yeka/add_sub_yeka.html',
+                                      {'yeka_form': yeka_form, 'error_messages': '', 'alt_yekalar': alt_yekalar,
+                                       'yeka_connection_capacity': yeka_connection_capacities, 'yeka': uuid
+                                       })
 
                     log = "Alt Yeka eklendi"
                     log = general_methods.logwrite(request, request.user, log)
-                    messages.success(request, 'Yeka Başarıyla Kayıt Edilmiştir.')
+                    messages.success(request, 'Alt Yeka Başarıyla Kayıt Edilmiştir.')
                     return redirect('ekabis:view_yeka')
 
                 else:
                     error_message_unit = get_error_messages(yeka_form)
                     return render(request, 'Yeka/add_sub_yeka.html',
                                   {'yeka_form': yeka_form, 'error_messages': error_message_unit,
-                                   'alt_yekalar': alt_yekalar
+                                   'alt_yekalar': alt_yekalar, 'yeka_connection_capacity': yeka_connection_capacities,
+                                   'yeka': uuid
                                    })
 
             return render(request, 'Yeka/add_sub_yeka.html',
-                          {'yeka_form': yeka_form, 'error_messages': '', 'alt_yekalar': alt_yekalar
+                          {'yeka_form': yeka_form, 'error_messages': '', 'alt_yekalar': alt_yekalar,
+                           'yeka_connection_capacity': yeka_connection_capacities, 'yeka': uuid
+                           })
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+@login_required
+def update_sub_yeka(request, uuid):
+    yeka = Yeka.objects.get(uuid=uuid)
+    alt_yekalar = Yeka.objects.filter(yekaParent=yeka, isDeleted=False)
+    yeka_connection = YekaConnectionRegion.objects.get(yeka=yeka.yekaParent)
+    yeka_connection_capacities = ConnectionCapacity.objects.filter(isDeleted=False,
+                                                                   connection_region=yeka_connection.connectionRegion)
+    yeka_form = YekaForm(request.POST or None, instance=yeka)
+    current_capacities = SubYekaCapacity.objects.filter(yeka=yeka, isDeleted=False)
+    sub_capacities = []
+    for sub in current_capacities:
+        sub_capacities.append(sub.capacity)
+    try:
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+
+                if yeka_form.is_valid():
+                    total_capacity = 0
+                    array_capacity = []
+                    for region_capacity in request.POST.getlist('region_capacity'):
+                        capacity = ConnectionCapacity.objects.get(uuid=region_capacity)
+                        array_capacity.append(capacity)
+                        total_capacity = total_capacity + capacity.value
+
+                    if yeka.capacity >= total_capacity:
+                        yeka.definition = yeka_form.cleaned_data['definition']
+                        yeka.date = yeka_form.cleaned_data['date']
+                        yeka.save()
+
+                        for new_capacity in array_capacity:
+                            if not new_capacity in sub_capacities:
+                                yeka_region_capacity = SubYekaCapacity(yeka=yeka, capacity=new_capacity)
+                                yeka_region_capacity.save()
+
+                        yeka.capacity = total_capacity
+                        yeka.unit = array_capacity[0].unit
+                        yeka.save()
+
+                        delete_yeka = list(set(array_capacity) - set(current_capacities))
+
+                        for delete_yeka in delete_yeka:
+                            delete = SubYekaCapacity.objects.get(
+                                Q(capacity__uuid=delete_yeka.uuid) & Q(yeka=yeka))
+                            delete.delete()
+                    else:
+                        messages.warning(request,
+                                         'Alt Yeka Toplam Kapasitesi Üst Yeka Toplam Kapasitesinden Büyük Olamaz.')
+                        return render(request, 'Yeka/update_sub_yeka.html',
+                                      {'yeka_form': yeka_form, 'error_messages': '', 'alt_yekalar': alt_yekalar,
+                                       'yeka_connection_capacity': yeka_connection_capacities, 'yeka': uuid,
+                                       'current_capacities': sub_capacities
+                                       })
+
+                    log = "Alt Yeka güncellendi"
+                    log = general_methods.logwrite(request, request.user, log)
+                    messages.success(request, 'Alt Yeka Başarıyla Kayıt Edilmiştir.')
+                    return redirect('ekabis:view_yeka')
+
+                else:
+                    error_message_unit = get_error_messages(yeka_form)
+                    return render(request, 'Yeka/update_sub_yeka.html',
+                                  {'yeka_form': yeka_form, 'error_messages': error_message_unit,
+                                   'alt_yekalar': alt_yekalar, 'yeka_connection_capacity': yeka_connection_capacities,
+                                   'yeka': uuid, 'current_capacities': sub_capacities
+                                   })
+
+            return render(request, 'Yeka/update_sub_yeka.html',
+                          {'yeka_form': yeka_form, 'error_messages': '', 'alt_yekalar': alt_yekalar,
+                           'yeka_connection_capacity': yeka_connection_capacities, 'yeka': uuid,
+                           'current_capacities': sub_capacities
                            })
 
     except Exception as e:

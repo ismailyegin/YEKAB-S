@@ -128,7 +128,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        ALT YEKA EKLE</h1>
+                        ALT YEKA GÜNCELLE</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -155,7 +155,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">ALT YEKA EKLE</h3>
+                            <h3 class="card-title">ALT YEKA GÜNCELLE</h3>
                         </div>
 
                         <div class="card-body">
@@ -185,11 +185,14 @@
                                                     data-dropdown-css-class="select2-purple"
                                                     style="width: 100%;" id="region_capacity" name="region_capacity"
                                                     data-select2-id="15" tabindex="-1" aria-hidden="true">
-                                                {% for capacity in yeka_connection_capacity %}
-
-                                                        <option  data-select2-id="{{ capacity.uuid }}"
+                                               {% for capacity in yeka_connection_capacity %}
+                                                    {% if capacity in current_capacities %}
+                                                        <option selected data-select2-id="{{ capacity.uuid }}"
                                                                 value="{{ capacity.uuid }}">{{ capacity.name }}</option>
-
+                                                    {% else %}
+                                                        <option data-select2-id="{{ capacity.uuid }}"
+                                                                value="{{ capacity.uuid }}">{{ capacity.name }}</option>
+                                                    {% endif %}
                                                 {% endfor %}
 
 
@@ -218,155 +221,9 @@
 
     </section>
 
-    <script>
-        $(function () {
-            $('#yeka').DataTable({
-                dom: 'Bfrtip',
-
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
-
-                lengthMenu: [
-                    [10, 25, 50, 100, -1],
-                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
-                ],
-
-                buttons: [
-
-                    {#'copy',#}
-                    {#'csv',#}
-
-                    {
-                        extend: "pageLength",
-                    },
 
 
-                    {
-                        extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
-                        titleAttr: 'Ekle Çıkar'
 
-
-                    },
-                    {
-                        extend: 'print',
-                        title: 'Firmalar  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Yazdır'
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
-                    },
-
-                    {
-                        extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Firmalar',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
-                        titleAttr: 'Excel Kaydet'
-                    },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Firmalar.json'
-                            );
-                        }
-                    }
-
-
-                ],
-                'paging': true,
-                'lengthChange': true,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': true,
-                'responsive': true,
-            })
-
-        })
-    </script>
-
-    <script>
-        function deleteYeka(id) {
-            debugger;
-            console.log(id);
-            var html = ''
-            $("#modal-delete").on("shown.bs.modal", function (e) {
-                $("#btn-conf1").click(function () {
-                    $.ajax({
-                        url: "{% url "ekabis:delete_yeka" %}",
-                        type: "POST",
-                        data: {
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            uuid: id,
-                        },
-                        success: function (result) {
-                            if (result.status === 'Fail') {
-
-
-                                html = result.msg;
-                                debugger;
-                                $(".errorModal").html(html);
-                                $('#modal-error').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:view_yeka" %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-                            } else {
-                                html = 'YEKA Başarıyla Silindi';
-                                $(".successModal").html(html);
-                                $('#modal-success').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:view_yeka" %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-
-                            }
-
-                        }
-                    });
-                });
-            }).modal('show');
-            $('#btn-close1').click(function () {
-                $('#modal-active').modal('hide');
-            });
-
-        }
-    </script>
 
     <script>
         $(document).ready(function () {

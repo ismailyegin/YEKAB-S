@@ -134,6 +134,9 @@ urlpatterns = [
     path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<int:yekabusiness>/<int:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
 
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
+    path('yeka/alt-yekalar/<uuid:uuid>', YekaViews.return_sub_yeka, name='view_sub_yeka'),
+    path('yeka/alt-yeka-guncelle/<uuid:uuid>', YekaViews.update_sub_yeka, name='change_sub_yeka'),
+
     path('yeka/yeka-personeller/<uuid:uuid>', YekaViews.yeka_person_list, name='view_yeka_personel'),
     path('yeka/yeka-personel-ata/', YekaViews.yeka_person_assignment, name='yeka_person_assignment'),
     path('yeka/yeka-personel-sil/', YekaViews.yeka_person_remove, name='yeka_person_remove'),
