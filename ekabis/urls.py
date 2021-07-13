@@ -123,10 +123,8 @@ urlpatterns = [
     # Yeka
 
     path('yeka/yeka-ekle/', YekaViews.add_yeka, name='add_yeka'),
-    path('yeka/yekalar/', YekaViews.return_yeka, name='view_yeka'),
 
-
-    path('yeka/yeka-listesi/', YekaViews.view_yeka, name='view_yeka'),  
+    path('yeka/yeka-listesi/', YekaViews.return_yeka, name='view_yeka'),
 
     path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
@@ -142,7 +140,7 @@ urlpatterns = [
     path('yeka/yeka-firmalar/<uuid:uuid>', YekaViews.yeka_company_list, name='view_yeka_company'),
     path('yeka/yeka-firma-ata/', YekaViews.yeka_company_assignment, name='yeka_company_assignment'),
     path('remove-yeka-company/', YekaViews.yeka_company_remove, name='company_remove_yeka'),
-    path('yeka/personel-cikar/', YekaViews.yekaPerson_remove, name='yeka-personel-kaldir'),
+    path('yeka/personel-cikar/', YekaViews.yeka_person_remove, name='yeka-personel-kaldir'),
 
 
     # yekabusiness
