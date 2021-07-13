@@ -34,4 +34,11 @@ from .YekaPerson import YekaPerson
 from .YekaPersonHistory import YekaPersonHistory
 from .YekaCompany import YekaCompany
 from .YekaCompanyHistory import YekaCompanyHistory
-
+from .YekaBussiness import YekaBusiness
+from .YekaBusinessBlog import YekaBusinessBlog
+from .YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
+from .BusinessBlog import BusinessBlog
+from .BusinessBlogParametreType import BusinessBlogParametreType
+from .Calendar import Calendar
+from .CalendarName import CalendarName
+from .ExtraTime import ExtraTime

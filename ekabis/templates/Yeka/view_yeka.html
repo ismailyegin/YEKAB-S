@@ -177,10 +177,10 @@
                                         <th>Tanım</th>
                                         <th>Tarih</th>
                                         <th>Kapasite</th>
-                                        <th>Firmalar</th>
-                                        <th>Personeller</th>
+                                        <th>Firmalar/Personeller</th>
                                         <th>Güncelleme/Silme</th>
                                         <th>Alt Yeka Ekle</th>
+                                        <th>Zaman Çizelgesi</th>
 
                                     </tr>
                                     </thead>
@@ -199,25 +199,29 @@
                                                 <td>
                                                     {% for item in perm %}
                                                         {% if item == 'view_yeka_company' %}
-                                                            <a href="{% url 'ekabis:view_yeka_company' yeka.uuid %}"
-                                                               type="button" class="btn btn-success"><i
-                                                                    class="fa fa-plus"></i> Firma Ata
-                                                            </a>
+                                                            <div class="btn-group">
+
+                                                                <a href="{% url 'ekabis:view_yeka_company' yeka.uuid %}"
+                                                                   type="button" class="btn btn-success"><i
+                                                                        class="fa fa-plus"></i> Firma Ata
+                                                                </a></div>
                                                         {% endif %}
                                                     {% endfor %}
-                                                </td>
 
-                                                <td>
                                                     {% for item in perm %}
                                                         {% if item == 'view_yeka_personel' %}
-                                                            <a href="{% url 'ekabis:view_yeka_personel' yeka.uuid %}"
-                                                               type="button" class="btn btn-success"><i
-                                                                    class="fa fa-plus"></i> Personel Ata
-                                                            </a>
+                                                            <div class="btn-group">
+
+                                                                <a href="{% url 'ekabis:view_yeka_personel' yeka.uuid %}"
+                                                                   type="button" class="btn btn-success"><i
+                                                                        class="fa fa-plus"></i> Personel Ata
+                                                                </a>
+                                                            </div>
                                                         {% endif %}
                                                     {% endfor %}
-
                                                 </td>
+
+
                                                 <td>
 
                                                     <div class="btn-group">
@@ -250,6 +254,18 @@
                                                                 <a href="{% url 'ekabis:add_sub_yeka' yeka.uuid %}"
                                                                    type="button" class="btn btn-primary"><i
                                                                         class="fa fa-plus"></i> Alt Yeka Ekle
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        {% for item in perm %}
+                                                            {% if item == 'view_yekabusinessBlog' %}
+                                                                <a href="{% url 'ekabis:view_yekabusinessBlog' yeka.uuid %}"
+                                                                   type="button" class="btn btn-primary"><i
+                                                                        class="fa fa-calendar-times"></i> Zaman Çizelgesi
                                                                 </a>
                                                             {% endif %}
                                                         {% endfor %}

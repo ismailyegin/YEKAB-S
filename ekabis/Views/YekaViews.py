@@ -8,9 +8,12 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
+from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion
+from ekabis.models.BusinessBlog import BusinessBlog
+from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaCompany import YekaCompany
 from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.Employee import Employee
@@ -168,7 +171,7 @@ def update_yeka(request, uuid):
 
                     for region in current:
                         if not region in yeka_regions:
-                            new = YekaConnectionRegion(yeka=yeka,connectionRegion=region)
+                            new = YekaConnectionRegion(yeka=yeka, connectionRegion=region)
                             new.save()
 
                     delete_yeka = list(set(yeka_regions) - set(current))
@@ -410,3 +413,58 @@ def yeka_company_remove(request):
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
+
+@login_required()
+def view_yekabusinessBlog(request, uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        yeka = Yeka.objects.get(uuid=uuid)
+        yekabusinessbloks = None
+        if yeka.business:
+            yekabusiness = yeka.business
+            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+        return render(request, 'Yeka/timeline.html',
+                      {'yekabusinessbloks': yekabusinessbloks,
+                       'yeka': yeka,
+                       })
+
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+@login_required()
+def change_yekabusinessBlog(request, yeka, yekabusiness, business):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        yeka = Yeka.objects.get(uuid=yeka)
+        yekabussiness = YekaBusinessBlog.objects.get(pk=yekabusiness)
+        business = BusinessBlog.objects.get(pk=business)
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, request.POST or None, instance=yekabussiness)
+        for item in yekabussiness.paremetre.all():
+            yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+        if request.POST:
+            if yekaBusinessBlogo_form.is_valid():
+                yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
+                return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
+        return render(request, 'Yeka/YekabussinesBlogUpdate.html',
+                      {
+                          'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
+                          'yeka': yeka
+                      })
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
