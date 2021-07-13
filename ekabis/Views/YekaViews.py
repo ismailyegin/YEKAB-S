@@ -11,7 +11,7 @@ from django.shortcuts import redirect, render
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
-from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion
+from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, ExtraTime
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaCompany import YekaCompany
@@ -424,13 +424,16 @@ def view_yekabusinessBlog(request, uuid):
 
     try:
         yeka = Yeka.objects.get(uuid=uuid)
+        ekstratimes=ExtraTime.objects.filter(yeka=yeka)
         yekabusinessbloks = None
+        ekstratimes=ExtraTime.objects.filter(yeka=yeka)
         if yeka.business:
             yekabusiness = yeka.business
             yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
         return render(request, 'Yeka/timeline.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
+                       'ekstratimes':ekstratimes
                        })
 
     except Exception as e:
@@ -449,8 +452,8 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
 
     try:
         yeka = Yeka.objects.get(uuid=yeka)
-        yekabussiness = YekaBusinessBlog.objects.get(pk=yekabusiness)
-        business = BusinessBlog.objects.get(pk=business)
+        yekabussiness = YekaBusinessBlog.objects.get(uuid=yekabusiness)
+        business = BusinessBlog.objects.get(uuid=business)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, request.POST or None, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
             yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value

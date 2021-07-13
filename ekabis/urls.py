@@ -1,6 +1,6 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews
+    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews,ExtraTimeViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -131,7 +131,8 @@ urlpatterns = [
 
     #yekabusinessBlog
     path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
-    path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<int:yekabusiness>/<int:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
+    path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<uuid:yekabusiness>/<uuid:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
+
 
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
     path('yeka/yeka-personeller/<uuid:uuid>', YekaViews.yeka_person_list, name='view_yeka_personel'),
@@ -161,4 +162,11 @@ urlpatterns = [
          BusinessBlogViews.change_businessBlogParametre,
          name='change_businessBlogParametre'),
     path('isBlogu/parametre-sil/', BusinessBlogViews.delete_businessBlogParametre, name='delete_businessBlogParametre'),
+
+    # Ek zaman
+    path('yeka/ekstra/zaman-listesi/', ExtraTimeViews.return_list_extra_time, name='view_extratime'),
+    path('yeka/ekstra/zaman-ekle/<uuid:yeka>/<uuid:businessblog>/', ExtraTimeViews.return_add_extra_time, name='add_extratime'),
+    path('yeka/ekstra/zaman-guncelle/<uuid:uuid>/', ExtraTimeViews.return_update_extra_time, name='change_extratime'),
+    path('yeka/ekstra/zaman-sil/', ExtraTimeViews.delete_extra_time, name='delete_extratime'),
+
 ]

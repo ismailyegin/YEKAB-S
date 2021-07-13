@@ -198,11 +198,13 @@
                                     <div>
                                         <i class="fas fa-user bg-blue"></i>
                                         <div class="timeline-item">
-                                            <span class="time dropdown-toggle" data-toggle="dropdown">işlemler</span>
+                                            <span class="time dropdown-toggle" data-toggle="dropdown">İşlemler</span>
                                             <div class="dropdown-menu" role="menu" style="">
-                                                <a class="dropdown-item" href="{% url 'ekabis:change_yekabusinessBlog' yeka.uuid  yekabusinessblok.pk  yekabusinessblok.businessblog.pk %}">İncele</a>
+                                                <a class="dropdown-item"
+                                                   href="{% url 'ekabis:change_yekabusinessBlog' yeka.uuid  yekabusinessblok.uuid  yekabusinessblok.businessblog.uuid %}">İncele</a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Ekstra Zaman Ekle</a>
+                                                <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
+                                                   href="{% url 'ekabis:add_extratime' yeka.uuid  yekabusinessblok.uuid %}">Ek Süre</a>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="#">Log Listesi</a>
                                             </div>
@@ -235,6 +237,28 @@
                                                                    disabled="">
                                                         </div>
                                                     </div>
+
+
+                                                    {% if ekstratimes %}
+                                                        {% for ekstratime in ekstratimes %}
+
+                                                            {% if ekstratime.yekabusinessblog == yekabusinessblok %}
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label>Ek Süre</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="{{ ekstratime.time }}"
+                                                                               disabled="">
+                                                                    </div>
+                                                                </div>
+
+
+
+
+                                                            {% endif %}
+
+                                                        {% endfor %}
+                                                    {% endif %}
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Durumu</label>
@@ -259,8 +283,8 @@
 
                                             </div>
                                             <div class="timeline-footer">
-{#                                                <a class="btn btn-primary btn-sm"#}
-{#                                                   href="{% url 'ekabis:change_yekabusinessBlog' yeka.uuid  yekabusinessblok.pk  yekabusinessblok.businessblog.pk %}">İncele</a>#}
+                                                {#                                                <a class="btn btn-primary btn-sm"#}
+                                                {#                                                   href="{% url 'ekabis:change_yekabusinessBlog' yeka.uuid  yekabusinessblok.pk  yekabusinessblok.businessblog.pk %}">İncele</a>#}
 
                                             </div>
                                         </div>
@@ -281,6 +305,23 @@
             <!-- /.timeline -->
         </div>
     </section>
+
+{#    <script>#}
+{##}
+{#        $(function () {#}
+{#            yekablog - {{ yekabusinessblok.uuid }}#}
+{#            {% if ekstratimes %}#}
+{#                {% for item in ekstratimes %}#}
+{##}
+{#                    $("#yekablog-"{{ ek }}).attr("href", "http://www.google.com/")#}
+{##}
+{#                {% endfor %}#}
+{#            {% endif %}#}
+{##}
+{#            alert()#}
+{##}
+{#        });#}
+{#    </script>#}
 
 
 
