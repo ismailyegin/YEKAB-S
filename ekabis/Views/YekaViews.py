@@ -145,6 +145,11 @@ def update_yeka(request, uuid):
     yeka_form = YekaForm(request.POST or None, instance=yeka)
     alt_yekalar = Yeka.objects.filter(isDeleted=False, yekaParent__uuid=uuid)
     yeka_connections = YekaConnectionRegion.objects.filter(Q(isDeleted=False) & Q(yeka=yeka))
+    yeka_regions = []
+
+    for yeka_connection in yeka_connections:
+        yeka_regions.append(yeka_connection.connectionRegion)
+    connection_regions = ConnectionRegion.objects.filter(isDeleted=False)
 
     try:
         with transaction.atomic():
@@ -156,15 +161,21 @@ def update_yeka(request, uuid):
                     yeka.date = yeka_form.cleaned_data['date']
                     yeka.save()
 
-                    # regions = request.POST.getlist('region')
-                    # current = []
-                    # for region in yeka_connections:
-                    #     current.append(region.connectionRegion.uuid)
-                    #
-                    # for region in regions:
-                    #     if not current in region:
-                    #         new = YekaConnectionRegion(yeka=yeka,
-                    #                                    connectionRegion=ConnectionRegion.objects.get(uuid=region))
+                    new_regions = request.POST.getlist('region')
+                    current = []
+                    for region in new_regions:
+                        current.append(ConnectionRegion.objects.get(uuid=region))
+
+                    for region in current:
+                        if not region in yeka_regions:
+                            new = YekaConnectionRegion(yeka=yeka,connectionRegion=region)
+                            new.save()
+
+                    delete_yeka = list(set(yeka_regions) - set(current))
+
+                    for yeka in delete_yeka:
+                        delete = YekaConnectionRegion.objects.get(connectionRegion__uuid=yeka.uuid)
+                        delete.delete()
 
                     messages.success(request, 'Yeka Başarıyla Güncellendi')
                     return redirect('ekabis:view_yeka')
@@ -172,11 +183,12 @@ def update_yeka(request, uuid):
                     error_message_unit = get_error_messages(yeka_form)
                     return render(request, 'Yeka/change_yeka.html',
                                   {'yeka_form': yeka_form, 'error_messages': error_message_unit,
-                                   'yeka_connections': yeka_connections
+                                   'yeka_connections': yeka_regions, 'connection_regions': connection_regions
                                    })
 
             return render(request, 'Yeka/change_yeka.html',
-                          {'yeka_form': yeka_form, 'error_messages': '', 'yeka_connections': yeka_connections
+                          {'yeka_form': yeka_form, 'error_messages': '', 'yeka_connections': yeka_regions,
+                           'connection_regions': connection_regions
                            })
     except Exception as e:
         traceback.print_exc()
@@ -207,12 +219,11 @@ def alt_yeka_ekle(request, uuid):
                     #
                     # if yeka.capacity >= total_capacity + form_capacity:
                     new_yeka = Yeka(definition=yeka_form.cleaned_data['definition'],
-                                        date=yeka_form.cleaned_data['date']
-                                        )
+                                    date=yeka_form.cleaned_data['date']
+                                    )
                     new_yeka.save()
                     new_yeka.yekaParent = yeka
                     new_yeka.save()
-
 
                     log = "Alt Yeka eklendi"
                     log = general_methods.logwrite(request, request.user, log)

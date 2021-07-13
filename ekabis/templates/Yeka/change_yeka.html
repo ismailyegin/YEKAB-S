@@ -184,22 +184,30 @@
                                     <div class="form-group">
 
 
-                                            <div class="col-md-12">
-                                                    <label> Bağlantı Bölgeleri</label>
+                                        <div class="col-md-12">
+                                            <label> Bağlantı Bölgeleri</label>
 
-                                                    <select class="select2 select2-hidden-accessible" multiple=""
-                                                            data-placeholder="Select a State"
-                                                            data-dropdown-css-class="select2-purple"
-                                                            style="width: 100%;" id="region" name="region"
-                                                            data-select2-id="15" tabindex="-1" aria-hidden="true">
-                                                        {% for region in yeka_connections %}
-                                                            <option selected
-                                                                    data-select2-id="{{ region.connectionRegion.uuid }}" value="{{ region.connectionRegion.uuid }}">{{ region.connectionRegion.name }}</option>
+                                            <select class="select2 select2-hidden-accessible" multiple=""
+                                                    data-placeholder="Select a State"
+                                                    data-dropdown-css-class="select2-purple"
+                                                    style="width: 100%;" id="region" name="region"
+                                                    data-select2-id="15" tabindex="-1" aria-hidden="true">
+                                                {% for connection_region in connection_regions %}
+                                                    {% if connection_region in yeka_connections %}
+                                                        <option selected
+                                                                data-select2-id="{{ connection_region.uuid }}"
+                                                                value="{{ connection_region.uuid }}">{{ connection_region.name }}</option>
+                                                    {% else %}
+                                                        <option
+                                                                data-select2-id="{{ connection_region.uuid }}"
+                                                                value="{{ connection_region.uuid }}">{{ connection_region.name }}</option>
+                                                    {% endif %}
 
-                                                        {% endfor %}
+                                                {% endfor %}
 
-                                                    </select>
-                                            </div>
+
+                                            </select>
+                                        </div>
 
 
                                     </div>
