@@ -52,28 +52,30 @@ class YekaBusinessBlogForm(ModelForm):
                 self.fields[item.title] = forms.CharField(max_length=50)
                 self.fields[item.title].widget.attrs['class'] = 'form-control  dateyear'
             elif item.type == 'file':
-                self.fields[item.title] = forms.FileField()
+                self.fields[item.title] = forms.FileField(required=False)
 
     def save(self, yekabusiness, business,*args, **kwargs):
         tbussiness = BusinessBlog.objects.get(pk=business)
         tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
         for item in tbussiness.parametre.all():
             if item.type != 'file':
-                parametre = YekaBusinessBlogParemetre(
-                    value=str(self.data[item.title]),
-                )
-                parametre.parametre = item
-                parametre.save()
-                tyekabusinessblog.paremetre.add(parametre)
-                tyekabusinessblog.save()
+                if tyekabusinessblog.paremetre.filter(parametre=item):
+                    bValue=tyekabusinessblog.paremetre.get(parametre=item)
+                    bValue.value=str(self.data[item.title])
+                    bValue.save()
+                else:
+                    parametre = YekaBusinessBlogParemetre(
+                        value=str(self.data[item.title]),
+                    )
+                    parametre.parametre = item
+                    parametre.save()
+                    tyekabusinessblog.paremetre.add(parametre)
+                    tyekabusinessblog.save()
 
         super().save(*args, **kwargs)
 
         return
 
-
-
-#
 def update(self,yekabusiness, business,*args, **kwargs):
     tbussiness = BusinessBlog.objects.get(pk=business)
     tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
