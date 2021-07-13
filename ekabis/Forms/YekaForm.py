@@ -7,7 +7,9 @@ from ekabis.models.Yeka import Yeka
 class YekaForm(forms.ModelForm):
     class Meta:
         model = Yeka
+
         fields = ('date', 'definition', )
+
 
         labels = {'definition': 'Tanım '}
         widgets = {

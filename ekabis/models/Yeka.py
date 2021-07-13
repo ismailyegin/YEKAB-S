@@ -3,7 +3,7 @@ from django.db import models
 
 from ekabis.models.ConnectionUnit import ConnectionUnit
 from ekabis.models.BaseModel import BaseModel
-
+from ekabis.models.YekaBussiness import YekaBusiness
 
 class Yeka(BaseModel):
     definition = models.CharField(blank=True, null=True, max_length=250)
@@ -14,5 +14,3 @@ class Yeka(BaseModel):
     unit = models.ForeignKey(ConnectionUnit, on_delete=models.DO_NOTHING, null=True, blank=True)
     is_parent = models.BooleanField(default=False, null=True, blank=True)
 
-    def __str__(self):
-        return '%s' % (self.definition)

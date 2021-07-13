@@ -409,3 +409,4 @@ def yeka_company_remove(request):
     except:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
