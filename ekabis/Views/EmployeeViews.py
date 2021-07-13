@@ -78,7 +78,7 @@ def add_employee(request):
 
                     personel = Employee(
                         user=user, person=person, communication=communication,
-                        workDefinition=employe_form.cleaned_data['workDefinition'],
+                        workDefinition=employe_form.cleaned_data['workDefinition']
 
                     )
 
@@ -92,8 +92,8 @@ def add_employee(request):
 
                 else:
 
-                    for x in user_form.errors.as_data():
-                        messages.warning(request, user_form.errors[x].first())
+                    #for x in user_form.errors.as_data():
+                        #messages.warning(request, user_form.errors[x].first())
 
                     error_message_company = get_error_messages(user_form)
                     error_messages_person = get_error_messages(person_form)
