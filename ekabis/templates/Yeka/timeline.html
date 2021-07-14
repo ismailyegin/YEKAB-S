@@ -270,13 +270,25 @@
 
                                                     {% for item in yekabusinessblok.paremetre.all %}
                                                         <div class="col-sm-6">
+                                                        {% if item.file %}
+                                                             <label>{{ item.parametre.title }}</label>
+                                                            <a href="/media/{{ item.file }}" target="_blank"> <input type="text" class="form-control"
+                                                                       placeholder="{{ item.file }}"
+                                                                       disabled=""></a>
+
+                                                        {% else%}
+
                                                             <div class="form-group">
                                                                 <label>{{ item.parametre.title }}</label>
                                                                 <input type="text" class="form-control"
                                                                        placeholder="{{ item.value }}"
                                                                        disabled="">
+
                                                             </div>
-                                                        </div>
+
+                                                        {% endif %}
+                                                         </div>
+
                                                     {% endfor %}
 
                                                 </div>

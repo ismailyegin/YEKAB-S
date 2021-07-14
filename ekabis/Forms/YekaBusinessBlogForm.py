@@ -58,7 +58,31 @@ class YekaBusinessBlogForm(ModelForm):
         tbussiness = BusinessBlog.objects.get(pk=business)
         tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
         for item in tbussiness.parametre.all():
-            if item.type != 'file':
+            if item.type == 'file':
+
+                if tyekabusinessblog.paremetre.filter(parametre=item):
+                    try:
+                        if self.files[item.title]:
+                            bValue = tyekabusinessblog.paremetre.get(parametre=item)
+                            bValue.file = self.files[item.title]
+                            bValue.save()
+                    except:
+                        print('deger yok')
+                        pass
+
+
+                else:
+                    parametre = YekaBusinessBlogParemetre(
+                        file=self.files[item.title],
+                    )
+                    parametre.parametre = item
+                    parametre.save()
+                    tyekabusinessblog.paremetre.add(parametre)
+                    tyekabusinessblog.save()
+
+
+
+            else:
                 if tyekabusinessblog.paremetre.filter(parametre=item):
                     bValue=tyekabusinessblog.paremetre.get(parametre=item)
                     bValue.value=str(self.data[item.title])

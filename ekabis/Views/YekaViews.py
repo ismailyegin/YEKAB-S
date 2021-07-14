@@ -454,10 +454,17 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         yeka = Yeka.objects.get(uuid=yeka)
         yekabussiness = YekaBusinessBlog.objects.get(uuid=yekabusiness)
         business = BusinessBlog.objects.get(uuid=business)
-        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, request.POST or None, instance=yekabussiness)
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
-            yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+            if item.parametre.type == 'file':
+                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+            else:
+                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+
         if request.POST:
+            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, request.POST or None, request.FILES or None,
+                                                          instance=yekabussiness)
+
             if yekaBusinessBlogo_form.is_valid():
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
