@@ -177,7 +177,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                         <div class="col-md-12">
+                                        <div class="col-md-12">
                                             <label> Bağlantı Bölge Kapasiteleri</label>
 
                                             <select class="select2 select2-hidden-accessible" multiple=""
@@ -187,10 +187,11 @@
                                                     data-select2-id="15" tabindex="-1" aria-hidden="true">
                                                 {% for capacity in yeka_connection_capacity %}
 
-                                                        <option  data-select2-id="{{ capacity.uuid }}"
-                                                                value="{{ capacity.uuid }}">{{ capacity.name }}</option>
+                                                    <option data-select2-id="{{ capacity.uuid }}"
+                                                            value="{{ capacity.uuid }}">{{ capacity.name }}</option>
 
                                                 {% endfor %}
+                                                <label id="label_region_capacity"></label>
 
 
                                             </select>

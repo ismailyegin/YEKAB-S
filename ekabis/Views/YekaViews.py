@@ -68,14 +68,19 @@ def add_yeka(request):
                 yeka_form = YekaForm(request.POST)
                 yeka_connection_form = YekaConnectionRegionForm(request.POST)
 
-                if yeka_form.is_valid() & yeka_connection_form.is_valid():
+                if yeka_form.is_valid() and yeka_connection_form.is_valid():
+
                     yeka = Yeka(definition=yeka_form.cleaned_data['definition'], date=yeka_form.cleaned_data['date'])
                     yeka.save()
 
                     total_capacity = 0
-                    for region in yeka_connection_form.cleaned_data['connectionRegion']:
-                        connection_region = ConnectionRegion.objects.get(uuid=region.uuid)
-                        yeka_connection_region = YekaConnectionRegion(yeka=yeka, connectionRegion=connection_region)
+                    for region in yeka_connection_form.cleaned_data['connectionRegion'].filter():
+                        print(region.name)
+                        rg = ConnectionRegion()
+                        rg = region
+                        yeka_connection_region = YekaConnectionRegion()
+                        yeka_connection_region.yeka = yeka
+                        yeka_connection_region.connectionRegion =rg
                         yeka_connection_region.save()
                         total_capacity = total_capacity + region.value
 
