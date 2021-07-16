@@ -9,7 +9,6 @@ from ekabis.models.YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
 class YekaBusinessBlogForm(ModelForm):
     class Meta:
         model = YekaBusinessBlog
-
         fields = (
             'startDate', 'finisDate', 'businessTime', 'status')
         labels = {'startDate': 'Başlama Tarihi', 'finisDate': 'Bitiş Tarihi', 'businessTime': 'Süresi',
@@ -53,6 +52,7 @@ class YekaBusinessBlogForm(ModelForm):
                 self.fields[item.title].widget.attrs['class'] = 'form-control  dateyear'
             elif item.type == 'file':
                 self.fields[item.title] = forms.FileField(required=False)
+                self.fields[item.title].widget.attrs = {'class':'form-control',}
 
     def save(self, yekabusiness, business,*args, **kwargs):
         tbussiness = BusinessBlog.objects.get(pk=business)
@@ -67,21 +67,22 @@ class YekaBusinessBlogForm(ModelForm):
                             bValue.file = self.files[item.title]
                             bValue.save()
                     except:
-                        print('deger yok')
+                        print('deger yok ')
                         pass
 
-
                 else:
-                    parametre = YekaBusinessBlogParemetre(
-                        file=self.files[item.title],
-                    )
-                    parametre.parametre = item
-                    parametre.save()
-                    tyekabusinessblog.paremetre.add(parametre)
-                    tyekabusinessblog.save()
-
-
-
+                    try:
+                        if self.files[item.title]:
+                            parametre = YekaBusinessBlogParemetre(
+                                file=self.files[item.title],
+                            )
+                            parametre.parametre = item
+                            parametre.save()
+                            tyekabusinessblog.paremetre.add(parametre)
+                            tyekabusinessblog.save()
+                    except:
+                        print('deger yok ')
+                        pass
             else:
                 if tyekabusinessblog.paremetre.filter(parametre=item):
                     bValue=tyekabusinessblog.paremetre.get(parametre=item)
