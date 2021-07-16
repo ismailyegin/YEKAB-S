@@ -155,57 +155,107 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">ALT YEKA EKLE</h3>
+                            <h3 class="card-title">ALT YEKALAR</h3>
                         </div>
+                        {% for item in perm %}
+                            {% if item == 'add_yeka' %}
+                                <div class="card-header with-border">
 
+                                    <div class="btn-group">
+                                        <a href="{% url "ekabis:add_sub_yeka" yeka %}"
+                                           type="button" class="btn btn-success"><i
+                                                class="fa fa-edit"></i> Alt YEKA Ekle
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                         <div class="card-body">
-                            <form method="post" role="form">
-                                <div class="card-body">
-                                    {% csrf_token %}
 
-                                    <div class="form-group">
-                                        <label> {{ yeka_form.definition.label }}</label>
-                                        {{ yeka_form.definition }}
-                                        <label id="label_definition"></label>
+                            <table id="subyeka" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Yeka</th>
+                                    <th>Tarih</th>
+                                    <th>Bölge Kapasiteleri</th>
+                                    <th>Kapasite</th>
+                                    <th>Zaman Çizelgesi</th>
+                                    <th>İşlem</th>
 
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ yeka_form.date.label }}</label>
-                                        {{ yeka_form.date }}
-                                        <label id="label_date"></label>
+                                </tr>
+                                </thead>
 
-                                    </div>
+                                <tbody>
 
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <label> Bağlantı Bölge Kapasiteleri</label>
 
-                                            <select class="select2 select2-hidden-accessible" multiple=""
-                                                    data-placeholder="Select a State"
-                                                    data-dropdown-css-class="select2-purple"
-                                                    style="width: 100%;" id="region_capacity" name="region_capacity"
-                                                    data-select2-id="15" tabindex="-1" aria-hidden="true">
-                                                {% for capacity in yeka_connection_capacity %}
-
-                                                    <option data-select2-id="{{ capacity.uuid }}"
-                                                            value="{{ capacity.uuid }}">{{ capacity.name }}</option>
+                                {% if alt_yekalar %}
+                                    {% for yeka in alt_yekalar %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ yeka.yeka.definition }}</td>
+                                            <td>{{ yeka.yeka.date }}</td>
+                                            <td>
+                                                {% for capacity in yeka.capacities %}
+                                                    <a href="{% url 'ekabis:update-region-capacity' capacity.capacity.uuid %}"
+                                                       type="button" class="btn btn-outline-info btn-sm">
+                                                        {{ capacity.capacity.name }}
+                                                    </a>/
 
                                                 {% endfor %}
-                                                <label id="label_region_capacity"></label>
 
 
-                                            </select>
-                                        </div>
+                                            </td>
 
-                                    </div>
+                                            <td>{{ yeka.yeka.capacity }} {{ yeka.yeka.unit.name }}</td>
 
-                                </div>
-                                <!-- /.card-body -->
+                                            <td>
+                                                <div class="btn-group">
+                                                    {% for item in perm %}
+                                                        {% if item == 'view_yekabusinessBlog' %}
+                                                            <a href="{% url 'ekabis:view_yekabusinessBlog' yeka.yeka.uuid %}"
+                                                               type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-calendar-times"></i> Zaman Çizelgesi
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
 
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
-                                </div>
-                            </form>
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    {% for item in perm %}
+                                                        {% if item == 'delete_yeka' %}
+                                                            <a class="btn btn-danger"
+                                                               data-toggle="modal"
+                                                               onclick=deleteYeka('{{ yeka.yeka.uuid }}')><i
+                                                                    class="fa fa-trash"></i>Sil</a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="btn-group">
+                                                    {% for item in perm %}
+                                                        {% if item == 'change_sub_yeka' %}
+                                                            <a href="{% url 'ekabis:change_sub_yeka' yeka.yeka.uuid %}"
+                                                               type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-edit"></i>Güncelle
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+
                         </div>
 
                     </div>
@@ -221,7 +271,7 @@
 
     <script>
         $(function () {
-            $('#yeka').DataTable({
+            $('#subyeka').DataTable({
                 dom: 'Bfrtip',
 
                 language: {
