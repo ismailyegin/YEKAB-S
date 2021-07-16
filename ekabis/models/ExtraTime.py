@@ -8,4 +8,4 @@ class ExtraTime(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     time = models.IntegerField()
     yeka =models.ForeignKey(Yeka,on_delete=models.CASCADE)
-    yekabusinessblog=models.ForeignKey(YekaBusinessBlog,on_delete=models.CASCADE)
+    yekabusinessblog=models.OneToOneField(YekaBusinessBlog,on_delete=models.CASCADE)

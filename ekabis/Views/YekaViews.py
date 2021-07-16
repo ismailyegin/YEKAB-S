@@ -11,15 +11,17 @@ from django.shortcuts import redirect, render
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
+
 from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, ConnectionCapacity, \
-    SubYekaCapacity
+    SubYekaCapacity,ExtraTime
+
 from ekabis.models.BusinessBlog import BusinessBlog
+from ekabis.models.Company import Company
+from ekabis.models.Employee import Employee
+from ekabis.models.Yeka import Yeka
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaCompany import YekaCompany
 from ekabis.models.YekaPerson import YekaPerson
-from ekabis.models.Employee import Employee
-from ekabis.models.Yeka import Yeka
-from ekabis.models.Company import Company
 from ekabis.models.YekaPersonHistory import YekaPersonHistory
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
@@ -579,12 +581,14 @@ def view_yekabusinessBlog(request, uuid):
     try:
         yeka = Yeka.objects.get(uuid=uuid)
         yekabusinessbloks = None
+        ekstratimes=ExtraTime.objects.filter(yeka=yeka)
         if yeka.business:
             yekabusiness = yeka.business
             yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
         return render(request, 'Yeka/timeline.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
+                       'ekstratimes':ekstratimes
                        })
 
     except Exception as e:
@@ -600,21 +604,66 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-
     try:
         yeka = Yeka.objects.get(uuid=yeka)
-        yekabussiness = YekaBusinessBlog.objects.get(pk=yekabusiness)
-        business = BusinessBlog.objects.get(pk=business)
-        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, request.POST or None, instance=yekabussiness)
+        yekabussiness = YekaBusinessBlog.objects.get(uuid=yekabusiness)
+        business = BusinessBlog.objects.get(uuid=business)
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
-            yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+            if item.parametre.type == 'file':
+                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+                yekaBusinessBlogo_form.fields[item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
+                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
+                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
+
+            else:
+                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+
         if request.POST:
+            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, request.POST or None, request.FILES or None,
+                                                          instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
+                          'yeka': yeka
+                      })
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+def add_yekabusinessblog_company(request,yeka,yekabusinessblog):
+
+
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        yeka = Yeka.objects.get(uuid=yeka)
+        yekabussinessblog = YekaBusinessBlog.objects.get(uuid=yekabusinessblog)
+        company_list=Company.objects.all()
+
+
+        if request.POST:
+            with transaction.atomic():
+                companyies=request.POST.getlist('company')
+                if companyies:
+                    for item in companyies:
+                        if not yekabussinessblog.companys.filter(pk=item) and Company.objects.filter(pk=item):
+                            yekabussinessblog.companys.add(Company.objects.get(pk=item))
+                            yekabussinessblog.save()
+
+                return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
+        return render(request, 'Yeka/add_yekabusinessblog_company.html',
+                      {
+                          'company_list':company_list,
                           'yeka': yeka
                       })
     except Exception as e:

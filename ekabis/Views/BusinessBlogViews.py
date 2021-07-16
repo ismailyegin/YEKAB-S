@@ -267,7 +267,6 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
 
 @login_required
 def change_yekabusiness(request, uuid,yeka):
-
     yekabusiness = YekaBusiness.objects.get(uuid=uuid)
     business_form = YekaBusinessForm(request.POST or None, instance=yekabusiness)
 
