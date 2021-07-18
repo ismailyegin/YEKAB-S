@@ -1,14 +1,12 @@
 import traceback
-
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from unicode_tr import unicode_tr
-
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.CompanyFileNameForm import CompanyFileNameForm
 from ekabis.Forms.CompanyForm import CompanyForm
@@ -20,7 +18,8 @@ from ekabis.models.CompanyFiles import CompanyFiles
 from ekabis.models.CompanyUser import CompanyUser
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import CompanyService
+from ekabis.services.services import CompanyService, CompanyGetService, GroupService, GroupGetService, \
+    CompanyFileNamesService, CompanyFileNamesGetService
 
 
 @login_required
@@ -57,12 +56,28 @@ def return_add_Company(request):
                         user=user,
                         communication=communication,
                     )
-                    # kullanici kayıt olunca gruba eklenmesi yoksa  açılmasi gerekli
+
 
                     company_user.save()
                     company = company_form.save(communication, company_user)
                     company.save()
 
+                    # kullanici kayıt olunca gruba eklenmesi yoksa  açılmasi gerekli
+                    groupfilter={
+                        'name':'Firma'
+                    }
+
+                    if GroupService(request,groupfilter):
+                        group=GroupGetService(request,groupfilter)
+                        user.groups.add(group)
+                        user.save()
+                    else:
+                        group=Group(
+                            name='firma'
+                        )
+                        group.save()
+                        user.groups.add(group)
+                        user.save()
                     messages.success(request, 'Firma ve Kullanici Kayıt Edilmiştir.')
                     return redirect('ekabis:view_company')
                 else:
@@ -100,7 +115,7 @@ def delete_company(request):
                 companyfilter = {
                     'uuid': uuid
                 }
-                obj = CompanyService(request, companyfilter).first()
+                obj = CompanyGetService(request, companyfilter)
                 obj.isDeleted = True
                 obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
@@ -123,9 +138,9 @@ def return_list_Company(request):
         'isDeleted': False
 
     }
-    company_form = CompanyService(request, companyfilter)
+    company_forms = CompanyService(request, companyfilter)
     return render(request, 'Company/Companys.html',
-                  {'company_form': company_form})
+                  {'company_form': company_forms})
 
 
 @login_required
@@ -139,13 +154,14 @@ def return_update_Company(request, uuid):
         'uuid': uuid
 
     }
-    company = CompanyService(request, companyfilter)[0]
-    company_form = CompanyForm(request.POST or None, instance=company)
-    communication_form = CommunicationForm(request.POST or None, instance=company.communication)
-    person_form = PersonForm(request.POST or None,request.FILES or None,  instance=company.companyuser.person)
-    user_form = UserForm(request.POST or None, instance=company.companyuser.user)
-    companyDocumentName=CompanyFileNames.objects.all()
+
     try:
+        company = CompanyGetService(request, companyfilter)
+        company_form = CompanyForm(request.POST or None, instance=company)
+        communication_form = CommunicationForm(request.POST or None, instance=company.communication)
+        person_form = PersonForm(request.POST or None, request.FILES or None, instance=company.companyuser.person)
+        user_form = UserForm(request.POST or None, instance=company.companyuser.user)
+        companyDocumentName = CompanyFileNames.objects.all()
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -231,7 +247,7 @@ def add_companyfilename(request):
     return render(request, 'Company/CompanyFileNameAdd.html')
 @login_required
 def view_companyfilename(request):
-    companyNameList=CompanyFileNames.objects.all()
+    companyNameList=CompanyFileNamesService(request,None)
     return render(request, 'Company/CompanyFileNameList.html',{'companyNameList':companyNameList})
 @login_required
 def change_companyfilename(request,uuid):
@@ -239,9 +255,13 @@ def change_companyfilename(request,uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    names=CompanyFileNames.objects.get(uuid=uuid)
-    company_form = CompanyFileNameForm(request.POST or None ,instance=names)
+
     try:
+        company_name_filter = {
+            'uuid': uuid
+        }
+        names = CompanyFileNamesGetService(request, company_name_filter)
+        company_form = CompanyFileNameForm(request.POST or None, instance=names)
         if request.method == 'POST':
             with transaction.atomic():
 
@@ -263,7 +283,6 @@ def change_companyfilename(request,uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_companyfilename')
-    return render(request, 'Company/CompanyFileNameUpdate.html')
 @login_required
 def delete_companyfilename(request,uuid):
     perm = general_methods.control_access(request)
@@ -274,10 +293,11 @@ def delete_companyfilename(request,uuid):
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
                 uuid = request.POST['uuid']
-
-                obj = CompanyFileNames.objects.get(uuid=uuid)
-                #
-                log = str(obj.name) + " firma dokuman uyesi silindi"
+                company_name_filter = {
+                    'uuid': uuid
+                }
+                obj = CompanyFileNamesGetService(request, company_name_filter)
+                log = str(obj.name) + " firma dokuman  silindi"
                 log = general_methods.logwrite(request, request.user, log)
 
                 obj.isDeleted = True
@@ -294,6 +314,3 @@ def delete_companyfilename(request,uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
         return redirect('ekabis:view_companyfilename')
-
-# servis katmanına eklenmeleri yazılacak
-#silme islemi eklencek ajax filename alanı

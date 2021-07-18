@@ -34,11 +34,13 @@ class CompanyFormDinamik(ModelForm):
         parametre = CompanyFileNames.objects.all()
         for item in parametre:
             self.fields['file'+str(item.pk)] = forms.FileField()
-            self.fields['file'+str(item.pk)].label= item.name
+
             if item.is_active:
                 self.fields['file' + str(item.pk)].required = True
+                self.fields['file' + str(item.pk)].label = item.name +" (Zorunlu Alan)"
             else:
                 self.fields['file' + str(item.pk)].required = False
+
 
 
     def save(self,communication,company_user):
@@ -53,7 +55,6 @@ class CompanyFormDinamik(ModelForm):
             companyuser=company_user
                     )
         company.save()
-
         for item in parametre:
             companyfile = CompanyFiles(
                filename=item,

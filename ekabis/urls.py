@@ -23,7 +23,7 @@ urlpatterns = [
     path('yonetim/yonetim-kurul-profil-guncelle/', DirectoryViews.updateDirectoryProfile,
          name='yonetim-kurul-profil-guncelle'),
 
-    path('personel/personel-profil-guncelle/', EmployeeViews.updateRefereeProfile, name='personel-profil-güncelle'),
+    path('personel/personel-profil-guncelle/', EmployeeViews.updateRefereeProfile, name='personel-profil-guncelle'),
 
     # Yönetim
     path('kurul-uyeleri/', DirectoryViews.return_directory_members, name='view_directoryMember'),

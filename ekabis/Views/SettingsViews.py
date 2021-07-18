@@ -1,10 +1,12 @@
+import traceback
+
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import SettingsService
+from ekabis.services.services import SettingsService, SettingsGetService
 from ekabis.Forms.SettingsForm import SettingsForm
 
 
@@ -14,6 +16,8 @@ def view_settinsList(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
+
+    # Sistemde ayar verisi yoksa gönderilecek bir sayfa tasarlanmalı
     setting = SettingsService(request, None)[0]
     return render(request, 'Ayar/ayarlistesi.html',
                   {'settings': setting})
@@ -25,23 +29,30 @@ def change_serttings(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    groupfilter = {
-        'pk': pk
-    }
-    setting = SettingsService(request, groupfilter)[0] if SettingsService(request, groupfilter) else None
-    settings_form = SettingsForm(request.POST or None, instance=setting)
-    if request.method == 'POST':
-        if settings_form.is_valid():
-            settings_form.save()
-            messages.success(request, 'Ayarlar Güncellenmiştir.')
-            return redirect('ekabis:view_settings')
 
-        else:
-            error_messages = get_error_messages(settings_form)
-            return render(request, 'Ayar/ayarguncelle.html',
-                          {'settings_form': settings_form, 'error_messages': error_messages
-                           })
+    try:
+        groupfilter = {
+            'pk': pk
+        }
+        setting = SettingsGetService(request, groupfilter) if SettingsService(request, groupfilter) else None
+        settings_form = SettingsForm(request.POST or None, instance=setting)
+        if request.method == 'POST':
+            if settings_form.is_valid():
+                settings_form.save()
+                messages.success(request, 'Ayarlar Güncellenmiştir.')
+                return redirect('ekabis:view_settings')
 
-    return render(request, 'Ayar/ayarguncelle.html',
-                  {'settings_form': settings_form, 'error_messages': ''
-                   })
+            else:
+                error_messages = get_error_messages(settings_form)
+                return render(request, 'Ayar/ayarguncelle.html',
+                              {'settings_form': settings_form, 'error_messages': error_messages
+                               })
+
+        return render(request, 'Ayar/ayarguncelle.html',
+                      {'settings_form': settings_form, 'error_messages': ''
+                       })
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+

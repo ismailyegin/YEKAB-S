@@ -9,8 +9,7 @@ from ekabis.Forms.GroupForm import GroupForm
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import GroupService, PermissionService, PermissionGroupService
-from ekabis.models.Permission import Permission
+from ekabis.services.services import GroupService, PermissionService, PermissionGroupService, GroupGetService
 
 
 @login_required
@@ -69,12 +68,13 @@ def return_update_group(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    groupfilter = {
-        'pk': pk
-    }
-    groups = GroupService(request, groupfilter).first()
-    group_form = GroupForm(request.POST or None, instance=groups)
+
     try:
+        groupfilter = {
+            'pk': pk
+        }
+        groups = GroupGetService(request, groupfilter)
+        group_form = GroupForm(request.POST or None, instance=groups)
         with transaction.atomic():
             if request.method == 'POST':
                 if group_form.is_valid():
@@ -94,8 +94,6 @@ def return_update_group(request, pk):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-
-
 def change_groupPermission(request, pk):
     perm = general_methods.control_access(request)
     active = general_methods.controlGroup(request)
@@ -104,8 +102,9 @@ def change_groupPermission(request, pk):
         # logout(request)
         # return redirect('accounts:login')
     groupfilter = {
+        'group__pk' : pk
     }
-    permGroup = PermissionGroup.objects.filter(group__pk=pk)
+    permGroup = PermissionGroupService(request,groupfilter)
     try:
         with transaction.atomic():
             if request.method == 'POST':

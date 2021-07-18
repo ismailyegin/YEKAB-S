@@ -7,12 +7,15 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from ekabis.services import general_methods
-from ekabis.services.services import ActiveGroupService, GroupService
+from ekabis.services.services import ActiveGroupService, GroupService, ActiveGroupGetService, GroupGetService, \
+    CalendarNameService
 
 from ekabis.Forms.CalendarNameForm import CalendarNameForm
 from ekabis.models.CalendarName import CalendarName
 from django.contrib import messages
 import datetime
+
+from ekabis.services.services import UserGetService
 
 @login_required
 def return_directory_dashboard(request):
@@ -32,12 +35,21 @@ def return_personel_dashboard(request):
     active = general_methods.controlGroup(request)
     perm = general_methods.control_access(request)
 
+
+
+
     if not perm:
         logout(request)
         return redirect('accounts:login')
 
 
-    calendarNames=CalendarName.objects.filter(isDeleted=False,user=request.user)
+
+    calendar_filter={
+        'isDeleted' : False,
+        'user' : request.user
+    }
+
+    calendarNames=CalendarNameService(request,calendar_filter)
 
     return render(request, 'anasayfa/personel.html',
                   {
@@ -63,11 +75,11 @@ def activeGroup(request, pk):
     activefilter={
         'user':request.user
     }
-    userActive = ActiveGroupService(request,activefilter)[0]
+    userActive = ActiveGroupGetService(request,activefilter)
     groupfilter={
         'pk':pk
     }
-    group = GroupService(request,groupfilter)[0]
+    group = GroupGetService(request,groupfilter)
     userActive.group = group
     userActive.save()
     if group.name == "Admin":

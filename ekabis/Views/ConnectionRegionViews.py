@@ -1,12 +1,10 @@
 import traceback
-
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-
 from ekabis.Forms.ConnectionCapacityForm import ConnectionCapacityForm
 from ekabis.Forms.ConnectionRegionForm import ConnectionRegionForm
 from ekabis.Forms.ConnectionUnitForm import ConnectionUnitForm
@@ -14,7 +12,8 @@ from ekabis.models import ConnectionRegion, ConnectionCapacity
 from ekabis.models.ConnectionUnit import ConnectionUnit
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import UnitService, RegionService, CapacityService
+from ekabis.services.services import UnitService, RegionService, ConnectionCapacityService, ConnectionUnitGetService, \
+    ConnectionRegionGetService, ConnectionCapacityGetService
 
 
 @login_required
@@ -77,7 +76,7 @@ def delete_unit(request):
                 unitfilter = {
                     'uuid': uuid
                 }
-                obj = UnitService(request, unitfilter).first()
+                obj = ConnectionUnitGetService(request, unitfilter)
                 log = str(obj.name) + " Birim silindi"
                 log = general_methods.logwrite(request, request.user, log)
                 obj.isDeleted = True
@@ -104,7 +103,7 @@ def update_unit(request, uuid):
         'uuid': uuid
     }
 
-    unit = UnitService(request, unitfilter).first()
+    unit = ConnectionUnitGetService(request, unitfilter)
     unit_form = ConnectionUnitForm(request.POST or None, instance=unit)
     try:
         with transaction.atomic():
@@ -189,7 +188,7 @@ def delete_region(request):
                 regionfilter = {
                     'uuid': uuid
                 }
-                obj = RegionService(request, regionfilter).first()
+                obj = ConnectionRegionGetService(request, regionfilter)
                 region_capacities = ConnectionCapacity.objects.filter(connection_region=obj, isDeleted=False)
                 if region_capacities:
                     return JsonResponse(
@@ -221,7 +220,7 @@ def update_region(request, uuid):
         'uuid': uuid
     }
 
-    region = RegionService(request, regionfilter).first()
+    region = ConnectionRegionGetService(request, regionfilter)
     region_form = ConnectionRegionForm(request.POST or None, instance=region)
     try:
         with transaction.atomic():
@@ -256,16 +255,27 @@ def return_connectionCapacity(request, uuid):
         logout(request)
         return redirect('accounts:login')
 
-    capacities = ConnectionCapacity.objects.filter(connection_region__uuid=uuid, isDeleted=False)
-    capacity_form = ConnectionCapacityForm()
 
     try:
+        capasity_filter = {
+            'connection_region__uuid': uuid,
+            'isDeleted': False
+        }
+
+        capacities = ConnectionCapacityService(request, capasity_filter)
+        capacity_form = ConnectionCapacityForm()
+
         with transaction.atomic():
             if request.method == 'POST':
                 capacity_form = ConnectionCapacityForm(request.POST)
                 region = ConnectionRegion.objects.get(uuid=uuid)
-                region_capacities = ConnectionCapacity.objects.filter(connection_region__uuid=uuid, isDeleted=False)
+                region_filter = {
 
+                    'onnection_region__uuid': uuid,
+                    'isDeleted': False
+
+                }
+                region_capacities = ConnectionCapacityService(request, region_filter)
                 if capacity_form.is_valid():
 
                     capacity_value = int(capacity_form.cleaned_data['value'])
@@ -282,7 +292,12 @@ def return_connectionCapacity(request, uuid):
                                                       value=capacity_value)
                         capacity.save()
 
-                        capacity.connection_region = ConnectionRegion.objects.get(uuid=uuid)
+
+                        region_filter={
+                            'uuid:uuid'
+                        }
+
+                        capacity.connection_region = ConnectionRegionGetService(request,region_filter,)
                         capacity.save()
 
                         log = "Kapasite eklendi"
@@ -318,10 +333,12 @@ def update_capacity(request, uuid):
     capacityfilter = {
         'uuid': uuid
     }
+    #
+    # Servisi katmanı eklemesi yapılacak
 
     region_uuid = ConnectionCapacity.objects.get(uuid=uuid)
 
-    capacity = CapacityService(request, capacityfilter).first()
+    capacity = ConnectionCapacityService(request, capacityfilter).first()
     capacity_form = ConnectionCapacityForm(request.POST or None, instance=capacity)
     try:
         with transaction.atomic():
@@ -385,7 +402,7 @@ def delete_capacity(request):
                 capacityfilter = {
                     'uuid': uuid
                 }
-                obj = CapacityService(request, capacityfilter).first()
+                obj = ConnectionCapacityGetService(request, capacityfilter)
                 log = str(obj.name) + " Kapasite silindi"
                 log = general_methods.logwrite(request, request.user, log)
                 obj.isDeleted = True

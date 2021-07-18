@@ -13,6 +13,7 @@ from ekabis.models.Yeka import Yeka
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
+from ekabis.services.services import ExtraTimeService, ExtraTimeGetService
 
 
 class YekabusinessBlog:
@@ -72,10 +73,9 @@ def return_list_extra_time(request):
         'isDeleted': False
 
     }
-    ekstratime = ExtraTime.objects.all()
+    ekstratime = ExtraTimeService(request,None)
     return render(request, 'ExtraTime/view_extratime.html',
                   {'ekstratime': ekstratime})
-
 
 @login_required
 def return_update_extra_time(request, uuid):
@@ -83,7 +83,10 @@ def return_update_extra_time(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    extratime = ExtraTime.objects.get(uuid=uuid)
+    extra_time_filter={
+        'uuid':uuid
+    }
+    extratime = ExtraTimeGetService(request,extra_time_filter)
     extratime_form = ExtraTimeForm(request.POST or None, instance=extratime)
     try:
         with transaction.atomic():
@@ -119,10 +122,10 @@ def delete_extra_time(request):
             if request.method == 'POST' and request.is_ajax():
                 uuid = request.POST['uuid']
 
-                ExtraTimefilter = {
+                extra_time_filter = {
                     'uuid': uuid
                 }
-                obj = ExtraTime.objects.get(uuid=uuid)
+                obj = ExtraTimeGetService(request,extra_time_filter)
                 obj.isDeleted = True
                 obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})

@@ -17,6 +17,7 @@ from ekabis.models.Yeka import Yeka
 from ekabis.models.YekaBussiness import YekaBusiness
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
+from ekabis.services.services import YekaBusinessGetService
 
 
 @login_required
@@ -267,16 +268,21 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
 
 @login_required
 def change_yekabusiness(request, uuid,yeka):
-    yekabusiness = YekaBusiness.objects.get(uuid=uuid)
-    business_form = YekaBusinessForm(request.POST or None, instance=yekabusiness)
 
-    business = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
-    tk = []
-    for item in business:
-        tk.append(item.businessblog.pk)
-    unbusiness = BusinessBlog.objects.exclude(id__in=tk).filter(isDeleted=False)
+
 
     try:
+        business_filter = {
+            uuid: uuid
+        }
+        yekabusiness = YekaBusinessGetService(request, business_filter)
+        business_form = YekaBusinessForm(request.POST or None, instance=yekabusiness)
+
+        business = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+        tk = []
+        for item in business:
+            tk.append(item.businessblog.pk)
+        unbusiness = BusinessBlog.objects.exclude(id__in=tk).filter(isDeleted=False)
         if request.method == 'POST':
             with transaction.atomic():
 
@@ -286,7 +292,7 @@ def change_yekabusiness(request, uuid,yeka):
                     if request.POST.get('businessblog'):
 
                         blogs = request.POST.get('businessblog').split("-")
-                        parent = YekaBusinessBlog.objects.none()
+                        parent = None
                         blog = None
                         # olmayanları sil
                         if business:

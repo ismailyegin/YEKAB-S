@@ -4,7 +4,8 @@ from django.contrib.auth.models import User, Group
 from django.db import transaction
 from django.db.models import Q
 
-from ekabis.models import ConnectionRegion, ConnectionCapacity, Yeka
+from ekabis.models import ConnectionRegion, ConnectionCapacity, Yeka, YekaPersonHistory, YekaCompany, \
+    YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
@@ -17,14 +18,98 @@ from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
 from ekabis.models.Employee import Employee
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
-from ekabis.models.MenuAdmin import MenuAdmin
-from ekabis.models.MenuDirectory import MenuDirectory
-from ekabis.models.MenuPersonel import MenuPersonel
 from ekabis.models.Notification import Notification
 from ekabis.models.Permission import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.models.Person import Person
 from ekabis.models.Settings import Settings
+from ekabis.models import YekaConnectionRegion,YekaPersonHistory,YekaPerson,YekaBusiness,YekaBusinessBlog,YekaBusinessBlogParemetre,SubYekaCapacity,ConnectionRegion,ConnectionCapacity,ConnectionUnit,CompanyUser,CompanyFiles,CompanyFileNames,CalendarName,Calendar
+
+def YekaCompanyService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return YekaCompany.objects.filter(**filter)
+            else:
+                return YekaCompany.objects.filter(filter)
+        else:
+            return YekaCompany.objects.all()
+    except YekaCompany.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+def YekaPersonService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return YekaPerson.objects.filter(**filter)
+            else:
+                return YekaPerson.objects.filter(filter)
+        else:
+            return YekaPerson.objects.all()
+    except YekaPerson.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+def SubYekaCapacityService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return SubYekaCapacity.objects.filter(**filter)
+            else:
+                return SubYekaCapacity.objects.filter(filter)
+        else:
+            return SubYekaCapacity.objects.all()
+    except SubYekaCapacity.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+
+def YekaConnectionRegionService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return YekaConnectionRegion.objects.filter(**filter)
+            else:
+                return YekaConnectionRegion.objects.filter(filter)
+        else:
+            return YekaConnectionRegion.objects.all()
+    except YekaConnectionRegion.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+def ExtraTimeService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return ExtraTime.objects.filter(**filter)
+            else:
+                return ExtraTime.objects.filter(filter)
+        else:
+            return ExtraTime.objects.all()
+    except ExtraTime.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+def CalendarNameService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return CalendarName.objects.filter(**filter)
+            else:
+                return CalendarName.objects.filter(filter)
+        else:
+            return CalendarName.objects.all()
+    except CalendarName.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
 
 
 def UserService(request, filter):
@@ -201,45 +286,6 @@ def MenuService(request, filter):
         pass
 
 
-def MenuAdminService(request, filter):
-    try:
-        if filter:
-            return MenuAdmin.objects.filter(**filter).order_by("sorting")
-        else:
-            return MenuAdmin.objects.all().order_by("sorting")
-    except Exception as e:
-        traceback.print_exc()
-
-        print(e)
-        pass
-
-
-def MenuDirectoryService(request, filter):
-    try:
-        if filter:
-            return MenuDirectory.objects.filter(**filter).order_by("sorting")
-        else:
-            return MenuDirectory.objects.all().order_by("sorting")
-    except Exception as e:
-        traceback.print_exc()
-
-        print(e)
-        pass
-
-
-def MenuPersonelService(request, filter):
-    try:
-        if filter:
-            return MenuPersonel.objects.filter(**filter).order_by("sorting")
-        else:
-            return MenuPersonel.objects.all().order_by("sorting")
-    except Exception as e:
-        traceback.print_exc()
-
-        print(e)
-        pass
-
-
 def NotificationService(request, filter):
     try:
         if filter:
@@ -278,7 +324,16 @@ def PermissionService(request, filter):
         print(e)
         pass
 
-
+def CompanyFileNamesService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return CompanyFileNames.objects.filter(**filter)
+            else:
+                return CompanyFileNames.objects.all()
+    except Exception as e:
+        traceback.print_exc()
+        pass
 def ClaimService(request, filter):
     try:
         if filter:
@@ -347,7 +402,7 @@ def RegionService(request, filter):
         pass
 
 
-def CapacityService(request, filter):
+def ConnectionCapacityService(request, filter):
     try:
         with transaction.atomic():
             if filter:
@@ -369,6 +424,511 @@ def YekaService(request, filter):
                 return Yeka.objects.all()
     except Exception as e:
         traceback.print_exc()
-        print(e)
         pass
 
+# get servisler
+def YekaGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Yeka.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def UserGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return User.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def YekaPersonGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaPerson.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+def YekaConnectionRegionGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaConnectionRegion.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+def YekaCompanyGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaCompany.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+def YekaCompanyHistoryGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaCompanyHistory.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+def YekaBusinessGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaBusiness.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+def YekaBusinessBlogGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaBusinessBlog.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+def YekaBusinessBlogParemetreGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaBusinessBlogParemetre.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def SubYekaCapacityGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return SubYekaCapacity.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def SettingsGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Settings.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def PersonGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Person.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def PermissionGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Permission.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def PermissionGroupGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return PermissionGroup.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def NotificationGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Notification.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def UserGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return User.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def MenuGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Menu.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def LogsGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Logs.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def HistoryGroupGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return HistoryGroup.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def ExtraTimeGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ExtraTime.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def EmployeeGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Employee.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def DirectoryCommissionGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return DirectoryCommission.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def DirectoryMemberRoleGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return DirectoryMemberRole.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def DirectoryMemberGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return DirectoryMember.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def ConnectionUnitGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ConnectionUnit.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def ConnectionRegionGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ConnectionRegion.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def ConnectionCapacityGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ConnectionCapacity.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CompanyUserGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return CompanyUser.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CompanyFilesGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return CompanyFiles.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CompanyFileNamesGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return CompanyFileNames.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CompanyGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Company.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CommunicationGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Communication.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def ClaimGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Claim.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CountryGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Country.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CityGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return City.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CategoryItemGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return CategoryItem.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CalendarNameGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return CalendarName.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CalendarGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Calendar.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def BusinessBlogGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return BusinessBlog.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def BusinessBlogParametreTypeGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return BusinessBlogParametreType.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def ActiveGroupGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ActiveGroup.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def GroupGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Group.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+
+
+
+def GroupExcludeService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return Group.objects.exclude(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()

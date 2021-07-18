@@ -1,8 +1,4 @@
-import json
 import traceback
-
-from django.core import serializers
-from builtins import classmethod
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -21,7 +17,7 @@ from ekabis.Forms.DestekSearchForm import DestekSearchform
 from unicode_tr import unicode_tr
 from ekabis.Forms.UserSearchForm import UserSearchForm
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import ClaimService
+from ekabis.services.services import ClaimService, ClaimGetService
 
 
 @login_required
@@ -106,9 +102,13 @@ def claim_update(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    clain = Claim.objects.get(uuid=uuid)
-    claim_form = ClaimForm(request.POST or None, instance=clain)
+
     try:
+        claim_filter = {
+            'uuid': uuid
+        }
+        clain = ClaimGetService(request, claim_filter)
+        claim_form = ClaimForm(request.POST or None, instance=clain)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -141,8 +141,9 @@ def delete_claim(request):
                 claimfilter = {
                     'uuid': uuid
                 }
-                obj = ClaimService(request, claimfilter).first()
-                obj.delete()
+                obj = ClaimGetService(request, claimfilter)
+                obj.isDeleted=True
+                obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 

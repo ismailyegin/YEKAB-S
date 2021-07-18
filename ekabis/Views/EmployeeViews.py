@@ -7,7 +7,6 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User, Group
 from django.db import transaction
 from django.db.models import Q
-from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from unicode_tr import unicode_tr
@@ -22,13 +21,11 @@ from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
 from ekabis.Forms.UserSearchForm import UserSearchForm
 from ekabis.models.Communication import Communication
-from ekabis.models.Person import Person
 from ekabis.models.CategoryItem import CategoryItem
-from ekabis.models.Country import Country
 from ekabis.models.Employee import Employee
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import CategoryItemService, EmployeeService
+from ekabis.services.services import CategoryItemService, EmployeeService, EmployeeGetService, CategoryItemGetService
 
 
 @login_required
@@ -124,21 +121,22 @@ def edit_employee(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    employefilter = {
-        'uuid': pk
-    }
-    employee = EmployeeService(request, employefilter).first()
-    user_form = UserForm(request.POST or None, instance=employee.user)
-    person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
-    communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
 
-    employee_form = EmployeeForm(request.POST or None, instance=employee)
-    categoryfilter = {
-        'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
-    }
-    employee_form.fields['workDefinition'].queryset = CategoryItemService(request, categoryfilter)
 
     try:
+        employefilter = {
+            'uuid': pk
+        }
+        employee = EmployeeGetService(request, employefilter)
+        user_form = UserForm(request.POST or None, instance=employee.user)
+        person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
+        communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
+
+        employee_form = EmployeeForm(request.POST or None, instance=employee)
+        categoryfilter = {
+            'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
+        }
+        employee_form.fields['workDefinition'].queryset = CategoryItemService(request, categoryfilter)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -204,7 +202,7 @@ def delete_employee(request):
                 empoyefilter = {
                     'uuid': uuid
                 }
-                obj = EmployeeService(request, empoyefilter).first()
+                obj = EmployeeGetService(request, empoyefilter)
                 obj.isDeleted = True
                 obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
@@ -328,12 +326,13 @@ def delete_workdefinition(request, pk):
                 categoryfilter = {
                     'pk': pk
                 }
-                obj = CategoryItemService(request, categoryfilter).first()
+                obj = CategoryItemGetService(request, categoryfilter)
 
                 log = str(obj.name) + " unvani sildi"
                 log = general_methods.logwrite(request, request.user, log)
 
-                obj.delete()
+                obj.isDeleted=True
+                obj.save()
 
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
@@ -351,12 +350,13 @@ def edit_workdefinition(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    categoryfilter = {
-        'pk': pk
-    }
-    categoryItem = CategoryItemService(request, categoryfilter).first()
-    category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
+
     try:
+        categoryfilter = {
+            'pk': pk
+        }
+        categoryItem = CategoryItemGetService(request, categoryfilter)
+        category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -388,7 +388,7 @@ def edit_workdefinitionUnvan(request, uuid):
     categoryfilter = {
         'uuid': uuid
     }
-    categoryItem = CategoryItemService(request, categoryfilter).first()
+    categoryItem = CategoryItemGetService(request, categoryfilter)
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
     try:
         with transaction.atomic():
@@ -427,7 +427,7 @@ def delete_employeetitle(request):
                 categoryfilter = {
                     'uuid': uuid
                 }
-                obj = CategoryItemService(request, categoryfilter).first()
+                obj = CategoryItemGetService(request, categoryfilter)
                 obj.isDeleted = True
                 obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
@@ -450,7 +450,7 @@ def updateRefereeProfile(request):
     employeefilter = {
         'user': request.user
     }
-    employee = EmployeeService(request, employeefilter).first()
+    employee = EmployeeGetService(request, employeefilter)
     user_form = DisabledUserForm(request.POST or None, instance=employee.user)
     person_form = DisabledPersonForm(request.POST or None, request.FILES or None, instance=employee.person)
     communication_form = DisabledCommunicationForm(request.POST or None, instance=employee.communication)

@@ -4,8 +4,8 @@ from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
 from ekabis.models.PermissionGroup import PermissionGroup
-from ekabis.services.services import ActiveGroupService, MenuAdminService, MenuDirectoryService, MenuPersonelService, \
-    MenuService, EmployeeService, DirectoryMemberService, UserService, PermissionGroupService
+from ekabis.services.services import ActiveGroupService, MenuService, EmployeeService, DirectoryMemberService, \
+    UserService, PermissionGroupService, ActiveGroupGetService, EmployeeGetService, DirectoryMemberGetService
 
 
 def get_client_ip(request):
@@ -62,27 +62,12 @@ def getMenu(request):
     return {'menus': menus, 'activ_url': activ_urls}
 
 
-def getAdminMenu(request):
-    adminmenus = MenuAdminService(request, None)
-    return {'adminmenus1': adminmenus}
-
-
-def getDirectoryMenu(request):
-    refereemenus = MenuDirectoryService(request, None)
-    return {'refereemenus': refereemenus}
-
-
-def getPersonelMenu(request):
-    coachmenus = MenuPersonelService(request, None)
-    return {'coachmenus': coachmenus}
-
-
 def control_access(request):
     is_exist = False
     groupfilter = {
         'user': request.user
     }
-    aktifgroup = ActiveGroupService(request, groupfilter)[0].group
+    aktifgroup = ActiveGroupGetService(request, groupfilter).group
     for perm in PermissionGroup.objects.filter(group=aktifgroup, is_active=True):
         if request.resolver_match.url_name == perm.permissions.codename:
             print('Okey')
@@ -112,13 +97,13 @@ def aktif(request):
             activfilter = {
                 'user': request.user
             }
-            aktifgroup = ActiveGroupService(request, activfilter)[0]
+            aktifgroup = ActiveGroupGetService(request, activfilter)
             # aktifgroup = ActiveGroupService(request, activfilter)[0]
             aktif = aktifgroup.group.name
         perm = []
 
         groupfilter = {
-            'group_id': aktifgroup.pk,
+            'group_id':aktifgroup.group_id,
             'is_active': True
         }
         permission = PermissionGroupService(request, groupfilter)
@@ -152,7 +137,7 @@ def controlGroup(request):
             activfilter = {
                 'user': request.user
             }
-            active = ActiveGroupService(request, activfilter)[0]
+            active = ActiveGroupGetService(request, activfilter)
             active = active.group.name
         return active
 
@@ -170,10 +155,10 @@ def getProfileImage(request):
             person = dict()
             person['profileImage'] = "profile/logo.png"
         elif request.user.groups.filter(name='Personel').exists():
-            athlete = EmployeeService(request, userfilter)[0]
+            athlete = EmployeeGetService(request, userfilter)
             person = athlete.person
         elif request.user.groups.filter(name='Yonetim').exists():
-            athlete = DirectoryMemberService(request, userfilter)[0]
+            athlete = DirectoryMemberGetService(request, userfilter)
             person = athlete.person
         else:
             person = None
