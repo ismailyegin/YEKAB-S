@@ -164,7 +164,8 @@
                                     {% csrf_token %}
 
                                     <div class="form-group">
-                                        <label> {{ region_form.name.label }}</label>
+                                        <label> {{ region_form.name.label }}</label><small
+                                                        style="color: red">*</small>
                                         {{ region_form.name }}
                                         <label id="label_name"></label>
 
@@ -172,7 +173,8 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label> {{ region_form.value.label }}</label>
+                                                <label> {{ region_form.value.label }}</label><small
+                                                        style="color: red">*</small>
                                                 {{ region_form.value }}
                                                 <label id="label_value"></label>
                                             </div>
@@ -180,7 +182,9 @@
 
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label> {{ region_form.unit.label }}</label>
+                                                    <label> {{ region_form.unit.label }}</label> <small
+                                                        style="color: red">*</small>
+
                                                     {{ region_form.unit }}
                                                     <label id="label_unit"></label>
                                                 </div>
@@ -194,6 +198,8 @@
 
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    <small style="color: red">(*) Olan Alanlar zorunludur.</small>
+
                                 </div>
                             </form>
                         </div>

@@ -13,7 +13,7 @@ from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
 
 from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, ConnectionCapacity, \
-    SubYekaCapacity,ExtraTime
+    SubYekaCapacity, ExtraTime, YekaBusiness
 
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.Company import Company
@@ -94,7 +94,7 @@ def add_yeka(request):
                         rg = region
                         yeka_connection_region = YekaConnectionRegion()
                         yeka_connection_region.yeka = yeka
-                        yeka_connection_region.connectionRegion =rg
+                        yeka_connection_region.connectionRegion = rg
                         yeka_connection_region.save()
                         total_capacity = total_capacity + region.value
 
@@ -343,7 +343,45 @@ def alt_yeka_ekle(request, uuid):
                                         )
                         new_yeka.save()
                         new_yeka.yekaParent = yeka
-                        new_yeka.business = yeka.business
+                        yeka_business = YekaBusiness(name=yeka.business.name)
+                        yeka_business.save()
+                        if yeka.business.businessblogs.all():
+                            parent_yeka_business_blog = YekaBusinessBlog.objects.none()
+                            for item in yeka.business.businessblogs.all().order_by('sorting'):
+
+                                if item.sorting == 1:
+                                    yeka_businessblog = YekaBusinessBlog(
+                                        finisDate=item.finisDate,
+                                        startDate=item.startDate,
+                                        sorting=item.sorting,
+                                        businessTime=item.businessTime,
+                                        status=item.status,
+                                        businessblog=item.businessblog
+
+                                    )
+                                    parent_yeka_business_blog = yeka_businessblog
+                                    yeka_businessblog.save()
+
+                                else:
+                                    yeka_businessblog = YekaBusinessBlog(parent=parent_yeka_business_blog,
+                                                                         finisDate=item.finisDate,
+                                                                         businessblog=item.businessblog,
+                                                                         sorting=item.sorting,
+                                                                         businessTime=item.businessTime,
+                                                                         status=item.status,
+                                                                         )
+                                    yeka_businessblog.save()
+                                    parent_yeka_business_blog = yeka_businessblog
+                                if item.companys.all():
+                                    for company in item.companys.all():
+                                        yeka_businessblog.companys.add(company)
+                                        yeka_businessblog.save()
+
+                                yeka_business.save()
+                                yeka_business.businessblogs.add(yeka_businessblog)
+                                yeka_business.save()
+
+                        new_yeka.business = yeka_business
                         new_yeka.save()
 
                         for new_capacity in array_capacity:
@@ -711,17 +749,19 @@ def view_yekabusinessBlog(request, uuid):
 
         yeka = YekaGetService(request, yeka_filter)
         yekabusinessbloks = None
+
         extratime_filter={
             'yeka':yeka
         }
         ekstratimes=ExtraTimeService(request,extratime_filter)
+
         if yeka.business:
             yekabusiness = yeka.business
             yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
         return render(request, 'Yeka/timeline.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
-                       'ekstratimes':ekstratimes
+                       'ekstratimes': ekstratimes
                        })
 
     except Exception as e:
@@ -756,7 +796,8 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         for item in yekabussiness.paremetre.all():
             if item.parametre.type == 'file':
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
-                yekaBusinessBlogo_form.fields[item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                yekaBusinessBlogo_form.fields[
+                    item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
                 # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
                 # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
                 # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
@@ -782,9 +823,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         return redirect('ekabis:view_yeka')
 
 
-def add_yekabusinessblog_company(request,yeka,yekabusinessblog):
-
-
+def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -807,7 +846,7 @@ def add_yekabusinessblog_company(request,yeka,yekabusinessblog):
 
         if request.POST:
             with transaction.atomic():
-                companyies=request.POST.getlist('company')
+                companyies = request.POST.getlist('company')
                 if companyies:
                     for item in companyies:
                         if not yekabussinessblog.companys.filter(pk=item) and Company.objects.filter(pk=item):
@@ -817,7 +856,7 @@ def add_yekabusinessblog_company(request,yeka,yekabusinessblog):
                 return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
         return render(request, 'Yeka/add_yekabusinessblog_company.html',
                       {
-                          'company_list':company_list,
+                          'company_list': company_list,
                           'yeka': yeka
                       })
     except Exception as e:
