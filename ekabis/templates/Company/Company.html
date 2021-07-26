@@ -79,6 +79,9 @@
 
                             {% for item in company_form %}
                                 <div class="form-group">
+                                {% if item.is_active  %}
+                                    <small  style="color: red">*</small>
+                                {% endif %}
                                     <label>{{ item.label }}</label><br>
 
                                     {{ item }}

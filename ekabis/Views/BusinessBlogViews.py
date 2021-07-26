@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
@@ -389,3 +390,5 @@ def delete_yekabusiness(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
         return redirect('ekabis:view_businessBlog')
+
+

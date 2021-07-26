@@ -160,19 +160,22 @@
                                     {% csrf_token %}
 
                                     <div class="form-group">
-                                        <label> {{ yeka_form.definition.label }}</label>
+                                        <label> {{ yeka_form.definition.label }}</label><small
+                                                        style="color: red">*</small>
                                         {{ yeka_form.definition }}
                                         <label id="label_definition"></label>
 
                                     </div>
                                     <div class="form-group">
-                                        <label> {{ yeka_form.date.label }}</label>
+                                        <label> {{ yeka_form.date.label }}</label><small
+                                                        style="color: red">*</small>
                                         {{ yeka_form.date }}
                                         <label id="label_date"></label>
 
                                     </div>
                                     <div class="form-group">
-                                        <label> Bağlantı Bölgesi </label>
+                                        <label> Bağlantı Bölgesi </label><small
+                                                        style="color: red">*</small>
                                         {{ yeka_connection_form.connectionRegion }}
                                         <label id="label_connectionRegion"></label>
 
@@ -184,6 +187,7 @@
 
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    <small  style="color: red">(*) Olan Alanlar Zorunludur.</small>
                                 </div>
                             </form>
                         </div>
