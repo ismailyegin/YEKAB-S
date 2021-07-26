@@ -29,7 +29,8 @@ from unicode_tr import unicode_tr
 
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import PersonService, UserService, GroupService, DirectoryMemberService, \
-    DirectoryMemberRoleService, DirectoryCommissionService
+    DirectoryMemberRoleService, DirectoryCommissionService, DirectoryMemberGetService, DirectoryMemberRoleGetService, \
+    DirectoryCommissionGetService, GroupGetService
 
 
 @login_required
@@ -98,7 +99,7 @@ def add_directory_member(request):
             groupfilter = {
                 'name': 'Yonetim'
             }
-            group = GroupService(request, groupfilter).first()
+            group = GroupGetService(request, groupfilter)
             password = User.objects.make_random_password()
             user.set_password(password)
             user.save()
@@ -194,7 +195,7 @@ def delete_directory_member(request):
                 memberfilter = {
                     'uuid': uuid
                 }
-                obj = DirectoryMemberService(request, memberfilter)[0]
+                obj = DirectoryMemberGetService(request, memberfilter)
 
                 log = str(obj.user.get_full_name()) + " kurul uyesi silindi"
                 log = general_methods.logwrite(request, request.user, log)
@@ -220,12 +221,12 @@ def update_directory_member(request, uuid):
     memberfilter = {
         'uuid': uuid
     }
-    member = DirectoryMemberService(request, memberfilter).first()
+    member = DirectoryMemberGetService(request, memberfilter)
     if not member.user.groups.all():
         groupfilter = {
             'name': 'Yonetim'
         }
-        member.user.groups.add(GroupService(request, groupfilter).first())
+        member.user.groups.add(GroupGetService(request, groupfilter))
         member.save()
     groups = GroupService(request, None)
 
@@ -268,21 +269,21 @@ def update_directory_member(request, uuid):
                                        'person_form': person_form, 'member_form': member_form, 'groups': groups,
 
                                        })
-
-                name = request.POST.get('first_name')
-                surname = request.POST.get('last_name')
-                year = request.POST.get('birthDate')
-                year = year.split('/')
-
-                client = Client('https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?WSDL')
-                if not (client.service.TCKimlikNoDogrula(tc, name, surname, year[2])):
-                    messages.warning(request,
-                                     'Tc kimlik numarasi ile isim  soyisim dogum yılı  bilgileri uyuşmamaktadır. ')
-                    return render(request, 'yonetim/kurul-uyesi-duzenle.html',
-                                  {'user_form': user_form, 'communication_form': communication_form, 'member': member,
-                                   'person_form': person_form, 'member_form': member_form, 'groups': groups,
-
-                                   })
+                #
+                # name = request.POST.get('first_name')
+                # surname = request.POST.get('last_name')
+                # year = request.POST.get('birthDate')
+                # year = year.split('/')
+                #
+                # client = Client('https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?WSDL')
+                # if not (client.service.TCKimlikNoDogrula(tc, name, surname, year[2])):
+                #     messages.warning(request,
+                #                      'Tc kimlik numarasi ile isim  soyisim dogum yılı  bilgileri uyuşmamaktadır. ')
+                #     return render(request, 'yonetim/kurul-uyesi-duzenle.html',
+                #                   {'user_form': user_form, 'communication_form': communication_form, 'member': member,
+                #                    'person_form': person_form, 'member_form': member_form, 'groups': groups,
+                #
+                #                    })
 
                 if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and member_form.is_valid():
 
@@ -368,7 +369,7 @@ def delete_member_role(request):
                 memberrolefilter = {
                     'uuid': uuid
                 }
-                obj = DirectoryMemberRoleService(request, memberrolefilter).first()
+                obj = DirectoryMemberRoleGetService(request, memberrolefilter)
                 obj.isDeleted = True
                 obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
@@ -387,13 +388,14 @@ def update_member_role(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    memberrolefilter = {
-        'uuid': uuid
-    }
 
-    memberRole = DirectoryMemberRoleService(request, memberrolefilter).first()
-    member_role_form = DirectoryMemberRoleForm(request.POST or None, instance=memberRole)
     try:
+        memberrolefilter = {
+            'uuid': uuid
+        }
+
+        memberRole = DirectoryMemberRoleGetService(request, memberrolefilter)
+        member_role_form = DirectoryMemberRoleForm(request.POST or None, instance=memberRole)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -472,7 +474,7 @@ def delete_commission(request):
                 commissonfilter = {
                     'uuid': uuid
                 }
-                obj = DirectoryCommissionService(request, commissonfilter).first()
+                obj = DirectoryCommissionGetService(request, commissonfilter)
                 log = str(obj.name) + " kurul silindi"
                 log = general_methods.logwrite(request, request.user, log)
                 obj.isDeleted = True
@@ -495,12 +497,13 @@ def update_commission(request, pk):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    commissonfilter = {
-        'uuid': pk
-    }
-    commission = DirectoryCommissionService(request, commissonfilter).first()
-    commission_form = DirectoryCommissionForm(request.POST or None, instance=commission)
+
     try:
+        commissonfilter = {
+            'uuid': pk
+        }
+        commission = DirectoryCommissionGetService(request, commissonfilter)
+        commission_form = DirectoryCommissionForm(request.POST or None, instance=commission)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -536,7 +539,7 @@ def updateDirectoryProfile(request):
     memberfilter = {
         'user': user
     }
-    member = DirectoryMemberService(request, memberfilter).first()
+    member = DirectoryMemberGetService(request, memberfilter)
     person = member.person
     communication = member.communication
     user_form = DisabledUserForm(request.POST or None, instance=user)

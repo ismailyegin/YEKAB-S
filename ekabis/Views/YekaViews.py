@@ -25,7 +25,10 @@ from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.YekaPersonHistory import YekaPersonHistory
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import YekaService
+from ekabis.services.services import YekaService, CompanyService, YekaConnectionRegionService, YekaGetService, \
+    YekaConnectionRegionGetService, ConnectionCapacityService, SubYekaCapacityService, YekaPersonService, \
+    EmployeeGetService, YekaCompanyService, CompanyGetService, ExtraTimeService, YekaBusinessBlogGetService, \
+    BusinessBlogGetService
 
 
 @login_required
@@ -36,9 +39,18 @@ def return_yeka(request):
         logout(request)
         return redirect('accounts:login')
     yeka_form = YekaForm()
-    parent_yekalar = Yeka.objects.filter(Q(isDeleted=False) & Q(yekaParent=None))
-    companies = Company.objects.filter(isDeleted=False)
+
     try:
+        yeka_filter = {
+            'isDeleted': False,
+            'yekaParent': None
+
+        }
+        parent_yekalar = YekaService(request, yeka_filter)
+        companyfilter = {
+            'isDeleted': False
+        }
+        companies = CompanyService(request, companyfilter)
         with transaction.atomic():
 
             return render(request, 'Yeka/view_yeka.html',
@@ -122,17 +134,26 @@ def return_sub_yeka(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    yeka = Yeka.objects.get(uuid=uuid)
-    alt_yekalar = Yeka.objects.filter(yekaParent=yeka, isDeleted=False)
-    yekalar = dict()
-    sub_yekalar = []
-    for alt_yeka in alt_yekalar:
-        capacities = SubYekaCapacity.objects.filter(yeka=alt_yeka)
-        yekalar['yeka'] = alt_yeka
-        yekalar['capacities'] = capacities
-        sub_yekalar.append(yekalar)
+
 
     try:
+        yeka_filter = {
+            'uuid': uuid
+        }
+        yeka = YekaService(request, yeka_filter)
+
+        alt_yeka_filter = {
+            'yekaParent': yeka,
+            'isDeleted': False
+        }
+        alt_yekalar = YekaService(request, alt_yeka_filter)
+        yekalar = dict()
+        sub_yekalar = []
+        for alt_yeka in alt_yekalar:
+            capacities = SubYekaCapacity.objects.filter(yeka=alt_yeka)
+            yekalar['yeka'] = alt_yeka
+            yekalar['capacities'] = capacities
+            sub_yekalar.append(yekalar)
         return render(request, 'Yeka/view_sub_yeka.html',
                       {'alt_yekalar': sub_yekalar, 'yeka': uuid, })
     except Exception as e:
@@ -155,7 +176,11 @@ def delete_yeka(request):
                     'uuid': uuid
                 }
                 obj = YekaService(request, yekafilter).first()
-                parent = Yeka.objects.filter(Q(isDeleted=False) & Q(yekaParent__uuid=obj.uuid))
+                parent_filter={
+                    'isDeleted' : False,
+                    'yekaParent__uuid' : obj.uuid
+                }
+                parent = YekaService(request,parent_filter)
                 if parent:
                     return JsonResponse({'status': 'Fail', 'msg': 'Yeka silinemez.Alt Yekalar bulunmaktadır.'})
                 else:
@@ -178,17 +203,36 @@ def update_yeka(request, uuid):
         logout(request)
         return redirect('accounts:login')
 
-    yeka = Yeka.objects.get(uuid=uuid)
-    yeka_form = YekaForm(request.POST or None, instance=yeka)
-    alt_yekalar = Yeka.objects.filter(isDeleted=False, yekaParent__uuid=uuid)
-    yeka_connections = YekaConnectionRegion.objects.filter(Q(isDeleted=False) & Q(yeka=yeka))
-    yeka_regions = []
 
-    for yeka_connection in yeka_connections:
-        yeka_regions.append(yeka_connection.connectionRegion)
-    connection_regions = ConnectionRegion.objects.filter(isDeleted=False)
 
     try:
+        yeka_filter = {
+            'uuid': uuid
+        }
+
+        yeka = YekaService(request, yeka_filter)
+        yeka_form = YekaForm(request.POST or None, instance=yeka)
+        alt_yeka_filter = {
+            'isDeleted': False,
+            'yekaParent__uuid': uuid
+
+        }
+
+        alt_yekalar = YekaService(request, alt_yeka_filter)
+        yeka_connections_filter = {
+            'isDeleted': False,
+            'yeka': yeka
+        }
+        yeka_connections = YekaConnectionRegionService(request, yeka_connections_filter)
+        yeka_regions = []
+
+        for yeka_connection in yeka_connections:
+            yeka_regions.append(yeka_connection.connectionRegion)
+
+        connection_regions_filter = {
+            'isDeleted': False
+        }
+        connection_regions = YekaConnectionRegionService(request, connection_regions_filter)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -256,14 +300,29 @@ def update_yeka(request, uuid):
 
 @login_required
 def alt_yeka_ekle(request, uuid):
-    yeka_form = YekaForm()
-    yeka = Yeka.objects.get(uuid=uuid)
-    alt_yekalar = Yeka.objects.filter(yekaParent=yeka, isDeleted=False)
-    yeka_connection = YekaConnectionRegion.objects.get(yeka=yeka)
-    yeka_connection_capacities = ConnectionCapacity.objects.filter(isDeleted=False,
-                                                                   connection_region=yeka_connection.connectionRegion)
+
 
     try:
+        yeka_form = YekaForm()
+        yeka_filter = {
+            'uuid': uuid
+        }
+        yeka = YekaGetService(request, yeka_filter)
+        alt_yeka_filter = {
+            'yekaParent': yeka,
+            'isDeleted': False
+
+        }
+        alt_yekalar = YekaService(request, alt_yeka_filter)
+        yeka_connection_region_filter = {
+            'yeka': yeka
+        }
+        yeka_connection = YekaConnectionRegionGetService(request, yeka_connection_region_filter)
+        capasity_filter = {
+            'isDeleted': False,
+            'connection_region': yeka_connection.connectionRegion
+        }
+        yeka_connection_capacities = ConnectionCapacityService(request, capasity_filter)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -366,17 +425,38 @@ def alt_yeka_ekle(request, uuid):
 
 @login_required
 def update_sub_yeka(request, uuid):
-    yeka = Yeka.objects.get(uuid=uuid)
-    alt_yekalar = Yeka.objects.filter(yekaParent=yeka, isDeleted=False)
-    yeka_connection = YekaConnectionRegion.objects.get(yeka=yeka.yekaParent)
-    yeka_connection_capacities = ConnectionCapacity.objects.filter(isDeleted=False,
-                                                                   connection_region=yeka_connection.connectionRegion)
-    yeka_form = YekaForm(request.POST or None, instance=yeka)
-    current_capacities = SubYekaCapacity.objects.filter(yeka=yeka, isDeleted=False)
-    sub_capacities = []
-    for sub in current_capacities:
-        sub_capacities.append(sub.capacity)
+
     try:
+        yeka_filter = {
+            'uuid': uuid
+        }
+        yeka = YekaGetService(request, yeka_filter)
+        alt_yeka_filter = {
+            'yekaParent': yeka,
+            'isDeleted': False
+
+        }
+        alt_yekalar = YekaService(request, alt_yeka_filter)
+        yeka_connection_region_filter = {
+            'yeka': yeka
+        }
+        yeka_connection = YekaConnectionRegionGetService(request, yeka_connection_region_filter)
+        capasity_filter = {
+            'isDeleted': False,
+            'connection_region': yeka_connection.connectionRegion
+        }
+        yeka_connection_capacities = ConnectionCapacityService(request, capasity_filter)
+        yeka_form = YekaForm(request.POST or None, instance=yeka)
+
+        subyeka_filter={
+            'yeka' : yeka,
+            'isDeleted' : False
+        }
+
+        current_capacities = SubYekaCapacityService(request,subyeka_filter)
+        sub_capacities = []
+        for sub in current_capacities:
+            sub_capacities.append(sub.capacity)
 
         with transaction.atomic():
 
@@ -450,11 +530,25 @@ def yeka_person_list(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    yeka = Yeka.objects.get(uuid=uuid)
-    yeka_person = YekaPerson.objects.filter(Q(yeka=yeka) & Q(isDeleted=False))
+
+
+
+    yeka_filter={
+        'uuid':uuid,
+
+    }
+    yeka = YekaGetService(request,yeka_filter)
+    yeka_person_filter={
+        'yeka':yeka,
+        'isDeleted' : False
+    }
+
+    yeka_person = YekaPersonService(request,yeka_person_filter)
     array = []
     for person in yeka_person:
         array.append(person.employee.uuid)
+
+    # ekstra servis yazılacak
     persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array)
 
     return render(request, 'Yeka/yekaPersonList.html',
@@ -472,8 +566,15 @@ def yeka_person_assignment(request):
                 person_uuid = request.POST['person_uuid']
                 yeka_uuid = request.POST['yeka_uuid']
 
-                yeka = Yeka.objects.get(uuid=yeka_uuid)
-                person = Employee.objects.get(uuid=person_uuid)
+                yeka_filter={
+                    'uuid':yeka_uuid
+                }
+
+                yeka = YekaGetService(request,yeka_filter)
+                employee_filter={
+                    'uuid':person_uuid
+                }
+                person = EmployeeGetService(request,employee_filter)
 
                 person_yeka = YekaPerson(yeka=yeka, employee=person, is_active=True)
                 person_yeka.save()
@@ -503,7 +604,12 @@ def yeka_person_remove(request):
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
                 uuid = request.POST['uuid']
-                person = Employee.objects.get(uuid=uuid)
+
+                employee_filter={
+                    'uuid':uuid
+                }
+                person = EmployeeGetService(request,employee_filter)
+
 
                 yeka_person = YekaPerson.objects.get(Q(uuid=request.POST['yeka_uuid']) & Q(employee__uuid=uuid))
 
@@ -533,11 +639,24 @@ def yeka_company_list(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    yeka = Yeka.objects.get(uuid=uuid)
-    yeka_company = YekaCompany.objects.filter(Q(yeka=yeka) & Q(isDeleted=False))
+
+    yeka_filter = {
+        'uuid': uuid
+    }
+
+    yeka = YekaGetService(request,yeka_filter)
+    yeka_company_filter = {
+        'yeka': yeka,
+        'isDeleted' : False
+
+    }
+    yeka_company = YekaCompanyService(request,yeka_company_filter)
     array = []
     for yeka in yeka_company:
         array.append(yeka.company.uuid)
+    company_filter={
+        'isDeleted' : False
+    }
     companies = Company.objects.filter(isDeleted=False).exclude(uuid__in=array)
 
     return render(request, 'Yeka/yeka_company_list.html',
@@ -555,8 +674,15 @@ def yeka_company_assignment(request):
                 company_uuid = request.POST['company_uuid']
                 yeka_uuid = request.POST['yeka_uuid']
 
-                yeka = Yeka.objects.get(uuid=yeka_uuid)
-                company = Company.objects.get(uuid=company_uuid)
+                yeka_filter = {
+                    'uuid': yeka_uuid
+                }
+
+                yeka = YekaGetService(request,yeka_filter)
+                company_filter={
+                    'uuid' : company_uuid
+                }
+                company = CompanyGetService(request,company_filter)
 
                 yeka_company = YekaCompany(yeka=yeka, company=company, is_active=True)
                 yeka_company.save()
@@ -617,9 +743,18 @@ def view_yekabusinessBlog(request, uuid):
         return redirect('accounts:login')
 
     try:
-        yeka = Yeka.objects.get(uuid=uuid)
+        yeka_filter = {
+            'uuid': uuid
+        }
+
+        yeka = YekaGetService(request, yeka_filter)
         yekabusinessbloks = None
-        ekstratimes = ExtraTime.objects.filter(yeka=yeka)
+
+        extratime_filter={
+            'yeka':yeka
+        }
+        ekstratimes=ExtraTimeService(request,extratime_filter)
+
         if yeka.business:
             yekabusiness = yeka.business
             yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
@@ -643,9 +778,20 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         logout(request)
         return redirect('accounts:login')
     try:
-        yeka = Yeka.objects.get(uuid=yeka)
-        yekabussiness = YekaBusinessBlog.objects.get(uuid=yekabusiness)
-        business = BusinessBlog.objects.get(uuid=business)
+        yeka_filter = {
+            'uuid': yeka
+        }
+
+        yeka = YekaGetService(request, yeka_filter)
+        yeka_yekabusiness_filter_ = {
+            'uuid': yekabusiness
+        }
+
+        yekabussiness = YekaBusinessBlogGetService(request,yeka_yekabusiness_filter_)
+        yeka_business_filter_ = {
+            'uuid': business
+        }
+        business = BusinessBlogGetService(request,yeka_business_filter_)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
             if item.parametre.type == 'file':
@@ -683,9 +829,20 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
         logout(request)
         return redirect('accounts:login')
     try:
-        yeka = Yeka.objects.get(uuid=yeka)
-        yekabussinessblog = YekaBusinessBlog.objects.get(uuid=yekabusinessblog)
-        company_list = Company.objects.all()
+
+        yeka_filter = {
+            'uuid': yeka
+        }
+
+        yeka = YekaGetService(request, yeka_filter)
+        yeka_yekabusiness_filter= {
+            'uuid': yekabusinessblog
+        }
+
+        yeka = YekaGetService(request,yeka_filter)
+        yekabussinessblog = YekaBusinessBlogGetService(request,yeka_yekabusiness_filter)
+        company_list=CompanyService(request,None)
+
 
         if request.POST:
             with transaction.atomic():

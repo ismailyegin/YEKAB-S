@@ -13,9 +13,6 @@ from .Employee import Employee
 from .EnumFields import EnumFields
 from .Logs import Logs
 from .Menu import Menu
-from .MenuAdmin import MenuAdmin
-from .MenuDirectory import MenuDirectory
-from .MenuPersonel import MenuPersonel
 from .Notification import Notification
 from .Person import Person
 from .PermissionGroup import PermissionGroup

@@ -12,7 +12,8 @@ from ekabis.urls import urlpatterns
 from ekabis.models.Permission import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
 
-from ekabis.services.services import UserService
+from ekabis.services.services import UserService, UserGetService
+
 
 def index(request):
     return render(request, 'accounts/index.html')
@@ -65,7 +66,7 @@ def forgot(request):
             'username' : mail
         }
         if UserService(request,userfilter):
-            user = UserService(request,userfilter)[0]
+            user = UserGetService(request,userfilter)
             user.is_active = True
             user.save()
 

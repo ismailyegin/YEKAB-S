@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <meta name="description" content="SPOR  BİLGİ SİSTEMİ"/>
-    <meta name="keywords" content="SPOR  BİLGİ SİSTEMİ"/>
+    <meta name="description" content="YEKABİS"/>
+    <meta name="keywords" content="YEKABİS"/>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {% load static %}
@@ -230,7 +230,6 @@
 <script src="{% static 'plugins/jquery-mapael/maps/usa_states.min.js' %}"></script>
 <script src="{% static 'errors_message.js' %}"></script>
 
-
 <!-- ChartJS -->
 <script src="{% static 'eski/chart.js/Chart.min.js' %}"></script>
 
@@ -240,123 +239,6 @@
 {#<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>#}
 <script src="{% static 'alert/sweetalert.min.js' %}"></script>
 <script>
-    $(function () {
-        $('#example1').DataTable();
-        $('#example2').DataTable({
-            'paging': true,
-            'lengthChange': false,
-            'searching': false,
-            'ordering': true,
-            'info': true,
-            'autoWidth': false
-        });
-
-
-        $('.select2').select2();
-
-
-        {#//Datemask dd/mm/yyyy#}
-        {#$('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'});#}
-        {#//Datemask2 mm/dd/yyyy#}
-        {#$('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'});#}
-        {##}
-        {#$('.datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'});#}
-        {#//Money Euro#}
-        {#$('[data-mask]').inputmask();#}
-
-        //Date range picker
-        $('#reservation').daterangepicker();
-        //Date range picker with time picker
-        $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
-        //Date range as a button
-        $('#daterange-btn').daterangepicker(
-            {
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                },
-                startDate: moment().subtract(29, 'days'),
-                endDate: moment()
-            },
-            function (start, end) {
-                $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-            }
-        );
-
-        //Date picker
-        $('#datepicker').datepicker({
-            autoclose: true,
-            language: 'tr',
-            format: 'dd/mm/yyyy',
-
-        });
-
-        //Date picker
-        $('#datepicker2').datepicker({
-            autoclose: true,
-            language: 'tr',
-            format: 'dd/mm/yyyy',
-        });
-
-
-        $('#datepicker3').datepicker({
-            autoclose: true,
-            language: 'tr',
-            format: 'dd/mm/yyyy',
-        });
-
-        $('#datepicker4').datepicker({
-            autoclose: true,
-            language: 'tr',
-            format: 'dd/mm/yyyy',
-        });
-        $('.datepicker6').datepicker({
-            autoclose: true,
-            language: 'tr',
-            format: 'dd/mm/yyyy',
-        })
-        $('.dateyear').datepicker({
-            autoclose: true,
-            language: 'tr',
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years"
-
-
-        })
-        $('#datepicker5').datepicker({
-            autoclose: true,
-            language: 'tr',
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years"
-
-
-        })
-
-
-        $('.preloader').fadeOut('slow');
-
-
-        $('.dateyear').datepicker({
-            autoclose: true,
-            language: 'tr',
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years"
-
-
-        })
-        //Bootstrap Duallistbox
-        $('.duallistbox').bootstrapDualListbox()
-
-    });
-
-
     function validate(evt) {
         var theEvent = evt || window.event;
 

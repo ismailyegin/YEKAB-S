@@ -2,7 +2,6 @@ import traceback
 
 from django.contrib.auth import update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.db import transaction
@@ -14,7 +13,7 @@ from ekabis.Forms.UserSearchForm import UserSearchForm
 from accounts.models import Forgot
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import UserService, GroupService
+from ekabis.services.services import UserService, GroupService, UserGetService, GroupGetService, GroupExcludeService
 
 from django.contrib.auth.models import User, Group
 from ekabis.models.HistoryGroup import HistoryGroup
@@ -68,7 +67,7 @@ def update_user(request, pk):
     userfilter = {
         'pk': pk
     }
-    user = UserService(request, userfilter).first()
+    user = UserGetService(request, userfilter)
     user_form = UserForm(request.POST or None, instance=user)
     try:
         with transaction.atomic():
@@ -111,7 +110,7 @@ def active_user(request, pk):
                     'pk': pk
                 }
 
-                obj = UserService(request, userfilter).first()
+                obj = UserGetService(request, userfilter)
                 if obj.is_active:
                     obj.is_active = False
                     obj.save()
@@ -145,20 +144,20 @@ def send_information(request, uuid):
                     'uuid': uuid
                 }
 
-                user = UserService(request, userfilter)
+                user = UserGetService(request, userfilter)
 
                 if not user.is_active:
                     return JsonResponse({'status': 'Fail', 'msg': 'Kullanıcıyı aktifleştirin.'})
                 fdk = Forgot(user=user, status=False)
                 fdk.save()
                 html_content = ''
-                subject, from_email, to = 'Etut Proje Bilgi Sistemi Kullanıcı Bilgileri', 'etutproje@kobiltek.com', user.email
-                html_content = '<h2>ADALET BAKANLIGI PROJE TAKİP  SİSTEMİ</h2>'
+                subject, from_email, to = 'Yekabis Kullanıcı Bilgileri', 'fatih@kobiltek.com', user.email
+                html_content = '<h2>Yekabis</h2>'
                 html_content = html_content + '<p><strong>Kullanıcı Adınız :' + str(fdk.user.username) + '</strong></p>'
                 # html_content = html_content + '<p> <strong>Site adresi:</strong> <a href="http://127.0.0.1:8000/newpassword?query=' + str(
                 #     fdk.uuid) + '">http://127.0.0.1:8000/sbs/profil-guncelle/?query=' + str(fdk.uuid) + '</p></a>'
-                html_content = html_content + '<p> <strong>Yeni şifre oluşturma linki:</strong> <a href="https://www.kobiltek.com:81/etutproje/sbs/newpassword?query=' + str(
-                    fdk.uuid) + '">https://www.kobiltek.com:81/etutproje/sbs/profil-guncelle/?query=' + str(
+                html_content = html_content + '<p> <strong>Yeni şifre oluşturma linki:</strong> <a href="https://www.kobiltek.com:81/yekabis/sbs/newpassword?query=' + str(
+                    fdk.uuid) + '">https://www.kobiltek.com:81/yekabis/sbs/profil-guncelle/?query=' + str(
                     fdk.uuid) + '</p></a>'
                 msg = EmailMultiAlternatives(subject, '', from_email, [to])
                 msg.attach_alternative(html_content, "text/html")
@@ -184,7 +183,7 @@ def change_group_function(request, pk):
     userfilter = {
         'pk': pk
     }
-    user = UserService(request, userfilter)[0]
+    user = UserGetService(request, userfilter)
     user_group = Group.objects.filter(user=user)
 
     if request.POST:
@@ -196,7 +195,7 @@ def change_group_function(request, pk):
                 groupfilter = {
                     'pk': item
                 }
-                group = GroupService(request, groupfilter)[0]
+                group = GroupGetService(request, groupfilter)
 
                 user.groups.add(group)
                 user.save()
@@ -222,8 +221,11 @@ def change_group_function(request, pk):
                     is_active=False
                 )
                 history.save()
-    user_group = Group.objects.filter(user=user)
-    user_none_group = Group.objects.exclude(user=user)
+    userfilter={
+        'user':user
+    }
+    user_group = GroupService(request,userfilter)
+    user_none_group = GroupExcludeService(request,userfilter)
 
     return render(request, 'kullanici/kullniciGrupEkle.html',
                   {"user_none_group": user_none_group,
