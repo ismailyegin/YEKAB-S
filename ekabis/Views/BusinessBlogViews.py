@@ -274,7 +274,7 @@ def change_yekabusiness(request, uuid,yeka):
 
     try:
         business_filter = {
-            uuid: uuid
+            'uuid': uuid
         }
         yekabusiness = YekaBusinessGetService(request, business_filter)
         business_form = YekaBusinessForm(request.POST or None, instance=yekabusiness)
