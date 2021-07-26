@@ -140,7 +140,7 @@ def return_sub_yeka(request, uuid):
         yeka_filter = {
             'uuid': uuid
         }
-        yeka = YekaService(request, yeka_filter)
+        yeka = YekaGetService(request, yeka_filter)
 
         alt_yeka_filter = {
             'yekaParent': yeka,
@@ -149,11 +149,12 @@ def return_sub_yeka(request, uuid):
         alt_yekalar = YekaService(request, alt_yeka_filter)
         yekalar = dict()
         sub_yekalar = []
-        for alt_yeka in alt_yekalar:
-            capacities = SubYekaCapacity.objects.filter(yeka=alt_yeka)
-            yekalar['yeka'] = alt_yeka
-            yekalar['capacities'] = capacities
-            sub_yekalar.append(yekalar)
+        if alt_yekalar:
+            for alt_yeka in alt_yekalar:
+                capacities = SubYekaCapacity.objects.filter(yeka=alt_yeka)
+                yekalar['yeka'] = alt_yeka
+                yekalar['capacities'] = capacities
+                sub_yekalar.append(yekalar)
         return render(request, 'Yeka/view_sub_yeka.html',
                       {'alt_yekalar': sub_yekalar, 'yeka': uuid, })
     except Exception as e:
