@@ -146,7 +146,7 @@
 
 
                                 <div class="form-group">
-                                    <label> {{ category_item_form.name.label }}</label>
+                                    <label> {{ category_item_form.name.label }}</label> <small style="color: red">*</small>
                                     {{ category_item_form.name }}
                                 </div>
 
@@ -155,6 +155,7 @@
 
 
                                 <button type="submit" class="btn btn-primary">Kaydet</button>
+                                                            <small style="color: red">(*)Olan Alanlar zorunludur.</small>
                             </div>
                         </form>
 

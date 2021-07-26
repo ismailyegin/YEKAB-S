@@ -11,7 +11,7 @@ class YekaBusinessBlog(BaseModel):
         (True, 'Yes'),
         (False, 'No')
     )
-    businessblog = models.ForeignKey(BusinessBlog, on_delete=models.CASCADE)
+    businessblog = models.ForeignKey(BusinessBlog, on_delete=models.CASCADE,null=True,blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     startDate = models.DateTimeField(null=True, blank=True)
     finisDate = models.DateTimeField(null=True, blank=True)
@@ -19,4 +19,4 @@ class YekaBusinessBlog(BaseModel):
     status = models.BooleanField(default=False ,choices=TRUE_FALSE_CHOICES)
     sorting = models.IntegerField(default=0)
     companys=models.ManyToManyField(Company)
-    paremetre=models.ManyToManyField(YekaBusinessBlogParemetre)
+    paremetre=models.ManyToManyField(YekaBusinessBlogParemetre,null=True,blank=True)
