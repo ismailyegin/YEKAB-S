@@ -56,46 +56,35 @@
     </div>
 
 
-    {% if messages %}
+     {% if messages %}
         {% for message in messages %}
 
-
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+            <div id="toast-container"  class="toasts-top-right" >
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
 
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -133,20 +122,17 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Firmalar</h3>
-                        </div>
-                        {% for item in perm %}
+                            {% for item in perm %}
                             {% if item == 'add_company' %}
-                                <div class="card-header with-border">
 
-                                    <div class="btn-group">
                                         <a href="{% url "ekabis:add_company" %}"
-                                           type="button" class="btn btn-success"><i
-                                                class="fa fa-edit"></i> Yeni Firma Ekle
+                                           type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                                class="fa fa-plus" title="Firma Ekle"></i>
                                         </a>
-                                    </div>
-                                </div>
                             {% endif %}
                         {% endfor %}
+                        </div>
+
                         <div class="card-body">
                             <table id="company" class="table table-bordered table-hover">
                                 <thead>
@@ -155,7 +141,7 @@
                                     <th>İsim</th>
                                     <th>Ünvan</th>
                                     <th>Sorumlu</th>
-                                    <td>işlemler</td>
+                                    <td></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -167,25 +153,38 @@
                                             <td>{{ company.degree }}</td>
                                             <td>{{ company.companyuser.user.first_name }} {{ company.companyuser.user.last_name }}</td>
                                             <td>
-                                                {% for item in perm %}
+                                               <div class="btn-group">
+                                                    <button type="button" class="btn btn-default">İşlemler</button>
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown">
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                         {% for item in perm %}
                                                     {% if item == 'change_company' %}
-                                                        <div class="btn-group">
-                                                            <a href="{% url "ekabis:change_company" company.uuid %}"
-                                                               type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-edit"></i>İncele
-                                                            </a>
-                                                        </div>
+                                                               <a href="{% url "ekabis:change_company" company.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                         {% for item in perm %}
+                                                    {% if item == 'delete_company' %}
 
-                                                    {% elif item == 'delete_company' %}
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-danger"
-                                                               data-toggle="modal"
-                                                               onclick=deleteCompany('{{ company.uuid }}')><i
+                                                                <a class="dropdown-item" href=""
+                                                                   data-toggle="modal"
+                                                                  onclick=deleteCompany('{{ company.uuid }}')><i
                                                                     class="fa fa-trash"></i>Sil</a>
-                                                        </div>
 
-                                                    {% endif %}
-                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+
+
+
+
                                             </td>
                                         </tr>
 
@@ -207,25 +206,19 @@
         </div>
 
     </section>
-
+{% load static %}
     <script>
         $(function () {
             $('#company').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
-                buttons: [
+               'buttons': [
+
+
                     {
                         extend: "pageLength",
                     },
@@ -233,54 +226,31 @@
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
+                        text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'Firmalar',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Firmalar',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Firmalar.json'
-                            );
-                        }
-                    }
 
 
                 ],
@@ -291,6 +261,9 @@
                 'info': true,
                 'autoWidth': true,
                 'responsive': true,
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                }
             })
 
         })

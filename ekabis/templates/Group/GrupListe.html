@@ -56,43 +56,32 @@
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -158,20 +147,17 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Gruplar</h3>
+                            {% if aktif == 'Yonetim' or aktif == 'Admin' %}
+
+                                <a href="{% url "ekabis:add_group" %}"
+                                   type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                        class="fa fa-plus" title="Yeni Grup Ekle"></i>
+                                </a>
+
+
+                            {% endif %}
                         </div>
-                        {% if aktif == 'Yonetim' or aktif == 'Admin' %}
-                            <div class="card-header with-border">
-                                <div class="btn-group">
 
-                                    <a href="{% url "ekabis:add_group" %}"
-                                       type="button" class="btn btn-success"><i
-                                            class="fa fa-edit"></i> Yeni Grup Ekle
-                                    </a>
-
-
-                                </div>
-                            </div>
-                        {% endif %}
                         <div class="card-body">
                             <table id="company" class="table table-bordered table-hover">
                                 <thead>
@@ -190,25 +176,36 @@
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ group.name }}</td>
                                             <td>
-                                                {% for item in perm %}
-                                                    {% if item == 'change_group' %}
-                                                        <div class="btn-group">
-                                                            <a href="{% url "ekabis:change_group" group.pk %}"
-                                                               type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-edit"></i>İncele
+
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default">İşlemler</button>
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown">
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        {% for item in perm %}
+                                                            {% if item == 'change_group' %}
+                                                               <a href="{% url "ekabis:change_group" group.pk %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% if aktif == 'Yonetim' or aktif == 'Admin' %}
+                                                            <!-- izin kontrolü yapılacak ! -->
+                                                            <a href="{% url "ekabis:change_groupPermission"  group.pk %}"
+                                                               class="dropdown-item"> <i
+                                                                    class="fa fa-lock" title="İzinler"></i> İzinler
                                                             </a>
-                                                        </div>
-                                                    {% endif %}
-                                                {% endfor %}
-                                                {% if aktif == 'Yonetim' or aktif == 'Admin' %}
-                                                    <!-- izin kontrolü yapılacak ! -->
-                                                    <div class="btn-group">
-                                                        <a href="{% url "ekabis:change_groupPermission"  group.pk %}"
-                                                           type="button" class="btn btn-success"><i
-                                                                class="fa fa-edit"></i> İzinler
-                                                        </a>
+
+                                                        {% endif %}
+
                                                     </div>
-                                                {% endif %}
+                                                </div>
+
+
+
                                             </td>
 
                                         </tr>
@@ -253,10 +250,8 @@
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                buttons: [
+                'buttons': [
 
-                    {#'copy',#}
-                    {#'csv',#}
 
                     {
                         extend: "pageLength",
@@ -265,57 +260,37 @@
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
+                        text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'Gruplar  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'Gruplar',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Gruplar',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'grup.json'
-                            );
-                        }
-                    }
 
 
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,

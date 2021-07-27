@@ -1,108 +1,276 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 
-    {% if messages %}
-        {% for message in messages %}
+{% if messages %}
+    {% for message in messages %}
 
-
+        <div id="toast-container" class="toasts-top-right">
             {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
-
-
-                    <ul class="messages">
+                <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                    <div class="toast-message">
                         {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                            {{ message }}
                         {% endfor %}
-                    </ul>
-
-
+                    </div>
                 </div>
 
-            {% endif %}
 
+
+            {% endif %}
 
             {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
+                <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                    <div class="toast-message"> {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                    </div>
                 </div>
+
+
 
             {% endif %}
-        {% endfor %}
+        </div>
+    {% endfor %}
 
 
-    {% endif %}
+{% endif %}
 
 
 
-    <section class="content-header">
+<section class="content-header">
 
 
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>{{ aktif }}-
-                        Ek Süre Ekle</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Ek Zaman  Ekle</a></li>
-                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                    </ol>
-                </div>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>{{ aktif }}-
+                    Ek Süre Ekle</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Ek Zaman Ekle</a></li>
+                    {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                </ol>
             </div>
         </div>
+    </div>
 
-    </section>
-    <section class="content">
+</section>
+<section class="content">
 
-        <form method="post" enctype="multipart/form-data" role="form">
-            {% csrf_token %}
-            <div class="row">
-                <div class="card card-primary">
+    <form method="post" enctype="multipart/form-data" role="form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card card-primary card-outline">
                     <div class="card-header with-border">
                         <h3 class="card-title">Firma Bilgileri</h3>
                     </div>
                     <div class="card-body">
                         <div class="card-body">
 
-                                <div class="form-group">
-                                    {{ extratime_form }}
-                                </div>
+                            <div class="form-group">
+                                {{ extratime_form }}
+                            </div>
 
                         </div>
 
                         <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                            </button>
+
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
+            <div class="col-md-9">
+                <div class="card card-primary card-outline">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">Ek Süreler</h3>
+
+                    </div>
+
+                    <div class="card-body">
+                        <table id="company" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Yeka</th>
+                                <th>Firmalar</th>
+                                <th>Ek Süre Ekleyen Personel</th>
+                                <th>Ek Süre</th>
+                                <th>Ekleme Tarihi</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for time in extra_times %}
+                                <tr>
+                                    <td>{{ forloop.counter }} </td>
+                                    <td>{{ time.yeka.definition }}</td>
+                                    <td>
+                                        {% for company in  time.yekabusinessblog.companys.all %}
+                                            {{ company.name }}/
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ time.user.first_name }} {{ time.user.last_name }}</td>
+                                    <td>{{ time.time }}</td>
+                                    <td>{{ time.creationDate  }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default">İşlemler</button>
+                                            <button type="button"
+                                                    class="btn btn-default dropdown-toggle dropdown-icon"
+                                                    data-toggle="dropdown">
+                                            </button>
+                                            <div class="dropdown-menu" role="menu">
+                                                {% for item in perm %}
+                                                    {% if item == 'change_company' %}
+                                                        <a href=""
+                                                           class="dropdown-item"> <i
+                                                                class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% for item in perm %}
+                                                    {% if item == '' %}
+
+                                                        <a class="dropdown-item" href=""
+                                                           data-toggle="modal"
+                                                           onclick=deleteCompany('{{ company.uuid }}')><i
+                                                                class="fa fa-trash"></i>Sil</a>
+
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
 
 
-    </section>
+                                    </td>
+                                </tr>
 
-    <script>
-        $(document).ready(function () {
-            {% if error_messages  %}
-                errors_messages({{ error_messages |safe }})
-            {% endif %}
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+</section>
+{% load static %}
+<script>
+    $(function () {
+        $('#company').DataTable({
+            dom: 'Bfrtip',
+
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+            ],
+            'buttons': [
+
+
+                {
+                    extend: "pageLength",
+                },
+
+
+                {
+                    extend: 'colvis',
+                    titleAttr: 'Ekle Çıkar'
+
+
+                },
+                {
+                    extend: 'print',
+                    title: 'Ek Süreler',
+                    text: '<i class="fa fa-print"></i>',
+
+                    titleAttr: 'Yazdır'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    download: 'open',
+                    text: '<i class="fa fa-file-pdf"></i>',
+
+                    titleAttr: 'Pdf Kaydet'
+                },
+
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel"></i>',
+                    titleAttr: 'Excel Kaydet'
+                },
+
+
+            ],
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true,
+            'responsive': true,
+            'language': {
+                "url": "{% static 'datatable_tr.json' %}"
+            }
+        })
+
+    })
+
+    function deleteCompany(id) {
+        debugger;
+        console.log(id);
+        var html = ''
+        $("#modal-delete").on("shown.bs.modal", function (e) {
+            $("#btn-conf1").click(function () {
+                $.ajax({
+                    url: "{% url "ekabis:delete_company" %}",
+                    type: "POST",
+                    data: {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                        uuid: id,
+                    },
+                    success: function (result) {
+
+                        html = 'Firma Başarıyla Silindi';
+                        debugger;
+                        $(".successModal").html(html);
+                        $('#modal-success').on("shown.bs.modal", function (e) {
+                            $(".btn-ok").click(function () {
+
+                                window.location.replace("{% url "ekabis:view_company" %}");
+
+                            });
+
+                        }).modal('show');
+
+                        console.log(result.status)
+                    }
+                });
+            });
+        }).modal('show');
+        $('#btn-close1').click(function () {
+            $('#modal-active').modal('hide');
         });
-    </script>
+
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        {% if error_messages  %}
+            errors_messages({{ error_messages |safe }})
+        {% endif %}
+    });
+</script>
 
 {% endblock %}
 

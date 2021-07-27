@@ -80,6 +80,19 @@ def YekaConnectionRegionService(request, filter):
         return None
     except Exception as e:
         traceback.print_exc()
+def ConnectionRegionService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return ConnectionRegion.objects.filter(**filter)
+            else:
+                return ConnectionRegion.objects.filter(filter)
+        else:
+            return ConnectionRegion.objects.all()
+    except ConnectionRegion.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
 
 
 def ExtraTimeService(request, filter):
@@ -472,6 +485,8 @@ def YekaConnectionRegionGetService(request, filter):
         traceback.print_exc()
         pass
 
+
+
 def YekaCompanyGetService(request, filter):
     try:
         with transaction.atomic():
@@ -534,6 +549,7 @@ def SubYekaCapacityGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+
 
 
 def SettingsGetService(request, filter):

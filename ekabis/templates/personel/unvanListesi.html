@@ -55,43 +55,32 @@
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -134,83 +123,101 @@
                 <div class="card-body">
 
 
-                    <div class="card card-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Unvan Listesi</h3>
                         </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        <form method="post" role="form">
-                            <div class="card-body">
-                                {% csrf_token %}
+                        <div class="card-body">
+                            <form method="post" role="form">
+                                <div class="card-body">
+                                    {% csrf_token %}
 
 
-                                <div class="form-group">
-                                    <label> {{ category_item_form.name.label }}</label> <small style="color: red">*</small>
-                                    {{ category_item_form.name }}
+                                    <div class="form-group">
+                                        <label> {{ category_item_form.name.label }}</label>
+                                        {{ category_item_form.name }}
+                                    </div>
+
+
+                                    <!-- /.card-body -->
+
+                                    <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+
+                                        <small style="color: red ">(*) Olan Alanlar zorunludur.</small>
+                                    </div>
+
                                 </div>
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <table id="kategori" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>İş Tanımı</th>
+                                    <th></th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
 
 
-                                <!-- /.card-body -->
+                                {% if categoryitem.all %}
+                                    {% for category_item in categoryitem %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ category_item.name }}</td>
+                                            <td>
 
 
-                                <button type="submit" class="btn btn-primary">Kaydet</button>
-                                                            <small style="color: red">(*)Olan Alanlar zorunludur.</small>
-                            </div>
-                        </form>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default">İşlemler</button>
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown" aria-expanded="false">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        {% for item in perm %}
+                                                            {% if item == 'change_categoryitem' %}
 
+                                                                <a href="{% url "ekabis:change_categoryitem" category_item.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for item in perm %}
+                                                            {% if item == 'delete_categoryitem' %}
 
-                        <table id="kategori" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>İş Tanımı</th>
-                                <th>İşlemler</th>
+                                                                <a class="dropdown-item"
+                                                                   data-toggle="modal"
+                                                                   onclick=deleteClubRole('{{ category_item.uuid }}')><i
+                                                                        class="fa fa-trash"></i> Sil</a>
 
-                            </tr>
-                            </thead>
+                                                            {% endif %}
+                                                        {% endfor %}
 
-                            <tbody>
-
-
-                            {% if categoryitem.all %}
-                                {% for category_item in categoryitem %}
-                                    <tr>
-                                        <td>{{ forloop.counter }} </td>
-                                        <td>{{ category_item.name }}</td>
-                                        <td>
-                                            {% for item in perm %}
-                                                {% if item == 'change_categoryitem' %}
-                                                    <div class="btn-group">
-                                                        <a href="{% url "ekabis:change_categoryitem" category_item.uuid %}"
-                                                           type="button" class="btn btn-warning"
-                                                           style="margin-right: 5px"><i
-                                                                class="fa fa-edit"></i>Güncelle
-                                                        </a>
                                                     </div>
-                                                {% endif %}
-                                            {% endfor %}
-                                            {% for item in perm %}
-                                                {% if item == 'delete_categoryitem' %}
-                                                    <div class="btn-group">
-                                                        <a class="btn btn-danger"
-                                                           data-toggle="modal"
-                                                           onclick=deleteClubRole('{{ category_item.uuid }}')><i
-                                                                class="fa fa-trash"></i>Sil</a>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
-
-                                        </td>
-
-                                    </tr>
-
-                                {% endfor %}
-                            {% endif %}
+                                                </div>
 
 
-                            </tbody>
-                        </table>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
 
 
                     </div>
@@ -222,7 +229,7 @@
 
 
         </div>
-        <!-- /.row (main row) -->
+
 
     </section>
 

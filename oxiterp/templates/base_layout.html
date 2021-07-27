@@ -10,7 +10,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {% load static %}
 
-    <link rel="shortcut icon" type="image/png" href="/media/ekebis-icon.ico"/>
+    <link rel="shortcut icon"  type="image/png" href="/media/yekabis-logo.png"/>
     <title>YEKABİS </title>
 
 
@@ -28,7 +28,7 @@
     <!-- iCheck -->
     <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
 
-      <!-- Bootstrap Color Picker -->
+    <!-- Bootstrap Color Picker -->
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
 
     <!-- JQVMap -->
@@ -39,7 +39,7 @@
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
-
+    <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
     <!-- summernote -->
     <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
 
@@ -309,8 +309,8 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="#" class="brand-link">
-            <img src="{% static 'images/yekabis-logo.png' %}" alt="Yekabis"
+        <a href="" class="brand-link">
+            <img src="{% static '/images/yekabis-logo.png' %}" alt="Yekabis"
                  class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">YEKABİS</span>
         </a>
@@ -438,6 +438,7 @@
 
 
 <!-- bs-custom-file-input -->
+
 <script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
 <!-- PAGE PLUGINS -->
 
@@ -477,15 +478,18 @@
 <script src="{% static 'plugins/jquery-mapael/maps/usa_states.min.js' %}"></script>
 <script src="{% static 'errors_message.js' %}"></script>
 
-
 <!-- ChartJS -->
 <script src="{% static 'eski/chart.js/Chart.min.js' %}"></script>
-
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'alert/sweetalert.min.js' %}"></script>
+<script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
 <!-- AdminLTE for demo purposes -->
-{#<script src="{% static 'dist/js/demo.js' %}"></script>#}
+<script src="{% static 'dist/js/demo.js' %}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 {#<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>#}
-<script src="{% static 'alert/sweetalert.min.js' %}"></script>
+
+
 <script>
     $(function () {
         $('#example1').DataTable();
@@ -636,7 +640,15 @@
 
 </script>
 
+<script>
 
+    $(document).ready(function () {
+        $('.toast').fadeOut(5000);
+
+    });
+
+
+</script>
 </body>
 </html>
 

@@ -116,47 +116,35 @@
     </div>
 
 
-
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -165,33 +153,8 @@
 
 
 
-
-
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-
-
-            <div class="modal-content" style="height:fit-content">
-
-                <div class="modal-header" style="background-color:#3c8dbc ">
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body bodys">
-                    ...
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
     <section class="content">
+
         <section class="content-header">
             <div class="row">
                 <div class="col-sm-6">
@@ -211,23 +174,20 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h3 class="card-title">İş Blokları</h3>
-                        </div>
 
-                        <div class="card-header with-border">
-                            <div class="btn-group">
-                                {% for p in perm%}
-                                    {% if p == 'add_businessBlog' %}
+                            {% for p in perm %}
+                                {% if p == 'add_businessBlog' %}
+                                    <a href="{% url "ekabis:add_businessBlog" %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" style="" title="İş Bloğu Ekle"></i>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
 
-                                        <a href="{% url "ekabis:add_businessBlog" %}"
-                                           type="button" class="btn btn-success"><i
-                                                class="fa fa-edit"></i> Yeni İş Blogu Ekle
-                                        </a>
-                                    {% endif %}
-                                {% endfor %}
-
-                            </div>
 
                         </div>
+
+
                         <div class="card-body">
                             <table id="kullanicilar" class="table table-bordered table-hover">
                                 <thead>
@@ -235,7 +195,7 @@
                                     <th>#</th>
                                     <th>Tanımı</th>
 
-                                    <th>İşlemler</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
 
@@ -246,22 +206,38 @@
                                             <td>{{ item.name }} </td>
 
                                             <td>
-                                                {% for p in perm %}
-                                                    {% if p == 'change_businessBlog' %}
-                                                        <a href="{% url "ekabis:change_businessBlog"  item.uuid %}"
-                                                           type="button" class="btn btn-warning"><i
-                                                                class="fa fa-edit"></i> İncele
-                                                        </a>
-                                                    {% endif %}
-                                                {% endfor %}
 
-                                                {% for p in perm %}
-                                                    {% if p == 'delete_businessBlog' %}
-                                                        <button onclick="birimsil('{{ item.uuid }}')" type="button"
-                                                                class="btn btn-danger"> Sil
-                                                        </button>
-                                                    {% endif %}
-                                                {% endfor %}
+
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default">İşlemler</button>
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown">
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        {% for p in perm %}
+                                                            {% if p == 'change_businessBlog' %}
+                                                                <a href="{% url "ekabis:change_businessBlog" item.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for p in perm %}
+                                                            {% if p == 'delete_businessBlog' %}
+
+                                                                <a class="dropdown-item" href=""
+                                                                   data-toggle="modal"
+                                                                   onclick=deleteEmployee('{{ item.uuid }}')> <i
+                                                                        class="fa fa-trash" title="Sil"></i> Sil</a>
+
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+
+
                                             </td>
 
                                             {#                                            <td>#}
@@ -298,20 +274,12 @@
         <!-- /.row (main row) -->
 
     </section>
-
+{% load  static %}
     <script>
         $(function () {
             $('#kullanicilar').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Göster",
-                            '-1': "Hepsini Göster"
-                        }
-                    }
-                },
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
@@ -335,36 +303,30 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Sporcular',
-                        text: "Yazdır",
+                        title: 'İş Bloğu Parametreleri',
+                        text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: "Pdf",
+                        text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        text: "Excel",
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: 'Json',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Sporcular.json'
-                            );
-                        }
-                    }
+
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'bubble': true,
                 'paging': true,
                 'lengthChange': true,
@@ -374,6 +336,9 @@
                 'autoWidth': true,
                 'responsive': true,
                 'select': true,
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                }
             })
 
         })

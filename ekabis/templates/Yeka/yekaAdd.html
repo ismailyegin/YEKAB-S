@@ -78,43 +78,32 @@
     {% if messages %}
         {% for message in messages %}
 
-
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+            <div id="toast-container"  class="toasts-top-right" >
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
 
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -230,20 +219,13 @@
         </div>
 
     </section>
-
+{% load static %}
     <script>
         $(function () {
             $('#yeka').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
+
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
@@ -313,6 +295,9 @@
 
 
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
@@ -320,6 +305,9 @@
                 'info': true,
                 'autoWidth': true,
                 'responsive': true,
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                }
             })
 
         })

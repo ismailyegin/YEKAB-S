@@ -5,14 +5,14 @@
 
 
 
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">İşlem Başarılı</h4>
+
                 </div>
                 <div class="modal-body successModal">
                     ...
@@ -27,23 +27,25 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Uyarı</h4>
+
                 </div>
                 <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz?</p>
+                    <p>Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
                             data-dismiss="modal">Evet
                     </button>
-                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -52,47 +54,35 @@
     </div>
 
 
-
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -160,6 +150,7 @@
                                     <th>Yeka</th>
                                     <th>İş Blogu</th>
                                     <td>Süre</td>
+                                    <td>İşlemler</td>
 
 
                                 </tr>
@@ -175,6 +166,36 @@
                                             </td>
                                             <td>
                                                 {{ item.time }}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default">İşlemler</button>
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown">
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        {% for p in perm %}
+                                                            {% if p == 'change_extratime' %}
+                                                                <a href="{% url "ekabis:change_extratime" item.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for item in perm %}
+                                                            {% if item == 'delete_company' %}
+
+                                                                <a class="dropdown-item" href=""
+                                                                   data-toggle="modal"
+                                                                   onclick=deleteExtraTime('{{ item.uuid }}')><i
+                                                                        class="fa fa-trash"></i>Sil</a>
+
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
                                             </td>
 
                                         </tr>
@@ -199,30 +220,20 @@
         <!-- /.row (main row) -->
 
     </section>
-
+    {% load  static %}
     <script>
         $(function () {
             $('#company').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                buttons: [
+                'buttons': [
 
-                    {#'copy',#}
-                    {#'csv',#}
 
                     {
                         extend: "pageLength",
@@ -231,54 +242,39 @@
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'YEKA LİSTESİ',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'EK Süreler',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'eksure.json'
-                            );
-                        }
-                    }
+
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
@@ -290,5 +286,43 @@
 
         })
     </script>
+
+    <script>  function deleteExtraTime(id) {
+        debugger;
+        console.log(id);
+        var html = ''
+        $("#modal-delete").on("shown.bs.modal", function (e) {
+            $("#btn-conf1").click(function () {
+                $.ajax({
+                    url: "{% url "ekabis:delete_extratime" %}",
+                    type: "POST",
+                    data: {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                        uuid: id,
+                    },
+                    success: function (result) {
+
+                        html = 'Ek Süre Başarıyla Silindi';
+                        debugger;
+                        $(".successModal").html(html);
+                        $('#modal-success').on("shown.bs.modal", function (e) {
+                            $(".btn-ok").click(function () {
+
+                                window.location.replace("{% url "ekabis:view_extratime" %}");
+
+                            });
+
+                        }).modal('show');
+
+                        console.log(result.status)
+                    }
+                });
+            });
+        }).modal('show');
+        $('#btn-close1').click(function () {
+            $('#modal-active').modal('hide');
+        });
+
+    }</script>
 {% endblock %}
 

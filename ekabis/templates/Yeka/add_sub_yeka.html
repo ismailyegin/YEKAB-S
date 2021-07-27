@@ -75,46 +75,35 @@
     </div>
 
 
-    {% if messages %}
+     {% if messages %}
         {% for message in messages %}
 
-
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+            <div id="toast-container"  class="toasts-top-right" >
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
 
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -177,7 +166,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="col-md-12">
+
                                             <label> Bağlantı Bölge Kapasiteleri</label>
 
                                             <select class="select2 select2-hidden-accessible" multiple=""
@@ -195,7 +184,7 @@
 
 
                                             </select>
-                                        </div>
+
 
                                     </div>
 
@@ -203,8 +192,8 @@
                                 <!-- /.card-body -->
 
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
-                                    <small style="">(*) Olan Alanlar Zorunludur.</small>
+                                        <button class="btn btn-outline-primary mt-5" type="submit" style="float:right">Kaydet</button>
+                                    <small style="color: red">(*) Olan Alanlar Zorunludur.</small>
                                 </div>
                             </form>
                         </div>
@@ -219,19 +208,14 @@
         </div>
 
     </section>
-
+{% load static %}
     <script>
         $(function () {
             $('#yeka').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
+                 'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
                 },
 
                 lengthMenu: [
@@ -302,6 +286,9 @@
 
 
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,

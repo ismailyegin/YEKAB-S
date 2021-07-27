@@ -117,46 +117,35 @@
 
 
 
-    {% if messages %}
+   {% if messages %}
         {% for message in messages %}
 
-
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+            <div id="toast-container"  class="toasts-top-right" >
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
 
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -229,7 +218,7 @@
                                     {% for item in company_list %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ item.name }} </td>
+                                            <td>{{ item.company.name }} </td>
 
                                             <td><input value="{{ item.pk }}" name="company" class=""
                                                        type="checkbox"/></td>
@@ -246,8 +235,9 @@
 
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Kaydet</button>
-                        </div>
+                                        <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet</button>
+
+                                </div>
                     </div>
                     <!-- /.card -->
 
@@ -260,20 +250,13 @@
         <!-- /.row (main row) -->
 
     </section>
-
+{% load static %}
     <script>
         $(function () {
             $('#company').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Göster",
-                            '-1': "Hepsini Göster"
-                        }
-                    }
-                },
+
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
@@ -290,43 +273,36 @@
 
                     {
                         extend: 'colvis',
-                        text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'Sporcular',
-                        text: "Yazdır",
+                        title: 'YEKA LİSTESİ',
+                        text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: "Pdf",
+                        text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        text: "Excel",
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: 'Json',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Sporcular.json'
-                            );
-                        }
-                    }
+
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'bubble': true,
                 'paging': true,
                 'lengthChange': true,
@@ -336,6 +312,9 @@
                 'autoWidth': true,
                 'responsive': true,
                 'select': true,
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                }
             })
 
         })
