@@ -10,15 +10,19 @@ class YekaBusinessBlogForm(ModelForm):
     class Meta:
         model = YekaBusinessBlog
         fields = (
-            'startDate', 'finisDate', 'businessTime', 'status')
-        labels = {'startDate': 'Başlama Tarihi', 'finisDate': 'Bitiş Tarihi', 'businessTime': 'Süresi',
-                  'status': 'Durumu'}
-
+            'indefinite','startDate','businessTime', 'finisDate',  'status',)
+        labels = {'startDate': 'Başlama Tarihi',
+                  'finisDate': 'Bitiş Tarihi',
+                  'businessTime': 'Süresi',
+                  'status': 'Durumu',
+                  'indefinite':'Süre durumu'}
         widgets = {
             'businessTime': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
 
             'status': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                          'style': 'width: 100%; '}),
+            'indefinite': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                           'style': 'width: 100%; '}),
             'startDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',

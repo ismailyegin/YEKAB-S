@@ -1,12 +1,17 @@
 from datetime import datetime
 
+from django.contrib.messages import get_messages
+from django.shortcuts import redirect
+
+from ekabis.models import Yeka, YekaPerson
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.services.services import ActiveGroupService, MenuService, EmployeeService, DirectoryMemberService, \
-    UserService, PermissionGroupService, ActiveGroupGetService, EmployeeGetService, DirectoryMemberGetService
-
+    UserService, PermissionGroupService, ActiveGroupGetService, EmployeeGetService, DirectoryMemberGetService, \
+    YekaPersonService, YekaCompanyService
+from django.contrib import messages
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -186,3 +191,36 @@ def get_error_messages(form):
                     error_messages.append(entry)
         return error_messages
     return {}
+
+
+def do_something_with_the_message(message):
+    pass
+
+
+def yeka_control(request,yeka):
+    storage = get_messages(request)
+    for message in storage:
+        if message.level_tag =='warning':
+            return None
+    message=[]
+    yekafilter={
+        'yeka':yeka
+    }
+    url=None
+    # Çalısma sırasına göre  sıraladık ona göre if döngülerinin sonucunda deger alacak
+
+    if not (yeka.business):
+        messages.add_message(request, messages.WARNING, 'İş Blokları Bilgileri Eksik.')
+        url="view_yekabusinessBlog"
+
+    if not (YekaCompanyService(request,yekafilter)):
+        messages.add_message(request, messages.WARNING, 'Firma Bilgileri Eksik.')
+        url="view_yeka_company"
+
+    if not (YekaPersonService(request,yekafilter)):
+        messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
+        url="view_yeka_personel"
+    if url :
+        return url
+    else:
+        return None
