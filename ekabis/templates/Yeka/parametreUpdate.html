@@ -6,55 +6,43 @@
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
     {% endif %}
-
     <section class="content">
         <form method="post" role="form">
             {% csrf_token %}
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card card-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title"> Parametre Güncelle </h3>
                         </div>
@@ -62,15 +50,15 @@
                             <div class="col-lg-12">
 
                                 {% for item in business_form %}
-                                <div class="form-group">
-                                    <label>{{ item.label }}</label><br>
-                                    {{ item }}
-                                    <label for="" id="label_{{ item.name }}"></label>
-                                </div>
+                                    <div class="form-group">
+                                        <label>{{ item.label }}</label><br>
+                                        {{ item }}
+                                        <label for="" id="label_{{ item.name }}"></label>
+                                    </div>
 
-                            {% endfor %}
+                                {% endfor %}
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    <button type="submit" class="btn btn-primary" style="float: right">Kaydet</button>
                                 </div>
                             </div>
                         </div>
@@ -82,11 +70,11 @@
         </form>
     </section>
 
-        <script>
+    <script>
         $(function () {
             {% if error_messages %}
                 errors_messages({{ error_messages |safe }})
             {% endif %}
         });
-        </script>
+    </script>
 {% endblock %}

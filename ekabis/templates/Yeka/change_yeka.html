@@ -80,51 +80,39 @@
     </div>
 
 
-    {% if messages %}
+ {% if messages %}
         {% for message in messages %}
 
-
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+            <div id="toast-container"  class="toasts-top-right" >
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
 
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
     {% endif %}
-
 
     <section class="content-header">
 
@@ -160,7 +148,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA Güncelleme</h3>
+                            <h3 class="card-title">YEKA Güncelle</h3>
                         </div>
 
                         <div class="card-body">
@@ -169,15 +157,13 @@
                                     {% csrf_token %}
 
                                     <div class="form-group">
-                                        <label> {{ yeka_form.definition.label }}</label><small
-                                                        style="color: red">*</small>
+                                        <label> {{ yeka_form.definition.label }}</label>
                                         {{ yeka_form.definition }}
                                         <label id="label_definition"></label>
 
                                     </div>
                                     <div class="form-group">
-                                        <label> {{ yeka_form.date.label }}</label><small
-                                                        style="color: red">*</small>
+                                        <label> {{ yeka_form.date.label }}</label>
                                         {{ yeka_form.date }}
                                         <label id="label_date"></label>
 
@@ -186,9 +172,8 @@
                                     <div class="form-group">
 
 
-                                        <div class="col-md-12">
-                                            <label> Bağlantı Bölgeleri</label><small
-                                                        style="color: red">*</small>
+
+                                            <label> Bağlantı Bölgeleri</label>
 
                                             <select class="select2 select2-hidden-accessible" multiple=""
                                                     data-placeholder="Select a State"
@@ -211,7 +196,7 @@
 
 
                                             </select>
-                                        </div>
+
 
 
                                     </div>
@@ -220,7 +205,7 @@
                                 <!-- /.card-body -->
 
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                        <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet</button>
                                     <small style="color: red">(*)Olan Alanlar zorunludur.</small>
 
                                 </div>

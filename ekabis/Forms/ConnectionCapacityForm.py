@@ -8,7 +8,7 @@ class ConnectionCapacityForm(forms.ModelForm):
         model = ConnectionCapacity
         fields = ('name', 'value', 'unit')
 
-        labels = {'name': 'Bağlantı Kapasitesi '}
+        labels = {'name': 'Bağlantı Kapasitesi *','value':'Miktar *','unit':'Birim *'}
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
             'value': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),

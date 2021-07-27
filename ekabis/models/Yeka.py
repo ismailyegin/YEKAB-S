@@ -14,3 +14,6 @@ class Yeka(BaseModel):
     unit = models.ForeignKey(ConnectionUnit, on_delete=models.DO_NOTHING, null=True, blank=True)
     is_parent = models.BooleanField(default=False, null=True, blank=True)
     business = models.ForeignKey(YekaBusiness, on_delete=models.CASCADE,null=True,blank=True)
+
+    def __str__(self):
+        return '%s ' % self.definition

@@ -223,47 +223,14 @@ def return_employees(request):
         logout(request)
         return redirect('accounts:login')
 
-    user_form = UserSearchForm()
-    employees = None
-    get = request.GET.get('get')
-    if get:
-        if get == 'hepsi':
-            employees = EmployeeService(request, None)
+    employeefilter = {
+        'isDeleted': False,
+    }
+    employees = EmployeeService(request, employeefilter)
     try:
-        with transaction.atomic():
-            if request.method == 'POST':
-
-                user_form = UserSearchForm(request.POST)
-
-                if user_form.is_valid():
-                    firstName = user_form.cleaned_data.get('first_name')
-                    lastName = user_form.cleaned_data.get('last_name')
-                    email = user_form.cleaned_data.get('email')
-                    workDefinition = user_form.cleaned_data.get('workDefinition')
-                    group = request.POST.get('group')
-                    if not (firstName or lastName or email or workDefinition or group):
-                        personfilter = {
-                            'isDeleted': False
-                        }
-                        employees = EmployeeService(request, personfilter)
-
-                    else:
-                        query = Q()
-                        if lastName:
-                            query &= Q(user__last_name__icontains=lastName)
-                        if firstName:
-                            query &= Q(user__first_name__icontains=firstName)
-                        if email:
-                            query &= Q(user__email__icontains=email)
-                        if workDefinition:
-                            query &= Q(workDefinition=workDefinition)
-                        if group:
-                            query &= Q(user__groups__name=group)
-
-                        employees = EmployeeService(request, query)
 
         return render(request, 'personel/personeller.html',
-                      {'employees': employees, 'user_form': user_form, })
+                      {'employees': employees, })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

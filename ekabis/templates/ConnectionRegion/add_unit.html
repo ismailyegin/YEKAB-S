@@ -59,43 +59,32 @@
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -156,7 +145,9 @@
                                 <!-- /.card-body -->
 
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                    </button>
+
                                 </div>
                             </form>
                         </div>
@@ -168,7 +159,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Birim</th>
-                                        <th>Güncelleme/Silme</th>
+                                        <th></th>
 
                                     </tr>
                                     </thead>
@@ -183,25 +174,36 @@
                                                 <td>{{ unit.name }}</td>
                                                 <td>
 
-                                                    {% for item in perm %}
-                                                        {% if item == 'update_unit' %}
-                                                            <div class="btn-group">
-                                                                <a href="{% url "ekabis:update_unit" unit.uuid %}"
-                                                                   type="button" class="btn btn-warning"><i
-                                                                        class="fa fa-edit"></i>Güncelle
-                                                                </a>
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-default">İşlemler</button>
+                                                        <button type="button"
+                                                                class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                data-toggle="dropdown">
+                                                        </button>
+                                                        <div class="dropdown-menu" role="menu">
+                                                            {% for item in perm %}
+                                                                {% if item == 'update_unit' %}
+                                                                    <a href="{% url "ekabis:update_unit" unit.uuid %}"
+                                                                       class="dropdown-item"> <i
+                                                                            class="fa fa-edit" title="Düzenle"></i>
+                                                                        Düzenle
+                                                                    </a>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            {% for item in perm %}
+                                                                {% if item == 'delete_unit' %}
+                                                                    <!-- izin kontrolü yapılacak ! -->
+                                                                    <a class="dropdown-item" href=""
+                                                                       data-toggle="modal"
+                                                                       onclick=deleteUnit('{{ unit.uuid }}')><i
+                                                                            class="fa fa-trash"></i>Sil</a>
 
-                                                            </div>
-                                                        {% elif item == 'delete_unit' %}
-                                                            <div class="btn-group">
-                                                                <a class="btn btn-danger"
-                                                                   data-toggle="modal"
-                                                                   onclick=deleteUnit('{{ unit.uuid }}')><i
-                                                                        class="fa fa-trash"></i>Sil</a>
-                                                            </div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
 
-                                                        {% endif %}
-                                                    {% endfor %}
+
                                                 </td>
 
                                             </tr>

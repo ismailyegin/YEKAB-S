@@ -72,46 +72,35 @@
     </div>
 
 
-    {% if messages %}
+     {% if messages %}
         {% for message in messages %}
 
-
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+            <div id="toast-container"  class="toasts-top-right" >
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
 
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
@@ -162,7 +151,7 @@
                                     <th>No</th>
                                     <th>Firma</th>
                                     <th>Sorumlu</th>
-                                    <th>Görevlendir</th>
+                                    <th>İşlem</th>
 
                                 </tr>
                                 </thead>
@@ -178,8 +167,8 @@
                                         <td>{{ company.companyuser.user.first_name }} {{ company.companyuser.user.last_name }}</td>
                                         <td>
                                             <a onclick="yeka_company_assignment('{{ yeka_uuid }}','{{ company.uuid }}')"
-                                               type="button" class="btn btn-primary"><i
-                                                    class="fa fa-plus"></i> Görevlendir
+                                               type="button" class="btn btn-outline-primary btn-sm"><i
+                                                    class="fa fa-plus" title="Ekle"></i>
                                             </a>
 
                                         </td>
@@ -196,7 +185,7 @@
 
                         </div>
 
-                        {% if yeka_companies %}
+
                             <div class="card-header with-border">
                                 <h3 class="card-title">YEKA FİRMA LİSTESİ</h3>
                             </div>
@@ -206,8 +195,8 @@
                                     <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Ad Soyad</th>
-                                        <th>Unvan</th>
+                                        <th>Firma</th>
+                                        <th>Sorumlu</th>
                                         <th>İşlem</th>
 
                                     </tr>
@@ -224,8 +213,8 @@
                                             <td>{{ yeka.company.companyuser.user.first_name }} {{ yeka.company.companyuser.user.last_name }}</td>
                                             <td>
                                                 <a onclick="yeka_company_remove('{{ yeka.yeka.uuid }}','{{ yeka.company.uuid }}')"
-                                                   type="button" class="btn btn-danger"><i
-                                                        class="fa fa-times"></i> Yekadan Çıkar
+                                                   type="button" class="btn btn-outline-danger btn-sm"><i
+                                                        class="fa fa-times" title="Yekadan Çıkar"></i>
                                                 </a>
 
                                             </td>
@@ -243,7 +232,7 @@
 
                             </div>
 
-                        {% endif %}
+
                     </div>
 
 
@@ -254,30 +243,21 @@
         </div>
 
     </section>
-
+{% load static %}
     <script>
         $(function () {
             $('#companies').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
+
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                buttons: [
+               'buttons': [
 
-                    {#'copy',#}
-                    {#'csv',#}
 
                     {
                         extend: "pageLength",
@@ -286,57 +266,36 @@
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'Yeka Firmaları',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Personeller',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Firmalar.json'
-                            );
-                        }
-                    }
 
 
                 ],
+                 "search": {
+                    "caseInsensitive": true,
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
@@ -344,28 +303,22 @@
                 'info': true,
                 'autoWidth': true,
                 'responsive': true,
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                }
             })
             $('#yekacompanies').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
+
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                buttons: [
+                'buttons': [
 
-                    {#'copy',#}
-                    {#'csv',#}
 
                     {
                         extend: "pageLength",
@@ -374,57 +327,36 @@
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'YEKA Personelleri  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'Yeka Firmaları',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Yeka Firmaları',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Firmalar.json'
-                            );
-                        }
-                    }
 
 
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
@@ -432,6 +364,9 @@
                 'info': true,
                 'autoWidth': true,
                 'responsive': true,
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                }
             })
 
 
