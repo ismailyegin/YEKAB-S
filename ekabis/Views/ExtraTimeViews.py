@@ -16,10 +16,6 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import ExtraTimeService, ExtraTimeGetService
 
 
-class YekabusinessBlog:
-    pass
-
-
 @login_required
 def return_add_extra_time(request, yeka, businessblog):
     perm = general_methods.control_access(request)
@@ -31,9 +27,10 @@ def return_add_extra_time(request, yeka, businessblog):
         yeka = Yeka.objects.get(uuid=yeka)
         yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
 
-        if ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog):
-            return redirect('ekabis:change_extratime', ExtraTime.objects.get(yekabusinessblog=yekabussinessblog).uuid)
+        # if ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog):
+        #      return redirect('ekabis:change_extratime', ExtraTime.objects.get(yekabusinessblog=yekabussinessblog).uuid)
         extratime_form = ExtraTimeForm()
+        extra_times= ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog)
         with transaction.atomic():
             if request.method == 'POST':
                 extratime_form = ExtraTimeForm(request.POST)
@@ -54,13 +51,13 @@ def return_add_extra_time(request, yeka, businessblog):
 
             return render(request, 'ExtraTime/add_extratime.html',
                           {'extratime_form': extratime_form,
-                           'yeka': yeka,
+                           'yeka': yeka,'extra_times':extra_times,
                            'yekabussinessblog': yekabussinessblog
                            })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_yeka')
+        return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
 
 
 @login_required

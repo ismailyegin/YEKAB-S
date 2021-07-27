@@ -61,7 +61,7 @@
         <form method="post" enctype="multipart/form-data" role="form">
             {% csrf_token %}
             <div class="row">
-                <div class="card card-primary">
+                    <div class="card card-primary card-outline">
                     <div class="card-header with-border">
                         <h3 class="card-title">Ek Süre</h3>
                     </div>
@@ -74,9 +74,11 @@
 
                         </div>
 
-                        <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Kaydet</button>
-                        </div>
+                       <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
                     </div>
                 </div>
             </div>
