@@ -129,6 +129,7 @@ urlpatterns = [
     path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
 
+    path('yeka/yeka-is-bloklari-semasi/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant'),
     #yekabusinessBlog
     path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
     path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<uuid:yekabusiness>/<uuid:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
@@ -146,7 +147,6 @@ urlpatterns = [
     path('yeka/yeka-firma-ata/', YekaViews.yeka_company_assignment, name='yeka_company_assignment'),
     path('remove-yeka-company/', YekaViews.yeka_company_remove, name='company_remove_yeka'),
     path('yeka/personel-cikar/', YekaViews.yeka_person_remove, name='yeka-personel-kaldir'),
-
 
     # yekabusiness
     path('yekaIsBlogu/yeka-IsBlogu-ekle/<uuid:uuid>/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),

@@ -31,9 +31,9 @@ def YekaCompanyService(request, filter):
             if type(filter) != type(Q()):
                 return YekaCompany.objects.filter(**filter)
             else:
-                return YekaCompany.objects.filter(filter)
+                return YekaCompany.objects.filter(filter,isDeleted=False)
         else:
-            return YekaCompany.objects.all()
+            return YekaCompany.objects.filter(isDeleted=False)
     except YekaCompany.DoesNotExist:
         return None
     except Exception as e:

@@ -196,10 +196,9 @@
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
                                                    href="{% url 'ekabis:add_extratime' yeka.uuid  yekabusinessblok.uuid %}">Ek
-                                                    Süre</a>
+                                                    Süre Ekle</a>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="#">Log Listesi</a>
-
                                             </div>
                                             <h3 class="timeline-header"><a
                                                     href="#">{{ yekabusinessblok.businessblog.name }}</a>
@@ -214,6 +213,7 @@
                                                                    disabled="">
                                                         </div>
                                                     </div>
+
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Bitiş Tarihi</label>
@@ -232,15 +232,26 @@
                                                     </div>
 
 
+                                                 <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Süre Durumu:</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{% if yekabusinessblok.indefinite  %}Süresiz {% else %}  Süreli {% endif %} {{  yekabusinessblok.indefinite }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+
+
+
                                                     {% if ekstratimes %}
                                                         {% for ekstratime in ekstratimes %}
 
                                                             {% if ekstratime.yekabusinessblog == yekabusinessblok %}
                                                                 <div class="col-sm-6">
                                                                     <div class="form-group">
-                                                                        <label>Ek Süre</label>
+                                                                        <label>Ek Süre {{ forloop.counter }}</label>
                                                                         <input type="text" class="form-control"
-                                                                               placeholder="{{ ekstratime.time }}"
+                                                                               placeholder="{{ ekstratime.time }} "
                                                                                disabled="">
                                                                     </div>
                                                                 </div>

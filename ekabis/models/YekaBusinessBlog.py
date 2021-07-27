@@ -8,8 +8,12 @@ from ekabis.models.YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
 
 class YekaBusinessBlog(BaseModel):
     TRUE_FALSE_CHOICES = (
-        (True, 'Yes'),
-        (False, 'No')
+        (True, 'Aktif'),
+        (False, 'Pasif')
+    )
+    INDEFINETE_CHOICES = (
+        (True, 'SÜRESİZ '),
+        (False, 'SÜRELİ')
     )
     businessblog = models.ForeignKey(BusinessBlog, on_delete=models.CASCADE,null=True,blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
@@ -20,3 +24,4 @@ class YekaBusinessBlog(BaseModel):
     sorting = models.IntegerField(default=0)
     companys=models.ManyToManyField(Company)
     paremetre=models.ManyToManyField(YekaBusinessBlogParemetre,null=True,blank=True)
+    indefinite=models.BooleanField(default=False,choices=INDEFINETE_CHOICES)
