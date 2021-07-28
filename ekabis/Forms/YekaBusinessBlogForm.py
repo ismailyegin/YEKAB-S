@@ -48,7 +48,6 @@ class YekaBusinessBlogForm(ModelForm):
                     for company in yekabussiness.companys.filter(isDeleted=False):
                         print(company.name)
                         title=str(item.title)+"-"+str(company.pk)
-                        print(title)
 
 
                         if item.type == 'string':
@@ -123,15 +122,40 @@ class YekaBusinessBlogForm(ModelForm):
                         self.fields[item.title].widget.attrs = {'class': 'form-control', }
 
 
-
-
     def save(self, yekabusiness, business,*args, **kwargs):
         tbussiness = BusinessBlog.objects.get(pk=business)
         tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.companynecessary:
+                for company in tyekabusinessblog.companys.all():
+                    title = str(item.title) + "-" + str(company.pk)
+                    print(title)
+                    if item.type == 'file':
+                        if tyekabusinessblog.paremetre.filter(parametre=item, isDeleted=False,company=company):
+                            try:
+                                if self.files[title]:
+                                    bValue = tyekabusinessblog.paremetre.get(parametre=item)
+                                    bValue.file = self.files[title]
+                                    bValue.company=company
+                                    bValue.save()
+                            except:
+                                print('deger yok ')
+                                pass
 
-                print('firma kaydet kısmı yazılacak test edilecek')
+                        else:
+                            try:
+                                if self.files[title]:
+                                    parametre = YekaBusinessBlogParemetre(
+                                        file=self.files[title],
+                                        company=company,
+                                    )
+                                    parametre.parametre = item
+                                    parametre.save()
+                                    tyekabusinessblog.paremetre.add(parametre)
+                                    tyekabusinessblog.save()
+                            except:
+                                print('deger yok ')
+                                pass
 
             else:
                 if item.type == 'file':

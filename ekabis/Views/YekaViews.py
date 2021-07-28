@@ -798,16 +798,31 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
 
-            if item.parametre.type == 'file':
-                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
-                yekaBusinessBlogo_form.fields[
-                    item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
+            if item.company:
+                title=item.parametre.title +"-" + str(item.company.pk)
+                if item.parametre.type == 'file':
+                    yekaBusinessBlogo_form.fields[title].initial = item.file
+                    yekaBusinessBlogo_form.fields[title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
 
+                else:
+                    yekaBusinessBlogo_form.fields[title].initial = item.value
             else:
-                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+                if item.parametre.type == 'file':
+                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+                    yekaBusinessBlogo_form.fields[
+                        item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
+
+                else:
+                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+
+
+
 
         if request.POST:
             yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, request.POST or None, request.FILES or None,
