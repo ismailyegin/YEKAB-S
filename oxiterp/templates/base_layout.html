@@ -81,9 +81,9 @@
 
 
     {#    <!-- jQuery -->#}
-    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery/jquery.js' %}"></script>
     <!-- jQuery UI 1.11.4 -->
-    <script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-ui/jquery-ui.js' %}"></script>
 
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
@@ -491,7 +491,23 @@
 
 
 <script>
+
+
+
     $(function () {
+
+
+            $.fn.datepicker.dates['tr'] =
+        {
+            days: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
+            daysShort: ["Pz", "Pzt", "Sal", "Çrş", "Prş", "Cu", "Cts", "Pz"],
+            daysMin: ["Pz", "Pzt", "Sa", "Çr", "Pr", "Cu", "Ct", "Pz"],
+            months: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+            monthsShort: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+            today: "Bugün",
+            suffix: [],
+            meridiem: []
+        };
         $('#example1').DataTable();
         $('#example2').DataTable({
             'paging': true,
@@ -554,6 +570,7 @@
         });
 
 
+
         $('#datepicker3').datepicker({
             autoclose: true,
             language: 'tr',
@@ -577,7 +594,6 @@
             viewMode: "years",
             minViewMode: "years"
 
-
         })
         $('#datepicker5').datepicker({
             autoclose: true,
@@ -585,7 +601,6 @@
             format: "yyyy",
             viewMode: "years",
             minViewMode: "years"
-
 
         })
 
