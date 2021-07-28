@@ -795,8 +795,9 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
             'uuid': business
         }
         business = BusinessBlogGetService(request, yeka_business_filter_)
-        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, instance=yekabussiness)
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
+
             if item.parametre.type == 'file':
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
                 yekaBusinessBlogo_form.fields[
@@ -809,7 +810,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
 
         if request.POST:
-            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, request.POST or None, request.FILES or None,
+            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, request.POST or None, request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
@@ -903,6 +904,83 @@ def view_yekabusiness_gant(request, uuid):
                        'ekstratimes': ekstratimes
                        })
 
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+@login_required()
+def view_yekabusiness_gant2(request, uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        yeka_filter = {
+            'uuid': uuid
+        }
+        yeka = YekaGetService(request, yeka_filter)
+
+        url=general_methods.yeka_control(request, yeka)
+        if url and url !='view_yekabusinessBlog':
+            return redirect('ekabis:'+url ,yeka.uuid)
+        yekabusinessbloks = None
+
+        extratime_filter = {
+            'yeka': yeka
+        }
+        ekstratimes = ExtraTimeService(request, extratime_filter)
+
+        if yeka.business:
+            yekabusiness = yeka.business
+            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+        return render(request, 'Yeka/gant.html',
+                      {'yekabusinessbloks': yekabusinessbloks,
+                       'yeka': yeka,
+                       'ekstratimes': ekstratimes
+                       })
+
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+
+
+
+@login_required()
+def view_yekabusinessblog_gant(request, yeka, yekabusiness):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        yeka_filter = {
+            'uuid': yeka
+        }
+
+        yeka = YekaGetService(request, yeka_filter)
+        yeka_yekabusiness_filter_ = {
+            'uuid': yekabusiness
+        }
+
+        yekabussiness = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter_)
+        extrafilter={
+            'yekabusinessblog':yekabussiness
+        }
+        extratime=ExtraTimeService(request,extrafilter)
+
+        return render(request, 'Yeka/yekabussinessblog_detail.html',
+                      {
+                          'yeka': yeka,
+                          'yekabusinessblok':yekabussiness,
+                          'ekstratimes':extratime,
+                      })
     except Exception as e:
 
         traceback.print_exc()

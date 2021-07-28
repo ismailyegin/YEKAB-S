@@ -1,9 +1,6 @@
 from django.db import models
-
 from ekabis.models.BaseModel import BaseModel
-
-
-class   BusinessBlogParametreType(BaseModel):
+class  BusinessBlogParametreType(BaseModel):
     aDate = 'date'
     aString = 'string'
     aNumber = 'number'
@@ -17,5 +14,15 @@ class   BusinessBlogParametreType(BaseModel):
         (afile, 'Dosya'),
 
     )
+    necesssary_choices = (
+        (True, 'Zorunlu '),
+        (False, 'Zorunlu Degil')
+    )
+    COMPANY_CHOICES = (
+        (True, 'Her Firma için Gerekli '),
+        (False, 'Her Firma için Gerekli Degil ')
+    )
     title = models.CharField(max_length=120, null=True, blank=True, verbose_name='Başlık')
     type = models.CharField(max_length=128, verbose_name='Türü ', choices=Type, default=aString)
+    necessary=models.BooleanField(default=False,choices=necesssary_choices)
+    companynecessary = models.BooleanField(default=False,choices=COMPANY_CHOICES)
