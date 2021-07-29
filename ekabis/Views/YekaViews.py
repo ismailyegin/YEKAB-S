@@ -12,7 +12,7 @@ from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, ConnectionCapacity, \
-    SubYekaCapacity, YekaBusiness
+    SubYekaCapacity, YekaBusiness, ExtraTime
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
 from ekabis.models.Yeka import Yeka
@@ -26,7 +26,7 @@ from ekabis.services.services import YekaService, CompanyService, YekaConnection
     YekaConnectionRegionGetService, ConnectionCapacityService, SubYekaCapacityService, YekaPersonService, \
     EmployeeGetService, YekaCompanyService, CompanyGetService, ExtraTimeService, YekaBusinessBlogGetService, \
     BusinessBlogGetService, ConnectionRegionService
-
+import datetime
 
 @login_required
 def return_yeka(request):
@@ -781,23 +781,47 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
             'uuid': business
         }
         business = BusinessBlogGetService(request, yeka_business_filter_)
-        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, instance=yekabussiness)
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
-            if item.parametre.type == 'file':
-                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
-                yekaBusinessBlogo_form.fields[
-                    item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
 
+            if item.company:
+                title=item.parametre.title +"-" + str(item.company.pk)
+                if item.parametre.type == 'file':
+                    yekaBusinessBlogo_form.fields[title].initial = item.file
+                    yekaBusinessBlogo_form.fields[title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
+
+                else:
+                    yekaBusinessBlogo_form.fields[title].initial = item.value
             else:
-                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+                if item.parametre.type == 'file':
+                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+                    yekaBusinessBlogo_form.fields[
+                        item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
+                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
+
+                else:
+                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+
+
+
 
         if request.POST:
-            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, request.POST or None, request.FILES or None,
+            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, request.POST or None, request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
+                if not   yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                    startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
+                    finishDate = startDate + datetime.timedelta(days=int(yekaBusinessBlogo_form.cleaned_data['businessTime']))
+                    yekabussiness.finisDate = finishDate
+                    yekabussiness.save()
+                else:
+                    yekabussiness.businessTime=0
+                    yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
@@ -831,7 +855,12 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
         yeka = YekaGetService(request, yeka_filter)
         yekabussinessblog = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter)
 
-        company_list = YekaCompany.objects.filter(isDeleted=False, yeka=yeka)
+
+        yeka = YekaGetService(request,yeka_filter)
+        yekabussinessblog = YekaBusinessBlogGetService(request,yeka_yekabusiness_filter)
+
+        company_list=YekaCompany.objects.filter(isDeleted=False,yeka=yeka)
+
 
         if request.POST:
             with transaction.atomic():
@@ -875,6 +904,62 @@ def view_yekabusiness_gant(request, uuid):
         yekabusinessbloks = None
 
         extratime_filter = {
+            'yeka': yeka,
+            'isDeleted' : False,
+        }
+        ekstratimes = ExtraTimeService(request, extratime_filter)
+        extratime=[]
+        for item in ekstratimes:
+            if ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).count()>1:
+                for business in ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).order_by('-creationDate'):
+                    print(business.creationDate)
+
+            else:
+                beka = {
+                    'uuid': item.uuid,
+                    'content': item.yekabusinessblog.businessblog.name + " Ek Süre",
+                    'start': item.yekabusinessblog.finisDate,
+                    'finish': item.yekabusinessblog.finisDate + datetime.timedelta(days=item.time),
+                    'bloguuid': item.yekabusinessblog.uuid,
+                }
+                extratime.append(beka)
+
+
+        if yeka.business:
+            yekabusiness = yeka.business
+            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+        return render(request, 'Yeka/gant.html',
+                      {'yekabusinessbloks': yekabusinessbloks,
+                       'yeka': yeka,
+                       'ekstratimes': extratime
+                       })
+
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+@login_required()
+def view_yekabusiness_gant2(request, uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        yeka_filter = {
+            'uuid': uuid
+        }
+        yeka = YekaGetService(request, yeka_filter)
+
+        url=general_methods.yeka_control(request, yeka)
+        if url and url !='view_yekabusinessBlog':
+            return redirect('ekabis:'+url ,yeka.uuid)
+        yekabusinessbloks = None
+
+        extratime_filter = {
             'yeka': yeka
         }
         ekstratimes = ExtraTimeService(request, extratime_filter)
@@ -893,3 +978,42 @@ def view_yekabusiness_gant(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+
+
+@login_required()
+def view_yekabusinessblog_gant(request, yeka, yekabusiness):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        yeka_filter = {
+            'uuid': yeka
+        }
+
+        yeka = YekaGetService(request, yeka_filter)
+        yeka_yekabusiness_filter_ = {
+            'uuid': yekabusiness
+        }
+
+        yekabussiness = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter_)
+        extrafilter={
+            'yekabusinessblog':yekabussiness
+        }
+        extratime=ExtraTimeService(request,extrafilter)
+
+        return render(request, 'Yeka/yekabussinessblog_detail.html',
+                      {
+                          'yeka': yeka,
+                          'yekabusinessblok':yekabussiness,
+                          'ekstratimes':extratime,
+                      })
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
