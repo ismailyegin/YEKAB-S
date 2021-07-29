@@ -1,5 +1,7 @@
 from django.db import models
 from ekabis.models.BaseModel import BaseModel
+
+
 class Person(BaseModel):
     MALE = 0
     FEMALE = 1
@@ -39,10 +41,9 @@ class Person(BaseModel):
     profileImage = models.ImageField(upload_to='profile/', null=True, blank=True, default='profile/user.png',
                                      verbose_name='Profil Resmi')
     birthDate = models.DateField(null=True, blank=True, verbose_name='Doğum Tarihi')
-    bloodType = models.CharField(max_length=128, verbose_name='Kan Grubu', choices=BLOODTYPE, default=AB1)
+    bloodType = models.CharField(max_length=128, verbose_name='Kan Grubu', choices=BLOODTYPE, default=AB1, null=True,
+                                 blank=True)
     gender = models.IntegerField(blank=True, null=True, choices=GENDER_CHOICES)
-
 
     class Meta:
         default_permissions = ()
-

@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <meta name="description" content="YEKABİS"/>
-    <meta name="keywords" content="YEKABİS"/>
+    <meta name="description" content="SPOR  BİLGİ SİSTEMİ"/>
+    <meta name="keywords" content="SPOR  BİLGİ SİSTEMİ"/>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {% load static %}
 
-    <link rel="shortcut icon"  type="image/png" href="/media/yekabis-logo.png"/>
+    <link rel="shortcut icon" type="image/png" href="/media/ekebis-icon.ico"/>
     <title>YEKABİS </title>
 
 
@@ -27,19 +27,16 @@
           href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
     <!-- iCheck -->
     <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
-
-    <!-- Bootstrap Color Picker -->
-    <link rel="stylesheet" href="{% static 'plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
-
     <!-- JQVMap -->
     <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
-    <link rel="stylesheet" href="{% static "plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css" %}">
+
+
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
+
+
     <!-- summernote -->
     <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
 
@@ -78,6 +75,8 @@
     <link rel="stylesheet" href="{% static 'plugins/bs-stepper/css/bs-stepper.min.css' %}">
     <!-- dropzonejs -->
     <link rel="stylesheet" href="{% static 'plugins/dropzone/min/dropzone.min.css' %}">
+	<link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
+
 
 
     {#    <!-- jQuery -->#}
@@ -309,8 +308,8 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="" class="brand-link">
-            <img src="{% static '/images/yekabis-logo.png' %}" alt="Yekabis"
+        <a href="#" class="brand-link">
+            <img src="{% static 'images/yekabis-logo.png' %}" alt="Yekabis"
                  class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">YEKABİS</span>
         </a>
@@ -325,43 +324,44 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
 
-
-                    {% for menu in menus %}
-                        {% if menu.is_parent %}
-                            {% if  menu.pk == activ_url.parent.pk %}
-                                <li class="nav-item  menu-is-opening menu-open">
-                                    {% else %}
-                                <li class="nav-item">
-                            {% endif %}
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas {{ menu.fa_icon }}"></i>
-                            <p>
-                                {{ menu.name }}
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            {% for menusub in menus %}
-                                {% if menusub.parent.id is menu.id %}
-                                    <li class="nav-item">
-                                        {% if  menusub.pk == activ_url.pk %}
-                                            <a href="{% url menusub.url %}" class="nav-link active">
-                                                <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                <p>{{ menusub.name }}</p>
-                                            </a>
+                    {% if aktif == 'Admin' %}
+                        {% for menu in menus %}
+                            {% if menu.is_parent %}
+                                {% if  menu.pk == activ_url.parent.pk %}
+                                    <li class="nav-item  menu-is-opening menu-open">
                                         {% else %}
-                                            <a href="{% url menusub.url %}" class="nav-link">
-                                                <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                <p>{{ menusub.name }}</p>
-                                            </a>
-                                        {% endif %}
-                                    </li>
+                                    <li class="nav-item">
                                 {% endif %}
-                            {% endfor %}
-                        </ul>
-                        </li>
-                        {% endif %}
-                    {% endfor %}
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas {{ menu.fa_icon }}"></i>
+                                <p>
+                                    {{ menu.name }}
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                {% for menusub in menus %}
+                                    {% if menusub.parent.id is menu.id %}
+                                        <li class="nav-item">
+                                            {% if  menusub.pk == activ_url.pk %}
+                                                <a href="{% url menusub.url %}" class="nav-link active">
+                                                    <i class="far {{ menusub.fa_icon }} nav-icon"></i>
+                                                    <p>{{ menusub.name }}</p>
+                                                </a>
+                                            {% else %}
+                                                <a href="{% url menusub.url %}" class="nav-link">
+                                                    <i class="far {{ menusub.fa_icon }} nav-icon"></i>
+                                                    <p>{{ menusub.name }}</p>
+                                                </a>
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
 
 
                 </ul>
@@ -438,7 +438,6 @@
 
 
 <!-- bs-custom-file-input -->
-
 <script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
 <!-- PAGE PLUGINS -->
 
@@ -449,8 +448,6 @@
 <script src="{% static 'plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js' %}"></script>
 <!-- InputMask -->
 <script src="{% static 'plugins/moment/moment.min.js' %}"></script>
-<!-- bootstrap color picker -->
-<script src="{% static 'plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js' %}"></script>
 {#pickermask#}
 <script src="{% static 'plugins/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
@@ -476,19 +473,17 @@
 <script src="{% static 'plugins/raphael/raphael.min.js' %}"></script>
 <script src="{% static 'plugins/jquery-mapael/jquery.mapael.min.js' %}"></script>
 <script src="{% static 'plugins/jquery-mapael/maps/usa_states.min.js' %}"></script>
-<script src="{% static 'errors_message.js' %}"></script>
+
 
 <!-- ChartJS -->
 <script src="{% static 'eski/chart.js/Chart.min.js' %}"></script>
-<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'alert/sweetalert.min.js' %}"></script>
-<script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
-<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+
 <!-- AdminLTE for demo purposes -->
-<script src="{% static 'dist/js/demo.js' %}"></script>
+{#<script src="{% static 'dist/js/demo.js' %}"></script>#}
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 {#<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>#}
-
+<script src="{% static 'alert/sweetalert.min.js' %}"></script>
+<script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
 
 <script>
 
@@ -617,20 +612,6 @@
 
 
         })
-        //Colorpicker
-        $('.my-colorpicker1').colorpicker()
-        //color picker with addon
-        $('.my-colorpicker2').colorpicker()
-
-        $('.my-colorpicker2').on('colorpickerChange', function (event) {
-            $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-        });
-
-        $("input[data-bootstrap-switch]").each(function () {
-            $(this).bootstrapSwitch('state', $(this).prop('checked'));
-        });
-        //Bootstrap Duallistbox
-        $('.duallistbox').bootstrapDualListbox()
 
     });
 
@@ -654,16 +635,13 @@
     }
 
 </script>
-
 <script>
-
-    $(document).ready(function () {
+ $(document).ready(function () {
         $('.toast').fadeOut(5000);
 
-    });
+    });</script>
 
 
-</script>
 </body>
 </html>
 

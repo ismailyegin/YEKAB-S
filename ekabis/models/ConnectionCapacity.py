@@ -1,5 +1,6 @@
 from django.db import models
 
+from ekabis.models import City
 from ekabis.models.ConnectionRegion import ConnectionRegion
 from ekabis.models.BaseModel import BaseModel
 from ekabis.models.ConnectionUnit import ConnectionUnit
@@ -11,6 +12,8 @@ class ConnectionCapacity(BaseModel):
     unit = models.ForeignKey(ConnectionUnit, on_delete=models.DO_NOTHING, verbose_name='Birim', null=False, blank=False)
     connection_region = models.ForeignKey(ConnectionRegion, on_delete=models.DO_NOTHING,
                                             verbose_name='Bağlantı Bölgesi', null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True, verbose_name='İl')
+    district = models.CharField(max_length=250, null=True, blank=True, verbose_name='İlçe')
 
     def __str__(self):
         return '%s ' % self.name

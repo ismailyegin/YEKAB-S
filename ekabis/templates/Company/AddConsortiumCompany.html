@@ -34,18 +34,63 @@
 
 
     {% endif %}
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
 
+                </div>
+                <div class="modal-body">
+                <div class="row">
+                      <div class="col-lg-6">
+
+                    <select required class="select2 select2-hidden-accessible"
+                            data-placeholder="Firma Seçin"
+                            data-dropdown-css-class="select2-purple"
+                            style="width: 100%;" id="region_capacity" name="region_capacity"
+                            data-select2-id="15" tabindex="-1" aria-hidden="true">
+                        {% for company in companies %}
+
+                            <option data-select2-id="{{ company.uuid }}"
+                                    value="{{ company.uuid }}">{{ company.name }}</option>
+
+                        {% endfor %}
+                    </select></div>
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" id="percent" placeholder="Katılım Yüzdesi %">
+                    </div>
+                </div>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <section class="content-header">
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>{{ aktif }}-
-                        Firma Ekle</h1>
+                    <h1>
+                        Konsorsiyum Ekle</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Firma Ekle</a></li>
+                        <li class="breadcrumb-item"><a href="#">Konsorsiyum Ekle</a></li>
                         {#              <li class="breadcrumb-item active">Advanced Form</li>#}
                     </ol>
                 </div>
@@ -58,11 +103,10 @@
         <form method="post" enctype="multipart/form-data" role="form">
             {% csrf_token %}
             <div class="row">
-
                 <div class="col-lg-6">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Firma Bilgileri</h3>
+                            <h3 class="card-title">Konsorsiyum Bilgileri</h3>
                         </div>
                         <div class="card-body">
 
@@ -82,6 +126,10 @@
 
 
                     </div>
+
+
+                </div>
+                <div class="col-lg-6">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">İletişim Bilgileri</h3>
@@ -137,72 +185,22 @@
                         </div>
 
                         <div class="card-footer">
+
                             <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
                             </button>
+                            <a onclick="AddCompany()" class="btn btn-outline-primary" type="button"
+                               style="float:right;margin-right:5px"><i class="fa fa-plus"></i>Firma Ekle
+                            </a>
 
                         </div>
 
 
                     </div>
-
-
-                </div>
-                <div class="col-lg-6">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Kullanici Bilgileri</h3>
-                        </div>
-                        <div class="card-body">
-
-                            {% for item in user_form %}
-                                <div class="form-group">
-                                    <label>{{ item.label }}</label><br>
-                                    {{ item }}
-                                    <label for="" id="label_{{ item.name }}"></label>
-                                </div>
-                            {% endfor %}
-
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
-                            </button>
-
-                        </div>
-
-
-                    </div>
-                    <div class="card card-primary card-outline">
-
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Kullanici Bilgileri</h3>
-                        </div>
-                        <div class="card-body">
-
-                            {% for item in person_form %}
-                                <div class="form-group">
-                                    <label>{{ item.label }}</label><br>
-
-                                    {{ item }}
-                                    <label for="" id="label_{{ item.name }}"></label>
-                                </div>
-                            {% endfor %}
-
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
-                            </button>
-
-                        </div>
-
-
-                    </div>
-
-
-
                 </div>
 
 
             </div>
+
 
         </form>
 
@@ -234,7 +232,43 @@
             {% endif %}
         });
 
+        function AddCompany(id) {
+            debugger;
+            console.log(id);
+            var html = ''
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid: id,
+                        },
+                        success: function (result) {
 
+                            html = 'Firma Başarıyla Silindi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:view_company" %}");
+
+                                });
+
+                            }).modal('show');
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-delete').modal('hide');
+            });
+
+        }
     </script>
 
 

@@ -5,7 +5,7 @@ class ExtraTimeForm(forms.ModelForm):
     class Meta:
         model = ExtraTime
         fields = ('time',)
-        labels = {'time': 'Eksta Eklenecek zaman '}
+        labels = {'time': 'Eksta Eklenecek Zaman '}
         widgets = {
             'time': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),

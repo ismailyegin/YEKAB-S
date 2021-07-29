@@ -141,136 +141,130 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">YEKA LİSTESİ</h3>
-                             {% for item in perm %}
-                            {% if item == 'add_yeka' %}
+                            {% for item in perm %}
+                                {% if item == 'add_yeka' %}
 
-                                        <a href="{% url "ekabis:add_yeka" %}"
-                                           type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
-                                                class="fa fa-plus" title="Yeni Yeka Ekle"></i>
-                                        </a>
+                                    <a href="{% url "ekabis:add_yeka" %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" title="Yeni Yeka Ekle"></i>
+                                    </a>
 
-                            {% endif %}
-                        {% endfor %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
 
 
-                        {% if parent_yekalar %}
-                            <div class="card-body">
+                        <div class="card-body">
 
-                                <table id="yeka" class="table table-bordered table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Tanım</th>
-                                        <th>Tarih</th>
-                                        <th>Kapasite</th>
-                                        <th>İşlemler</th>
-
-
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
+                            <table id="yeka" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tanım</th>
+                                    <th>Tarih</th>
+                                    <th>Kapasite</th>
+                                    <th>İşlemler</th>
 
 
-                                    {% if parent_yekalar.all %}
-                                        {% for yeka in parent_yekalar %}
-                                            <tr>
-                                                <td>{{ forloop.counter }} </td>
-                                                <td>{{ yeka.definition }}</td>
-                                                <td>{{ yeka.date }}</td>
-                                                <td>{{ yeka.capacity }} {{ yeka.unit.name }}</td>
-                                            <td><div class="btn-group">
-                                            <button type="button" class="btn btn-default">İşlemler</button>
-                                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon"
-                                                    data-toggle="dropdown">
-                                            </button>
-                                            <div class="dropdown-menu" role="menu">
-                                                 {% for item in perm %}
-                                                        {% if item == 'view_yeka_company' %}
+                                </tr>
+                                </thead>
 
-                                                          <a href="{% url 'ekabis:view_yeka_company' yeka.uuid %}"
-                                                           class="dropdown-item"> <i
-                                                                class="fa fa-plus" title="Firma Ekle"></i> Firma Ekle
-                                                        </a>
-                                                    {% endif %}
-                                                {% endfor %}
-                                                {% for item in perm %}
-                                                        {% if item == 'view_yeka_personel' %}
-
-                                                         <a href="{% url 'ekabis:view_yeka_personel' yeka.uuid %}"
-                                                                    class="dropdown-item"><i
-                                                                        class="fa fa-plus" title="Personel Ata"></i> Personel Ata
-                                                                </a>
-
-                                                    {% endif %}
-                                                {% endfor %}
-                                             {% for item in perm %}
-                                                            {% if item == 'change_yeka' %}
-
-                                                         <a href="{% url 'ekabis:change_yeka' yeka.uuid %}"
-                                                                    class="dropdown-item"><i
-                                                                        class="fa fa-plus" title="Düzenle"></i> Düzenle
-                                                                </a>
-
-                                                    {% endif %}
-                                                {% endfor %}
-                                             {% for item in perm %}
-                                                            {% if item == 'delete_yeka' %}
-
-                                                          <a class="dropdown-item"
-                                                                   data-toggle="modal"
-                                                                   onclick=deleteYeka('{{ yeka.uuid }}')><i
-                                                                        class="fa fa-trash" title="Sil"></i> Sil</a>
-
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% for item in perm %}
-                                                            {% if item == 'view_sub_yeka' %}
-                                                          <a type="button" class="dropdown-item"  href="{% url 'ekabis:view_sub_yeka' yeka.uuid %}" ><i
-                                                                        class="fa fa-list" title="Alt Yekalar"></i> Alt Yekalar</a>
-
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% for item in perm %}
-                                                            {% if item == 'view_yekabusinessBlog' %}
-                                                                <a href="{% url 'ekabis:view_yekabusinessBlog' yeka.uuid %}"
-                                                                   type="button" class="dropdown-item"><i
-                                                                        class="fa fa-calendar-times" title="İş Bloğu"></i> İş Bloğu
-                                                                </a>
-                                                            {% endif %}
-                                                        {% endfor %}
-
-                                                        {% for item in perm %}
-                                                            {% if item == 'view_yekabusiness_gant' %}
-                                                                <a href="{% url 'ekabis:view_yekabusiness_gant' yeka.uuid %}"
-                                                                   type="button" class="dropdown-item"><i
-                                                                        class="fa fa-calendar-times" title="Yol Haritası"></i> Yol Haritası
-                                                                </a>
-                                                            {% endif %}
-                                                        {% endfor %}
-
-                                            </div>
-                                        </div>
-                                            </td>
+                                <tbody>
 
 
+                                {#                                    {% if parent_yekalar.all %}#}
+                                {#                                        {% for yeka in parent_yekalar %}#}
+                                {#                                            <tr>#}
+                                {#                                                <td>{{ forloop.counter }} </td>#}
+                                {#                                                <td>{{ yeka.definition }}</td>#}
+                                {#                                                <td>{{ yeka.date }}</td>#}
+                                {#                                                <td>{{ yeka.capacity }} {{ yeka.unit.name }}</td>#}
+                                {#                                                <td>#}
+                                {#                                                    <div class="btn-group">#}
+                                {#                                                        <button type="button" class="btn btn-default">İşlemler</button>#}
+                                {#                                                        <button type="button"#}
+                                {#                                                                class="btn btn-default dropdown-toggle dropdown-icon"#}
+                                {#                                                                data-toggle="dropdown">#}
+                                {#                                                        </button>#}
+                                {#                                                        <div class="dropdown-menu" role="menu">#}
+                                {#                                                            {% for item in perm %}#}
+                                {#                                                                {% if item == 'view_yeka_company' %}#}
+                                {##}
+                                {#                                                                    <a href="{% url 'ekabis:view_yeka_company' yeka.uuid %}"#}
+                                {#                                                                       class="dropdown-item"> <i#}
+                                {#                                                                            class="fa fa-plus" title="Firma Ekle"></i>#}
+                                {#                                                                        Firma Ekle#}
+                                {#                                                                    </a>#}
+                                {#                                                                {% endif %}#}
+                                {#                                                            {% endfor %}#}
+                                {#                                                            {% for item in perm %}#}
+                                {#                                                                {% if item == 'view_yeka_personel' %}#}
+                                {##}
+                                {#                                                                    <a href="{% url 'ekabis:view_yeka_personel' yeka.uuid %}"#}
+                                {#                                                                       class="dropdown-item"><i#}
+                                {#                                                                            class="fa fa-plus" title="Personel Ata"></i>#}
+                                {#                                                                        Personel Ata#}
+                                {#                                                                    </a>#}
+                                {##}
+                                {#                                                                {% endif %}#}
+                                {#                                                            {% endfor %}#}
+                                {#                                                            {% for item in perm %}#}
+                                {#                                                                {% if item == 'change_yeka' %}#}
+                                {##}
+                                {#                                                                    <a href="{% url 'ekabis:change_yeka' yeka.uuid %}"#}
+                                {#                                                                       class="dropdown-item"><i#}
+                                {#                                                                            class="fa fa-plus" title="Düzenle"></i>#}
+                                {#                                                                        Düzenle#}
+                                {#                                                                    </a>#}
+                                {##}
+                                {#                                                                {% endif %}#}
+                                {#                                                            {% endfor %}#}
+                                {#                                                            {% for item in perm %}#}
+                                {#                                                                {% if item == 'delete_yeka' %}#}
+                                {##}
+                                {#                                                                    <a class="dropdown-item"#}
+                                {#                                                                       data-toggle="modal"#}
+                                {#                                                                       onclick=deleteYeka('{{ yeka.uuid }}')><i#}
+                                {#                                                                            class="fa fa-trash" title="Sil"></i> Sil</a>#}
+                                {##}
+                                {#                                                                {% endif %}#}
+                                {#                                                            {% endfor %}#}
+                                {#                                                            {% for item in perm %}#}
+                                {#                                                                {% if item == 'view_sub_yeka' %}#}
+                                {#                                                                    <a type="button" class="dropdown-item"#}
+                                {#                                                                       href="{% url 'ekabis:view_sub_yeka' yeka.uuid %}"><i#}
+                                {#                                                                            class="fa fa-list" title="Alt Yekalar"></i>#}
+                                {#                                                                        Alt Yekalar</a>#}
+                                {##}
+                                {#                                                                {% endif %}#}
+                                {#                                                            {% endfor %}#}
+                                {#                                                            {% for item in perm %}#}
+                                {#                                                                {% if item == 'view_yekabusinessBlog' %}#}
+                                {#                                                                    <a href="{% url 'ekabis:view_yekabusinessBlog' yeka.uuid %}"#}
+                                {#                                                                       type="button" class="dropdown-item"><i#}
+                                {#                                                                            class="fa fa-calendar-times"#}
+                                {#                                                                            title="İş Bloğu"></i> İş Bloğu#}
+                                {#                                                                    </a>#}
+                                {#                                                                {% endif %}#}
+                                {#                                                            {% endfor %}#}
+                                {##}
+                                {#                                                        </div>#}
+                                {#                                                    </div>#}
+                                {#                                                </td>#}
+                                {##}
+                                {##}
+                                {#                                            </tr>#}
+                                {##}
+                                {#                                        {% endfor %}#}
+                                {#                                    {% endif %}#}
 
 
+                                </tbody>
+                            </table>
 
 
-                                            </tr>
+                        </div>
 
-                                        {% endfor %}
-                                    {% endif %}
-
-
-                                    </tbody>
-                                </table>
-
-
-                            </div>
-                        {% endif %}
                     </div>
 
 
@@ -281,19 +275,24 @@
         </div>
 
     </section>
-{% load static %}
+    {% load static %}
     <script>
         $(function () {
-            $('#yeka').DataTable({
-                dom: 'Bfrtip',
 
-               'language': {
-                    "url": "{% static 'datatable_tr.json' %}"
+            debugger;
+            $('#yeka').DataTable({
+
+                "processing": true,
+                "serverSide": true,
+                "paging": true,
+                "ordering": true,
+
+
+                "ajax": {
+                    "url": "{% url 'ekabis:view_yeka-api' %}",
+                    "type": "POST",
                 },
-                lengthMenu: [
-                    [10, 25, 50, 100, -1],
-                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
-                ],
+                dom: 'Bfrtip',
 
                 'buttons': [
 
@@ -311,7 +310,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'YEKA LİSTESİ',
+                        title: 'Firmalar',
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
@@ -332,18 +331,114 @@
 
 
                 ],
-                "search": {
-                    "caseInsensitive": true,
+
+
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
                 },
-                'paging': true,
-                'lengthChange': true,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': true,
-                'responsive': true,
-            })
+                "columns": [
+                    {"data": "id"},
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.definition;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.date;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.capacity + '' + row.unit.name;
+
+                        }
+                    },
+
+                    {
+                        "data": null,
+                        render: function (full) {
+                            console.log(full.content);
+                            let html;
+                            debugger;
+                            let url_update = "{% url 'ekabis:change_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
+                            let url_company = "{% url 'ekabis:view_yeka_company' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            url_company = url_company.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
+                            let url_person = "{% url 'ekabis:view_yeka_personel' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            url_person = url_person.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
+                            let url_sub_yeka = "{% url 'ekabis:view_sub_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            url_sub_yeka = url_sub_yeka.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
+                            let url_business = "{% url 'ekabis:view_yekabusinessBlog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            url_business = url_business.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
+
+                            html = '<td><div class="btn-group"> <button type="button" class="btn btn-default">İşlemler</button>  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> </button> <div class="dropdown-menu" role="menu">';
+                            html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
+                            html += '<a href="' + url_person + '" class="dropdown-item" title="Personel Ekle" type="button"><i class="fa fa-plus"></i> Personel Ekle</a>';
+
+                            html += '<a href="' + url_company + '" class="dropdown-item" title="Firma Ekle" type="button"><i class="fa fa-plus"></i> Firma Ekle</a>';
+                            html += '<a href="' + url_sub_yeka + '" class="dropdown-item" title="Alt Yeka Ekle" type="button"><i class="fa fa-plus"></i> Alt Yeka Ekle</a>';
+                            html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Bloğu Ekle</a>';
+
+                            html += '<button type="button" onclick="deleteYeka(\'' + full.uuid + '\')" class="dropdown-item" href=""><i class="fa fa-trash"></i>Sil</button></div></div></td>';
+
+                            return html;
+                        }
+                    }
+                ],
+                "search": {
+                    "caseInsensitive": true
+                }
+
+
+            });
+
+
         })
+
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
     </script>
 
     <script>

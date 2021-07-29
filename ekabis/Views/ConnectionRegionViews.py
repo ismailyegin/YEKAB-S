@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from ekabis.Forms.ConnectionCapacityForm import ConnectionCapacityForm
 from ekabis.Forms.ConnectionRegionForm import ConnectionRegionForm
 from ekabis.Forms.ConnectionUnitForm import ConnectionUnitForm
-from ekabis.models import ConnectionRegion, ConnectionCapacity
+from ekabis.models import ConnectionRegion, ConnectionCapacity, City
 from ekabis.models.ConnectionUnit import ConnectionUnit
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
@@ -255,7 +255,6 @@ def return_connectionCapacity(request, uuid):
         logout(request)
         return redirect('accounts:login')
 
-
     try:
         capasity_filter = {
             'connection_region__uuid': uuid,
@@ -264,6 +263,7 @@ def return_connectionCapacity(request, uuid):
 
         capacities = ConnectionCapacityService(request, capasity_filter)
         capacity_form = ConnectionCapacityForm()
+        cities = City.objects.filter(isDeleted=False)
 
         with transaction.atomic():
             if request.method == 'POST':
@@ -271,7 +271,7 @@ def return_connectionCapacity(request, uuid):
                 region = ConnectionRegion.objects.get(uuid=uuid)
                 region_filter = {
 
-                    'onnection_region__uuid': uuid,
+                    'connection_region__uuid': uuid,
                     'isDeleted': False
 
                 }
@@ -289,15 +289,16 @@ def return_connectionCapacity(request, uuid):
                     if region_value >= total_capacity:
                         capacity = ConnectionCapacity(name=capacity_form.cleaned_data['name'],
                                                       unit=capacity_form.cleaned_data['unit'],
-                                                      value=capacity_value)
+                                                      value=capacity_value,
+                                                      city=City.objects.get(pk=int(request.POST['city'])),
+                                                      district=capacity_form.cleaned_data['district'])
                         capacity.save()
 
-
-                        region_filter={
-                            'uuid:uuid'
+                        region_filter = {
+                            'uuid': uuid
                         }
 
-                        capacity.connection_region = ConnectionRegionGetService(request,region_filter,)
+                        capacity.connection_region = ConnectionRegionGetService(request, region_filter, )
                         capacity.save()
 
                         log = "Kapasite eklendi"
@@ -312,10 +313,11 @@ def return_connectionCapacity(request, uuid):
 
                     return render(request, 'ConnectionRegion/add-connectionCapacity.html',
                                   {'capacity_form': capacity_form, 'capacities': capacities,
-                                   'error_messages': error_message_capacity})
+                                   'error_messages': error_message_capacity, 'cities': cities})
 
             return render(request, 'ConnectionRegion/add-connectionCapacity.html',
-                          {'capacity_form': capacity_form, 'capacities': capacities, 'error_messages': ''})
+                          {'capacity_form': capacity_form, 'capacities': capacities, 'error_messages': '',
+                           'cities': cities})
 
     except Exception as e:
         traceback.print_exc()

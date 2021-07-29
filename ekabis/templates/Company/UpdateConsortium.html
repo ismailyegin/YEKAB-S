@@ -1,0 +1,612 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div id="toast-container" class="toasts-top-right">
+
+        <div class="toast toast-error error" aria-live="polite" style="display: none" id="error_toast">
+            <div class="toast-message" id="error_message">
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <form method="post" enctype="multipart/form-data" role="form" name="form" id="form">
+        <div class="modal modal-warning fade in deneme23" tabindex="-1" role="dialog" id="addDocument"
+             aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">Bilgileri Giriniz</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <label for="documanname">Döküman İsmi </label>
+                        <select id="documanname" name="documanname" class="form-control">
+                            <option value="" selected>Seçiniz...</option>
+                            {% for item  in companyDocumentName %}
+                                <option value="{{ item.pk }}">{{ item.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="id_file1">Döküman İsmi </label><br>
+                        <input type="file" name="documanfile" id="id_file">
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline pull-left">Kaydet
+                        </button>
+                        <button type="button" class="btn btn-outline" id="edit-btn-closereddet">Geri Dön</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+        <section class="content-header">
+
+
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Konsorsiyum Güncelle</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Konsorsiyum Güncelle</a></li>
+                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <section class="content">
+
+
+            {% csrf_token %}
+            <div class="row">
+
+
+                <div class="col-lg-5">
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Genel Bilgiler</h3>
+                            </div>
+                            <div class="card-body">
+
+                                {% for item in company_form %}
+                                    <div class="form-group">
+                                        <label>{{ item.label }}</label><br>
+
+                                        {{ item }}
+                                        <label for="" id="label_{{ item.name }}"></label>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="col-lg-12">
+
+                        <div class="card card-primary card-outline  collapsed-card">
+
+
+                            <div class="card-header with-border">
+                                <h3 class="card-title">İLETİŞİM BİLGİLERİ</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+                                </div>
+
+
+                                <!-- /.card-tools -->
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+                                <div class="row">
+                                    {{ communication_form }}
+                                </div>
+
+
+                            </div>
+
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+
+                        <div class="card card-primary card-outline  collapsed-card">
+
+
+                            <div class="card-header with-border">
+                                <h3 class="card-title">DÖKÜMAN BİLGİLERİ</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+
+                                </div>
+
+
+                                <!-- /.card-tools -->
+
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+                                <button class="btn btn-success" id="btnDokuman" type="button"> Döküman Ekle</button>
+
+
+                            </div>
+                            <div class="card-body" style="display: none;">
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <table id="dokuman" class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Dosya</th>
+                                                <th>İşlemler</th>
+
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+
+                                            {% if company.files.all %}
+                                                {% for item in company.files.all %}
+                                                    <tr id="documents-{{ item.pk }}">
+                                                        <td>{{ forloop.counter }} </td>
+                                                        <td>{{ item.filename.name }}</td>
+
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-success"
+                                                                   data-toggle="modal"
+                                                                   href="/media/{{ item.file }}"><i
+                                                                        class="fa fa-download"></i></a>
+
+                                                                {#                                                        delete kısmı eklenecek#}
+                                                                <a class="btn btn-danger"
+                                                                   data-toggle="modal"
+                                                                   onclick=deletedocument({{ item.pk }})><i
+                                                                        class="fa fa-trash"></i></a>
+
+                                                            </div>
+                                                        </td>
+
+                                                    </tr>
+
+                                                {% endfor %}
+                                            {% endif %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-12">
+
+                        <div class="card card-primary card-outline  collapsed-card">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">KULLANICI BİLGİLERİ</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+
+                                </div>
+
+
+                                <!-- /.card-tools -->
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+                                        {% for item in user_form %}
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label><br>
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        {% for item in person_form %}
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label><br>
+
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        {% endfor %}
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-12">
+
+                        <div class="card card-primary card-outline  collapsed-card">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">FİRMA BİLGİLERİ</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+
+                                </div>
+
+
+                                <!-- /.card-tools -->
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+                                <div class="row">
+
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <select required class="select2 select2-hidden-accessible"
+                                                    data-placeholder="Firma Seçin"
+                                                    data-dropdown-css-class="select2-purple"
+                                                    style="width: 100%;" id="consortium_company"
+                                                    name="consortium_company"
+                                                    data-select2-id="15" tabindex="-1" aria-hidden="true">
+                                                {% for company in companies %}
+
+                                                    <option data-select2-id="{{ company.uuid }}"
+                                                            value="{{ company.uuid }},{{ company.name }}">{{ company.name }}</option>
+
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="percent" value=""
+                                                   placeholder="Katılım Yüzdesi %">
+                                            <input type="hidden" value="" name="consortium_list" id="consortium_list">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" onclick="consortium()" type="button"
+                                        style="float:right">Ekle
+                                </button>
+
+                            </div>
+
+
+                            <div class="card-body">
+                                <table id="company" class="table table-bordered table-hover" cellspacing="0"
+                                       width="100%">
+                                    <thead>
+                                    <tr>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="button" onclick="percent_control()"
+                                        style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+        </section>
+    </form>
+    {% load static %}
+    <script>
+        let consortium_list = [];
+        $(document).ready(function () {
+
+
+            $('#btnDokuman').click(function (e) {
+                $("#addDocument").modal('show');
+                $('#edit-btn-closereddet').click(function () {
+
+
+                    $('#addDocument').modal('hide');
+                    $('.modal').modal('hide');
+
+                });
+
+            });
+
+
+            {% if error_messages %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+
+            $('#dokuman').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Yeka Firmaları',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                },
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+
+            })
+
+
+        });
+
+
+    </script>
+    <script>
+        var company_list = [];
+
+        function consortium() {
+            debugger;
+            var consortium = document.getElementById('consortium_company').value;
+            var company = consortium.split(",")[1];
+            var percent = document.getElementById('percent').value;
+
+            var table = document.getElementById("company");
+
+            var row = table.insertRow(0);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+
+            cell1.innerHTML = company;
+            cell2.innerHTML = percent;
+            cell3.innerHTML = '<button type="button" onclick="delete_consortium(\'' + company + '\',this,\'' + consortium.split(",")[0] + '\')" class="btn btn-outline-danger">Sil</button>'
+            var element = '' + consortium.split(",")[0] + '&' + percent + '';
+            consortium_list.push(element)
+            company_list.push(company)
+
+
+            document.getElementById('consortium_list').value = consortium_list;
+
+
+        }
+
+        function delete_consortium(name, id, company) {
+            debugger;
+            var row = id.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+
+            var consortiums = consortium_list.splice(',')
+            for (var i = 0; i < consortiums.length; i++) {
+                var list = consortiums[i].split('&')
+                if (list[i] === company) {
+                    consortium_list.pop(consortium_list[i])
+                }
+
+                document.getElementById('consortium_list').value = consortium_list;
+
+
+            }
+        }
+
+        function percent_control() {
+            debugger;
+            if (consortium_list.length > 0) {
+                var total_percent = 0;
+                var consortiums = consortium_list.splice(',')
+                for (var i = 0; i < consortiums.length; i++) {
+                    var list = consortiums[i].split('&')
+                    total_percent = total_percent + parseInt(list[1])
+                }
+                if (total_percent < 100) {
+                    debugger;
+                    let toast = document.getElementById('error_message');
+                    html = 'Toplam katılım yüzdesi 100 den küçük olamaz.';
+                    toast.innerHTML = html;
+                    document.getElementById('error_toast').style.display = 'block';
+                    $('.error').toast('show');
+                    $('.toast').fadeOut(5000);
+                } else if (total_percent > 100) {
+                    let toast = document.getElementById('error_message');
+                    html = 'Toplam katılım yüzdesi 100 den büyük olamaz.';
+                    toast.innerHTML = html;
+                    document.getElementById('error_toast').style.display = 'block';
+                    $('.error').toast('show');
+                    $('.toast').fadeOut(5000);
+                } else {
+                    document.getElementById("form").submit();
+                }
+            }
+
+
+        }
+    </script>
+
+
+
+{% endblock %}
+
+
