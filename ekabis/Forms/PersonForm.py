@@ -24,7 +24,7 @@ class PersonForm(ModelForm):
                        'onkeydown': 'return false', 'required': 'required'}),
 
             'gender': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                          'style': 'width: 100%; ', 'required': 'required'}),
+                                          'style': 'width: 100%; ',}),
             'birthplace': forms.TextInput(
                 attrs={'class': 'form-control '}),
             'motherName': forms.TextInput(
@@ -32,6 +32,6 @@ class PersonForm(ModelForm):
             'fatherName': forms.TextInput(
                 attrs={'class': 'form-control '}),
             'bloodType': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                          'style': 'width: 100%; ', 'required': 'required'}),
+                                          'style': 'width: 100%; ', }),
 
         }

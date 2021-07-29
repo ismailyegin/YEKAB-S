@@ -22,6 +22,7 @@ class Company(BaseModel):
     kobilid = models.IntegerField(null=True, blank=True, default=1)
     files = models.ManyToManyField(CompanyFiles)
     companyuser = models.ForeignKey(CompanyUser, on_delete=models.CASCADE, null=True, blank=True)
+    is_consortium = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return '%s' % (self.name)

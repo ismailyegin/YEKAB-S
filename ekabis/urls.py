@@ -1,6 +1,7 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews,ExtraTimeViews
+    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
+    ExtraTimeViews, APIViews, CityViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -52,6 +53,7 @@ urlpatterns = [
     path('kullanici/kullanici-group-guncelle/<int:pk>/', UserViews.change_group_function, name='change_user_group'),
 
     # Personeller
+    path('api-personel-listesi/', APIViews.GetEmployee.as_view(), name='view_employee_api'),
     path('personel/personel-listesi/', EmployeeViews.return_employees, name='view_employee'),
     path('personel/personel-ekle/', EmployeeViews.add_employee, name='add_employee'),
     path('personel/personel-duzenle/<uuid:pk>/', EmployeeViews.edit_employee, name='change_employee'),
@@ -83,6 +85,11 @@ urlpatterns = [
     # firma
     path('firma/firma-ekle/', CompanyView.return_add_Company, name='add_company'),
     path('firma/firma-listesi/', CompanyView.return_list_Company, name='view_company'),
+    path('firma/konsorsiyum-firma-ekle/', CompanyView.add_consortium, name='add_consortium'),
+    path('firma/konsortium/', CompanyView.view_consortium, name='view_consortium'),
+    path('firma/konsorsiyum-guncelle/<uuid:uuid>/', CompanyView.return_update_consortium, name='change_consortium'),
+
+    path('api-firma-listesi/', APIViews.GetCompany.as_view(), name='view_company-api'),
     path('firma/firma-guncelle/<uuid:uuid>/', CompanyView.return_update_Company, name='change_company'),
     path('firma/firma-sil/', CompanyView.delete_company, name='delete_company'),
 
@@ -125,6 +132,7 @@ urlpatterns = [
     path('yeka/yeka-ekle/', YekaViews.add_yeka, name='add_yeka'),
 
     path('yeka/yeka-listesi/', YekaViews.return_yeka, name='view_yeka'),
+    path('yeka/api-yeka-listesi/', APIViews.GetYeka.as_view(), name='view_yeka-api'),
 
     path('yeka/yeka-sil/', YekaViews.delete_yeka, name='delete_yeka'),
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
@@ -141,12 +149,10 @@ urlpatterns = [
     path('yeka/alt-yeka-guncelle/<uuid:uuid>', YekaViews.update_sub_yeka, name='change_sub_yeka'),
 
     path('yeka/yeka-personeller/<uuid:uuid>', YekaViews.yeka_person_list, name='view_yeka_personel'),
-    path('yeka/yeka-personel-ata/', YekaViews.yeka_person_assignment, name='yeka_person_assignment'),
-    path('yeka/yeka-personel-sil/', YekaViews.yeka_person_remove, name='yeka_person_remove'),
+
     path('yeka/yeka-firmalar/<uuid:uuid>', YekaViews.yeka_company_list, name='view_yeka_company'),
     path('yeka/yeka-firma-ata/', YekaViews.yeka_company_assignment, name='yeka_company_assignment'),
     path('remove-yeka-company/', YekaViews.yeka_company_remove, name='company_remove_yeka'),
-    path('yeka/personel-cikar/', YekaViews.yeka_person_remove, name='yeka-personel-kaldir'),
 
     # yekabusiness
     path('yekaIsBlogu/yeka-IsBlogu-ekle/<uuid:uuid>/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
@@ -172,5 +178,7 @@ urlpatterns = [
     path('yeka/ekstra/zaman-ekle/<uuid:yeka>/<uuid:businessblog>/', ExtraTimeViews.return_add_extra_time, name='add_extratime'),
     path('yeka/ekstra/zaman-guncelle/<uuid:uuid>/', ExtraTimeViews.return_update_extra_time, name='change_extratime'),
     path('yeka/ekstra/zaman-sil/', ExtraTimeViews.delete_extra_time, name='delete_extratime'),
+
+    path('ilce-getir/', CityViews.get_districts, name='ilce-getir'),
 
 ]

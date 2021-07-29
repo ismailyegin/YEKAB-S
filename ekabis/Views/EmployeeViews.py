@@ -222,15 +222,8 @@ def return_employees(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-
-    employeefilter = {
-        'isDeleted': False,
-    }
-    employees = EmployeeService(request, employeefilter)
     try:
-
-        return render(request, 'personel/personeller.html',
-                      {'employees': employees, })
+        return render(request, 'personel/personeller.html')
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

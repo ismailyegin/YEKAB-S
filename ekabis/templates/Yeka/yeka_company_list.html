@@ -72,16 +72,16 @@
     </div>
 
 
-     {% if messages %}
+    {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -138,60 +138,15 @@
 
 
                 <div class="card-body">
-
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">FİRMA LİSTESİ</h3>
-                        </div>
-                        <div class="card-body">
-
-                            <table id="companies" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Firma</th>
-                                    <th>Sorumlu</th>
-                                    <th>İşlem</th>
-
-                                </tr>
-                                </thead>
-
-                                <tbody>
-
-
-                                {% for company in companies.all %}
-
-                                    <tr>
-                                        <td>{{ forloop.counter }} </td>
-                                        <td>{{ company.name }}</td>
-                                        <td>{{ company.companyuser.user.first_name }} {{ company.companyuser.user.last_name }}</td>
-                                        <td>
-                                            <a onclick="yeka_company_assignment('{{ yeka_uuid }}','{{ company.uuid }}')"
-                                               type="button" class="btn btn-outline-primary btn-sm"><i
-                                                    class="fa fa-plus" title="Ekle"></i>
-                                            </a>
-
-                                        </td>
-
-                                    </tr>
-
-
-                                {% endfor %}
-
-
-                                </tbody>
-                            </table>
-
-
-                        </div>
-
-
+                    <form method="post" role="form">
+                        {% csrf_token %}
+                        <div class="card card-primary card-outline">
                             <div class="card-header with-border">
-                                <h3 class="card-title">YEKA FİRMA LİSTESİ</h3>
+                                <h3 class="card-title">FİRMA LİSTESİ</h3>
                             </div>
                             <div class="card-body">
 
-                                <table id="yekacompanies" class="table table-bordered table-hover">
+                                <table id="companies" class="table table-bordered table-hover">
                                     <thead>
                                     <tr>
                                         <th>No</th>
@@ -205,20 +160,17 @@
                                     <tbody>
 
 
-                                    {% for yeka in yeka_companies %}
+                                    {% for company in companies.all %}
 
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ yeka.company.name }} </td>
-                                            <td>{{ yeka.company.companyuser.user.first_name }} {{ yeka.company.companyuser.user.last_name }}</td>
+                                            <td>{{ company.name }}</td>
+                                            <td>{{ company.companyuser.user.first_name }} {{ company.companyuser.user.last_name }}</td>
                                             <td>
-                                                <a onclick="yeka_company_remove('{{ yeka.yeka.uuid }}','{{ yeka.company.uuid }}')"
-                                                   type="button" class="btn btn-outline-danger btn-sm"><i
-                                                        class="fa fa-times" title="Yekadan Çıkar"></i>
-                                                </a>
-
+                                                <input value="{{ company.pk }}" name="company" class=""
+                                                       type="checkbox"/>
+                                                <input type="hidden" name="yeka" id="yeka" value="add">
                                             </td>
-
 
                                         </tr>
 
@@ -231,24 +183,87 @@
 
 
                             </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                        </div>
+                    </form>
+                    <form method="post" role="form">
+                        {% csrf_token %}
+
+                    <div class="card card-primary card-outline">
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">YEKA FİRMA LİSTESİ</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <table id="yekacompanies" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Firma</th>
+                                    <th>Sorumlu</th>
+                                    <th>İşlem</th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
 
 
+                                {% for yeka in yeka_companies %}
+
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ yeka.company.name }} </td>
+                                        <td>{{ yeka.company.companyuser.user.first_name }} {{ yeka.company.companyuser.user.last_name }}</td>
+                                        <td>
+
+                                            <input value="{{ yeka.company.pk }}" name="company" class=""
+                                                   type="checkbox"/>
+                                            <input type="hidden" name="yeka" id="yeka" value="sub">
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                            </button>
+
+                        </div>
                     </div>
+                </form>
 
 
                 </div>
             </section>
-
-
         </div>
-
     </section>
-{% load static %}
+
+
+
+
+
+    {% load static %}
     <script>
         $(function () {
             $('#companies').DataTable({
                 dom: 'Bfrtip',
-
 
 
                 lengthMenu: [
@@ -256,7 +271,7 @@
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-               'buttons': [
+                'buttons': [
 
 
                     {
@@ -293,7 +308,7 @@
 
 
                 ],
-                 "search": {
+                "search": {
                     "caseInsensitive": true,
                 },
                 'paging': true,
@@ -309,7 +324,6 @@
             })
             $('#yekacompanies').DataTable({
                 dom: 'Bfrtip',
-
 
 
                 lengthMenu: [
@@ -376,31 +390,6 @@
     <script>
 
 
-        function yeka_company_assignment(yeka_id, company_id) {
-            debugger;
-            console.log(yeka_id);
-            var html = ''
-
-            $.ajax({
-                url: "{% url "ekabis:yeka_company_assignment" %}",
-                type: "POST",
-                data: {
-                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                    yeka_uuid: yeka_id,
-                    company_uuid: company_id
-                },
-                success: function (result) {
-                    let url = '{% url 'ekabis:view_yeka_company' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
-                    url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_id)
-                    window.location.replace(url);
-
-
-                }
-            });
-
-
-        }
-
         function yeka_company_remove(yeka_uuid, company_uuid) {
             debugger;
 
@@ -415,7 +404,7 @@
                 },
                 success: function (result) {
 
-                      let url = '{% url 'ekabis:view_yeka_company' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
+                    let url = '{% url 'ekabis:view_yeka_company' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
                     url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_uuid)
                     window.location.replace(url);
 

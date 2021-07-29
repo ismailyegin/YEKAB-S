@@ -147,22 +147,21 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Dokuman İsimleri</h3>
-                        </div>
-                        {% for item in perm %}
+                            {% for item in perm %}
                                                     {% if item == 'change_companyfilename' %}
-                            <div class="card-header with-border">
-                                <div class="btn-group">
+
 
                                     <a href="{% url "ekabis:add_companyfilename" %}"
-                                       type="button" class="btn btn-success"><i
-                                            class="fa fa-edit"></i> Yeni Dokuman İsmi
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" title="Döküman Ekle"></i>
                                     </a>
 
 
-                                </div>
-                            </div>
+
                         {% endif %}
                                                 {% endfor %}
+                        </div>
+
                         <div class="card-body">
                             <table id="company" class="table table-bordered table-hover">
                                 <thead>
@@ -170,7 +169,7 @@
                                     <th>#</th>
                                     <th>İsim</th>
                                     <th>Zorunlu Alan</th>
-                                    <td>işlemler</td>
+                                    <td></td>
 
 
                                 </tr>
@@ -183,16 +182,30 @@
                                             <td>{{ gr.name }}</td>
                                         <td>{{ gr.is_active }}</td>
                                             <td>
-                                                {% for item in perm %}
+
+
+                                            <div class="btn-group">
+                                            <button type="button" class="btn btn-default">İşlemler</button>
+                                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon"
+                                                    data-toggle="dropdown">
+                                            </button>
+                                            <div class="dropdown-menu" role="menu">
+                                                  {% for item in perm %}
                                                     {% if item == 'change_companyfilename' %}
-                                                        <div class="btn-group">
-                                                            <a href="{% url "ekabis:change_companyfilename" gr.uuid %}"
-                                                               type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-edit"></i>İncele
-                                                            </a>
-                                                        </div>
+
+                                                           <a href="{% url "ekabis:change_companyfilename" gr.uuid %}"
+                                                           class="dropdown-item"> <i
+                                                                class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                        </a>
                                                     {% endif %}
                                                 {% endfor %}
+
+
+
+                                        </div>
+
+
+
 
                                             </td>
 
@@ -218,30 +231,21 @@
         <!-- /.row (main row) -->
 
     </section>
-
+{% load static %}
     <script>
         $(function () {
             $('#company').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
+
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                buttons: [
+                'buttons': [
 
-                    {#'copy',#}
-                    {#'csv',#}
 
                     {
                         extend: "pageLength",
@@ -250,57 +254,39 @@
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'Gruplar  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'Dökümanlar',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Gruplar',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'grup.json'
-                            );
-                        }
-                    }
 
 
                 ],
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                },
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,

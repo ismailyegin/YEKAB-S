@@ -76,13 +76,13 @@
     {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -139,58 +139,72 @@
 
 
                 <div class="card-body">
-
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">PERSONEL LİSTESİ</h3>
-                        </div>
-                        <div class="card-body">
-
-                            <table id="persons" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Ad Soyad</th>
-                                    <th>Unvan</th>
-                                    <th>İşlem</th>
-
-                                </tr>
-                                </thead>
-
-                                <tbody>
-
-
-                                {% for employee in persons.all %}
-
-                                    <tr>
-                                        <td>{{ forloop.counter }} </td>
-                                        <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
-                                        <td>{{ employee.workDefinition }}</td>
-                                        <td>
-                                            <a onclick="yeka_person_assignment('{{ yeka_uuid }}','{{ employee.uuid }}')"
-                                               type="button" class="btn btn-outline-primary btn-sm"><i
-                                                        class="fa fa-plus" title="Görevlendir"></i>
-                                            </a>
-
-                                        </td>
-
-                                    </tr>
-
-
-                                {% endfor %}
-
-
-                                </tbody>
-                            </table>
-
-
-                        </div>
-
-
+                    <form method="post" role="form">
+                        {% csrf_token %}
+                        <div class="card card-primary card-outline">
                             <div class="card-header with-border">
-                                <h3 class="card-title">YEKA PERSONEL LİSTESİ</h3>
+                                <h3 class="card-title">PERSONEL LİSTESİ</h3>
                             </div>
                             <div class="card-body">
+
+                                <table id="persons" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Unvan</th>
+                                        <th>İşlem</th>
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+
+                                    {% for employee in persons.all %}
+
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+                                            <td>{{ employee.workDefinition }}</td>
+                                            <td>
+                                                {#                                            <a onclick="yeka_person_assignment('{{ yeka_uuid }}','{{ employee.uuid }}')"#}
+                                                {#                                               type="button" class="btn btn-outline-primary btn-sm"><i#}
+                                                {#                                                        class="fa fa-plus" title="Görevlendir"></i>#}
+                                                {#                                            </a>#}
+                                                <input value="{{ employee.pk }}" name="employee" class=""
+                                                       type="checkbox"/>
+                                                <input type="hidden" name="yeka" id="yeka" value="add">
+
+                                            </td>
+
+                                        </tr>
+
+
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </form>
+                 <form method="post" role="form">
+                                {% csrf_token %}
+                    <div class="card card-primary card-outline">
+
+                        <div class="card-header with-border">
+                            <h3 class="card-title">YEKA PERSONEL LİSTESİ</h3>
+                        </div>
+                        <div class="card-body">
 
                                 <table id="yekapersons" class="table table-bordered table-hover">
                                     <thead>
@@ -215,10 +229,11 @@
                                             <td>
                                                 {% for item in perm %}
                                                     {% if item == 'yeka_person_remove' %}
-                                                        <a onclick="yeka_person_remove('{{ yeka.employee.uuid }}','{{ yeka.uuid }}')"
-                                                           type="button" class="btn btn-outline-danger btn-sm"><i
-                                                        class="fa fa-times" title="Yekadan Çıkar"></i>
-                                                        </a>
+                                                                                                            </a>#}
+                                                        <input value="{{ yeka.employee.pk }}" name="sub_employee" class=""
+                                                               type="checkbox"/>
+                                                        <input type="hidden" name="yeka" id="yeka" value="sub">
+
                                                     {% endif %}
                                                 {% endfor %}
 
@@ -235,10 +250,15 @@
                                 </table>
 
 
+                        </div>
+                     <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
                             </div>
 
                     </div>
-
+                 </form>
 
                 </div>
             </section>
@@ -247,12 +267,11 @@
         </div>
 
     </section>
-{% load static %}
+    {% load static %}
     <script>
         $(function () {
             $('#persons').DataTable({
                 dom: 'Bfrtip',
-
 
 
                 lengthMenu: [
@@ -298,7 +317,7 @@
 
 
                 ],
-                 "search": {
+                "search": {
                     "caseInsensitive": true,
                 },
                 'paging': true,
@@ -315,7 +334,7 @@
             $('#yekapersons').DataTable({
                 dom: 'Bfrtip',
 
-               'language': {
+                'language': {
                     "url": "{% static 'datatable_tr.json' %}"
                 },
 
@@ -324,7 +343,7 @@
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-               'buttons': [
+                'buttons': [
 
 
                     {
@@ -361,7 +380,7 @@
 
 
                 ],
-                 "search": {
+                "search": {
                     "caseInsensitive": true,
                 },
                 'paging': true,

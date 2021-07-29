@@ -40,3 +40,4 @@ from .Calendar import Calendar
 from .CalendarName import CalendarName
 from .ExtraTime import ExtraTime
 from .SubYekaCapacity import SubYekaCapacity
+from .ConsortiumCompany import ConsortiumCompany

@@ -56,16 +56,16 @@
     </div>
 
 
-     {% if messages %}
+    {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -138,6 +138,34 @@
                                         <label id="label_name"></label>
 
                                     </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">İl</label><span style="color: red">*</span>
+                                                <select style="width: 100%"
+                                                        class="form-control select2 select2-hidden-accessible"
+                                                        name="city" id="id_city"
+                                                        onChange="ilceGetir()">
+                                                    <option value="">-------</option>
+                                                    {% for city in cities %}
+                                                        <option value="{{ city.pk }}">{{ city.name }}</option>
+                                                    {% endfor %}
+
+                                                </select>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label> {{ capacity_form.district.label }}</label>
+                                                {{ capacity_form.district }}
+                                                <label id="label_name"></label>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
@@ -174,6 +202,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Bağlantı Bölgesi</th>
+                                        <th>İl/İlçe</th>
                                         <th>Miktar</th>
                                         <th>Güncelleme/Silme</th>
 
@@ -187,6 +216,7 @@
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ capacity.name }}</td>
+                                            <td>{{ capacity.city.name }}/{{ capacity.district }}</td>
                                             <td>{{ capacity.value }} {{ capacity.unit }}</td>
 
                                             <td>
@@ -198,7 +228,7 @@
                                                                     class="fa fa-edit"></i>Güncelle
                                                             </a>
                                                         </div>
-                                                    {% elif item == 'delete_capacity'%}
+                                                    {% elif item == 'delete_capacity' %}
                                                         <div class="btn-group">
                                                             <a class="btn btn-danger"
                                                                data-toggle="modal"
@@ -371,9 +401,73 @@
     </script>
     <script>
         $(document).ready(function () {
-           {% if error_messages  %}
+            {% if error_messages  %}
                 errors_messages({{ error_messages |safe }})
             {% endif %}
+        });
+    </script>
+
+    <script>
+        function ilceGetir() {
+
+            var e = document.getElementById("id_city");
+            var il_id = e.options[e.selectedIndex].value;
+            $.ajax({
+                url: "{% url 'ekabis:ilce-getir' %}",
+                type: "post", // or "get"
+                async: false,
+                data: {
+                    il_id: il_id,
+
+                },
+                success: function (result) {
+                    debugger;
+
+                    let select = document.getElementById("ilce_id");
+
+                    select.options[select.options.length] = new Option('Text 1', 'Value1');
+
+                    $('#ilce_id').empty();
+
+                    for (let i = 0; i < result.ilceler.length; i++) {
+                        select.options[select.options.length] = new Option(result.ilceler[i].name, result.ilceler[i].name);
+                    }
+                }
+            });
+        }
+
+
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
         });
     </script>
 

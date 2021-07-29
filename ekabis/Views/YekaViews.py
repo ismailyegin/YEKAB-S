@@ -39,22 +39,9 @@ def return_yeka(request):
 
     try:
         with transaction.atomic():
-            yeka_filter = {
-                'isDeleted': False,
-                'yekaParent': None
-
-            }
-            parent_yekalar = YekaService(request, yeka_filter)
-            companyfilter = {
-                'isDeleted': False
-            }
-            companies = CompanyService(request, companyfilter)
-
 
             return render(request, 'Yeka/view_yeka.html',
-                              {'yeka_form': yeka_form, 'error_messages': '',
-                               'parent_yekalar': parent_yekalar, 'companies': companies,
-                               })
+                          {'yeka_form': yeka_form, 'error_messages': '', })
 
     except Exception as e:
         traceback.print_exc()
@@ -301,8 +288,8 @@ def alt_yeka_ekle(request, uuid):
         yeka = YekaGetService(request, yeka_filter)
 
         url = general_methods.yeka_control(request, yeka)
-        if url :
-            return redirect('ekabis:' + url ,yeka.uuid)
+        if url:
+            return redirect('ekabis:' + url, yeka.uuid)
 
         alt_yeka_filter = {
             'yekaParent': yeka,
@@ -436,7 +423,7 @@ def update_sub_yeka(request, uuid):
             'yeka': yeka.yekaParent
         }
         yeka_connection = YekaConnectionRegionGetService(request, yeka_connection_region_filter)
-        yeka_connection_capacities=[]
+        yeka_connection_capacities = []
         if yeka_connection:
             capacity_filter = {
                 'isDeleted': False,
@@ -536,96 +523,65 @@ def yeka_person_list(request, uuid):
     yeka = YekaGetService(request, yeka_filter)
     yeka_person_filter = {
         'yeka': yeka,
-        'isDeleted': False
+        'isDeleted': False,
+        'is_active':True
     }
 
-    yeka_person = YekaPersonService(request, yeka_person_filter)
+    yeka_person = YekaPersonService(request, yeka_person_filter).order_by('-creationDate')
     array = []
     for person in yeka_person:
         array.append(person.employee.uuid)
 
     # ekstra servis yazılacak
-    persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array)
+    persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array).order_by('-creationDate')
+    if request.POST:
+        with transaction.atomic():
+            if request.POST['yeka'] == 'add':
+                persons = request.POST.getlist('employee')
+                if persons:
+                    for person_id in persons:
+                        person_filter = {
+                            'pk': person_id
+                        }
+                        person = EmployeeGetService(request, person_filter)
+                        person_yeka = YekaPerson(yeka=yeka, employee=person, is_active=True)
+                        person_yeka.save()
+
+                        personHistory = YekaPersonHistory(yeka=yeka, person=person, is_active=True)
+                        personHistory.save()
+
+                        log = str(yeka.definition) + ' adlı yekaya - ' + str(
+                            person.user.get_full_name()) + " adlı personel atandı."
+                        log = general_methods.logwrite(request, request.user, log)
+            else:
+                persons = request.POST.getlist('sub_employee')
+                if persons:
+                    for person_id in persons:
+                        person_filter = {
+                            'pk': person_id
+                        }
+                        person = EmployeeGetService(request, person_filter)
+                        yeka_person = YekaPerson.objects.get(
+                            Q(isDeleted=False) & Q(yeka__uuid=uuid) & Q(employee__uuid=person.uuid))
+
+                        yeka_person.isDeleted = True
+                        yeka_person.is_active = False
+                        yeka_person.save()
+
+                        personHistory = YekaPersonHistory(yeka=yeka_person.yeka, person=person, is_active=False)
+                        personHistory.save()
+
+                        log = str(yeka_person.yeka.definition) + ' adlı yekadan -' + str(
+                            person.user.get_full_name()) + " personeli çıkarıldı."
+                        log = general_methods.logwrite(request, request.user, log)
+
+
+        return redirect('ekabis:view_yeka_personel', uuid)
 
     return render(request, 'Yeka/yekaPersonList.html',
                   {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid})
 
 
-def yeka_person_assignment(request):
-    perm = general_methods.control_access(request)
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-    try:
-        with transaction.atomic():
-            if request.method == 'POST' and request.is_ajax():
-                person_uuid = request.POST['person_uuid']
-                yeka_uuid = request.POST['yeka_uuid']
-
-                yeka_filter = {
-                    'uuid': yeka_uuid
-                }
-
-                yeka = YekaGetService(request, yeka_filter)
-                employee_filter = {
-                    'uuid': person_uuid
-                }
-                person = EmployeeGetService(request, employee_filter)
-
-                person_yeka = YekaPerson(yeka=yeka, employee=person, is_active=True)
-                person_yeka.save()
-
-                personHistory = YekaPersonHistory(yeka=yeka, person=person, is_active=True)
-                personHistory.save()
-
-                log = str(yeka.definition) + ' adlı yekaya - ' + str(
-                    person.user.get_full_name()) + " adlı personel atandı."
-                log = general_methods.logwrite(request, request.user, log)
-
-                return JsonResponse({'status': 'Success', 'msg': 'save successfully'})
-
-            else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
-    except:
-        traceback.print_exc()
-        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
-
-
-def yeka_person_remove(request):
-    perm = general_methods.control_access(request)
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-    try:
-        with transaction.atomic():
-            if request.method == 'POST' and request.is_ajax():
-                uuid = request.POST['uuid']
-
-                employee_filter = {
-                    'uuid': uuid
-                }
-                person = EmployeeGetService(request, employee_filter)
-
-                yeka_person = YekaPerson.objects.get(Q(uuid=request.POST['yeka_uuid']) & Q(employee__uuid=uuid))
-
-                yeka_person.isDeleted = True
-                yeka_person.is_active = False
-                yeka_person.save()
-
-                personHistory = YekaPersonHistory(yeka=yeka_person.yeka, person=person, is_active=False)
-                personHistory.save()
-
-                log = str(yeka_person.yeka.definition) + ' adlı yekadan -' + str(
-                    person.user.get_full_name()) + " personeli çıkarıldı."
-                log = general_methods.logwrite(request, request.user, log)
-
-                return JsonResponse({'status': 'Success', 'msg': 'save successfully'})
-
-            else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
-    except:
-        traceback.print_exc()
-        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
 
 def yeka_company_list(request, uuid):
@@ -642,22 +598,52 @@ def yeka_company_list(request, uuid):
     yeka = YekaGetService(request, yeka_filter)
     yeka_company_filter = {
         'yeka': yeka,
-        'isDeleted': False
+        'isDeleted': False,
+        'is_active': True
 
     }
     url = general_methods.yeka_control(request, yeka)
-    if url and url !='view_yeka_company':
-        return redirect('ekabis:' + url ,yeka.uuid)
+    if url and url != 'view_yeka_company':
+        return redirect('ekabis:' + url, yeka.uuid)
 
-
-    yeka_company = YekaCompanyService(request, yeka_company_filter)
+    yeka_company = YekaCompanyService(request, yeka_company_filter).order_by('-creationDate')
     array = []
-    for yeka in yeka_company:
-        array.append(yeka.company.uuid)
-    company_filter = {
-        'isDeleted': False
-    }
+    for company_yeka in yeka_company:
+        array.append(company_yeka.company.uuid)
+
     companies = Company.objects.filter(isDeleted=False).exclude(uuid__in=array)
+    if request.POST:
+        with transaction.atomic():
+            if request.POST['yeka'] =='add':
+                companies = request.POST.getlist('company')
+                if companies:
+                    for company_id in companies:
+                        company = Company.objects.get(pk=company_id)
+                        yeka_company = YekaCompany(yeka=yeka, company=company, is_active=True)
+                        yeka_company.save()
+                        log = str(yeka.definition) + ' adlı yekaya -' + str(company.name) + " adlı firma atandı."
+                        log = general_methods.logwrite(request, request.user, log)
+            else:
+                companies = request.POST.getlist('company')
+                if companies:
+                    for company_id in companies:
+                        company = Company.objects.get(pk=company_id)
+
+                        yeka_company = YekaCompany.objects.get(
+                            Q(yeka__uuid=uuid) & Q(company=company) & Q(isDeleted=False))
+
+                        if yeka_company:
+                            yeka_company.isDeleted = True
+                            yeka_company.is_active = False
+                            yeka_company.save()
+
+                        companyHistory = YekaCompanyHistory(yeka=yeka_company.yeka, company=company, is_active=False)
+                        companyHistory.save()
+
+                        log = str(yeka_company.yeka.definition) + '-' + str(
+                            yeka_company.company.name) + " adlı firma çıkarıldı."
+                        log = general_methods.logwrite(request, request.user, log)
+        return redirect('ekabis:view_yeka_company', yeka.uuid)
 
     return render(request, 'Yeka/yeka_company_list.html',
                   {'companies': companies, 'yeka_companies': yeka_company, 'yeka_uuid': uuid})
@@ -748,9 +734,9 @@ def view_yekabusinessBlog(request, uuid):
         }
         yeka = YekaGetService(request, yeka_filter)
 
-        url=general_methods.yeka_control(request, yeka)
-        if url and url !='view_yekabusinessBlog':
-            return redirect('ekabis:'+url ,yeka.uuid)
+        url = general_methods.yeka_control(request, yeka)
+        if url and url != 'view_yekabusinessBlog':
+            return redirect('ekabis:' + url, yeka.uuid)
         yekabusinessbloks = None
 
         extratime_filter = {
@@ -842,13 +828,10 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
             'uuid': yekabusinessblog
         }
 
+        yeka = YekaGetService(request, yeka_filter)
+        yekabussinessblog = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter)
 
-        yeka = YekaGetService(request,yeka_filter)
-        yekabussinessblog = YekaBusinessBlogGetService(request,yeka_yekabusiness_filter)
-
-        company_list=YekaCompany.objects.filter(isDeleted=False,yeka=yeka)
-
-
+        company_list = YekaCompany.objects.filter(isDeleted=False, yeka=yeka)
 
         if request.POST:
             with transaction.atomic():
@@ -870,6 +853,8 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
 @login_required()
 def view_yekabusiness_gant(request, uuid):
     perm = general_methods.control_access(request)
@@ -884,9 +869,9 @@ def view_yekabusiness_gant(request, uuid):
         }
         yeka = YekaGetService(request, yeka_filter)
 
-        url=general_methods.yeka_control(request, yeka)
-        if url and url !='view_yekabusinessBlog':
-            return redirect('ekabis:'+url ,yeka.uuid)
+        url = general_methods.yeka_control(request, yeka)
+        if url and url != 'view_yekabusinessBlog':
+            return redirect('ekabis:' + url, yeka.uuid)
         yekabusinessbloks = None
 
         extratime_filter = {
@@ -908,4 +893,3 @@ def view_yekabusiness_gant(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
-

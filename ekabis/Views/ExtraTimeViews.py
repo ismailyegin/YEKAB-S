@@ -1,4 +1,5 @@
 import traceback
+from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -30,7 +31,7 @@ def return_add_extra_time(request, yeka, businessblog):
         # if ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog):
         #      return redirect('ekabis:change_extratime', ExtraTime.objects.get(yekabusinessblog=yekabussinessblog).uuid)
         extratime_form = ExtraTimeForm()
-        extra_times= ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog)
+        extra_times = ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog)
         with transaction.atomic():
             if request.method == 'POST':
                 extratime_form = ExtraTimeForm(request.POST)
@@ -40,6 +41,22 @@ def return_add_extra_time(request, yeka, businessblog):
                     time.yekabusinessblog = yekabussinessblog
                     time.yeka = yeka
                     time.save()
+                    main = yekabussinessblog
+                    while main != None:
+                        if YekaBusinessBlog.objects.filter(parent=main, isDeleted=False):
+                            parent=YekaBusinessBlog.objects.get(parent=main, isDeleted=False)
+                            if not parent.indefinite:
+
+                                parent.startDate = parent.startDate.date() + timedelta(days=time.time)
+                                parent.finisDate = parent.finisDate.date() + timedelta(days=time.time)
+                                parent.save()
+                                main = parent
+                            else:
+                                # süresiz ise işlem yapılmayacaktır.
+                                main = None
+                        else:
+                            main = None
+
                     messages.success(request, 'Ek Süre Kayıt Edilmiştir.')
                     return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
                 else:
@@ -51,7 +68,7 @@ def return_add_extra_time(request, yeka, businessblog):
 
             return render(request, 'ExtraTime/add_extratime.html',
                           {'extratime_form': extratime_form,
-                           'yeka': yeka,'extra_times':extra_times,
+                           'yeka': yeka, 'extra_times': extra_times,
                            'yekabussinessblog': yekabussinessblog
                            })
     except Exception as e:
@@ -70,9 +87,10 @@ def return_list_extra_time(request):
         'isDeleted': False
 
     }
-    ekstratime = ExtraTimeService(request,None)
+    ekstratime = ExtraTimeService(request, ExtraTimefilter)
     return render(request, 'ExtraTime/view_extratime.html',
                   {'ekstratime': ekstratime})
+
 
 @login_required
 def return_update_extra_time(request, uuid):
@@ -80,10 +98,10 @@ def return_update_extra_time(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    extra_time_filter={
-        'uuid':uuid
+    extra_time_filter = {
+        'uuid': uuid
     }
-    extratime = ExtraTimeGetService(request,extra_time_filter)
+    extratime = ExtraTimeGetService(request, extra_time_filter)
     extratime_form = ExtraTimeForm(request.POST or None, instance=extratime)
     try:
         with transaction.atomic():
@@ -122,7 +140,7 @@ def delete_extra_time(request):
                 extra_time_filter = {
                     'uuid': uuid
                 }
-                obj = ExtraTimeGetService(request,extra_time_filter)
+                obj = ExtraTimeGetService(request, extra_time_filter)
                 obj.isDeleted = True
                 obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
