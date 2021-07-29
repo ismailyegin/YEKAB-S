@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 
 from ekabis.services import general_methods
 from ekabis.services.services import ActiveGroupService, GroupService, ActiveGroupGetService, GroupGetService, \
-    CalendarNameService
+    CalendarNameService, YekaService, ConnectionCapacityService
 
 from ekabis.Forms.CalendarNameForm import CalendarNameForm
 from ekabis.models.CalendarName import CalendarName
@@ -64,10 +64,13 @@ def return_admin_dashboard(request):
         logout(request)
         return redirect('accounts:login')
 
-    return render(request, 'anasayfa/admin.html',
-                  {
+    yeka=YekaService(request,None)
+    cities=ConnectionCapacityService(request,None)
 
-                  })
+    return render(request, 'anasayfa/admin.html',{
+        'yeka':yeka,
+        'cities':cities
+    })
 
 
 @login_required

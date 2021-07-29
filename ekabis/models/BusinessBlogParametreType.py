@@ -19,8 +19,8 @@ class  BusinessBlogParametreType(BaseModel):
         (False, 'Zorunlu Degil')
     )
     COMPANY_CHOICES = (
-        (True, 'Her Firma için Gerekli '),
-        (False, 'Her Firma için Gerekli Degil ')
+        (True, 'Evet '),
+        (False, 'Hayır')
     )
     title = models.CharField(max_length=120, null=True, blank=True, verbose_name='Başlık')
     type = models.CharField(max_length=128, verbose_name='Türü ', choices=Type, default=aString)
