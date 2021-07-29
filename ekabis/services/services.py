@@ -44,9 +44,9 @@ def YekaPersonService(request, filter):
             if type(filter) != type(Q()):
                 return YekaPerson.objects.filter(**filter)
             else:
-                return YekaPerson.objects.filter(filter)
+                return YekaPerson.objects.filter(filter,isDeleted=False)
         else:
-            return YekaPerson.objects.all()
+            return YekaPerson.objects.filter(isDeleted=False)
     except YekaPerson.DoesNotExist:
         return None
     except Exception as e:
@@ -57,9 +57,9 @@ def SubYekaCapacityService(request, filter):
             if type(filter) != type(Q()):
                 return SubYekaCapacity.objects.filter(**filter)
             else:
-                return SubYekaCapacity.objects.filter(filter)
+                return SubYekaCapacity.objects.filter(filter,isDeleted=False)
         else:
-            return SubYekaCapacity.objects.all()
+            return SubYekaCapacity.objects.filter(isDeleted=False)
     except SubYekaCapacity.DoesNotExist:
         return None
     except Exception as e:
@@ -73,9 +73,9 @@ def YekaConnectionRegionService(request, filter):
             if type(filter) != type(Q()):
                 return YekaConnectionRegion.objects.filter(**filter)
             else:
-                return YekaConnectionRegion.objects.filter(filter)
+                return YekaConnectionRegion.objects.filter(filter,isDeleted=False)
         else:
-            return YekaConnectionRegion.objects.all()
+            return YekaConnectionRegion.objects.filter(isDeleted=False)
     except YekaConnectionRegion.DoesNotExist:
         return None
     except Exception as e:
@@ -86,9 +86,9 @@ def ConnectionRegionService(request, filter):
             if type(filter) != type(Q()):
                 return ConnectionRegion.objects.filter(**filter)
             else:
-                return ConnectionRegion.objects.filter(filter)
+                return ConnectionRegion.objects.filter(filter,isDeleted=False)
         else:
-            return ConnectionRegion.objects.all()
+            return ConnectionRegion.objects.filter(isDeleted=False)
     except ConnectionRegion.DoesNotExist:
         return None
     except Exception as e:
@@ -101,9 +101,9 @@ def ExtraTimeService(request, filter):
             if type(filter) != type(Q()):
                 return ExtraTime.objects.filter(**filter)
             else:
-                return ExtraTime.objects.filter(filter)
+                return ExtraTime.objects.filter(filter,isDeleted=False)
         else:
-            return ExtraTime.objects.all()
+            return ExtraTime.objects.filter(isDeleted=False)
     except ExtraTime.DoesNotExist:
         return None
     except Exception as e:
@@ -116,9 +116,9 @@ def CalendarNameService(request, filter):
             if type(filter) != type(Q()):
                 return CalendarName.objects.filter(**filter)
             else:
-                return CalendarName.objects.filter(filter)
+                return CalendarName.objects.filter(filter,isDeleted=False)
         else:
-            return CalendarName.objects.all()
+            return CalendarName.objects.filter(isDeleted=False)
     except CalendarName.DoesNotExist:
         return None
     except Exception as e:
@@ -162,7 +162,7 @@ def PersonService(request, filter):
         if filter:
             return Person.objects.filter(**filter)
         else:
-            return Person.objects.all()
+            return Person.objects.filter(isDeleted=False)
     # except Person.DoesNotExist:
     #     return None
     except Exception as e:
@@ -177,7 +177,7 @@ def CommunicationService(request, filter):
         if filter:
             return Communication.objects.filter(**filter)
         else:
-            return Communication.objects.all()
+            return Communication.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -190,7 +190,7 @@ def CategoryItemService(request, filter):
         if filter:
             return CategoryItem.objects.filter(**filter)
         else:
-            return CategoryItem.objects.all()
+            return CategoryItem.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -203,7 +203,7 @@ def CompanyService(request, filter):
         if filter:
             return Company.objects.filter(**filter)
         else:
-            return Company.objects.all()
+            return Company.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -217,9 +217,9 @@ def DirectoryMemberService(request, filter):
             if type(filter) != type(Q()):
                 return DirectoryMember.objects.filter(**filter)
             else:
-                return DirectoryMember.objects.filter(filter)
+                return DirectoryMember.objects.filter(filter,isDeleted=False)
         else:
-            return DirectoryMember.objects.all()
+            return DirectoryMember.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -232,7 +232,7 @@ def DirectoryCommissionService(request, filter):
         if filter:
             return DirectoryCommission.objects.filter(**filter)
         else:
-            return DirectoryCommission.objects.all()
+            return DirectoryCommission.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -247,7 +247,7 @@ def DirectoryMemberRoleService(request, filter):
             if filter:
                 return DirectoryMemberRole.objects.filter(**filter)
             else:
-                return DirectoryMemberRole.objects.all()
+                return DirectoryMemberRole.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         print(e)
@@ -260,9 +260,9 @@ def EmployeeService(request, filter):
             if type(filter) != type(Q()):
                 return Employee.objects.filter(**filter)
             else:
-                Employee.objects.filter(filter)
+                Employee.objects.filter(filter,isDeleted=False)
         else:
-            return Employee.objects.all()
+            return Employee.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -276,9 +276,9 @@ def LogsService(request, filter):
             if type(filter) != type(Q()):
                 return Logs.objects.filter(**filter)
             else:
-                return Logs.objects.filter(filter)
+                return Logs.objects.filter(filter,isDeleted=False)
         else:
-            return Logs.objects.all()
+            return Logs.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -291,7 +291,7 @@ def MenuService(request, filter):
         if filter:
             return Menu.objects.filter(**filter)
         else:
-            return Menu.objects.all()
+            return Menu.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -304,7 +304,7 @@ def NotificationService(request, filter):
         if filter:
             return Notification.objects.filter(**filter)
         else:
-            return Notification.objects.all()
+            return Notification.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -317,7 +317,7 @@ def ActiveGroupService(request, filter):
         if filter:
             return ActiveGroup.objects.filter(**filter)
         else:
-            return ActiveGroup.objects.all()
+            return ActiveGroup.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -330,7 +330,7 @@ def PermissionService(request, filter):
         if filter:
             return Permission.objects.filter(**filter)
         else:
-            return Permission.objects.all()
+            return Permission.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -343,7 +343,7 @@ def CompanyFileNamesService(request, filter):
             if filter:
                 return CompanyFileNames.objects.filter(**filter)
             else:
-                return CompanyFileNames.objects.all()
+                return CompanyFileNames.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         pass
@@ -353,9 +353,9 @@ def ClaimService(request, filter):
             if type(filter) != type(Q()):
                 return Claim.objects.filter(**filter)
             else:
-                return Claim.objects.filter(filter)
+                return Claim.objects.filter(filter,isDeleted=False)
         else:
-            return Claim.objects.all()
+            return Claim.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -369,9 +369,9 @@ def PermissionGroupService(request, filter):
             if type(filter) != type(Q()):
                 return PermissionGroup.objects.filter(**filter)
             else:
-                return PermissionGroup.objects.filter(filter)
+                return PermissionGroup.objects.filter(filter,isDeleted=False)
         else:
-            return PermissionGroup.objects.all()
+            return PermissionGroup.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
 
@@ -395,7 +395,7 @@ def UnitService(request, filter):
             if filter:
                 return ConnectionUnit.objects.filter(**filter)
             else:
-                return ConnectionUnit.objects.all()
+                return ConnectionUnit.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         print(e)
@@ -408,7 +408,7 @@ def RegionService(request, filter):
             if filter:
                 return ConnectionRegion.objects.filter(**filter)
             else:
-                return ConnectionRegion.objects.all()
+                return ConnectionRegion.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         print(e)
@@ -421,7 +421,7 @@ def ConnectionCapacityService(request, filter):
             if filter:
                 return ConnectionCapacity.objects.filter(**filter)
             else:
-                return ConnectionCapacity.objects.all()
+                return ConnectionCapacity.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         print(e)
@@ -434,7 +434,7 @@ def YekaService(request, filter):
             if filter:
                 return Yeka.objects.filter(**filter)
             else:
-                return Yeka.objects.all()
+                return Yeka.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         pass
@@ -576,7 +576,7 @@ def PersonGetService(request, filter):
         pass
 
 
-def PermissionGetService(request, filter):
+def PermissionGetService(request, filter,isDeleted=False):
     try:
         with transaction.atomic():
             if filter:

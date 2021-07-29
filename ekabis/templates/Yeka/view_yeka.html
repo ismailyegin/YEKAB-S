@@ -241,6 +241,15 @@
                                                             {% endif %}
                                                         {% endfor %}
 
+                                                        {% for item in perm %}
+                                                            {% if item == 'view_yekabusiness_gant' %}
+                                                                <a href="{% url 'ekabis:view_yekabusiness_gant' yeka.uuid %}"
+                                                                   type="button" class="dropdown-item"><i
+                                                                        class="fa fa-calendar-times" title="Yol Haritası"></i> Yol Haritası
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+
                                             </div>
                                         </div>
                                             </td>

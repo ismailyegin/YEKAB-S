@@ -130,11 +130,13 @@ urlpatterns = [
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
 
     path('yeka/yeka-is-bloklari-semasi/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant'),
+    path('yeka/yeka-is-bloklari-gant/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant2'),
+    path('yeka/yeka-is-bloklari-incele-gant-detay/<uuid:yeka>/<uuid:yekabusiness>/', YekaViews.view_yekabusinessblog_gant, name='view_yekabusinessblog_gant'),
+
     #yekabusinessBlog
     path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
     path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<uuid:yekabusiness>/<uuid:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
-    path('yeka/yeka-is-bloklari-firma-ekle/<uuid:yeka>/<uuid:yekabusinessblog>/',
-         YekaViews.add_yekabusinessblog_company, name='add_yekabusinessblog_company'),
+    path('yeka/yeka-is-bloklari-firma-ekle/<uuid:yeka>/<uuid:yekabusinessblog>/',YekaViews.add_yekabusinessblog_company, name='add_yekabusinessblog_company'),
 
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
     path('yeka/alt-yekalar/<uuid:uuid>', YekaViews.return_sub_yeka, name='view_sub_yeka'),

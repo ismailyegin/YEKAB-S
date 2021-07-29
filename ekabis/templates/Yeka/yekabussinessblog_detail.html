@@ -113,43 +113,43 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Zaman çizelgesi</h1>
+                        {{ yeka.definition }}</h1>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-
-
-                        {% for item in perm %}
-                            {% if item == 'add_yekabusiness' %}
-
-
-                                {% if not yekabusinessbloks %}
-
-
-
-                                    <li class="breadcrumb-item">
-
-                                        <a class="btn btn-success"
-                                           href="{% url 'ekabis:add_yekabusiness'  yeka.uuid %}">Yeka iş Blogunu
-                                            Ekle</a>
-                                    </li>
-                                {% endif %}
-
-                            {% endif %}
-                            {% if item == 'change_yekabusiness' %}
-                                {% if  yekabusinessbloks %}
-                                    <li class="breadcrumb-item">
-                                        <a class="btn btn-outline-primary btn-sm"
-                                           href="{% url 'ekabis:change_yekabusiness'  yeka.business.uuid  yeka.uuid %}">
-                                            Yeka İş Bloğunu Güncelle</a>
-                                    </li>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-
-
-                    </ol>
-                </div>
+{#                <div class="col-sm-6">#}
+{#                    <ol class="breadcrumb float-sm-right">#}
+{##}
+{##}
+{#                        {% for item in perm %}#}
+{#                            {% if item == 'add_yekabusiness' %}#}
+{##}
+{##}
+{#                                {% if not yekabusinessbloks %}#}
+{##}
+{##}
+{##}
+{#                                    <li class="breadcrumb-item">#}
+{##}
+{#                                        <a class="btn btn-success"#}
+{#                                           href="{% url 'ekabis:add_yekabusiness'  yeka.uuid %}">Yeka iş Blogunu#}
+{#                                            Ekle</a>#}
+{#                                    </li>#}
+{#                                {% endif %}#}
+{##}
+{#                            {% endif %}#}
+{#                            {% if item == 'change_yekabusiness' %}#}
+{#                                {% if  yekabusinessbloks %}#}
+{#                                    <li class="breadcrumb-item">#}
+{#                                        <a class="btn btn-outline-primary btn-sm"#}
+{#                                           href="{% url 'ekabis:change_yekabusiness'  yeka.business.uuid  yeka.uuid %}">#}
+{#                                            Yeka İş Bloğunu Güncelle</a>#}
+{#                                    </li>#}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{##}
+{##}
+{#                    </ol>#}
+{#                </div>#}
             </div>
         </div>
 
@@ -165,7 +165,7 @@
             <!-- Timelime example  -->
             <div class="card card-primary card-outline">
                 <div class="card-header with-border">
-                    <h3 class="card-title">{{ yeka.definition }}</h3>
+                    <h3 class="card-title">{{ yekabusinessblok.businessblog.name }}</h3>
                 </div>
 
                 <div class="card-body">
@@ -177,7 +177,7 @@
                             <div class="timeline">
 
 
-                                {% for yekabusinessblok in yekabusinessbloks %}
+
                                     <div class="time-label">
                                         <span class="bg-green">{{ yekabusinessblok.startDate |date }}</span>
                                     </div>
@@ -231,8 +231,7 @@
                                                                    disabled="">
                                                         </div>
                                                     </div>
-{% endif %}
-
+                                                {% endif %}
                                                  <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Süre Durumu:</label>
@@ -247,7 +246,7 @@
                                                     {% if ekstratimes %}
                                                         {% for ekstratime in ekstratimes %}
 
-                                                            {% if ekstratime.yekabusinessblog == yekabusinessblok %}
+
                                                                 <div class="col-sm-6">
                                                                     <div class="form-group">
                                                                         <label>Ek Süre {{ forloop.counter }}</label>
@@ -257,10 +256,6 @@
                                                                     </div>
                                                                 </div>
 
-
-
-
-                                                            {% endif %}
 
                                                         {% endfor %}
                                                     {% endif %}
@@ -273,7 +268,7 @@
                                                         </div>
                                                     </div>
 
-                                                    {% for item in yekabusinessblok.paremetre.all %}
+                                                     {% for item in yekabusinessblok.paremetre.all %}
                                                         {% if item.company %}
                                                             <div class="col-sm-6">
                                                             {% if item.file %}
@@ -375,7 +370,7 @@
                                         <span class="bg-red">{{ yekabusinessblok.finisDate | date }}</span>
                                     </div>
 
-                                {% endfor %}
+
 
 
                         </div>

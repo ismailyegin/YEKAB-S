@@ -1,144 +1,138 @@
 {% extends 'base_layout.html' %}
 
 {% block content %}
-
-
-
     {% load static %}
-    <link rel="stylesheet" href="{% static 'gant/css/style.css' %}">
 
-    <div class="row">
-        <div id="navSide" class=""></div>
+      <style type="text/css">
+    body, input {
+      font: 12pt verdana;
+    }
 
-        <script src="{% static 'gant/js/go.js' %}"></script>
-        <div class="p-4 w-full">
-            <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700' rel='stylesheet' type='text/css'>
-            <script id="code">
-                function init() {
-                    var $ = go.GraphObject.make;  // for conciseness in defining templates
+    /* custom styles for individual items, load this after vis-timeline-graph2d.min.css/vis-timeline-graph2d.min.css */
 
-                    myDiagram =
-                        $(go.Diagram, "myDiagramDiv",  // must be the ID or reference to div
-                            {
-                                "toolManager.hoverDelay": 100,  // 100 milliseconds instead of the default 850
-                                allowCopy: false,
-                                layout:  // create a TreeLayout for the family tree
-                                    $(go.TreeLayout,
-                                        {
-                                            angle: 90,
-                                            nodeSpacing: 10,
-                                            layerSpacing: 40,
-                                            layerStyle: go.TreeLayout.LayerUniform
-                                        })
-                            });
+    .vis-item.green {
+      background-color: greenyellow;
+      border-color: green;
+    }
 
-                    var bluegrad = '#90CAF9';
-                    var pinkgrad = '#F48FB1';
+    /* create a custom sized dot at the bottom of the red item */
+    .vis-item.red {
+      background-color: red;
+      border-color: darkred;
+      color: white;
+      font-family: monospace;
+      box-shadow: 0 0 10px gray;
+    }
+    .vis-item.vis-dot.red {
+      border-radius: 10px;
+      border-width: 10px;
+    }
+    .vis-item.vis-line.red {
+      border-width: 5px;
+    }
+    .vis-item.vis-box.red {
+      border-radius: 0;
+      border-width: 2px;
+      font-size: 24pt;
+      font-weight: bold;
+    }
 
-                    // Set up a Part as a legend, and place it directly on the diagram
-                    myDiagram.add(
-                        $(go.Part, "Table",
-                            {position: new go.Point(300, 10), selectable: true},
+    .vis-item.orange {
+      background-color: gold;
+      border-color: orange;
+    }
+    .vis-item.vis-selected.orange {
+      /* custom colors for selected orange items */
+      background-color: orange;
+      border-color: orangered;
+    }
 
-                        ));
+    .vis-item.magenta {
+      background-color: magenta;
+      border-color: purple;
+      color: white;
+    }
 
-                    // get tooltip text from the object's data
-                    function tooltipTextConverter(person) {
-
-                    }
-
-                    // define tooltips for nodes
-                    var tooltiptemplate =
-                        $("ToolTip",
-                            {"Border.fill": "whitesmoke", "Border.stroke": "black"},
-                            $(go.TextBlock,
-                                {
-                                    font: "bold 8pt Helvetica, bold Arial, sans-serif",
-                                    wrap: go.TextBlock.WrapFit,
-                                    margin: 5
-                                },
-                                new go.Binding("text", "", tooltipTextConverter))
-                        );
-
-                    // define Converters to be used for Bindings
-                    function genderBrushConverter(gender) {
-                        if (gender === "M") return bluegrad;
-                        if (gender === "F") return pinkgrad;
-                        return "orange";
-                    }
-
-                    // replace the default Node template in the nodeTemplateMap
-                    myDiagram.nodeTemplate =
-                        $(go.Node, "Auto",
-                            {deletable: false, toolTip: tooltiptemplate},
-                            new go.Binding("text", "name"),
-                            $(go.Shape, "Rectangle",
-                                {
-                                    fill: "lightgray",
-                                    stroke: null, strokeWidth: 0,
-                                    stretch: go.GraphObject.Fill,
-                                    alignment: go.Spot.Center
-                                },
-                                new go.Binding("fill", "gender", genderBrushConverter)),
-                            $(go.TextBlock,
-                                {
-                                    font: "700 12px Droid Serif, sans-serif",
-                                    textAlign: "center",
-                                    margin: 10, maxSize: new go.Size(80, NaN)
-                                },
-                                new go.Binding("text", "name"))
-                        );
-
-                    // define the Link template
-                    myDiagram.linkTemplate =
-                        $(go.Link,  // the whole link panel
-                            {routing: go.Link.Orthogonal, corner: 5, selectable: false},
-                            $(go.Shape, {strokeWidth: 3, stroke: '#424242'}));  // the gray link shape
-
-                    // here's the family data
-                    var nodeDataArray = [
-                        {
-                            key: 0,
-                            name: "Yeka İş Planı ",
-                            gender: "M",
-
-                        },
-                        {% for  itemyekabusinessblok in yekabusinessbloks %}
-                            {
-                                key: {{ forloop.counter}},
-                                parent: 0,
-                                name: "{{ itemyekabusinessblok.businessblog.name }}",
-                                gender: "M",
-
-                            },
-                        {% endfor %}
+    /* our custom classes overrule the styles for selected events,
+       so lets define a new style for the selected events */
+    .vis-item.vis-selected {
+      background-color: white;
+      border-color: black;
+      color: black;
+      box-shadow: 0 0 10px gray;
+    }
+  </style>
 
 
+    <link rel="stylesheet" href="{% static 'vis/css/vis-timeline-graph2d.min.css' %}">
+    <script src="{% static 'vis/js/moment-with-locales.js' %}"></script>
+    <script src="{% static 'vis/js/vis-timeline-graph2d.min.js' %}"></script>
 
 
-                    ];
-
-                    // create the model for the family tree
-                    myDiagram.model = new go.TreeModel(nodeDataArray);
-
-
-
-
-
-                }
-
-                window.addEventListener('DOMContentLoaded', init);
-            </script>
-
-            <div id="sample">
-                <div id="myDiagramDiv"
-                     style="background-color: white; border: solid 1px black; width: 100%; height: 550px"></div>
-
-            </div>
+    <div class="card card-primary card-outline">
+        <div class="card-header with-border">
+            <h3 class="card-title">{{ yeka.definition }}</h3>
         </div>
-        <!-- * * * * * * * * * * * * * -->
-        <!--  End of GoJS sample code  -->
+
+        <div class="card-body">
+            <div id="visualization"></div>
+        </div>
     </div>
+
+    <script type="text/javascript">
+
+
+        // DOM element where the Timeline will be attached
+        var container = document.getElementById("visualization");
+
+        // Create a DataSet (allows two way data-binding)
+        var items = new vis.DataSet([
+            {% for yekabusinessblok in yekabusinessbloks %}
+                {
+                    id: "{{ yekabusinessblok.uuid}}",
+                    content: "{{ yekabusinessblok.businessblog.name }}",
+                    start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                    end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
+                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
+                },
+
+            {% endfor %}
+            {% for extra in ekstratimes %}
+
+
+                {
+                    id: "{{ extra.uuid}}",
+                    content: "{{ extra.content }}",
+                    start: "{{ extra.start | date:"Y-m-d" }}",
+                    end: "{{ extra.finish | date:"Y-m-d" }}",
+                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid  extra.bloguuid %}",
+                    className: 'red',
+                },
+
+            {% endfor %}
+        ]);
+        var options = {
+            height: '500px',
+            width: '100%',
+            locale: 'tr',
+
+
+        };
+        var timeline = new vis.Timeline(container, items, options);
+        timeline.on('click', function (properties) {
+            if (properties.item != null) {
+                var clickedNodes = items.get(properties.nodes);
+                for (let i = 0; i < clickedNodes.length; i++) {
+                    if (clickedNodes[i].id == properties.item) {
+                        window.open(clickedNodes[i].url, '_blank');
+                    }
+                }
+            }
+        });
+
+
+    </script>
+
 
 
 

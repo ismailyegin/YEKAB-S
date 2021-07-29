@@ -4,10 +4,17 @@ from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 class BusinessBlogParametreForm(ModelForm):
     class Meta:
         model = BusinessBlogParametreType
-        fields = ('title','type')
-        labels = {'title': 'Tanımı','type':'Türü'}
+        fields = ('title','type','necessary','companynecessary')
+        labels = {'title': 'Tanımı',
+                  'type':'Türü',
+                  'necessary':'Zorunlu ',
+                  'companynecessary':'Firma'}
         widgets = {
             'title':  forms.TextInput(attrs={'class': 'form-control ','required': 'required'}),
             'type': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                           'style': 'width: 100%;', 'required': 'required'}),
+            'necessary': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                        'style': 'width: 100%;', 'required': 'required'}),
+            'companynecessary': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                        'style': 'width: 100%;', 'required': 'required'}),
         }

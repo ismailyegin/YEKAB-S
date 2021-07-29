@@ -4,13 +4,13 @@
     {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -49,7 +49,19 @@
                             <h3 class="card-title"> Yeka İş Blogu Düzenle </h3>
                         </div>
                         <div class="card-body">
-                            <div class="row">{{ yekaBusinessBlogo_form }}</div>
+                            <div class="row">
+                                {% for item in yekaBusinessBlogo_form %}
+                                    <div class="col-lg-6" id="control-{{ item.name }}">
+                                        <div class="form-group">
+                                            <label>{{ item.label }}</label>
+                                            {{ item }}
+                                            <label for="" id="label_{{ item.name }}"></label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+
+                            </div>
                         </div>
                         <div class="card-body">
                             <button class="btn btn-primary  pull-right" type="submit">Kaydet</button>
@@ -60,5 +72,33 @@
             </div>
         </form>
     </section>
+    <script>
+        $(document).ready(function () {
+
+            {% if error_messages %}
+                errors_messages({{ error_messages |safe }}
+            {% endif %}
+
+
+        if ($("#id_indefinite option:selected").val() == 'True') {
+                $('#control-businessTime').hide();
+            }
+
+
+
+
+            $('#id_indefinite').change(function () {
+            if ($("#id_indefinite option:selected").val() == 'True') {
+                console.log('benden tamam ')
+                $('#control-businessTime').hide();
+            } else {
+                $('#control-businessTime').show();
+            }
+
+
+        });
+
+        });
+    </script>
 
 {% endblock %}
