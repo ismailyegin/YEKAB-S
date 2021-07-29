@@ -222,6 +222,7 @@
                                                                    disabled="">
                                                         </div>
                                                     </div>
+                                                {% if not  yekabusinessblok.indefinite  %}
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Süresi</label>
@@ -230,13 +231,13 @@
                                                                    disabled="">
                                                         </div>
                                                     </div>
-
+{% endif %}
 
                                                  <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Süre Durumu:</label>
                                                             <input type="text" class="form-control"
-                                                                   placeholder="{% if yekabusinessblok.indefinite  %}Süresiz {% else %}  Süreli {% endif %} {{  yekabusinessblok.indefinite }}"
+                                                                   placeholder="{% if yekabusinessblok.indefinite  %}Süresiz {% else %}  Süreli {% endif %}"
                                                                    disabled="">
                                                         </div>
                                                     </div>

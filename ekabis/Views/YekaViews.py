@@ -26,7 +26,7 @@ from ekabis.services.services import YekaService, CompanyService, YekaConnection
     YekaConnectionRegionGetService, ConnectionCapacityService, SubYekaCapacityService, YekaPersonService, \
     EmployeeGetService, YekaCompanyService, CompanyGetService, ExtraTimeService, YekaBusinessBlogGetService, \
     BusinessBlogGetService, ConnectionRegionService
-
+import datetime
 
 @login_required
 def return_yeka(request):
@@ -828,6 +828,14 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
             yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, request.POST or None, request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
+                if not   yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                    startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
+                    finishDate = startDate + datetime.timedelta(days=int(yekaBusinessBlogo_form.cleaned_data['businessTime']))
+                    yekabussiness.finisDate = finishDate
+                    yekabussiness.save()
+                else:
+                    yekabussiness.businessTime=0
+                    yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
@@ -863,8 +871,6 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
         yekabussinessblog = YekaBusinessBlogGetService(request,yeka_yekabusiness_filter)
 
         company_list=YekaCompany.objects.filter(isDeleted=False,yeka=yeka)
-
-
 
         if request.POST:
             with transaction.atomic():

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django import forms
 from django.forms import ModelForm
 
@@ -11,9 +13,13 @@ class YekaBusinessBlogForm(ModelForm):
     class Meta:
         model = YekaBusinessBlog
         fields = (
-            'indefinite','startDate','businessTime', 'finisDate',  'status',)
+            'indefinite',
+            'startDate',
+            'businessTime',
+            # 'finisDate',
+            'status',)
         labels = {'startDate': 'Başlama Tarihi',
-                  'finisDate': 'Bitiş Tarihi',
+                  # 'finisDate': 'Bitiş Tarihi',
                   'businessTime': 'Süresi',
                   'status': 'Durumu',
                   'indefinite':'Süre durumu'}
@@ -28,9 +34,9 @@ class YekaBusinessBlogForm(ModelForm):
             'startDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
                        'onkeydown': 'return false', 'required': 'required'}),
-            'finisDate': forms.DateInput(
-                attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
-                       'onkeydown': 'return false', 'required': 'required'}),
+            # 'finisDate': forms.DateInput(
+            #     attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
+            #            'onkeydown': 'return false', 'required': 'required'}),
 
         }
 
@@ -39,6 +45,7 @@ class YekaBusinessBlogForm(ModelForm):
         business_filter={
             'pk':business
         }
+
         tbussiness = BusinessBlogGetService(self,business_filter)
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.companynecessary:
@@ -123,8 +130,11 @@ class YekaBusinessBlogForm(ModelForm):
 
 
     def save(self, yekabusiness, business,*args, **kwargs):
+
         tbussiness = BusinessBlog.objects.get(pk=business)
         tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
+
+
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.companynecessary:
                 for company in tyekabusinessblog.companys.all():
@@ -196,11 +206,13 @@ class YekaBusinessBlogForm(ModelForm):
                         tyekabusinessblog.paremetre.add(parametre)
                         tyekabusinessblog.save()
 
+
         super().save(*args, **kwargs)
 
         return
 
 def update(self,yekabusiness, business,*args, **kwargs):
+
     tbussiness = BusinessBlog.objects.get(pk=business)
     tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
     for item in tyekabusinessblog.parametre.all():
