@@ -13,7 +13,7 @@ from ekabis.Forms.CompanyForm import CompanyForm
 from ekabis.Forms.CompanyFormDinamik import CompanyFormDinamik
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
-from ekabis.models import Company, YekaCompany, ConsortiumCompany
+from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Employee
 from ekabis.models.CompanyFileNames import CompanyFileNames
 from ekabis.models.CompanyFiles import CompanyFiles
 from ekabis.models.CompanyUser import CompanyUser
@@ -398,18 +398,15 @@ def return_update_consortium(request, uuid):
             'isDeleted': False,
 
         }
+        consortium = ConsortiumCompany.objects.filter(isDeleted=False, company=company)
         companies = CompanyService(request, filter)
         company_form = CompanyForm(request.POST or None, instance=company)
         communication_form = CommunicationForm(request.POST or None, instance=company.communication)
-        if company.companyuser:
-            person_form = PersonForm(request.POST or None, request.FILES or None, instance=company.companyuser.person)
-            user_form = UserForm(request.POST or None, instance=company.companyuser.user)
-        else:
-            person_form = PersonForm(request.POST)
-            user_form = UserForm(request.POST)
         companyDocumentName = CompanyFileNames.objects.all()
+        employess = Employee.objects.filter(user__groups__name='firma', isDeleted=False)
         with transaction.atomic():
             if request.method == 'POST':
+
 
                 list = request.POST['consortium_list']
                 consortium_list = list.split(',')
@@ -431,15 +428,15 @@ def return_update_consortium(request, uuid):
                     companyfile.save()
                     company.files.add(companyfile)
                     company.save()
-                if company_form.is_valid() and communication_form.is_valid() and user_form.is_valid() and person_form.is_valid():
+                if company_form.is_valid() and communication_form.is_valid():
                     communication = communication_form.save(commit=False)
                     communication.save()
                     company = company_form.save(commit=False)
                     company.communication = communication
                     company.save()
-                    user_form.save()
-                    person_form.save()
+
                     messages.success(request, 'Firma Güncellenmiştir.')
+
                 else:
                     error_message_company = get_error_messages(company_form)
                     error_messages_communication = get_error_messages(communication_form)
@@ -448,17 +445,16 @@ def return_update_consortium(request, uuid):
                                   {'company_form': company_form,
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
-                                   'person_form': person_form, 'user_form': user_form,
-                                   'companyDocumentName': companyDocumentName, 'companies': companies,'consortium':consortium
+                                   'companyDocumentName': companyDocumentName, 'companies': companies,
+                                   'consortium': consortium, 'employess': employess,
                                    })
 
         return render(request, 'Company/UpdateConsortium.html',
                       {'company_form': company_form,
                        'communication_form': communication_form,
                        'company': company, 'error_messages': '',
-                       'person_form': person_form,
-                       'user_form': user_form, 'companies': companies,
-                       'companyDocumentName': companyDocumentName,'consortium':consortium
+                       'companies': companies, 'employess': employess,
+                       'companyDocumentName': companyDocumentName, 'consortium': consortium,
 
                        })
 
