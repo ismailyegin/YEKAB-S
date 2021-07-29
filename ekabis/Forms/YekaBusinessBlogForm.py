@@ -7,6 +7,7 @@ from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
 from ekabis.services.services import BusinessBlogGetService
+import datetime
 
 
 class YekaBusinessBlogForm(ModelForm):
