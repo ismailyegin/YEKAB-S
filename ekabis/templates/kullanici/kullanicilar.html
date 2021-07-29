@@ -225,7 +225,7 @@
                                                     <div class="dropdown-menu" role="menu">
                                                    {% for item in perm %}
                                                     {% if item == 'view_email' %}
-                                                            <a class="dropdown-item"
+                                                            <a class="dropdown-item" href=""
                                                                data-toggle="modal" onclick=sendInform({{ user.pk }})><i
                                                                     class="fa  fa-arrow-circle-right" title="Şifre Gönder"></i> Şifre
                                                                 Gönder</a>
@@ -233,7 +233,7 @@
                                                     {% endfor %}
                                                          {% for item in perm %}
                                                         {% if item == 'view_status' %}
-                                                             <a class="dropdown-item"
+                                                             <a class="dropdown-item" href=""
                                                                data-toggle="modal" onclick=activeUser({{ user.pk }})><i
                                                                     class="fa fa-lock" title="Aktif/Pasif"></i> Aktif/Pasif Yap</a>
                                                             {% endif %}

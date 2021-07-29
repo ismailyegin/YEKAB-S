@@ -342,6 +342,7 @@ def update_capacity(request, uuid):
 
     capacity = ConnectionCapacityService(request, capacityfilter).first()
     capacity_form = ConnectionCapacityForm(request.POST or None, instance=capacity)
+    city = City.objects.all()
     try:
         with transaction.atomic():
             if request.method == 'POST':
@@ -369,6 +370,9 @@ def update_capacity(request, uuid):
                         capacity.value = capacity_form.cleaned_data['value']
                         capacity.name = capacity_form.cleaned_data['name']
                         capacity.unit = capacity_form.cleaned_data['unit']
+                        city_capacity=City.objects.get(pk=int(request.POST['city']))
+                        capacity.city = city_capacity
+                        capacity.district = capacity_form.cleaned_data['district']
                         capacity.save()
 
                         messages.success(request, 'Kapasite Başarıyla Güncellendi')
@@ -381,10 +385,10 @@ def update_capacity(request, uuid):
                 else:
                     error_message_unit = get_error_messages(capacity_form)
                     return render(request, 'ConnectionRegion/update_capacity.html',
-                                  {'capacity_form': capacity_form, 'error_messages': error_message_unit, })
+                                  {'capacity_form': capacity_form, 'error_messages': error_message_unit, 'city': city,'capacity':capacity})
 
             return render(request, 'ConnectionRegion/update_capacity.html',
-                          {'capacity_form': capacity_form, 'error_messages': ''})
+                          {'capacity_form': capacity_form, 'error_messages': '', 'city': city,'capacity':capacity})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

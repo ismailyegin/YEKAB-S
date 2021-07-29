@@ -396,59 +396,7 @@
         })
     </script>
 
-    <script>
 
-        function yeka_person_assignment(yeka_id, person_id) {
-            debugger;
-            console.log(yeka_id);
-            var html = ''
-
-            $.ajax({
-                url: "{% url "ekabis:yeka_person_assignment" %}",
-                type: "POST",
-                data: {
-                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                    yeka_uuid: yeka_id,
-                    person_uuid: person_id
-                },
-                success: function (result) {
-
-                    let url = '{% url 'ekabis:view_yeka_personel' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
-                    url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_id)
-                    window.location.replace(url);
-
-
-                }
-            });
-
-
-        }
-
-        function yeka_person_remove(person_id, yeka_uuid) {
-            debugger;
-
-            $.ajax({
-                url: "{% url "ekabis:yeka_person_remove" %}",
-                type: "POST",
-                data: {
-                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
-
-                    uuid: person_id,
-                    yeka_uuid: yeka_uuid
-                },
-                success: function (result) {
-
-                    let url = '{% url 'ekabis:view_yeka_personel' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
-                    url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_uuid)
-                    window.location.replace(url);
-
-
-                }
-            });
-
-
-        }
-    </script>
 
     <script>
         $(document).ready(function () {

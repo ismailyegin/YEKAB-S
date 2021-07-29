@@ -85,7 +85,7 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-lg-12">
                         <form method="post" enctype="multipart/form-data" role="form">
                             {% csrf_token %}
                             <div class="form-group">
@@ -93,7 +93,7 @@
                                 <div class="bootstrap-duallistbox-container row moveonselect moveondoubleclick">
 
                                 </div>
-                                <select class="duallistbox" multiple="multiple" name="test">
+                                <select style="width: 100%" class="duallistbox" multiple="multiple" name="test">
 
                                     {% for gr in user_group %}
                                         <option value="{{ gr.pk }}" selected=""

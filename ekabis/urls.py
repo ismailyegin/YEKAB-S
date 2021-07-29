@@ -86,7 +86,7 @@ urlpatterns = [
     path('firma/firma-ekle/', CompanyView.return_add_Company, name='add_company'),
     path('firma/firma-listesi/', CompanyView.return_list_Company, name='view_company'),
     path('firma/konsorsiyum-firma-ekle/', CompanyView.add_consortium, name='add_consortium'),
-    path('firma/konsortium/', CompanyView.view_consortium, name='view_consortium'),
+    path('firma/konsorsiyum/', CompanyView.view_consortium, name='view_consortium'),
     path('firma/konsorsiyum-guncelle/<uuid:uuid>/', CompanyView.return_update_consortium, name='change_consortium'),
 
     path('api-firma-listesi/', APIViews.GetCompany.as_view(), name='view_company-api'),

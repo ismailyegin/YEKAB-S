@@ -30,31 +30,10 @@ def return_users(request):
     user_form = UserSearchForm()
     try:
         with transaction.atomic():
-            if request.method == 'POST':
-
-                user_form = UserSearchForm(request.POST)
-                if user_form.is_valid():
-                    firstName = user_form.cleaned_data.get('first_name')
-                    lastName = user_form.cleaned_data.get('last_name')
-                    email = user_form.cleaned_data.get('email')
-                    active = request.POST.get('is_active')
-                    print(active)
-                    if not (firstName or lastName or email or active):
-                        users = UserService(request, None)
-                    else:
-                        query = Q()
-                        if lastName:
-                            query &= Q(last_name__icontains=lastName)
-                        if firstName:
-                            query &= Q(first_name__icontains=firstName)
-                        if email:
-                            query &= Q(email__icontains=email)
-                        if active == 'True':
-                            print(active)
-                            query &= Q(is_active=True)
-                        if active == 'False':
-                            query &= Q(is_active=False)
-                        users = UserService(request, query)
+            filter={
+                'is_active':True,
+            }
+            users=UserService(request,filter)
 
             return render(request, 'kullanici/kullanicilar.html', {'users': users, 'user_form': user_form})
     except Exception as e:

@@ -101,7 +101,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Kapacite Listesi</a></li>
+                        <li class="breadcrumb-item"><a href="#">Kapasite Listesi</a></li>
                         {#<li class="breadcrumb-item active">Advanced Form</li>#}
                     </ol>
                 </div>
@@ -141,7 +141,7 @@
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label for="">İl</label><span style="color: red">*</span>
+                                                <label for="">İl</label><span style="">*</span>
                                                 <select style="width: 100%"
                                                         class="form-control select2 select2-hidden-accessible"
                                                         name="city" id="id_city"
@@ -190,7 +190,10 @@
                                 <!-- /.card-body -->
 
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                    </button>
+                                    <small style="color: red">(*) Olan Alanlar zorunludur.</small>
+
                                 </div>
                             </form>
                         </div>
@@ -204,7 +207,7 @@
                                         <th>Bağlantı Bölgesi</th>
                                         <th>İl/İlçe</th>
                                         <th>Miktar</th>
-                                        <th>Güncelleme/Silme</th>
+                                        <th></th>
 
                                     </tr>
                                     </thead>
@@ -220,24 +223,37 @@
                                             <td>{{ capacity.value }} {{ capacity.unit }}</td>
 
                                             <td>
-                                                {% for item in perm %}
-                                                    {% if item == 'update-region-capacity' %}
-                                                        <div class="btn-group">
-                                                            <a href="{% url 'ekabis:update-region-capacity' capacity.uuid %}"
-                                                               type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-edit"></i>Güncelle
-                                                            </a>
-                                                        </div>
-                                                    {% elif item == 'delete_capacity' %}
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-danger"
-                                                               data-toggle="modal"
-                                                               onclick=deleteCapacity('{{ capacity.uuid }}')><i
-                                                                    class="fa fa-trash"></i>Sil</a>
-                                                        </div>
 
-                                                    {% endif %}
-                                                {% endfor %}
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default">İşlemler</button>
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown">
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        {% for item in perm %}
+                                                            {% if item == 'update-region-capacity' %}
+                                                                <a href="{% url 'ekabis:update-region-capacity' capacity.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for p in perm %}
+                                                            {% if p == 'delete_capacity' %}
+
+                                                                <a class="dropdown-item" href=""
+                                                                   data-toggle="modal"
+                                                                   onclick=deleteCapacity('{{ capacity.uuid }}')> <i
+                                                                        class="fa fa-trash" title="Sil"></i> Sil</a>
+
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+
+
                                             </td>
 
                                         </tr>
@@ -261,30 +277,14 @@
         </div>
 
     </section>
-
+{% load  static %}
     <script>
         $(function () {
             $('#capacity').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
+               'buttons': [
 
-                lengthMenu: [
-                    [10, 25, 50, 100, -1],
-                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
-                ],
-
-                buttons: [
-
-                    {#'copy',#}
-                    {#'csv',#}
 
                     {
                         extend: "pageLength",
@@ -293,57 +293,46 @@
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
+                        text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'İş Bloğu Parametreleri',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Firmalar',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Firmalar.json'
-                            );
-                        }
-                    }
 
 
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                 'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
