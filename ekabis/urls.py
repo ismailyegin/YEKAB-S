@@ -141,7 +141,7 @@ urlpatterns = [
     path('yeka/yeka-is-bloklari-gant/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant2'),
     path('yeka/yeka-is-bloklari-incele-gant-detay/<uuid:yeka>/<uuid:yekabusiness>/', YekaViews.view_yekabusinessblog_gant, name='view_yekabusinessblog_gant'),
 
-    #yekabusinessBlog
+    #yekabusinessBlogf
     path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
     path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<uuid:yekabusiness>/<uuid:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
     path('yeka/yeka-is-bloklari-firma-ekle/<uuid:yeka>/<uuid:yekabusinessblog>/',YekaViews.add_yekabusinessblog_company, name='add_yekabusinessblog_company'),
