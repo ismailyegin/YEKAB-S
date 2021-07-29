@@ -172,93 +172,6 @@
                                 <tbody>
 
 
-                                {#                                    {% if parent_yekalar.all %}#}
-                                {#                                        {% for yeka in parent_yekalar %}#}
-                                {#                                            <tr>#}
-                                {#                                                <td>{{ forloop.counter }} </td>#}
-                                {#                                                <td>{{ yeka.definition }}</td>#}
-                                {#                                                <td>{{ yeka.date }}</td>#}
-                                {#                                                <td>{{ yeka.capacity }} {{ yeka.unit.name }}</td>#}
-                                {#                                                <td>#}
-                                {#                                                    <div class="btn-group">#}
-                                {#                                                        <button type="button" class="btn btn-default">İşlemler</button>#}
-                                {#                                                        <button type="button"#}
-                                {#                                                                class="btn btn-default dropdown-toggle dropdown-icon"#}
-                                {#                                                                data-toggle="dropdown">#}
-                                {#                                                        </button>#}
-                                {#                                                        <div class="dropdown-menu" role="menu">#}
-                                {#                                                            {% for item in perm %}#}
-                                {#                                                                {% if item == 'view_yeka_company' %}#}
-                                {##}
-                                {#                                                                    <a href="{% url 'ekabis:view_yeka_company' yeka.uuid %}"#}
-                                {#                                                                       class="dropdown-item"> <i#}
-                                {#                                                                            class="fa fa-plus" title="Firma Ekle"></i>#}
-                                {#                                                                        Firma Ekle#}
-                                {#                                                                    </a>#}
-                                {#                                                                {% endif %}#}
-                                {#                                                            {% endfor %}#}
-                                {#                                                            {% for item in perm %}#}
-                                {#                                                                {% if item == 'view_yeka_personel' %}#}
-                                {##}
-                                {#                                                                    <a href="{% url 'ekabis:view_yeka_personel' yeka.uuid %}"#}
-                                {#                                                                       class="dropdown-item"><i#}
-                                {#                                                                            class="fa fa-plus" title="Personel Ata"></i>#}
-                                {#                                                                        Personel Ata#}
-                                {#                                                                    </a>#}
-                                {##}
-                                {#                                                                {% endif %}#}
-                                {#                                                            {% endfor %}#}
-                                {#                                                            {% for item in perm %}#}
-                                {#                                                                {% if item == 'change_yeka' %}#}
-                                {##}
-                                {#                                                                    <a href="{% url 'ekabis:change_yeka' yeka.uuid %}"#}
-                                {#                                                                       class="dropdown-item"><i#}
-                                {#                                                                            class="fa fa-plus" title="Düzenle"></i>#}
-                                {#                                                                        Düzenle#}
-                                {#                                                                    </a>#}
-                                {##}
-                                {#                                                                {% endif %}#}
-                                {#                                                            {% endfor %}#}
-                                {#                                                            {% for item in perm %}#}
-                                {#                                                                {% if item == 'delete_yeka' %}#}
-                                {##}
-                                {#                                                                    <a class="dropdown-item"#}
-                                {#                                                                       data-toggle="modal"#}
-                                {#                                                                       onclick=deleteYeka('{{ yeka.uuid }}')><i#}
-                                {#                                                                            class="fa fa-trash" title="Sil"></i> Sil</a>#}
-                                {##}
-                                {#                                                                {% endif %}#}
-                                {#                                                            {% endfor %}#}
-                                {#                                                            {% for item in perm %}#}
-                                {#                                                                {% if item == 'view_sub_yeka' %}#}
-                                {#                                                                    <a type="button" class="dropdown-item"#}
-                                {#                                                                       href="{% url 'ekabis:view_sub_yeka' yeka.uuid %}"><i#}
-                                {#                                                                            class="fa fa-list" title="Alt Yekalar"></i>#}
-                                {#                                                                        Alt Yekalar</a>#}
-                                {##}
-                                {#                                                                {% endif %}#}
-                                {#                                                            {% endfor %}#}
-                                {#                                                            {% for item in perm %}#}
-                                {#                                                                {% if item == 'view_yekabusinessBlog' %}#}
-                                {#                                                                    <a href="{% url 'ekabis:view_yekabusinessBlog' yeka.uuid %}"#}
-                                {#                                                                       type="button" class="dropdown-item"><i#}
-                                {#                                                                            class="fa fa-calendar-times"#}
-                                {#                                                                            title="İş Bloğu"></i> İş Bloğu#}
-                                {#                                                                    </a>#}
-                                {#                                                                {% endif %}#}
-                                {#                                                            {% endfor %}#}
-                                {##}
-                                {#                                                        </div>#}
-                                {#                                                    </div>#}
-                                {#                                                </td>#}
-                                {##}
-                                {##}
-                                {#                                            </tr>#}
-                                {##}
-                                {#                                        {% endfor %}#}
-                                {#                                    {% endif %}#}
-
-
                                 </tbody>
                             </table>
 
@@ -381,6 +294,9 @@
                             let url_business = "{% url 'ekabis:view_yekabusinessBlog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             url_business = url_business.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
 
+                            let url_business_plan = "{% url 'ekabis:view_yekabusiness_gant' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            url_business_plan = url_business_plan.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
 
                             html = '<td><div class="btn-group"> <button type="button" class="btn btn-default">İşlemler</button>  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> </button> <div class="dropdown-menu" role="menu">';
                             html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
@@ -389,6 +305,7 @@
                             html += '<a href="' + url_company + '" class="dropdown-item" title="Firma Ekle" type="button"><i class="fa fa-plus"></i> Firma Ekle</a>';
                             html += '<a href="' + url_sub_yeka + '" class="dropdown-item" title="Alt Yeka Ekle" type="button"><i class="fa fa-plus"></i> Alt Yeka Ekle</a>';
                             html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Bloğu Ekle</a>';
+                            html += '<a href="' + url_business_plan + '" class="dropdown-item" title="İş Planı" type="button"><i class="fa fa-search"></i> İş Planı</a>';
 
                             html += '<button type="button" onclick="deleteYeka(\'' + full.uuid + '\')" class="dropdown-item" href=""><i class="fa fa-trash"></i>Sil</button></div></div></td>';
 

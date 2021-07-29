@@ -449,7 +449,7 @@ def return_update_consortium(request, uuid):
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
                                    'person_form': person_form, 'user_form': user_form,
-                                   'companyDocumentName': companyDocumentName, 'companies': companies
+                                   'companyDocumentName': companyDocumentName, 'companies': companies,'consortium':consortium
                                    })
 
         return render(request, 'Company/UpdateConsortium.html',
@@ -458,7 +458,7 @@ def return_update_consortium(request, uuid):
                        'company': company, 'error_messages': '',
                        'person_form': person_form,
                        'user_form': user_form, 'companies': companies,
-                       'companyDocumentName': companyDocumentName
+                       'companyDocumentName': companyDocumentName,'consortium':consortium
 
                        })
 
