@@ -140,10 +140,11 @@
                                     <div class="form-group">
                                         <label>Grubunu Seçiniz</label> <small style="color: red">*</small>
                                         <select name="group" class="form-control select2 select2-hidden-accessible"
-                                                style="width: 100%; " id="group">
-                                            <option value="Personel" selected>Personel</option>
-                                            <option value="Teknik">Teknik Personel</option>
+                                                style="width: 100%; " id="group" name="group" required="required">
+                                            {% for item in groups %}
+                                            <option value="{{ item.pk }}" selected>{{ item.name }}</option>
 
+                                                {% endfor %}
 
                                         </select>
                                     </div>

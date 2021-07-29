@@ -909,11 +909,35 @@ def view_yekabusiness_gant(request, uuid):
         }
         ekstratimes = ExtraTimeService(request, extratime_filter)
         extratime=[]
+        endDate=None
         for item in ekstratimes:
             if ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).count()>1:
-                for business in ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).order_by('-creationDate'):
-                    print(business.creationDate)
+                extra=ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).order_by('-creationDate')
+                date=None
+                ex=None
+                for busines in range(len(extra)):
 
+                    if busines==0:
+                        if extra[busines]==item:
+                            endDate=item.yekabusinessblog.finisDate
+                            ex=item.yekabusinessblog.creationDate
+
+                        else:
+                            date=extra[busines].yekabusinessblog.finisDate
+                    else:
+                        if extra[busines]==item:
+                            endDate=date+datetime.timedelta(days=item.time)
+                            ex = item.yekabusinessblog.creationDate
+                        else:
+                            date=extra[busines].yekabusinessblog.finisDate+datetime.timedelta(days=item.time)
+                beka = {
+                    'uuid': item.uuid,
+                    'content': item.yekabusinessblog.businessblog.name + " Ek Süre"+ str(ex),
+                    'start': endDate,
+                    'finish': endDate+datetime.timedelta(days=item.time),
+                    'bloguuid': item.yekabusinessblog.uuid,
+                }
+                extratime.append(beka)
             else:
                 beka = {
                     'uuid': item.uuid,
@@ -978,8 +1002,6 @@ def view_yekabusiness_gant2(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
-
-
 
 
 @login_required()

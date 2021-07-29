@@ -25,7 +25,8 @@ from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Employee import Employee
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import CategoryItemService, EmployeeService, EmployeeGetService, CategoryItemGetService
+from ekabis.services.services import CategoryItemService, EmployeeService, EmployeeGetService, CategoryItemGetService, \
+    GroupService, GroupGetService
 
 
 @login_required
@@ -38,9 +39,11 @@ def add_employee(request):
 
     user_form = UserForm()
     person_form = PersonForm()
-    communication = Communication()
     communication_form = CommunicationForm()
     employee_form = EmployeeForm()
+
+    groups=Group.objects.exclude(name='Admin')
+
     categorItemfilter = {
         'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
 
@@ -51,21 +54,16 @@ def add_employee(request):
             if request.method == 'POST':
                 user_form = UserForm(request.POST)
                 person_form = PersonForm(request.POST, request.FILES)
-                communication_form = CommunicationForm(request.POST, request.FILES)
+                communication_form = CommunicationForm(request.POST)
 
                 employe_form = EmployeeForm(request.POST)
 
                 if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and employe_form.is_valid():
                     user = User()
                     user.username = user_form.cleaned_data['email']
-                    user.firstName = unicode_tr(user_form.cleaned_data['first_name']).upper()
-                    user.lastName = unicode_tr(user_form.cleaned_data['last_name']).upper()
+                    user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
+                    user.last_name = unicode_tr(user_form.cleaned_data['last_name']).upper()
                     user.email = user_form.cleaned_data['email']
-                    group = Group.objects.get(name=request.POST.get('group'))
-                    password = User.objects.make_random_password()
-                    user.set_password(password)
-                    user.save()
-                    user.groups.add(group)
                     user.save()
 
                     person = person_form.save(commit=False)
@@ -78,8 +76,15 @@ def add_employee(request):
                         workDefinition=employe_form.cleaned_data['workDefinition']
 
                     )
-
                     personel.save()
+                    if request.POST.get('group'):
+                        group_filter={
+                            'pk':request.POST.get('group')
+                        }
+                        if GroupService(request,group_filter):
+                            group=GroupGetService(request,group_filter)
+                            personel.user.groups.add(group)
+                            personel.save()
 
                     log = str(user.get_full_name()) + " personelini  kaydetti"
                     log = general_methods.logwrite(request, request.user, log)
@@ -88,9 +93,6 @@ def add_employee(request):
                     return redirect('ekabis:view_employee')
 
                 else:
-
-                    #for x in user_form.errors.as_data():
-                        #messages.warning(request, user_form.errors[x].first())
 
                     error_message_company = get_error_messages(user_form)
                     error_messages_person = get_error_messages(person_form)
@@ -106,7 +108,7 @@ def add_employee(request):
 
             return render(request, 'personel/personel-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                           'employee_form': employee_form, 'error_messages': '',
+                           'employee_form': employee_form, 'error_messages': '','groups':groups
                            })
     except Exception as e:
         traceback.print_exc()
