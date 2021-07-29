@@ -3,6 +3,66 @@
 {% block content %}
     {% load static %}
 
+      <style type="text/css">
+    body, input {
+      font: 12pt verdana;
+    }
+
+    /* custom styles for individual items, load this after vis-timeline-graph2d.min.css/vis-timeline-graph2d.min.css */
+
+    .vis-item.green {
+      background-color: greenyellow;
+      border-color: green;
+    }
+
+    /* create a custom sized dot at the bottom of the red item */
+    .vis-item.red {
+      background-color: red;
+      border-color: darkred;
+      color: white;
+      font-family: monospace;
+      box-shadow: 0 0 10px gray;
+    }
+    .vis-item.vis-dot.red {
+      border-radius: 10px;
+      border-width: 10px;
+    }
+    .vis-item.vis-line.red {
+      border-width: 5px;
+    }
+    .vis-item.vis-box.red {
+      border-radius: 0;
+      border-width: 2px;
+      font-size: 24pt;
+      font-weight: bold;
+    }
+
+    .vis-item.orange {
+      background-color: gold;
+      border-color: orange;
+    }
+    .vis-item.vis-selected.orange {
+      /* custom colors for selected orange items */
+      background-color: orange;
+      border-color: orangered;
+    }
+
+    .vis-item.magenta {
+      background-color: magenta;
+      border-color: purple;
+      color: white;
+    }
+
+    /* our custom classes overrule the styles for selected events,
+       so lets define a new style for the selected events */
+    .vis-item.vis-selected {
+      background-color: white;
+      border-color: black;
+      color: black;
+      box-shadow: 0 0 10px gray;
+    }
+  </style>
+
 
     <link rel="stylesheet" href="{% static 'vis/css/vis-timeline-graph2d.min.css' %}">
     <script src="{% static 'vis/js/moment-with-locales.js' %}"></script>
@@ -16,13 +76,12 @@
 
         <div class="card-body">
             <div id="visualization"></div>
-
         </div>
     </div>
 
-
-
     <script type="text/javascript">
+
+
         // DOM element where the Timeline will be attached
         var container = document.getElementById("visualization");
 
@@ -34,27 +93,44 @@
                     content: "{{ yekabusinessblok.businessblog.name }}",
                     start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
                     end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
-                    url:"{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
+                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
                 },
+
+            {% endfor %}
+            {% for extra in ekstratimes %}
+
+
+                {
+                    id: "{{ extra.uuid}}",
+                    content: "{{ extra.content }}",
+                    start: "{{ extra.start | date:"Y-m-d" }}",
+                    end: "{{ extra.finish | date:"Y-m-d" }}",
+                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid  extra.bloguuid %}",
+                    className: 'red',
+                },
+
             {% endfor %}
         ]);
         var options = {
             height: '500px',
             width: '100%',
             locale: 'tr',
-            clickToUse: false,
+
+
         };
         var timeline = new vis.Timeline(container, items, options);
         timeline.on('click', function (properties) {
-            if (properties.item != null){
+            if (properties.item != null) {
                 var clickedNodes = items.get(properties.nodes);
-                for (let i = 0; i < clickedNodes.length; i++ ){
-                    if (clickedNodes[i].id == properties.item){
-                        window.open(clickedNodes[i].url,'_blank');
+                for (let i = 0; i < clickedNodes.length; i++) {
+                    if (clickedNodes[i].id == properties.item) {
+                        window.open(clickedNodes[i].url, '_blank');
                     }
                 }
             }
         });
+
+
     </script>
 
 

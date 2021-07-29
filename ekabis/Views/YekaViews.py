@@ -12,7 +12,7 @@ from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, ConnectionCapacity, \
-    SubYekaCapacity, YekaBusiness
+    SubYekaCapacity, YekaBusiness, ExtraTime
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
 from ekabis.models.Yeka import Yeka
@@ -912,9 +912,26 @@ def view_yekabusiness_gant(request, uuid):
         yekabusinessbloks = None
 
         extratime_filter = {
-            'yeka': yeka
+            'yeka': yeka,
+            'isDeleted' : False,
         }
         ekstratimes = ExtraTimeService(request, extratime_filter)
+        extratime=[]
+        for item in ekstratimes:
+            if ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).count()>1:
+                for business in ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).order_by('-creationDate'):
+                    print(business.creationDate)
+
+            else:
+                beka = {
+                    'uuid': item.uuid,
+                    'content': item.yekabusinessblog.businessblog.name + " Ek Süre",
+                    'start': item.yekabusinessblog.finisDate,
+                    'finish': item.yekabusinessblog.finisDate + datetime.timedelta(days=item.time),
+                    'bloguuid': item.yekabusinessblog.uuid,
+                }
+                extratime.append(beka)
+
 
         if yeka.business:
             yekabusiness = yeka.business
@@ -922,7 +939,7 @@ def view_yekabusiness_gant(request, uuid):
         return render(request, 'Yeka/gant.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
-                       'ekstratimes': ekstratimes
+                       'ekstratimes': extratime
                        })
 
     except Exception as e:
