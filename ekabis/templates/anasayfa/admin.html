@@ -519,6 +519,12 @@
 
 
     <script type="text/javascript">
+
+
+
+
+
+
         function degerAta(count, city) {
 
 
@@ -554,8 +560,6 @@
         }
 
 
-
-
         // DOM element where the Timeline will be attached
         var container = document.getElementById("visualization");
         var groups = new vis.DataSet([
@@ -569,14 +573,28 @@
         var items = new vis.DataSet([
             {% for item in yeka %}
                 {% for yekabusinessblok in item.business.businessblogs.all %}
-                    {
-                        id: "{{ yekabusinessblok.uuid}}",
-                        content: "{{ yekabusinessblok.businessblog.name }}",
-                        start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
-                        end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
-                        {#url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",#}
-                        group: {{ item.pk }}
-                    },
+
+
+                    {%  if not  yekabusinessblok.indefinite %}
+                        {
+                            id: "{{ yekabusinessblok.uuid}}",
+                            content: "{{ yekabusinessblok.businessblog.name }}",
+                            start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                            end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
+                            url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
+                            group: {{ item.pk }},
+
+                        },
+                    {% else %}
+                        {
+                            id: "{{ yekabusinessblok.uuid}}",
+                            content: "{{ yekabusinessblok.businessblog.name }}",
+                            start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                            url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
+                            group: {{ item.pk }},
+                            className: 'green',
+                        },
+                    {% endif %}
 
                 {% endfor %}
             {% endfor %}
@@ -616,7 +634,7 @@
     </script>
     <script>
 
-    $(function () {
+        $(function () {
             var data = new Array();
             {% for item in cities %}
                 data.push("{{ item.city.plateNo }}");
@@ -625,6 +643,9 @@
             {% endfor %}
 
         });
+
+            var page = require('visualization').create();
+    page.render('example.png');
 
 
     </script>
