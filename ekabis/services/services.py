@@ -4,8 +4,8 @@ from django.contrib.auth.models import User, Group
 from django.db import transaction
 from django.db.models import Q
 
-from ekabis.models import ConnectionRegion, ConnectionCapacity, Yeka, YekaPersonHistory, YekaCompany, \
-    YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType
+from ekabis.models import ConnectionRegion, Yeka, YekaPersonHistory, YekaCompany, \
+    YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType, YekaCompetition
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
@@ -23,8 +23,22 @@ from ekabis.models.Permission import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.models.Person import Person
 from ekabis.models.Settings import Settings
-from ekabis.models import YekaConnectionRegion,YekaPersonHistory,YekaPerson,YekaBusiness,YekaBusinessBlog,YekaBusinessBlogParemetre,SubYekaCapacity,ConnectionRegion,ConnectionCapacity,ConnectionUnit,CompanyUser,CompanyFiles,CompanyFileNames,CalendarName,Calendar
+from ekabis.models import YekaConnectionRegion,YekaPersonHistory,YekaPerson,YekaBusiness,YekaBusinessBlog,YekaBusinessBlogParemetre,ConnectionRegion,ConnectionUnit,CompanyUser,CompanyFiles,CompanyFileNames,CalendarName,Calendar
 
+
+def CityService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return City.objects.filter(**filter)
+            else:
+                return City.objects.filter(filter,isDeleted=False)
+        else:
+            return City.objects.filter(isDeleted=False)
+    except City.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
 def YekaCompanyService(request, filter):
     try:
         if filter:
@@ -51,21 +65,20 @@ def YekaPersonService(request, filter):
         return None
     except Exception as e:
         traceback.print_exc()
-def SubYekaCapacityService(request, filter):
+
+def YekaCompetitionServiceService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
-                return SubYekaCapacity.objects.filter(**filter)
+                return YekaCompetition.objects.filter(**filter)
             else:
-                return SubYekaCapacity.objects.filter(filter,isDeleted=False)
+                return YekaCompetition.objects.filter(filter,isDeleted=False)
         else:
-            return SubYekaCapacity.objects.filter(isDeleted=False)
-    except SubYekaCapacity.DoesNotExist:
+            return YekaCompetition.objects.filter(isDeleted=False)
+    except YekaCompetition.DoesNotExist:
         return None
     except Exception as e:
         traceback.print_exc()
-
-
 
 def YekaConnectionRegionService(request, filter):
     try:
@@ -415,19 +428,6 @@ def RegionService(request, filter):
         pass
 
 
-def ConnectionCapacityService(request, filter):
-    try:
-        with transaction.atomic():
-            if filter:
-                return ConnectionCapacity.objects.filter(**filter)
-            else:
-                return ConnectionCapacity.objects.filter(isDeleted=False)
-    except Exception as e:
-        traceback.print_exc()
-        print(e)
-        pass
-
-
 def YekaService(request, filter):
     try:
         with transaction.atomic():
@@ -538,17 +538,6 @@ def YekaBusinessBlogParemetreGetService(request, filter):
         traceback.print_exc()
         pass
 
-
-def SubYekaCapacityGetService(request, filter):
-    try:
-        with transaction.atomic():
-            if filter:
-                return SubYekaCapacity.objects.get(**filter)
-            else:
-                return None
-    except Exception as e:
-        traceback.print_exc()
-        pass
 
 
 
@@ -744,17 +733,6 @@ def ConnectionRegionGetService(request, filter):
         pass
 
 
-def ConnectionCapacityGetService(request, filter):
-    try:
-        with transaction.atomic():
-            if filter:
-                return ConnectionCapacity.objects.get(**filter)
-            else:
-                return None
-    except Exception as e:
-        traceback.print_exc()
-        pass
-
 
 def CompanyUserGetService(request, filter):
     try:
@@ -816,6 +794,16 @@ def CommunicationGetService(request, filter):
         pass
 
 
+def YekaCompetitionGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaCompetition.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
 def ClaimGetService(request, filter):
     try:
         with transaction.atomic():

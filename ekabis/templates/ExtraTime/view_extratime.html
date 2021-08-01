@@ -156,13 +156,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% if ekstratime.all %}
+                                {% if ekstratime %}
                                     {% for item in ekstratime %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ item.yeka.definition }}</td>
+                                            <td>{{ item.yeka }}</td>
                                             <td>
-                                                {{ item.yekabusinessblog.businessblog.name }}
+                                                {{ item.businessblog }}
                                             </td>
                                             <td>
                                                 {{ item.time }}

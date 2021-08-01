@@ -168,13 +168,13 @@
                                             <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
                                             <td>{{ employee.workDefinition }}</td>
                                             <td>
-                                                {#                                            <a onclick="yeka_person_assignment('{{ yeka_uuid }}','{{ employee.uuid }}')"#}
-                                                {#                                               type="button" class="btn btn-outline-primary btn-sm"><i#}
-                                                {#                                                        class="fa fa-plus" title="Görevlendir"></i>#}
-                                                {#                                            </a>#}
-                                                <input value="{{ employee.pk }}" name="employee" class=""
-                                                       type="checkbox"/>
-                                                <input type="hidden" name="yeka" id="yeka" value="add">
+                                                {% for item in perm %}
+                                                    {% if item == 'view_yeka_personel' %}
+                                                        <input value="{{ employee.pk }}" name="employee" class=""
+                                                               type="checkbox"/>
+                                                        <input type="hidden" name="yeka" id="yeka" value="add">
+                                                    {% endif %}
+                                                {% endfor %}
 
                                             </td>
 
@@ -197,14 +197,14 @@
                         </div>
 
                     </form>
-                 <form method="post" role="form">
-                                {% csrf_token %}
-                    <div class="card card-primary card-outline">
+                    <form method="post" role="form">
+                        {% csrf_token %}
+                        <div class="card card-primary card-outline">
 
-                        <div class="card-header with-border">
-                            <h3 class="card-title">YEKA PERSONEL LİSTESİ</h3>
-                        </div>
-                        <div class="card-body">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">YEKA PERSONEL LİSTESİ</h3>
+                            </div>
+                            <div class="card-body">
 
                                 <table id="yekapersons" class="table table-bordered table-hover">
                                     <thead>
@@ -228,9 +228,10 @@
                                             <td>{{ yeka.employee.workDefinition }}</td>
                                             <td>
                                                 {% for item in perm %}
-                                                    {% if item == 'yeka_person_remove' %}
-                                                                                                            </a>#}
-                                                        <input value="{{ yeka.employee.pk }}" name="sub_employee" class=""
+                                                    {% if item == 'view_yeka_personel' %}
+                                                        </a>
+                                                        <input value="{{ yeka.employee.pk }}" name="sub_employee"
+                                                               class=""
                                                                type="checkbox"/>
                                                         <input type="hidden" name="yeka" id="yeka" value="sub">
 
@@ -250,15 +251,15 @@
                                 </table>
 
 
-                        </div>
-                     <div class="card-footer">
+                            </div>
+                            <div class="card-footer">
                                 <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
                                 </button>
 
                             </div>
 
-                    </div>
-                 </form>
+                        </div>
+                    </form>
 
                 </div>
             </section>
@@ -270,6 +271,16 @@
     {% load static %}
     <script>
         $(function () {
+            {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+
+            //Initialize Select2 Elements
+
+            $('.select2').select2()
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
             $('#persons').DataTable({
                 dom: 'Bfrtip',
 
@@ -394,77 +405,59 @@
 
 
         })
-    </script>
-
-    <script>
-
-        function yeka_person_assignment(yeka_id, person_id) {
-            debugger;
-            console.log(yeka_id);
-            var html = ''
-
-            $.ajax({
-                url: "{% url "ekabis:yeka_person_assignment" %}",
-                type: "POST",
-                data: {
-                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                    yeka_uuid: yeka_id,
-                    person_uuid: person_id
-                },
-                success: function (result) {
-
-                    let url = '{% url 'ekabis:view_yeka_personel' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
-                    url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_id)
-                    window.location.replace(url);
 
 
-                }
-            });
+        {#function yeka_person_assignment(yeka_id, person_id) {#}
+        {#    debugger;#}
+        {#    console.log(yeka_id);#}
+        {#    var html = ''#}
+        {##}
+        {#    $.ajax({#}
+        {#        url: "{% url "ekabis:yeka_person_assignment" %}",#}
+        {#        type: "POST",#}
+        {#        data: {#}
+        {#            'csrfmiddlewaretoken': "{{  csrf_token  }}",#}
+        {#            yeka_uuid: yeka_id,#}
+        {#            person_uuid: person_id#}
+        {#        },#}
+        {#        success: function (result) {#}
+        {##}
+        {#            let url = '{% url 'ekabis:view_yeka_personel' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'#}
+        {#            url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_id)#}
+        {#            window.location.replace(url);#}
+        {##}
+        {##}
+        {#        }#}
+        {#    });#}
+        {##}
+        {##}
+        {#}#}
+            {##}
+            {#function yeka_person_remove(person_id, yeka_uuid) {#}
+            {#    debugger;#}
+            {##}
+            {#    $.ajax({#}
+            {#        url: "{% url "ekabis:yeka_person_remove" %}",#}
+            {#        type: "POST",#}
+            {#        data: {#}
+            {#            'csrfmiddlewaretoken': "{{  csrf_token  }}",#}
+            {##}
+            {#            uuid: person_id,#}
+            {#            yeka_uuid: yeka_uuid#}
+            {#        },#}
+            {#        success: function (result) {#}
+            {##}
+            {#            let url = '{% url 'ekabis:view_yeka_personel' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'#}
+            {#            url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_uuid)#}
+            {#            window.location.replace(url);#}
+            {##}
+            {##}
+            {#        }#}
+            {#    });#}
+            {##}
+            {##}
+            {
+        #}#}
 
-
-        }
-
-        function yeka_person_remove(person_id, yeka_uuid) {
-            debugger;
-
-            $.ajax({
-                url: "{% url "ekabis:yeka_person_remove" %}",
-                type: "POST",
-                data: {
-                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
-
-                    uuid: person_id,
-                    yeka_uuid: yeka_uuid
-                },
-                success: function (result) {
-
-                    let url = '{% url 'ekabis:view_yeka_personel' '426b982f-4793-4341-9a88-10ba4cfbc830' %}'
-                    url = url.replace('426b982f-4793-4341-9a88-10ba4cfbc830', yeka_uuid)
-                    window.location.replace(url);
-
-
-                }
-            });
-
-
-        }
-    </script>
-
-    <script>
-        $(document).ready(function () {
-
-            {% if error_messages  %}
-                errors_messages({{ error_messages |safe }})
-            {% endif %}
-        });
-    </script>
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-        });
     </script>
 {% endblock %}

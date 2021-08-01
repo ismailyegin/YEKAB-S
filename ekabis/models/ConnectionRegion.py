@@ -1,14 +1,14 @@
 from django.db import models
 
 from ekabis.models.BaseModel import BaseModel
-from ekabis.models.ConnectionUnit import ConnectionUnit
-
+from ekabis.models.YekaCompetition import YekaCompetition
+from ekabis.models.City import City
 
 class ConnectionRegion(BaseModel):
     name = models.TextField(blank=False, null=False, verbose_name='Bağlantı Bölgesi')
-    value = models.IntegerField(null=False, blank=False, verbose_name='Miktar')
-    unit = models.ForeignKey(ConnectionUnit, on_delete=models.DO_NOTHING, verbose_name='Birim', null=False, blank=False)
-
+    capacity = models.IntegerField(null=False, blank=False, verbose_name='Kapasite')
+    cities=models.ManyToManyField(City)
+    yekacompetition=models.ManyToManyField(YekaCompetition)
     def __str__(self):
         return '%s ' % self.name
 

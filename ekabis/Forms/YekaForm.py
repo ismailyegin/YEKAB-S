@@ -8,16 +8,17 @@ class YekaForm(forms.ModelForm):
     class Meta:
         model = Yeka
 
-        fields = ('date', 'definition', )
+        fields = ('date', 'definition','capacity')
 
 
-        labels = {'definition': 'Tanım * ','date':'Tarih *'}
+        labels = {'definition': 'Tanım * ','date':'Resmi Gazetede Yayın Tarihi  *' ,'capacity':'Kapasite'}
         widgets = {
             'definition': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
 
             'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
                        'onkeydown': 'return false', 'required': 'required'}),
+            'capacity': forms.TextInput(attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
 
 
         }

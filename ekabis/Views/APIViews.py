@@ -100,8 +100,6 @@ class GetYeka(APIView):
 
         filter = {
             'isDeleted': False,
-            'yekaParent': None
-
         }
         count = YekaService(request, filter).count()
 
@@ -120,7 +118,6 @@ class GetYeka(APIView):
 
         serializer_context = {
             'request': request,
-
         }
         serializer =YekaResponseSerializer(logApiObject, context=serializer_context)
         return Response(serializer.data)

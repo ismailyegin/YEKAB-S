@@ -31,12 +31,10 @@ class CommunicationForm(ModelForm):
                 attrs={'class': 'form-control ', 'rows': '2', "style": "text-transform:uppercase"}),
 
             'phoneNumber': forms.TextInput(
-                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
-                       'minlength': '11'}),
+                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
 
             'phoneNumber2': forms.TextInput(
-                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
-                       'minlength': '11'}),
+                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
 
             'postalCode': forms.TextInput(attrs={'class': 'form-control '}),
 
