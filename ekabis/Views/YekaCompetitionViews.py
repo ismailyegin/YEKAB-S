@@ -6,19 +6,23 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-
+from django.db.models import Q
 from ekabis.Forms.ConnectionRegionForm import ConnectionRegionForm
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
 from ekabis.Forms.YekaCompetitionForm import YekaCompetitionForm
 from ekabis.Forms.YekaForm import YekaForm
-from ekabis.models import YekaCompetition, YekaBusiness, YekaBusinessBlog, BusinessBlog
+from ekabis.models import YekaCompetition, YekaBusiness, YekaBusinessBlog, BusinessBlog, Employee, YekaPerson, \
+    YekaPersonHistory
+from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
+from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaGetService, ConnectionRegionGetService, YekaCompetitionGetService, \
-    YekaBusinessGetService, YekaBusinessBlogGetService, BusinessBlogGetService
+    YekaBusinessGetService, YekaBusinessBlogGetService, BusinessBlogGetService, YekaCompetitionPersonService, \
+    EmployeeGetService
 import  datetime
-
+from django.db.models import Sum
 @login_required
 def view_competition(request,uuid):
     perm = general_methods.control_access(request)
@@ -66,6 +70,20 @@ def add_competition(request,region):
                 if competition_form.is_valid():
 
                     competition = competition_form.save(commit=False)
+
+                    total = int(
+                        YekaCompetition.objects.filter(connectionregion=region).distinct().aggregate(Sum('capacity'))[
+                            'capacity__sum'] or 0)
+                    total +=competition.capacity
+
+                    if total>region.capacity:
+                        messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
+                        return render(request, 'Competition/add_competition.html',
+                                      {'competition_form': competition_form, 'region': region,
+                                       })
+
+
+
                     competition.save()
                     region.yekacompetition.add(competition)
                     region.save()
@@ -199,6 +217,9 @@ def update_competition(request, uuid,yeka):
                 if region_form.is_valid():
                     region.name = region_form.cleaned_data['name']
                     region.value = region_form.cleaned_data['value']
+
+
+
                     region.save()
 
                     messages.success(request, 'Bölge Başarıyla Güncellendi')
@@ -482,3 +503,76 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+def yeka_person_list(request, uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    yekacompetition_filter = {
+        'uuid': uuid,
+    }
+    competition = YekaCompetitionGetService(request, yekacompetition_filter)
+    yekacompetition_person_filter = {
+        'competition': competition,
+        'isDeleted': False,
+        'is_active':True
+    }
+
+    yeka_person = YekaCompetitionPersonService(request,yekacompetition_person_filter).order_by('-creationDate')
+    array = []
+    for person in yeka_person:
+        array.append(person.employee.uuid)
+
+    # ekstra servis yazılacak
+    persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array).order_by('-creationDate')
+    if request.POST:
+        with transaction.atomic():
+            if request.POST['yeka'] == 'add':
+                persons = request.POST.getlist('employee')
+                if persons:
+                    for person_id in persons:
+                        person_filter = {
+                            'pk': person_id
+                        }
+                        person = EmployeeGetService(request, person_filter)
+                        person_yeka = YekaCompetitionPerson(competition=competition, employee=person, is_active=True)
+                        person_yeka.save()
+
+                        personHistory = YekaCompetitionPersonHistory(competition=competition, person=person, is_active=True)
+                        personHistory.save()
+
+                        log = str(competition.name) + ' adlı yekaya - ' + str(
+                            person.user.get_full_name()) + " adlı personel atandı."
+                        log = general_methods.logwrite(request, request.user, log)
+            else:
+                persons = request.POST.getlist('sub_employee')
+                if persons:
+                    for person_id in persons:
+                        person_filter = {
+                            'pk': person_id
+                        }
+                        person = EmployeeGetService(request, person_filter)
+                        yeka_person = YekaCompetitionPerson.objects.get(
+                            Q(isDeleted=False) & Q(competition__uuid=uuid) & Q(employee__uuid=person.uuid))
+
+                        yeka_person.isDeleted = True
+                        yeka_person.is_active = False
+                        yeka_person.save()
+
+                        personHistory = YekaCompetitionPersonHistory(competition=yeka_person.competition, person=person, is_active=False)
+                        personHistory.save()
+
+                        log = str(yeka_person.competition.name) + ' adlı yekadan -' + str(
+                            person.user.get_full_name()) + " personeli çıkarıldı."
+                        log = general_methods.logwrite(request, request.user, log)
+
+
+        return redirect('ekabis:view_yekacompetition_personel', uuid)
+
+    return render(request, 'Yeka/yekaPersonList.html',
+                  {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid})
+

@@ -131,6 +131,7 @@ urlpatterns = [
          name='change_yekacompetitionbusiness'),
     path('yarisma/yarisma-is-bloklari-ekle/<uuid:competition>/<uuid:yekabusiness>/<uuid:business>/',
          YekaCompetitionViews.change_yekacompetitionbusinessBlog, name='change_yekacompetitionbusinessBlog'),
+    path('yarisma/yarisma-personeller/<uuid:uuid>', YekaCompetitionViews.yeka_person_list, name='view_yekacompetition_personel'),
 
 
 

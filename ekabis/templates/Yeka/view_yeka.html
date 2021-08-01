@@ -298,6 +298,9 @@
                             let url_region = "{% url 'ekabis:add_region' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             url_region = url_region.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
 
+                            let url_gant = "{% url 'ekabis:view_yekabusiness_gant' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            url_gant = url_gant.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
                             html = '<td><div class="btn-group"> <button type="button" class="btn btn-default">İşlemler</button>  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> </button> <div class="dropdown-menu" role="menu">';
                             html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
                             html += '<a href="' + url_region + '" class="dropdown-item" title="Baglantı Bölgeleri" type="button"><i class="fa fa-plus"></i> Baglantı Bölgeleri</a>';
@@ -305,7 +308,8 @@
 
                             html += '<a href="' + url_company + '" class="dropdown-item" title="Firma Ekle" type="button"><i class="fa fa-plus"></i> Firma Ekle</a>';
                             {#html += '<a href="' + url_sub_yeka + '" class="dropdown-item" title="Alt Yeka Ekle" type="button"><i class="fa fa-plus"></i> Alt Yeka Ekle</a>';#}
-                            html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Bloğu Ekle</a>';
+                            html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Planı Ekle</a>';
+                            html += '<a href="' + url_gant + '" class="dropdown-item" title="İş Planı" type="button"><i class="fa fa-plus"></i> İş Planı</a>';
 
                             html += '<button type="button" onclick="deleteYeka(\'' + full.uuid + '\')" class="dropdown-item" href=""><i class="fa fa-trash"></i>Sil</button></div></div></td>';
 

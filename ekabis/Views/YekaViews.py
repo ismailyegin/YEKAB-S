@@ -875,7 +875,7 @@ def view_yekabusiness_gant(request, uuid):
         yekabusinessbloks = None
 
         extratime_filter = {
-            'yeka': yeka,
+            'business': yeka.business,
             'isDeleted' : False,
         }
         ekstratimes = ExtraTimeService(request, extratime_filter)

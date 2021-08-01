@@ -14,6 +14,7 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import UnitService, RegionService, ConnectionUnitGetService, \
     ConnectionRegionGetService, YekaGetService
 from ekabis.models.ConnectionRegion import ConnectionRegion
+from django.db.models import Sum
 
 
 @login_required
@@ -133,6 +134,7 @@ def add_connectionRegion(request,uuid):
         return redirect('accounts:login')
     region_form = ConnectionRegionForm()
 
+
     try:
 
         yeka_filter={
@@ -148,7 +150,20 @@ def add_connectionRegion(request,uuid):
 
                 if region_form.is_valid():
 
+
+
                     region = region_form.save(commit=False)
+                    total = int(
+                        ConnectionRegion.objects.filter(yeka=yeka).distinct().aggregate(Sum('capacity'))[
+                            'capacity__sum'] or 0)
+                    total +=region.capacity
+
+                    if yeka.capacity<total:
+                        messages.warning(request, 'Bölgelerin Kapasite  toplamı Yekanın Kapasitesinden büyük olamaz')
+
+                        return render(request, 'ConnectionRegion/add_connectionRegion.html',
+                                      {'region_form': region_form, 'yeka': yeka,
+                                       })
                     region.save()
                     yeka.connection_region.add(region)
                     yeka.save()
@@ -241,6 +256,16 @@ def update_region(request, uuid,yeka):
 
                 if region_form.is_valid():
                     region=region_form.save(commit=False)
+                    region = region_form.save(commit=False)
+                    total = int(
+                        ConnectionRegion.objects.exclude(uuid=region.uuid).filter(yeka=yeka).distinct().aggregate(Sum('capacity'))[
+                            'capacity__sum'] or 0)
+                    total += region.capacity
+
+                    if yeka.capacity < total:
+                        messages.warning(request, 'Bölgelerin Kapasite  toplamı Yekanın Kapasitesinden büyük olamaz')
+                        return render(request, 'ConnectionRegion/update_region.html',
+                                      {'region_form': region_form, 'units': ''})
                     region.save()
                     messages.success(request, 'Bölge Başarıyla Güncellendi')
                     return redirect('ekabis:add_region' ,yeka.uuid)

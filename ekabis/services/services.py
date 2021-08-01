@@ -11,7 +11,7 @@ from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
 from ekabis.models.Communication import Communication
 from ekabis.models.Company import Company
-from ekabis.models.ConnectionUnit import ConnectionUnit
+from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMember import DirectoryMember
 from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
@@ -337,6 +337,19 @@ def ActiveGroupService(request, filter):
         print(e)
         pass
 
+
+
+def YekaCompetitionPersonService(request, filter):
+    try:
+        if filter:
+            return YekaCompetitionPerson.objects.filter(**filter)
+        else:
+            return YekaCompetitionPerson.objects.filter(isDeleted=False)
+    except Exception as e:
+        traceback.print_exc()
+
+        print(e)
+        pass
 
 def PermissionService(request, filter):
     try:
@@ -792,7 +805,16 @@ def CommunicationGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-
+def YekaCompetitionPersonGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaCompetitionPerson.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
 
 def YekaCompetitionGetService(request, filter):
     try:
