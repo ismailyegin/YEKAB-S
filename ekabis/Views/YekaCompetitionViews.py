@@ -69,6 +69,8 @@ def add_competition(request,region):
 
                 if competition_form.is_valid():
 
+
+
                     competition = competition_form.save(commit=False)
 
                     total = int(
@@ -81,10 +83,10 @@ def add_competition(request,region):
                         return render(request, 'Competition/add_competition.html',
                                       {'competition_form': competition_form, 'region': region,
                                        })
-
-
-
                     competition.save()
+                    for item in region.cities.all():
+                        competition.city.add(item)
+                        competition.save()
                     region.yekacompetition.add(competition)
                     region.save()
                     yeka_filter = {
@@ -180,60 +182,71 @@ def delete_competition(request):
                     obj.isDeleted = True
                     obj.save()
                     return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
-
-
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
-
     except obj.DoesNotExist:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
-
-
 @login_required
-def update_competition(request, uuid,yeka):
+def update_competition(request, region,competition):
     perm = general_methods.control_access(request)
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
-
     try:
-        regionfilter = {
-            'uuid': uuid,
-            'isDeleted': False
+        region_filter = {
+            'uuid': region,
+            'isDeleted': False,
         }
-        yeka_filter={
-            'uuid':yeka,
-            'isDeleted': False
-
+        region = ConnectionRegionGetService(request, region_filter)
+        competition_filter = {
+            'uuid': competition,
+            'isDeleted': False,
         }
-        yeka=YekaGetService(request,yeka_filter)
-        region = ConnectionRegionGetService(request, regionfilter)
-        region_form = ConnectionRegionForm(request.POST or None, instance=region)
+        competition=YekaCompetitionGetService(request,competition_filter)
+        competition_form = YekaCompetitionForm(request.POST or None, instance=competition)
         with transaction.atomic():
             if request.method == 'POST':
+                if competition_form.is_valid():
+                    competition = competition_form.save(commit=False)
 
-                if region_form.is_valid():
-                    region.name = region_form.cleaned_data['name']
-                    region.value = region_form.cleaned_data['value']
+                    total = int(
+                        YekaCompetition.objects.filter(connectionregion=region).distinct().aggregate(Sum('capacity'))[
+                            'capacity__sum'] or 0)
+                    total += competition.capacity
 
-
-
+                    if total > region.capacity:
+                        messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
+                        return render(request, 'Competition/change_competition.html',
+                                      {'competition_form': competition_form, 'region': region,
+                                       })
+                    competition.save()
+                    for item in region.cities.all():
+                        competition.city.add(item)
+                        competition.save()
+                    region.yekacompetition.add(competition)
                     region.save()
+                    log = " Yeka Yarışması  güncellendi"
+                    log = general_methods.logwrite(request, request.user, log)
+                    messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
+                    return redirect('ekabis:add_competition', region.uuid)
 
-                    messages.success(request, 'Bölge Başarıyla Güncellendi')
-                    return redirect('ekabis:add_region' ,yeka.uuid)
                 else:
-                    error_message_unit = get_error_messages(region_form)
-                    return render(request, 'Competition/change_competition.html',
-                                  {'region_form': region_form, 'error_messages': error_message_unit, 'units': ''})
+                    error_message_region = get_error_messages(competition_form)
 
+                    return render(request, 'Competition/change_competition.html',
+                                  {'competition_form': competition_form, 'region': region,
+                                   'error_messages': error_message_region})
+
+            competitions = region.yekacompetition.filter(isDeleted=False)
             return render(request, 'Competition/change_competition.html',
-                          {'region_form': region_form, 'error_messages': '', 'units': ''})
+                          {'competition_form': competition_form, 'error_messages': '',
+                           'region': region})
+
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
 
 
 @login_required()

@@ -158,7 +158,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                             <div class="col-md-6">
+                                            <div class="col-md-6">
                                                 <label> {{ competition_form.date.label }}</label><small
                                                     style="color: red">*</small>
                                                 {{ competition_form.date }}
@@ -178,7 +178,8 @@
                                 <!-- /.card-body -->
 
                                 <div class="card-footer">
-                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet</button>
+                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                    </button>
                                     <small style="color: red">(*) Olan Alanlar zorunludur.</small>
 
                                 </div>
@@ -217,11 +218,19 @@
                                                         <div class="dropdown-menu" role="menu">
 
 
-                                                            <a onclick="deleteRegion({{ competition.uuid }})" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>
+                                                            <a onclick="deleteRegion({{ competition.uuid }})"
+                                                               class="dropdown-item" title="Sil" type="button"><i
+                                                                    class="fa fa-edit"></i>Sil</a>
 
-                                                           <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}" class="dropdown-item" title="İş Planı Ekle" type="button"><i class="fa fa-edit"></i>İş Planı</a>
-                                                            <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}" class="dropdown-item" title="Personel Ekle" type="button"><i class="fa fa-edit"></i>Personel Ekle</a>
-
+                                                            <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
+                                                               class="dropdown-item" title="İş Planı Ekle"
+                                                               type="button"><i class="fa fa-edit"></i>İş Planı</a>
+                                                            <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
+                                                               class="dropdown-item" title="Personel Ekle"
+                                                               type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
+                                                            <a href="{% url "ekabis:change_competition" region.uuid competition.uuid %}"
+                                                               class="dropdown-item" title="Düzenle " type="button"><i
+                                                                    class="fa fa-edit"></i>Düzenle </a>
 
                                                         </div>
                                                     </div>
@@ -253,7 +262,7 @@
     <script>
         $(function () {
 
-              {% if error_messages  %}
+            {% if error_messages  %}
                 errors_messages({{ error_messages |safe }})
             {% endif %}
 

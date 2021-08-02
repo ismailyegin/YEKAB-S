@@ -124,7 +124,7 @@ urlpatterns = [
     path('yeka/yeka-listesi/<uuid:yeka>', YekaCompetitionViews.view_competition, name='view_competition'),
     path('yarisma/yarisma-ekle/<uuid:region>', YekaCompetitionViews.add_competition, name='add_competition'),
     path('yarisma/yarisma-sil/', YekaCompetitionViews.delete_competition, name='delete_competition'),
-    path('yarisma/yarisma-guncelle/<uuid:uuid>/<uuid:yeka>', YekaCompetitionViews.update_competition, name='change_competition'),
+    path('yarisma/yarisma-guncelle/<uuid:region>/<uuid:competition>', YekaCompetitionViews.update_competition, name='change_competition'),
     path('yarisma/yarisma-is-bloklari-list/<uuid:uuid>/', YekaCompetitionViews.view_competition_yekabusinessBlog, name='view_competitionbusinessblog'),
     path('yarisma/yarisma-IsBlogu-ekle/<uuid:uuid>/', YekaCompetitionViews.add_yekacompetitionbusiness, name='add_yekacompetitionbusiness'),
     path('yarisma/yarisma-IsBlogu-guncelle/<uuid:uuid>/<uuid:competition>/', YekaCompetitionViews.change_yekacompetitionbusiness,
@@ -193,6 +193,13 @@ urlpatterns = [
     path('yeka/ekstra/zaman-ekle/<uuid:business>/<uuid:businessblog>/', ExtraTimeViews.return_add_extra_time, name='add_extratime'),
     path('yeka/ekstra/zaman-guncelle/<uuid:uuid>/', ExtraTimeViews.return_update_extra_time, name='change_extratime'),
     path('yeka/ekstra/zaman-sil/', ExtraTimeViews.delete_extra_time, name='delete_extratime'),
+
+    # Ekstra zaman file
+    path('yeka/ekstra/zaman-dosya-ekle/<uuid:uuid>/', ExtraTimeViews.add_extratimefile, name='add_extratimefile'),
+    path('yeka/ekstra/zaman-dosya-guncelle/<uuid:uuid>/<uuid:time>', ExtraTimeViews.change_extratimefile, name='change_extratimefile'),
+    path('yeka/ekstra/zaman-sil/', ExtraTimeViews.delete_extratimefile, name='delete_extratimefile'),
+
+
 
     path('ilce-getir/', CityViews.get_districts, name='ilce-getir'),
 

@@ -67,7 +67,6 @@ def add_yeka(request):
                     return render(request, 'Yeka/add_yeka.html',
                                   {'yeka_form': yeka_form, 'error_messages': error_message_unit,
                                    })
-
         return render(request, 'Yeka/add_yeka.html',
                       {'yeka_form': yeka_form, 'error_messages': ''})
 

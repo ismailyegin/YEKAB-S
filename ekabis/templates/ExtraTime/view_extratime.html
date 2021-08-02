@@ -162,7 +162,7 @@
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ item.yeka }}</td>
                                             <td>
-                                                {{ item.businessblog }}
+                                                {{ item.blogname }}
                                             </td>
                                             <td>
                                                 {{ item.time }}
@@ -182,9 +182,14 @@
                                                                         class="fa fa-edit" title="Düzenle"></i> Düzenle
                                                                 </a>
                                                             {% endif %}
-                                                        {% endfor %}
-                                                        {% for item in perm %}
-                                                            {% if item == 'delete_company' %}
+                                                            {% if p == 'add_extratimefile' %}
+                                                                <a href="{% url "ekabis:add_extratimefile" item.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-plus " title="Düzenle"></i> Dosya Ekle
+                                                                </a>
+                                                            {% endif %}
+
+                                                            {% if p == 'delete_extratime' %}
 
                                                                 <a class="dropdown-item" href=""
                                                                    data-toggle="modal"
@@ -193,6 +198,7 @@
 
                                                             {% endif %}
                                                         {% endfor %}
+
 
                                                     </div>
                                                 </div>

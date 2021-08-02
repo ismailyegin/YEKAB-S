@@ -1,8 +1,5 @@
 from django import forms
-
 from ekabis.models import ConnectionRegion, City
-
-
 class ConnectionRegionForm(forms.ModelForm):
     cities = forms.ModelMultipleChoiceField(queryset=None)
     class Meta:
@@ -16,8 +13,6 @@ class ConnectionRegionForm(forms.ModelForm):
 
 
         }
-
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -24,7 +24,7 @@ from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.models.Person import Person
 from ekabis.models.Settings import Settings
 from ekabis.models import YekaConnectionRegion,YekaPersonHistory,YekaPerson,YekaBusiness,YekaBusinessBlog,YekaBusinessBlogParemetre,ConnectionRegion,ConnectionUnit,CompanyUser,CompanyFiles,CompanyFileNames,CalendarName,Calendar
-
+from ekabis.models.ExtraTimeFile import ExtraTimeFile
 
 def CityService(request, filter):
     try:
@@ -440,6 +440,17 @@ def RegionService(request, filter):
         print(e)
         pass
 
+def ExtraTimeFileService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ExtraTimeFile.objects.filter(**filter)
+            else:
+                return ExtraTimeFile.objects.filter(isDeleted=False)
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+        pass
 
 def YekaService(request, filter):
     try:
@@ -660,6 +671,17 @@ def HistoryGroupGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+def ExtraTimeFileGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ExtraTimeFile.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
 
 
 def ExtraTimeGetService(request, filter):

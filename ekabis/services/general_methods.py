@@ -119,7 +119,6 @@ def aktif(request):
         return {'aktif': aktif,
                 'group': group,
                 'perm': perm,
-
                 }
     else:
         return {}
