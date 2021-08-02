@@ -75,8 +75,7 @@
     <link rel="stylesheet" href="{% static 'plugins/bs-stepper/css/bs-stepper.min.css' %}">
     <!-- dropzonejs -->
     <link rel="stylesheet" href="{% static 'plugins/dropzone/min/dropzone.min.css' %}">
-	<link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
-
+    <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
 
 
     {#    <!-- jQuery -->#}
@@ -488,21 +487,20 @@
 <script>
 
 
-
     $(function () {
 
 
-            $.fn.datepicker.dates['tr'] =
-        {
-            days: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
-            daysShort: ["Pz", "Pzt", "Sal", "Çrş", "Prş", "Cu", "Cts", "Pz"],
-            daysMin: ["Pz", "Pzt", "Sa", "Çr", "Pr", "Cu", "Ct", "Pz"],
-            months: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
-            monthsShort: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
-            today: "Bugün",
-            suffix: [],
-            meridiem: []
-        };
+        $.fn.datepicker.dates['tr'] =
+            {
+                days: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
+                daysShort: ["Pz", "Pzt", "Sal", "Çrş", "Prş", "Cu", "Cts", "Pz"],
+                daysMin: ["Pz", "Pzt", "Sa", "Çr", "Pr", "Cu", "Ct", "Pz"],
+                months: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+                monthsShort: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+                today: "Bugün",
+                suffix: [],
+                meridiem: []
+            };
         $('#example1').DataTable();
         $('#example2').DataTable({
             'paging': true,
@@ -527,7 +525,37 @@
         {#$('[data-mask]').inputmask();#}
 
         //Date range picker
-        $('#reservation').daterangepicker();
+        $('#reservation').daterangepicker({
+
+
+            "locale": {
+                "format": "DD/MM/YYYY",
+                "separator": " - ",
+                "applyLabel": "Apply",
+                "cancelLabel": "Cancel",
+                "fromLabel": "From",
+                "toLabel": "To",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Paz","Pzt", "Sal", "Çar", "Per", "Cum", "Cmt",
+                ],
+                "monthNames": [
+                    "Ocak",
+                    "Şubat",
+                    "Mart",
+                    "Nisan",
+                    "Mayıs",
+                    "Haziran",
+                    "Temmuz",
+                    "Ağustos",
+                    "Eylül",
+                    "Ekim",
+                    "Kasım",
+                    "Aralık"
+                ],
+                "firstDay": 1
+            }
+        })
         //Date range picker with time picker
         $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
         //Date range as a button
@@ -563,7 +591,6 @@
             language: 'tr',
             format: 'dd/mm/yyyy',
         });
-
 
 
         $('#datepicker3').datepicker({
@@ -636,7 +663,7 @@
 
 </script>
 <script>
- $(document).ready(function () {
+    $(document).ready(function () {
         $('.toast').fadeOut(5000);
 
     });</script>

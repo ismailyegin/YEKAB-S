@@ -6,6 +6,7 @@ from django.contrib.auth.models import User, Group
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import resolve
 from unicode_tr import unicode_tr
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.CompanyFileNameForm import CompanyFileNameForm
@@ -20,7 +21,7 @@ from ekabis.models.CompanyUser import CompanyUser
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import CompanyService, CompanyGetService, GroupService, GroupGetService, \
-    CompanyFileNamesService, CompanyFileNamesGetService, YekaCompanyService
+    CompanyFileNamesService, CompanyFileNamesGetService, YekaCompanyService, last_urls
 
 
 @login_required
@@ -138,7 +139,9 @@ def delete_company(request):
 
 @login_required
 def return_list_Company(request):
-    return render(request, 'Company/Companys.html')
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    return render(request, 'Company/Companys.html', {'urls': urls, 'current_url': current_url, })
 
 
 @login_required
@@ -152,6 +155,8 @@ def return_update_Company(request, uuid):
         'uuid': uuid
 
     }
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
 
     try:
         company = CompanyGetService(request, companyfilter)
@@ -189,7 +194,7 @@ def return_update_Company(request, uuid):
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
                                    'person_form': person_form, 'user_form': user_form,
-                                   'companyDocumentName': companyDocumentName
+                                   'companyDocumentName': companyDocumentName, 'urls': urls,
                                    })
 
         return render(request, 'Company/CompanyUpdate.html',
@@ -197,7 +202,7 @@ def return_update_Company(request, uuid):
                        'communication_form': communication_form,
                        'company': company, 'error_messages': '',
                        'person_form': person_form,
-                       'user_form': user_form,
+                       'user_form': user_form, 'urls': urls, 'current_url': current_url,
                        'companyDocumentName': companyDocumentName
 
                        })
@@ -406,7 +411,6 @@ def return_update_consortium(request, uuid):
         employess = Employee.objects.filter(user__groups__name='firma', isDeleted=False)
         with transaction.atomic():
             if request.method == 'POST':
-
 
                 list = request.POST['consortium_list']
                 consortium_list = list.split(',')

@@ -1,7 +1,7 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
-    ExtraTimeViews, APIViews, CityViews
+    ExtraTimeViews, APIViews, CityViews, VacationDayViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -13,6 +13,10 @@ urlpatterns = [
 
     # Takvim notları
     path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendarName, name='add_calendarName'),
+    path('tatil-gunleri/', VacationDayViews.return_vacation_day, name='vacation_days'),
+    path('tatil-gunu-ekle/', VacationDayViews.add_vacation_day, name='add_vacation_day'),
+    path('tatil-gunu-sil/', VacationDayViews.delete_vacation_date, name='delete_vacation_day'),
+    path('tatil-gunu-guncelle/<uuid:uuid>', VacationDayViews.update_vacation_date, name='update_vacation_day'),
 
     # Anasayfa Takvim notlar kaydet
     path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendar, name='add_calendarfdk'),
