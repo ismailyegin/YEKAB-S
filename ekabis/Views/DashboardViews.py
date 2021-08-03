@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from ekabis.models.VacationDay import VacationDay
 from ekabis.services import general_methods
 from ekabis.services.services import ActiveGroupService, GroupService, ActiveGroupGetService, GroupGetService, \
-    CalendarNameService, YekaService, ConnectionCapacityService, VacationDayService
+    CalendarNameService, YekaService, VacationDayService
 
 from ekabis.Forms.CalendarNameForm import CalendarNameForm
 from ekabis.models.CalendarName import CalendarName
@@ -66,7 +66,7 @@ def return_admin_dashboard(request):
         return redirect('accounts:login')
 
     yeka = YekaService(request, None)
-    cities = ConnectionCapacityService(request, None)
+    cities = None
     filter = {
         'isDeleted': False
     }

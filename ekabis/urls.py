@@ -1,7 +1,7 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
-    ExtraTimeViews, APIViews, CityViews, VacationDayViews
+    ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews
 
 app_name = 'ekabis'
 urlpatterns = [

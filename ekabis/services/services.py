@@ -24,8 +24,12 @@ from ekabis.models.Permission import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.models.Person import Person
 from ekabis.models.Settings import Settings
-from ekabis.models import YekaConnectionRegion,YekaPersonHistory,YekaPerson,YekaBusiness,YekaBusinessBlog,YekaBusinessBlogParemetre,ConnectionRegion,ConnectionUnit,CompanyUser,CompanyFiles,CompanyFileNames,CalendarName,Calendar
 from ekabis.models.ExtraTimeFile import ExtraTimeFile
+
+from ekabis.models import YekaConnectionRegion, YekaPersonHistory, YekaPerson, YekaBusiness, YekaBusinessBlog, \
+    YekaBusinessBlogParemetre, ConnectionRegion, ConnectionUnit, CompanyUser, \
+    CompanyFiles, CompanyFileNames, CalendarName, Calendar
+from ekabis.models.VacationDay import VacationDay
 
 def CityService(request, filter):
     try:
@@ -849,10 +853,7 @@ def YekaCompetitionGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-from ekabis.models import YekaConnectionRegion, YekaPersonHistory, YekaPerson, YekaBusiness, YekaBusinessBlog, \
-    YekaBusinessBlogParemetre, SubYekaCapacity, ConnectionRegion, ConnectionCapacity, ConnectionUnit, CompanyUser, \
-    CompanyFiles, CompanyFileNames, CalendarName, Calendar
-from ekabis.models.VacationDay import VacationDay
+
 
 def ClaimGetService(request, filter):
     try:
