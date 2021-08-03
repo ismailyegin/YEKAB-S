@@ -6,10 +6,11 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
+from ekabis.models import ConnectionRegion
 from ekabis.models.VacationDay import VacationDay
 from ekabis.services import general_methods
 from ekabis.services.services import ActiveGroupService, GroupService, ActiveGroupGetService, GroupGetService, \
-    CalendarNameService, YekaService, VacationDayService
+    CalendarNameService, YekaService, VacationDayService, ConnectionRegionService
 
 from ekabis.Forms.CalendarNameForm import CalendarNameForm
 from ekabis.models.CalendarName import CalendarName
@@ -66,15 +67,15 @@ def return_admin_dashboard(request):
         return redirect('accounts:login')
 
     yeka = YekaService(request, None)
-    cities = None
-    filter = {
-        'isDeleted': False
+    filter={
+        'pk':1
     }
+    regions = ConnectionRegionService(request,None)
     days = VacationDayService(request, filter)
 
     return render(request, 'anasayfa/admin.html', {
         'yeka': yeka,
-        'cities': cities, 'vacation_days': days
+        'regions': regions, 'vacation_days': days
     })
 
 
