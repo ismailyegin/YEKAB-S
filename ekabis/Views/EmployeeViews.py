@@ -9,6 +9,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import resolve
 from unicode_tr import unicode_tr
 
 from ekabis.Forms.CategoryItemForm import CategoryItemForm
@@ -20,13 +21,14 @@ from ekabis.Forms.EmployeeForm import EmployeeForm
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
 from ekabis.Forms.UserSearchForm import UserSearchForm
+from ekabis.models.Permission import Permission
 from ekabis.models.Communication import Communication
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Employee import Employee
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import CategoryItemService, EmployeeService, EmployeeGetService, CategoryItemGetService, \
-    GroupService, GroupGetService
+    GroupService, GroupGetService, last_urls
 
 
 @login_required
@@ -42,7 +44,7 @@ def add_employee(request):
     communication_form = CommunicationForm()
     employee_form = EmployeeForm()
 
-    groups=Group.objects.exclude(name='Admin')
+    groups = Group.objects.exclude(name='Admin')
 
     categorItemfilter = {
         'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
@@ -78,11 +80,11 @@ def add_employee(request):
                     )
                     personel.save()
                     if request.POST.get('group'):
-                        group_filter={
-                            'pk':request.POST.get('group')
+                        group_filter = {
+                            'pk': request.POST.get('group')
                         }
-                        if GroupService(request,group_filter):
-                            group=GroupGetService(request,group_filter)
+                        if GroupService(request, group_filter):
+                            group = GroupGetService(request, group_filter)
                             personel.user.groups.add(group)
                             personel.save()
 
@@ -108,7 +110,7 @@ def add_employee(request):
 
             return render(request, 'personel/personel-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                           'employee_form': employee_form, 'error_messages': '','groups':groups
+                           'employee_form': employee_form, 'error_messages': '', 'groups': groups
                            })
     except Exception as e:
         traceback.print_exc()
@@ -124,8 +126,10 @@ def edit_employee(request, pk):
         logout(request)
         return redirect('accounts:login')
 
-
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         employefilter = {
             'uuid': pk
         }
@@ -175,12 +179,14 @@ def edit_employee(request, pk):
                     return render(request, 'personel/personel-duzenle.html',
                                   {'user_form': user_form, 'communication_form': communication_form,
                                    'person_form': person_form, 'employee_form': employee_form,
-                                   'error_messages': error_messages,
+                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name
                                    })
 
             return render(request, 'personel/personel-duzenle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
                            'person_form': person_form, 'employee_form': employee_form, 'error_messages': '',
+                           'urls': urls, 'current_url': current_url, 'url_name': url_name
                            })
 
     except Exception as e:
@@ -224,8 +230,13 @@ def return_employees(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
+
     try:
-        return render(request, 'personel/personeller.html')
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        return render(request, 'personel/personeller.html',
+                      {'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -293,7 +304,7 @@ def delete_workdefinition(request, pk):
                 log = str(obj.name) + " unvani sildi"
                 log = general_methods.logwrite(request, request.user, log)
 
-                obj.isDeleted=True
+                obj.isDeleted = True
                 obj.save()
 
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})

@@ -8,12 +8,16 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import resolve
+
 from ekabis.Forms.UserForm import UserForm
 from ekabis.Forms.UserSearchForm import UserSearchForm
 from accounts.models import Forgot
+from ekabis.models import Permission
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import UserService, GroupService, UserGetService, GroupGetService, GroupExcludeService
+from ekabis.services.services import UserService, GroupService, UserGetService, GroupGetService, GroupExcludeService, \
+    last_urls
 
 from django.contrib.auth.models import User, Group
 from ekabis.models.HistoryGroup import HistoryGroup
@@ -29,13 +33,18 @@ def return_users(request):
     users = User.objects.none()
     user_form = UserSearchForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
-            filter={
-                'is_active':True,
+            filter = {
+                'is_active': True,
             }
-            users=UserService(request,filter)
+            users = UserService(request, filter)
 
-            return render(request, 'kullanici/kullanicilar.html', {'users': users, 'user_form': user_form})
+            return render(request, 'kullanici/kullanicilar.html',
+                          {'users': users, 'user_form': user_form, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -67,7 +76,7 @@ def update_user(request, pk):
                                   {'user_form': user_form, 'error_messages': error_messages, })
 
         return render(request, 'kullanici/kullanici-duzenle.html',
-                      {'user_form': user_form, 'error_messages': '' })
+                      {'user_form': user_form, 'error_messages': ''})
 
     except Exception as e:
         traceback.print_exc()
@@ -152,6 +161,7 @@ def send_information(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
+
 @login_required
 def change_group_function(request, pk):
     perm = general_methods.control_access(request)
@@ -164,7 +174,9 @@ def change_group_function(request, pk):
     }
     user = UserGetService(request, userfilter)
     user_group = Group.objects.filter(user=user)
-
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
     if request.POST:
         list = request.POST.getlist('test')
         # eklenme durumu -
@@ -200,13 +212,13 @@ def change_group_function(request, pk):
                     is_active=False
                 )
                 history.save()
-    userfilter={
-        'user':user
+    userfilter = {
+        'user': user
     }
-    user_group = GroupService(request,userfilter)
-    user_none_group = GroupExcludeService(request,userfilter)
+    user_group = GroupService(request, userfilter)
+    user_none_group = GroupExcludeService(request, userfilter)
 
     return render(request, 'kullanici/kullniciGrupEkle.html',
                   {"user_none_group": user_none_group,
                    "user_group": user_group,
-                   'user': user})
+                   'user': user, 'urls': urls, 'current_url': current_url, 'url_name': url_name})

@@ -83,9 +83,9 @@
                    <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         {% for url in urls %}
-                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name}}</a>
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
                             </li>
-                            <li class="breadcrumb-item active">{{ current_url.url_name }}</li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
                         {% endfor %}
                     </ol>
                 </div>

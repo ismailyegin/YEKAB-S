@@ -14,7 +14,7 @@ from ekabis.Forms.CompanyForm import CompanyForm
 from ekabis.Forms.CompanyFormDinamik import CompanyFormDinamik
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
-from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Employee
+from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Employee, Permission
 from ekabis.models.CompanyFileNames import CompanyFileNames
 from ekabis.models.CompanyFiles import CompanyFiles
 from ekabis.models.CompanyUser import CompanyUser
@@ -141,7 +141,8 @@ def delete_company(request):
 def return_list_Company(request):
     urls = last_urls(request)
     current_url = resolve(request.path_info)
-    return render(request, 'Company/Companys.html', {'urls': urls, 'current_url': current_url, })
+    url_name = Permission.objects.get(codename=current_url.url_name)
+    return render(request, 'Company/Companys.html', {'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
@@ -157,6 +158,7 @@ def return_update_Company(request, uuid):
     }
     urls = last_urls(request)
     current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
 
     try:
         company = CompanyGetService(request, companyfilter)
@@ -203,7 +205,7 @@ def return_update_Company(request, uuid):
                        'company': company, 'error_messages': '',
                        'person_form': person_form,
                        'user_form': user_form, 'urls': urls, 'current_url': current_url,
-                       'companyDocumentName': companyDocumentName
+                       'companyDocumentName': companyDocumentName, 'url_name': url_name
 
                        })
 
@@ -377,11 +379,21 @@ def add_consortium(request):
 
 @login_required
 def view_consortium(request):
-    company = {
-        'is_consortium': 'True'
-    }
-    consortium = CompanyService(request, company)
-    return render(request, 'Company/ConsortiumList.html', {'companies': consortium})
+    try:
+        company = {
+            'is_consortium': 'True'
+        }
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        consortium = CompanyService(request, company)
+
+        return render(request, 'Company/ConsortiumList.html',
+                      {'companies': consortium, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
 
 @login_required
@@ -398,6 +410,9 @@ def return_update_consortium(request, uuid):
     }
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         company = CompanyGetService(request, companyfilter)
         filter = {
             'isDeleted': False,
@@ -450,7 +465,8 @@ def return_update_consortium(request, uuid):
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
                                    'companyDocumentName': companyDocumentName, 'companies': companies,
-                                   'consortium': consortium, 'employess': employess,
+                                   'consortium': consortium, 'employess': employess, 'urls': urls,
+                                   'current_url': current_url, 'url_name': url_name
                                    })
 
         return render(request, 'Company/UpdateConsortium.html',
@@ -458,7 +474,8 @@ def return_update_consortium(request, uuid):
                        'communication_form': communication_form,
                        'company': company, 'error_messages': '',
                        'companies': companies, 'employess': employess,
-                       'companyDocumentName': companyDocumentName, 'consortium': consortium,
+                       'companyDocumentName': companyDocumentName, 'consortium': consortium, 'urls': urls,
+                       'current_url': current_url, 'url_name': url_name
 
                        })
 
