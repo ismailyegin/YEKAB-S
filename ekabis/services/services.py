@@ -5,14 +5,14 @@ from django.db import transaction
 from django.db.models import Q
 from django.urls import resolve
 
-from ekabis.models import ConnectionRegion, ConnectionCapacity, Yeka, YekaPersonHistory, YekaCompany, \
-    YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType
+from ekabis.models import ConnectionRegion, Yeka, YekaPersonHistory, YekaCompany, \
+    YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType, YekaCompetition
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
 from ekabis.models.Communication import Communication
 from ekabis.models.Company import Company
-from ekabis.models.ConnectionUnit import ConnectionUnit
+from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMember import DirectoryMember
 from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
@@ -24,34 +24,42 @@ from ekabis.models.Permission import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.models.Person import Person
 from ekabis.models.Settings import Settings
-from ekabis.models import YekaConnectionRegion, YekaPersonHistory, YekaPerson, YekaBusiness, YekaBusinessBlog, \
-    YekaBusinessBlogParemetre, SubYekaCapacity, ConnectionRegion, ConnectionCapacity, ConnectionUnit, CompanyUser, \
-    CompanyFiles, CompanyFileNames, CalendarName, Calendar
-from ekabis.models.VacationDay import VacationDay
+from ekabis.models import YekaConnectionRegion,YekaPersonHistory,YekaPerson,YekaBusiness,YekaBusinessBlog,YekaBusinessBlogParemetre,ConnectionRegion,ConnectionUnit,CompanyUser,CompanyFiles,CompanyFileNames,CalendarName,Calendar
+from ekabis.models.ExtraTimeFile import ExtraTimeFile
 
-
+def CityService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                return City.objects.filter(**filter)
+            else:
+                return City.objects.filter(filter,isDeleted=False)
+        else:
+            return City.objects.filter(isDeleted=False)
+    except City.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
 def YekaCompanyService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
                 return YekaCompany.objects.filter(**filter)
             else:
-                return YekaCompany.objects.filter(filter, isDeleted=False)
+                return YekaCompany.objects.filter(filter,isDeleted=False)
         else:
             return YekaCompany.objects.filter(isDeleted=False)
     except YekaCompany.DoesNotExist:
         return None
     except Exception as e:
         traceback.print_exc()
-
-
 def YekaPersonService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
                 return YekaPerson.objects.filter(**filter)
             else:
-                return YekaPerson.objects.filter(filter, isDeleted=False)
+                return YekaPerson.objects.filter(filter,isDeleted=False)
         else:
             return YekaPerson.objects.filter(isDeleted=False)
     except YekaPerson.DoesNotExist:
@@ -59,21 +67,19 @@ def YekaPersonService(request, filter):
     except Exception as e:
         traceback.print_exc()
 
-
-def SubYekaCapacityService(request, filter):
+def YekaCompetitionServiceService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
-                return SubYekaCapacity.objects.filter(**filter)
+                return YekaCompetition.objects.filter(**filter)
             else:
-                return SubYekaCapacity.objects.filter(filter, isDeleted=False)
+                return YekaCompetition.objects.filter(filter,isDeleted=False)
         else:
-            return SubYekaCapacity.objects.filter(isDeleted=False)
-    except SubYekaCapacity.DoesNotExist:
+            return YekaCompetition.objects.filter(isDeleted=False)
+    except YekaCompetition.DoesNotExist:
         return None
     except Exception as e:
         traceback.print_exc()
-
 
 def YekaConnectionRegionService(request, filter):
     try:
@@ -81,22 +87,20 @@ def YekaConnectionRegionService(request, filter):
             if type(filter) != type(Q()):
                 return YekaConnectionRegion.objects.filter(**filter)
             else:
-                return YekaConnectionRegion.objects.filter(filter, isDeleted=False)
+                return YekaConnectionRegion.objects.filter(filter,isDeleted=False)
         else:
             return YekaConnectionRegion.objects.filter(isDeleted=False)
     except YekaConnectionRegion.DoesNotExist:
         return None
     except Exception as e:
         traceback.print_exc()
-
-
 def ConnectionRegionService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
                 return ConnectionRegion.objects.filter(**filter)
             else:
-                return ConnectionRegion.objects.filter(filter, isDeleted=False)
+                return ConnectionRegion.objects.filter(filter,isDeleted=False)
         else:
             return ConnectionRegion.objects.filter(isDeleted=False)
     except ConnectionRegion.DoesNotExist:
@@ -111,7 +115,7 @@ def ExtraTimeService(request, filter):
             if type(filter) != type(Q()):
                 return ExtraTime.objects.filter(**filter)
             else:
-                return ExtraTime.objects.filter(filter, isDeleted=False)
+                return ExtraTime.objects.filter(filter,isDeleted=False)
         else:
             return ExtraTime.objects.filter(isDeleted=False)
     except ExtraTime.DoesNotExist:
@@ -126,7 +130,7 @@ def CalendarNameService(request, filter):
             if type(filter) != type(Q()):
                 return CalendarName.objects.filter(**filter)
             else:
-                return CalendarName.objects.filter(filter, isDeleted=False)
+                return CalendarName.objects.filter(filter,isDeleted=False)
         else:
             return CalendarName.objects.filter(isDeleted=False)
     except CalendarName.DoesNotExist:
@@ -227,7 +231,7 @@ def DirectoryMemberService(request, filter):
             if type(filter) != type(Q()):
                 return DirectoryMember.objects.filter(**filter)
             else:
-                return DirectoryMember.objects.filter(filter, isDeleted=False)
+                return DirectoryMember.objects.filter(filter,isDeleted=False)
         else:
             return DirectoryMember.objects.filter(isDeleted=False)
     except Exception as e:
@@ -270,7 +274,7 @@ def EmployeeService(request, filter):
             if type(filter) != type(Q()):
                 return Employee.objects.filter(**filter)
             else:
-                Employee.objects.filter(filter, isDeleted=False)
+                Employee.objects.filter(filter,isDeleted=False)
         else:
             return Employee.objects.filter(isDeleted=False)
     except Exception as e:
@@ -286,7 +290,7 @@ def LogsService(request, filter):
             if type(filter) != type(Q()):
                 return Logs.objects.filter(**filter)
             else:
-                return Logs.objects.filter(filter, isDeleted=False)
+                return Logs.objects.filter(filter,isDeleted=False)
         else:
             return Logs.objects.filter(isDeleted=False)
     except Exception as e:
@@ -335,6 +339,19 @@ def ActiveGroupService(request, filter):
         pass
 
 
+
+def YekaCompetitionPersonService(request, filter):
+    try:
+        if filter:
+            return YekaCompetitionPerson.objects.filter(**filter)
+        else:
+            return YekaCompetitionPerson.objects.filter(isDeleted=False)
+    except Exception as e:
+        traceback.print_exc()
+
+        print(e)
+        pass
+
 def PermissionService(request, filter):
     try:
         if filter:
@@ -347,7 +364,6 @@ def PermissionService(request, filter):
         print(e)
         pass
 
-
 def CompanyFileNamesService(request, filter):
     try:
         with transaction.atomic():
@@ -358,15 +374,13 @@ def CompanyFileNamesService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-
-
 def ClaimService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
                 return Claim.objects.filter(**filter)
             else:
-                return Claim.objects.filter(filter, isDeleted=False)
+                return Claim.objects.filter(filter,isDeleted=False)
         else:
             return Claim.objects.filter(isDeleted=False)
     except Exception as e:
@@ -382,7 +396,7 @@ def PermissionGroupService(request, filter):
             if type(filter) != type(Q()):
                 return PermissionGroup.objects.filter(**filter)
             else:
-                return PermissionGroup.objects.filter(filter, isDeleted=False)
+                return PermissionGroup.objects.filter(filter,isDeleted=False)
         else:
             return PermissionGroup.objects.filter(isDeleted=False)
     except Exception as e:
@@ -427,19 +441,17 @@ def RegionService(request, filter):
         print(e)
         pass
 
-
-def ConnectionCapacityService(request, filter):
+def ExtraTimeFileService(request, filter):
     try:
         with transaction.atomic():
             if filter:
-                return ConnectionCapacity.objects.filter(**filter)
+                return ExtraTimeFile.objects.filter(**filter)
             else:
-                return ConnectionCapacity.objects.filter(isDeleted=False)
+                return ExtraTimeFile.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         print(e)
         pass
-
 
 def YekaService(request, filter):
     try:
@@ -451,7 +463,6 @@ def YekaService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-
 
 # get servisler
 def YekaGetService(request, filter):
@@ -488,8 +499,6 @@ def YekaPersonGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-
-
 def YekaConnectionRegionGetService(request, filter):
     try:
         with transaction.atomic():
@@ -502,6 +511,7 @@ def YekaConnectionRegionGetService(request, filter):
         pass
 
 
+
 def YekaCompanyGetService(request, filter):
     try:
         with transaction.atomic():
@@ -512,8 +522,6 @@ def YekaCompanyGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-
-
 def YekaCompanyHistoryGetService(request, filter):
     try:
         with transaction.atomic():
@@ -524,8 +532,6 @@ def YekaCompanyHistoryGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-
-
 def YekaBusinessGetService(request, filter):
     try:
         with transaction.atomic():
@@ -536,8 +542,6 @@ def YekaBusinessGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-
-
 def YekaBusinessBlogGetService(request, filter):
     try:
         with transaction.atomic():
@@ -548,8 +552,6 @@ def YekaBusinessBlogGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
-
-
 def YekaBusinessBlogParemetreGetService(request, filter):
     try:
         with transaction.atomic():
@@ -562,16 +564,6 @@ def YekaBusinessBlogParemetreGetService(request, filter):
         pass
 
 
-def SubYekaCapacityGetService(request, filter):
-    try:
-        with transaction.atomic():
-            if filter:
-                return SubYekaCapacity.objects.get(**filter)
-            else:
-                return None
-    except Exception as e:
-        traceback.print_exc()
-        pass
 
 
 def SettingsGetService(request, filter):
@@ -598,7 +590,7 @@ def PersonGetService(request, filter):
         pass
 
 
-def PermissionGetService(request, filter, isDeleted=False):
+def PermissionGetService(request, filter,isDeleted=False):
     try:
         with transaction.atomic():
             if filter:
@@ -680,6 +672,17 @@ def HistoryGroupGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+def ExtraTimeFileGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return ExtraTimeFile.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
 
 
 def ExtraTimeGetService(request, filter):
@@ -766,17 +769,6 @@ def ConnectionRegionGetService(request, filter):
         pass
 
 
-def ConnectionCapacityGetService(request, filter):
-    try:
-        with transaction.atomic():
-            if filter:
-                return ConnectionCapacity.objects.get(**filter)
-            else:
-                return None
-    except Exception as e:
-        traceback.print_exc()
-        pass
-
 
 def CompanyUserGetService(request, filter):
     try:
@@ -836,7 +828,31 @@ def CommunicationGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+def YekaCompetitionPersonGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaCompetitionPerson.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
 
+def YekaCompetitionGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                return YekaCompetition.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+from ekabis.models import YekaConnectionRegion, YekaPersonHistory, YekaPerson, YekaBusiness, YekaBusinessBlog, \
+    YekaBusinessBlogParemetre, SubYekaCapacity, ConnectionRegion, ConnectionCapacity, ConnectionUnit, CompanyUser, \
+    CompanyFiles, CompanyFileNames, CalendarName, Calendar
+from ekabis.models.VacationDay import VacationDay
 
 def ClaimGetService(request, filter):
     try:
@@ -956,6 +972,9 @@ def GroupGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+
+
+
 
 
 def GroupExcludeService(request, filter):

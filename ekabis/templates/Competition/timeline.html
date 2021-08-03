@@ -1,0 +1,392 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body errorModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Bölgeyi Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container"  class="toasts-top-right" >
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Yeka Yarışması İş Planı</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+
+
+                        {% for item in perm %}
+                            {% if item == 'add_yekabusiness' %}
+
+
+                                {% if not yekabusinessbloks %}
+
+
+
+                                    <li class="breadcrumb-item">
+
+                                        <a class="btn btn-success"
+                                           href="{% url 'ekabis:add_yekacompetitionbusiness'  competition.uuid %}">Yeka Yarışması  iş Blogunu
+                                            Ekle</a>
+                                    </li>
+                                {% endif %}
+
+                            {% endif %}
+                            {% if item == 'change_yekabusiness' %}
+                                {% if  yekabusinessbloks %}
+                                    <li class="breadcrumb-item">
+                                        <a class="btn btn-outline-primary btn-sm"
+                                           href="{% url 'ekabis:change_yekacompetitionbusiness'  competition.business.uuid  competition.uuid %}">
+                                            Yeka Yarışması İş Planı Güncelle</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <!-- Timelime example  -->
+            <div class="card card-primary card-outline">
+                <div class="card-header with-border">
+                    <h3 class="card-title">{{ competition.definition }}</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- The time line -->
+
+
+                            <div class="timeline">
+
+
+                                {% for yekabusinessblok in yekabusinessbloks %}
+                                    <div class="time-label">
+                                        <span class="bg-green">{{ yekabusinessblok.startDate |date }}</span>
+                                    </div>
+
+                                    <div>
+                                        <i class="fas fa-user bg-blue"></i>
+                                        <div class="timeline-item">
+                                            <span class="time dropdown-toggle" data-toggle="dropdown">İşlemler</span>
+                                            <div class="dropdown-menu" role="menu" style="">
+                                                <a class="dropdown-item"
+                                                                                                   href="{% url 'ekabis:change_yekacompetitionbusinessBlog' competition.uuid  yekabusinessblok.uuid  yekabusinessblok.businessblog.uuid %}">İncele</a>
+                                                                                                <div class="dropdown-divider"></div>
+
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
+                                                   href="{% url 'ekabis:add_extratime' competition.business.uuid  yekabusinessblok.uuid %}">Ek
+                                                    Süre Ekle</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Log Listesi</a>
+                                            </div>
+                                            <h3 class="timeline-header"><a
+                                                    href="#">{{ yekabusinessblok.businessblog.name }}</a>
+                                            </h3>
+                                            <div class="timeline-body">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Başlama Tarihi</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{{ yekabusinessblok.startDate |date }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Bitiş Tarihi</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{{ yekabusinessblok.finisDate | date }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+                                                {% if not  yekabusinessblok.indefinite  %}
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Süresi</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{{ yekabusinessblok.businessTime }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+{% endif %}
+
+                                                 <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Süre Durumu:</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{% if yekabusinessblok.indefinite  %}Süresiz {% else %}  Süreli {% endif %}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    {% if ekstratimes %}
+                                                        {% for ekstratime in ekstratimes %}
+
+                                                            {% if ekstratime.yekabusinessblog == yekabusinessblok %}
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label>Ek Süre {{ forloop.counter }}</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="{{ ekstratime.time }} "
+                                                                               disabled="">
+                                                                    </div>
+                                                                </div>
+
+
+
+
+                                                            {% endif %}
+
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Durumu</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{{ yekabusinessblok.status }}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+
+                                                    {% for item in yekabusinessblok.paremetre.all %}
+                                                        {% if item.company %}
+                                                            <div class="col-sm-6">
+                                                            {% if item.file %}
+                                                                <label>{{ item.parametre.title }} ({{ item.company.name }})</label>
+                                                                <a href="/media/{{ item.file }}" target="_blank"> <input
+                                                                        type="text" class="form-control"
+                                                                        placeholder="{{ item.file }}"
+                                                                        disabled=""></a>
+
+                                                            {% else %}
+
+                                                                <div class="form-group">
+                                                                    <label>{{ item.parametre.title }} ({{ item.company.name }})</label>
+                                                                    <input type="text" class="form-control"
+                                                                           placeholder="{{ item.value }}"
+                                                                           disabled="">
+                                                                </div>
+
+                                                            {% endif %}
+                                                            </div>
+
+                                                        {% else %}
+
+                                                            <div class="col-sm-6">
+                                                            {% if item.file %}
+                                                                <label>{{ item.parametre.title }}</label>
+                                                                <a href="/media/{{ item.file }}" target="_blank"> <input
+                                                                        type="text" class="form-control"
+                                                                        placeholder="{{ item.file }}"
+                                                                        disabled=""></a>
+
+                                                            {% else %}
+
+                                                                <div class="form-group">
+                                                                    <label>{{ item.parametre.title }}</label>
+                                                                    <input type="text" class="form-control"
+                                                                           placeholder="{{ item.value }}"
+                                                                           disabled="">
+
+                                                                </div>
+
+                                                            {% endif %}
+                                                        </div>
+
+
+
+
+                                                        {% endif %}
+
+
+                                                    {% endfor %}
+
+                                                </div>
+
+                                            </div>
+                                        {% if yekabusinessblok.companys.all %}
+                                            <div class="timeline-footer">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <h3 class="card-title">Firma Bilgileri</h3>
+
+                                                            </div>
+                                                            <!-- /.card-header -->
+                                                            <div class="card-body table-responsive p-0">
+                                                            <table class="table table-head-fixed text-nowrap">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Firma</th>
+
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    {% for company in yekabusinessblok.companys.all %}
+                                                                        <tr>
+                                                                            <td>{{ forloop.counter }}</td>
+                                                                            <td>{{ company.name }}</td>
+                                                                        </tr>
+                                                                    {% endfor %}
+
+
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <!-- /.card-body -->
+                                                    </div>
+                                                    <!-- /.card -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    </div>
+                                    <div class="time-label">
+                                        <span class="bg-red">{{ yekabusinessblok.finisDate | date }}</span>
+                                    </div>
+
+                                {% endfor %}
+
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.timeline -->
+        </div>
+    </section>
+
+
+
+{% endblock %}
+

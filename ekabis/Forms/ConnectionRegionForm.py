@@ -1,18 +1,23 @@
 from django import forms
-
-from ekabis.models import ConnectionRegion
-
-
+from ekabis.models import ConnectionRegion, City
 class ConnectionRegionForm(forms.ModelForm):
+    cities = forms.ModelMultipleChoiceField(queryset=None)
     class Meta:
         model = ConnectionRegion
-        fields = ('name', 'value', 'unit')
+        fields = ('name', 'capacity',)
 
         labels = {'name': 'Bağlantı Bölgesi '}
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
-            'value': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
-            'unit': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                          'style': 'width: 100%; ', 'required': 'required'}),
+            'capacity': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
+
 
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cities'].queryset = City.objects.filter(isDeleted=False)
+        self.fields['cities'].label = 'Şehirler'
+        self.fields['cities'].widget.attrs = {'class': 'select2 select2-hidden-accessible',
+                                                        'style': 'width: 100%;', 'data-select2-id': '7',
+                                                        'data-placeholder': 'Bağlanti Bölgesi Seçiniz', }

@@ -1,6 +1,7 @@
 {% extends 'base_layout.html' %}
 
 {% block content %}
+    {% load static %}
 
     <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
         <div class="modal-dialog">
@@ -24,6 +25,7 @@
         <!-- /.modal-dialog -->
     </div>
 
+
     <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
@@ -46,6 +48,7 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+
 
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
@@ -106,27 +109,26 @@
 
 
     {% endif %}
+
+
     <section class="content-header">
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        YEKA Listesi</h1>
+                        Yeka Yarışması Ekle</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">YEKA</a></li>
-                        {#<li class="breadcrumb-item active">Advanced Form</li>#}
+                        <li class="breadcrumb-item"><a href="#">Yeka Yarışması Ekle({{ region.name }}</a></li>
+
                     </ol>
                 </div>
             </div>
         </div>
 
     </section>
-
-
-
 
     <section class="content">
 
@@ -139,7 +141,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA LİSTESİ</h3>
+                            <h3 class="card-title">Yeka Yarışması</h3>
                         </div>
 
                         <div class="card-body">
@@ -148,34 +150,37 @@
                                     {% csrf_token %}
 
                                     <div class="form-group">
-                                        <label> {{ yeka_form.definition.label }}</label><small
+                                        <label> {{ competition_form.name.label }}</label><small
                                             style="color: red">*</small>
-                                        {{ yeka_form.definition }}
-                                        <label id="label_definition"></label>
+                                        {{ competition_form.name }}
+                                        <label id="label_name"></label>
 
                                     </div>
                                     <div class="form-group">
-                                        <label> {{ yeka_form.date.label }}</label><small
-                                            style="color: red">*</small>
-                                        {{ yeka_form.date }}
-                                        <label id="label_date"></label>
+                                        <div class="row">
+                                             <div class="col-md-6">
+                                                <label> {{ competition_form.date.label }}</label><small
+                                                    style="color: red">*</small>
+                                                {{ competition_form.date }}
+                                                <label id="label_date"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label> {{ competition_form.capacity.label }}</label><small
+                                                    style="color: red">*</small>
+                                                {{ competition_form.capacity }}
+                                                <label id="label_value"></label>
+                                            </div>
+                                        </div>
 
                                     </div>
-                                    <div class="form-group">
-                                        <label> {{ yeka_form.capacity.label }} </label><small
-                                            style="color: red">*</small>
-                                        {{ yeka_form.capacity }}
-                                        <label id="label_capacity"></label>
-
-                                    </div>
-
 
                                 </div>
                                 <!-- /.card-body -->
 
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
-                                    <small style="color: red">(*) Olan Alanlar Zorunludur.</small>
+                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet</button>
+                                    <small style="color: red">(*) Olan Alanlar zorunludur.</small>
+
                                 </div>
                             </form>
                         </div>
@@ -190,86 +195,59 @@
         </div>
 
     </section>
-    {% load static %}
+
     <script>
         $(function () {
-            {% if error_messages  %}
+
+              {% if error_messages  %}
                 errors_messages({{ error_messages |safe }})
             {% endif %}
-            //Initialize Select2 Elements
-            $('.select2').select2()
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-            $('#yeka').DataTable({
-                dom: 'Bfrtip',
 
+            $('#region').DataTable({
+                dom: 'Bfrtip',
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                buttons: [
 
-                    {#'copy',#}
-                    {#'csv',#}
+                'buttons': [
+
 
                     {
                         extend: "pageLength",
+
                     },
 
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
+
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'Bağlantı Bölgeleri',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Firmalar',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Firmalar.json'
-                            );
-                        }
-                    }
 
 
                 ],
@@ -286,10 +264,14 @@
                 'language': {
                     "url": "{% static 'datatable_tr.json' %}"
                 }
+
             })
+
         })
 
 
+
     </script>
+
 {% endblock %}
 

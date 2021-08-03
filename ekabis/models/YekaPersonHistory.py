@@ -6,9 +6,7 @@ from ekabis.models.Employee import Employee
 from ekabis.models.Yeka import Yeka
 
 from django.db import models
-
 from ekabis.models import Yeka, Employee
-
 from ekabis.models.BaseModel import BaseModel
 
 

@@ -3,9 +3,6 @@
 {% block content %}
 
 
-
-
-
     <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
@@ -139,22 +136,22 @@
 
                                     </div>
                                     <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label> {{ region_form.value.label }}</label>
-                                                {{ region_form.value }}
+
+                                            <div class="col-md-12">
+                                                <label> {{ region_form.capacity.label }}</label>
+                                                {{ region_form.capacity }}
                                                 <label id="label_value"></label>
                                             </div>
 
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label> {{ region_form.unit.label }}</label>
-                                                    {{ region_form.unit }}
-                                                    <label id="label_unit"></label>
-                                                </div>
+                                         <div class="col-md-6">
+                                                <label> {{ region_form.cities.label }}</label><small
+                                                    style="color: red">*</small>
+                                                {{ region_form.cities }}
+                                                <label id="label_cities"></label>
                                             </div>
-                                        </div>
+
+
+
 
                                     </div>
 

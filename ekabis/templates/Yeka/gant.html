@@ -4,9 +4,7 @@
     {% load static %}
 
       <style type="text/css">
-    body, input {
-      font: 12pt verdana;
-    }
+
 
     /* custom styles for individual items, load this after vis-timeline-graph2d.min.css/vis-timeline-graph2d.min.css */
 
@@ -88,6 +86,8 @@
         // Create a DataSet (allows two way data-binding)
         var items = new vis.DataSet([
             {% for yekabusinessblok in yekabusinessbloks %}
+
+                {%  if not  yekabusinessblok.indefinite %}
                 {
                     id: "{{ yekabusinessblok.uuid}}",
                     content: "{{ yekabusinessblok.businessblog.name }}",
@@ -95,6 +95,16 @@
                     end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
                     url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
                 },
+                {% else %}
+                {
+                    id: "{{ yekabusinessblok.uuid}}",
+                    content: "{{ yekabusinessblok.businessblog.name }}",
+                    start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
+                    className: 'green',
+                },
+                {% endif %}
+
 
             {% endfor %}
             {% for extra in ekstratimes %}

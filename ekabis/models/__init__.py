@@ -19,7 +19,7 @@ from .PermissionGroup import PermissionGroup
 from .Permission import Permission
 from .ConnectionUnit import ConnectionUnit
 from .ConnectionRegion import ConnectionRegion
-from .ConnectionCapacity import ConnectionCapacity
+from .YekaCompetition import YekaCompetition
 from .Yeka import Yeka
 from .YekaPerson import YekaPerson
 from .YekaConnectionRegion import YekaConnectionRegion
@@ -39,5 +39,4 @@ from .BusinessBlogParametreType import BusinessBlogParametreType
 from .Calendar import Calendar
 from .CalendarName import CalendarName
 from .ExtraTime import ExtraTime
-from .SubYekaCapacity import SubYekaCapacity
 from .ConsortiumCompany import ConsortiumCompany

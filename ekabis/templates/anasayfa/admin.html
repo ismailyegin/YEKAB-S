@@ -95,9 +95,7 @@
     </script>
 
     <style type="text/css">
-        body, input {
-            font: 12pt verdana;
-        }
+
 
         /* custom styles for individual items, load this after vis-timeline-graph2d.min.css/vis-timeline-graph2d.min.css */
 
@@ -886,7 +884,7 @@
                 <div class="col-lg-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h4 class="card-title">Gand</h4>
+                            <h4 class="card-title">İş Planı Listesi</h4>
                         </div>
                         <div class="card-body">
                             <div id="visualization"></div>
@@ -1213,6 +1211,12 @@
 
 
     <script type="text/javascript">
+
+
+
+
+
+
         function degerAta(count, city) {
 
 
@@ -1261,14 +1265,28 @@
         var items = new vis.DataSet([
             {% for item in yeka %}
                 {% for yekabusinessblok in item.business.businessblogs.all %}
-                    {
-                        id: "{{ yekabusinessblok.uuid}}",
-                        content: "{{ yekabusinessblok.businessblog.name }}",
-                        start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
-                        end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
-                        {#url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",#}
-                        group: {{ item.pk }}
-                    },
+
+
+                    {%  if not  yekabusinessblok.indefinite %}
+                        {
+                            id: "{{ yekabusinessblok.uuid}}",
+                            content: "{{ yekabusinessblok.businessblog.name }}",
+                            start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                            end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
+                            url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
+                            group: {{ item.pk }},
+
+                        },
+                    {% else %}
+                        {
+                            id: "{{ yekabusinessblok.uuid}}",
+                            content: "{{ yekabusinessblok.businessblog.name }}",
+                            start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                            url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
+                            group: {{ item.pk }},
+                            className: 'green',
+                        },
+                    {% endif %}
 
                 {% endfor %}
             {% endfor %}
@@ -1317,6 +1335,9 @@
             {% endfor %}
 
         });
+
+            var page = require('visualization').create();
+    page.render('example.png');
 
 
     </script>

@@ -10,6 +10,7 @@
                     <h4 class="modal-title">İşlem Başarılı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
+
                 </div>
                 <div class="modal-body errorModal">
                     ...
@@ -23,6 +24,8 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+
+
     <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
@@ -114,21 +117,18 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Bağlantı Bölge Listesi</h1>
+                        Yeka Yarışması Ekle</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Bölge Listesi</a></li>
-                        {#<li class="breadcrumb-item active">Advanced Form</li>#}
+                        <li class="breadcrumb-item"><a href="#">Yeka Yarışması Ekle({{ region.name }}</a></li>
+
                     </ol>
                 </div>
             </div>
         </div>
 
     </section>
-
-
-
 
     <section class="content">
 
@@ -141,7 +141,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Bağlantı Bölgesi</h3>
+                            <h3 class="card-title">Yeka Yarışması</h3>
                         </div>
 
                         <div class="card-body">
@@ -150,28 +150,26 @@
                                     {% csrf_token %}
 
                                     <div class="form-group">
-                                        <label> {{ region_form.name.label }}</label><small
+                                        <label> {{ competition_form.name.label }}</label><small
                                             style="color: red">*</small>
-                                        {{ region_form.name }}
+                                        {{ competition_form.name }}
                                         <label id="label_name"></label>
 
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label> {{ region_form.capacity.label }}</label><small
+                                                <label> {{ competition_form.date.label }}</label><small
                                                     style="color: red">*</small>
-                                                {{ region_form.capacity }}
-                                                <label id="label_value"></label>
+                                                {{ competition_form.date }}
+                                                <label id="label_date"></label>
                                             </div>
                                             <div class="col-md-6">
-                                                <label> {{ region_form.cities.label }}</label><small
+                                                <label> {{ competition_form.capacity.label }}</label><small
                                                     style="color: red">*</small>
-                                                {{ region_form.cities }}
-                                                <label id="label_cities"></label>
+                                                {{ competition_form.capacity }}
+                                                <label id="label_value"></label>
                                             </div>
-
-
                                         </div>
 
                                     </div>
@@ -187,29 +185,28 @@
                                 </div>
                             </form>
                         </div>
-                        {% if regions %}
+                        {% if competitions %}
                             <div class="card-body">
 
                                 <table id="region" class="table table-bordered table-hover">
                                     <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Bağlantı Bölgesi</th>
+                                        <th>Yarışma Tanımı</th>
                                         <th>Kapasite</th>
                                         <th>İşlemler</th>
-
 
                                     </tr>
                                     </thead>
 
                                     <tbody>
 
-                                    {% if regions.all %}
-                                        {% for region in regions %}
+                                    {% if competitions.all %}
+                                        {% for competition in competitions %}
                                             <tr>
                                                 <td>{{ forloop.counter }} </td>
-                                                <td>{{ region.name }}</td>
-                                                <td>{{ region.capacity }}</td>
+                                                <td>{{ competition.name }}</td>
+                                                <td>{{ competition.capacity }}</td>
                                                 <td>
 
                                                     <div class="btn-group">
@@ -221,16 +218,19 @@
                                                         <div class="dropdown-menu" role="menu">
 
 
-                                                            <a onclick="deleteRegion({{ region.uuid }})"
+                                                            <a onclick="deleteRegion({{ competition.uuid }})"
                                                                class="dropdown-item" title="Sil" type="button"><i
                                                                     class="fa fa-edit"></i>Sil</a>
-                                                            <a href="{% url "ekabis:update_region" region.uuid yeka.uuid %}"
-                                                               class="dropdown-item" title="Düzenle" type="button"><i
-                                                                    class="fa fa-edit"></i>Düzenle</a>
-                                                            <a href="{% url "ekabis:add_competition" region.uuid %}"
-                                                               class="dropdown-item" title="Yarışma Ekle" type="button"><i
-                                                                    class="fa fa-plus"></i> Yeka Yarışmaları</a>
 
+                                                            <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
+                                                               class="dropdown-item" title="İş Planı Ekle"
+                                                               type="button"><i class="fa fa-edit"></i>İş Planı</a>
+                                                            <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
+                                                               class="dropdown-item" title="Personel Ekle"
+                                                               type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
+                                                            <a href="{% url "ekabis:change_competition" region.uuid competition.uuid %}"
+                                                               class="dropdown-item" title="Düzenle " type="button"><i
+                                                                    class="fa fa-edit"></i>Düzenle </a>
 
                                                         </div>
                                                     </div>
@@ -357,7 +357,7 @@
                                 $('#modal-error').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
 
-                                        window.location.replace("{% url "ekabis:add_region" yeka.uuid %}");
+                                        window.location.replace("{% url "ekabis:add_competition" region.uuid %}");
 
                                     });
 
@@ -369,7 +369,7 @@
                                 $('#modal-success').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
 
-                                        window.location.replace("{% url "ekabis:add_region" yeka.uuid %}");
+                                        window.location.replace("{% url "ekabis:add_competition" region.uuid %}");
 
                                     });
 

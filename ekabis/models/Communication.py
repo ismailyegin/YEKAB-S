@@ -6,7 +6,7 @@ from ekabis.models.BaseModel import BaseModel
 
 class Communication(BaseModel):
     postalCode = models.CharField(max_length=120, null=True, blank=True)
-    phoneNumber = models.CharField(max_length=11, null=False, blank=False, default='56546564654')
+    phoneNumber = models.CharField(max_length=11, null=False, blank=False)
     phoneNumber2 = models.CharField(max_length=11, null=True, blank=True)
     phoneHome = models.CharField(max_length=120, null=True, blank=True)
     phoneJop = models.CharField(max_length=120, null=True, blank=True)
@@ -20,7 +20,4 @@ class Communication(BaseModel):
     town = models.CharField(max_length=120, null=True, blank=True)
     neighborhood = models.CharField(max_length=120, null=True, blank=True)
 
-    # class Meta:
-    #     default_permissions = ()
-    #     db_table = 'communication'
-    #     managed = False
+

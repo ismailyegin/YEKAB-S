@@ -1,19 +1,22 @@
 import traceback
+
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from ekabis.Forms.ConnectionCapacityForm import ConnectionCapacityForm
+
 from ekabis.Forms.ConnectionRegionForm import ConnectionRegionForm
 from ekabis.Forms.ConnectionUnitForm import ConnectionUnitForm
-from ekabis.models import ConnectionRegion, ConnectionCapacity, City
+from ekabis.models import YekaCompetition
+from ekabis.models.ConnectionRegion import ConnectionRegion
 from ekabis.models.ConnectionUnit import ConnectionUnit
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import UnitService, RegionService, ConnectionCapacityService, ConnectionUnitGetService, \
-    ConnectionRegionGetService, ConnectionCapacityGetService
+from ekabis.services.services import UnitService, ConnectionUnitGetService, \
+    ConnectionRegionGetService, YekaGetService, CityService, CityGetService
 
 
 @login_required
@@ -91,7 +94,6 @@ def delete_unit(request):
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
-
 @login_required
 def update_unit(request, uuid):
     perm = general_methods.control_access(request)
@@ -102,7 +104,6 @@ def update_unit(request, uuid):
     unitfilter = {
         'uuid': uuid
     }
-
     unit = ConnectionUnitGetService(request, unitfilter)
     unit_form = ConnectionUnitForm(request.POST or None, instance=unit)
     try:
@@ -127,7 +128,7 @@ def update_unit(request, uuid):
 
 
 @login_required
-def return_connectionRegion(request):
+def add_connectionRegion(request,uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -135,43 +136,74 @@ def return_connectionRegion(request):
         return redirect('accounts:login')
     region_form = ConnectionRegionForm()
 
+
     try:
+
+        yeka_filter={
+            'uuid' :uuid,
+            'isDeleted' : False,
+        }
+        yeka=YekaGetService(request,yeka_filter)
         with transaction.atomic():
+
             if request.method == 'POST':
 
                 region_form = ConnectionRegionForm(request.POST)
 
                 if region_form.is_valid():
 
-                    region = ConnectionRegion(name=region_form.cleaned_data['name'],
-                                              value=int(region_form.cleaned_data['value']),
-                                              unit=region_form.cleaned_data['unit'])
+
+
+                    region = region_form.save(commit=False)
+                    total = int(
+                        ConnectionRegion.objects.filter(yeka=yeka).distinct().aggregate(Sum('capacity'))[
+                            'capacity__sum'] or 0)
+                    total +=region.capacity
+
+                    if yeka.capacity<total:
+                        messages.warning(request, 'Bölgelerin Kapasite  toplamı Yekanın Kapasitesinden büyük olamaz')
+
+                        return render(request, 'ConnectionRegion/add_connectionRegion.html',
+                                      {'region_form': region_form, 'yeka': yeka,
+                                       })
+
                     region.save()
+                    yeka.connection_region.add(region)
+                    yeka.save()
+
+                    region_city = request.POST.getlist('cities')
+                    cities=[]
+                    for item in region_city:
+                        city_filter={
+                            'pk':item
+                        }
+                        region.cities.add(CityGetService(request, city_filter))
+                        region.save()
 
                     log = " Bölge eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Bölge Başarıyla Kayıt Edilmiştir.')
-                    return redirect('ekabis:view_region')
+                    return redirect('ekabis:add_region' ,region.uuid)
 
                 else:
                     error_message_region = get_error_messages(region_form)
-                    unitfilter = {
-                        'isDeleted': False
-                    }
-                    units = ConnectionRegion(request, unitfilter)
+
                     return render(request, 'ConnectionRegion/add_connectionRegion.html',
-                                  {'region_form': region_form, 'units': units, 'error_messages': error_message_region})
+                                  {'region_form': region_form, 'yeka':yeka, 'error_messages': error_message_region})
             regionfilter = {
                 'isDeleted': False
+
             }
-            regions = RegionService(request, regionfilter)
+            regions = yeka.connection_region.all()
             return render(request, 'ConnectionRegion/add_connectionRegion.html',
-                          {'region_form': region_form, 'regions': regions, 'error_messages': ''})
+                          {'region_form': region_form, 'regions': regions, 'error_messages': '', 'yeka':yeka})
 
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_region')
+        return redirect('ekabis:view_yeka')
+
+
 
 
 @login_required
@@ -189,10 +221,11 @@ def delete_region(request):
                     'uuid': uuid
                 }
                 obj = ConnectionRegionGetService(request, regionfilter)
-                region_capacities = ConnectionCapacity.objects.filter(connection_region=obj, isDeleted=False)
+                # not: Silme işleminde kontrol yapılacak yarışma var mı şimdi yarışma alanını yazmadıgım için kontrol edemiyorum
+                region_capacities = YekaCompetition.objects.filter(isDeleted=False)
                 if region_capacities:
                     return JsonResponse(
-                        {'status': 'Fail', 'msg': 'Bölge için tanımlanmış kapasiteler var. Bölge silinemez'})
+                        {'status': 'Fail', 'msg': 'Bölge için tanımlanmış yarışmalar  var. Bölge silinemez'})
                 else:
                     log = str(obj.name) + "Bölge silindi"
                     log = general_methods.logwrite(request, request.user, log)
@@ -210,31 +243,72 @@ def delete_region(request):
 
 
 @login_required
-def update_region(request, uuid):
+def update_region(request, uuid,yeka):
     perm = general_methods.control_access(request)
 
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    regionfilter = {
-        'uuid': uuid
-    }
 
-    region = ConnectionRegionGetService(request, regionfilter)
-    region_form = ConnectionRegionForm(request.POST or None, instance=region)
     try:
+        regionfilter = {
+            'uuid': uuid,
+            'isDeleted': False
+        }
+        yeka_filter={
+            'uuid':yeka,
+            'isDeleted': False
+
+        }
+        yeka=YekaGetService(request,yeka_filter)
+        region = ConnectionRegionGetService(request, regionfilter)
+        region_form = ConnectionRegionForm(request.POST or None, instance=region ,initial={'cities': region.cities.all()})
+        print(region_form.fields['cities'].initial)
+        for item in region.cities.all():
+            print(item)
         with transaction.atomic():
             if request.method == 'POST':
 
                 if region_form.is_valid():
-                    region.name = region_form.cleaned_data['name']
-                    region.value = region_form.cleaned_data['value']
-                    region.unit = region_form.cleaned_data['unit']
+                    region=region_form.save(commit=False)
+                    region = region_form.save(commit=False)
+                    total = int(
+                        ConnectionRegion.objects.exclude(uuid=region.uuid).filter(yeka=yeka).distinct().aggregate(Sum('capacity'))[
+                            'capacity__sum'] or 0)
+                    total += region.capacity
 
+                    if yeka.capacity < total:
+                        messages.warning(request, 'Bölgelerin Kapasite  toplamı Yekanın Kapasitesinden büyük olamaz')
+                        return render(request, 'ConnectionRegion/update_region.html',
+                                      {'region_form': region_form, 'units': ''})
                     region.save()
 
+                    region_city = request.POST.getlist('cities')
+                    city_list = []
+                    region_city_list=[]
+                    for item in region.cities.all():
+                        city_list.append(item.pk)
+                    for item in region_city:
+                        city_filter = {
+                            'pk': item
+                        }
+                        region_city_list.append(int(item))
+                        if CityService(request, city_filter):
+                            if not region.cities.filter(pk=item):
+                                # deger yoksa kaydedildi
+                                region.cities.add(CityGetService(request, city_filter))
+                                region.save()
+                    remove=list(set(city_list) - set(region_city_list))
+
+                    for item in remove:
+                        city_filter = {
+                            'pk': item
+                        }
+                        region.cities.remove(CityGetService(request, city_filter))
+                        region.save()
+
                     messages.success(request, 'Bölge Başarıyla Güncellendi')
-                    return redirect('ekabis:view_region')
+                    return redirect('ekabis:add_region' ,yeka.uuid)
                 else:
                     error_message_unit = get_error_messages(region_form)
                     return render(request, 'ConnectionRegion/update_region.html',
@@ -245,181 +319,3 @@ def update_region(request, uuid):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-
-
-@login_required
-def return_connectionCapacity(request, uuid):
-    perm = general_methods.control_access(request)
-
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-
-    try:
-        capasity_filter = {
-            'connection_region__uuid': uuid,
-            'isDeleted': False
-        }
-
-        capacities = ConnectionCapacityService(request, capasity_filter)
-        capacity_form = ConnectionCapacityForm()
-        cities = City.objects.filter(isDeleted=False)
-
-        with transaction.atomic():
-            if request.method == 'POST':
-                capacity_form = ConnectionCapacityForm(request.POST)
-                region = ConnectionRegion.objects.get(uuid=uuid)
-                region_filter = {
-
-                    'connection_region__uuid': uuid,
-                    'isDeleted': False
-
-                }
-                region_capacities = ConnectionCapacityService(request, region_filter)
-                if capacity_form.is_valid():
-
-                    capacity_value = int(capacity_form.cleaned_data['value'])
-
-                    total_capacity = 0
-                    for capacity in region_capacities:
-                        total_capacity = total_capacity + capacity.value
-                    total_capacity = total_capacity + capacity_value
-                    region_value = region.value
-
-                    if region_value >= total_capacity:
-                        capacity = ConnectionCapacity(name=capacity_form.cleaned_data['name'],
-                                                      unit=capacity_form.cleaned_data['unit'],
-                                                      value=capacity_value,
-                                                      city=City.objects.get(pk=int(request.POST['city'])),
-                                                      district=capacity_form.cleaned_data['district'])
-                        capacity.save()
-
-                        region_filter = {
-                            'uuid': uuid
-                        }
-
-                        capacity.connection_region = ConnectionRegionGetService(request, region_filter, )
-                        capacity.save()
-
-                        log = "Kapasite eklendi"
-                        log = general_methods.logwrite(request, request.user, log)
-                        messages.success(request, 'Kapasite Başarıyla Kayıt Edilmiştir.')
-                        return redirect('ekabis:view_region')
-                    else:
-                        messages.warning(request, 'Kapasite toplam değeri bölge değerinden büyük olamaz.')
-                else:
-                    error_message_capacity = get_error_messages(capacity_form)
-                    capacities = ConnectionCapacity.objects.filter(connection_region__uuid=uuid, isDeleted=False)
-
-                    return render(request, 'ConnectionRegion/add-connectionCapacity.html',
-                                  {'capacity_form': capacity_form, 'capacities': capacities,
-                                   'error_messages': error_message_capacity, 'cities': cities})
-
-            return render(request, 'ConnectionRegion/add-connectionCapacity.html',
-                          {'capacity_form': capacity_form, 'capacities': capacities, 'error_messages': '',
-                           'cities': cities})
-
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_capacity')
-
-
-@login_required
-def update_capacity(request, uuid):
-    perm = general_methods.control_access(request)
-
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-    capacityfilter = {
-        'uuid': uuid
-    }
-    #
-    # Servisi katmanı eklemesi yapılacak
-
-    region_uuid = ConnectionCapacity.objects.get(uuid=uuid)
-
-    capacity = ConnectionCapacityService(request, capacityfilter).first()
-    capacity_form = ConnectionCapacityForm(request.POST or None, instance=capacity)
-    city = City.objects.all()
-    try:
-        with transaction.atomic():
-            if request.method == 'POST':
-
-                capacity_form = ConnectionCapacityForm(request.POST)
-                region_capacity = ConnectionCapacity.objects.get(uuid=uuid)
-                region = region_capacity.connection_region
-                region_capacities = ConnectionCapacity.objects.filter(connection_region=region, isDeleted=False)
-
-                if capacity_form.is_valid():
-
-                    capacity_value = int(capacity_form.cleaned_data['value'])
-
-                    if len(region_capacities) > 1:
-                        total = 0
-                        for capacity in region_capacities.exclude(uuid=uuid):
-                            total = total + capacity.value
-                        total_capacity = total + capacity_value
-                    else:
-                        total_capacity = capacity_value
-
-                    region_value = region.value
-
-                    if region_value >= total_capacity:
-                        capacity.value = capacity_form.cleaned_data['value']
-                        capacity.name = capacity_form.cleaned_data['name']
-                        capacity.unit = capacity_form.cleaned_data['unit']
-                        city_capacity=City.objects.get(pk=int(request.POST['city']))
-                        capacity.city = city_capacity
-                        capacity.district = capacity_form.cleaned_data['district']
-                        capacity.save()
-
-                        messages.success(request, 'Kapasite Başarıyla Güncellendi')
-                        return redirect('ekabis:view_region')
-                    else:
-                        messages.warning(request,
-                                         'Kapasite toplam değeri bölge değerinden büyük olamaz.Eklenen Toplam Kapasite: ' + str(
-                                             total) + ' En fazla ' + str(region_value - total) + ' eklenebilir')
-
-                else:
-                    error_message_unit = get_error_messages(capacity_form)
-                    return render(request, 'ConnectionRegion/update_capacity.html',
-                                  {'capacity_form': capacity_form, 'error_messages': error_message_unit, 'city': city,'capacity':capacity})
-
-            return render(request, 'ConnectionRegion/update_capacity.html',
-                          {'capacity_form': capacity_form, 'error_messages': '', 'city': city,'capacity':capacity})
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-
-
-@login_required
-def delete_capacity(request):
-    perm = general_methods.control_access(request)
-
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-    try:
-        with transaction.atomic():
-            if request.method == 'POST' and request.is_ajax():
-                uuid = request.POST['uuid']
-                capacityfilter = {
-                    'uuid': uuid
-                }
-                obj = ConnectionCapacityGetService(request, capacityfilter)
-                log = str(obj.name) + " Kapasite silindi"
-                log = general_methods.logwrite(request, request.user, log)
-                obj.isDeleted = True
-                obj.save()
-
-                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
-
-
-            else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
-
-    except obj.DoesNotExist:
-        traceback.print_exc()
-        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})

@@ -119,7 +119,6 @@ def aktif(request):
         return {'aktif': aktif,
                 'group': group,
                 'perm': perm,
-
                 }
     else:
         return {}
@@ -213,9 +212,9 @@ def yeka_control(request,yeka):
         messages.add_message(request, messages.WARNING, 'İş Blokları Bilgileri Eksik.')
         url="view_yekabusinessBlog"
 
-    if not (YekaCompanyService(request,yekafilter)):
-        messages.add_message(request, messages.WARNING, 'Firma Bilgileri Eksik.')
-        url="view_yeka_company"
+    # if not (YekaCompanyService(request,yekafilter)):
+    #     messages.add_message(request, messages.WARNING, 'Firma Bilgileri Eksik.')
+    #     url="view_yeka_company"
 
     if not (YekaPersonService(request,yekafilter)):
         messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')

@@ -1,16 +1,16 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 
-     {% if messages %}
+    {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -62,13 +62,21 @@
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Grup Ekle</h3>
+                        </div>
 
-                    {{ group_form }}
-                    <label id="label_name"></label>
+                        <div class="card-body">
+
+                            {{ group_form }}
+                            <label id="label_name"></label>
 
 
-                    <div class="card-footer">
-                        <button class="btn btn-primary" type="submit">Kaydet</button>
+                            <div class="card-footer">
+                                <button class="btn btn-primary" type="submit">Kaydet</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -82,7 +90,7 @@
 
     <script>
         $(document).ready(function () {
-          {% if error_messages  %}
+            {% if error_messages  %}
                 errors_messages({{ error_messages |safe }})
             {% endif %}
         });
