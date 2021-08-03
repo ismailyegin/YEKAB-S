@@ -1,35 +1,26 @@
 {% extends 'base_layout.html' %}
-
 {% block content %}
+    <div id="toast-container" class="toasts-top-right">
 
+        <div class="toast toast-error error" aria-live="polite" style="display: none" id="error_toast">
+            <div class="toast-message" id="error_message">
 
-
-
-
-    <!-- success modal -->
-    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">İşlem Başarılı</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-
-                </div>
-                <div class="modal-body successModal">
-                    ...
-                </div>
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
-                </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
+
+
     </div>
+    <div id="toast-container" class="toasts-top-right">
+
+        <div class="toast toast-success success " aria-live="polite" style="display: none" id="success_toast">
+            <div class="toast-message" id="success_message">
+
+            </div>
+        </div>
 
 
+    </div>
+    <!-- success modal -->
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -56,10 +47,13 @@
     </div>
 
 
+
+
     {% if messages %}
+         <div id="toast-container" class="toasts-top-right">
         {% for message in messages %}
 
-            <div id="toast-container" class="toasts-top-right">
+
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
@@ -84,13 +78,34 @@
 
 
                 {% endif %}
-            </div>
+
         {% endfor %}
 
-
+         </div>
     {% endif %}
 
 
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
     <section class="content-header">
 
 
@@ -98,14 +113,14 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Konsorsiyum Listesi</h1>
+                        Tatil Günleri Listesi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         {% for url in urls %}
-                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name}}</a>
                             </li>
-                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                            <li class="breadcrumb-item active">{{ current_url }}</li>
                         {% endfor %}
                     </ol>
                 </div>
@@ -113,6 +128,8 @@
         </div>
 
     </section>
+
+
     <section class="content">
 
         <div class="row">
@@ -122,75 +139,75 @@
 
                 <div class="card-body">
 
+
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Firmalar</h3>
+                            <h3 class="card-title">Tatil Günleri</h3>
                             {% for item in perm %}
-                                {% if item == 'add_company' %}
-
-                                    <a href="{% url "ekabis:add_consortium" %}"
-                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
-                                            class="fa fa-plus" title="Konsorsiyum Ekle"></i>
+                                {% if item == 'add_vacation_day' %}
+                                    <a href="{% url "ekabis:add_vacation_day" %}"
+                                       class="btn btn-outline-primary" style="float: right"> <i
+                                            class="fa fa-plus" title="Tatil Günü Ekle"></i>
                                     </a>
                                 {% endif %}
                             {% endfor %}
                         </div>
 
                         <div class="card-body">
-                            <table id="company" class="table table-bordered table-hover">
+                            <table id="days" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>İsim</th>
-                                    <th>Ünvan</th>
-                                    <th>Sorumlu</th>
+                                    <th>Açıklama</th>
+                                    <th>Tarih</th>
+                                    <td>İşlemler</td>
+
+
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {% for day in days %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ day.definition }}</td>
+                                        <td>{{ day.date.date }}</td>
+                                        <td>
 
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default">İşlemler</button>
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown">
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% for item in perm %}
+                                                        {% if item == 'update_vacation_day' %}
+                                                            <a href="{% url 'ekabis:update_vacation_day' day.uuid %}"
+                                                               class="dropdown-item"> <i
+                                                                    class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% for item in perm %}
+                                                        {% if item == 'delete_vacation_day' %}
 
-                                    {% for company in companies %}
-                                        <tr>
-                                            <td>{{ forloop.counter }} </td>
-                                            <td>{{ company.name }}</td>
-                                            <td>{{ company.degree }}</td>
-                                            <td>{{ company.companyuser.user.first_name }} {{ company.companyuser.user.last_name }}</td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-default">İşlemler</button>
-                                                    <button type="button"
-                                                            class="btn btn-default dropdown-toggle dropdown-icon"
-                                                            data-toggle="dropdown">
-                                                    </button>
-                                                    <div class="dropdown-menu" role="menu">
-                                                        {% for item in perm %}
-                                                            {% if item == 'change_company' %}
-                                                                <a href="{% url "ekabis:change_consortium" company.uuid %}"
-                                                                   class="dropdown-item"> <i
-                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
-                                                                </a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {% for item in perm %}
-                                                            {% if item == 'delete_company' %}
+                                                            <a class="dropdown-item" href=""
+                                                               data-toggle="modal"
+                                                               onclick=deleteVacationDate('{{ day.uuid }}')><i
+                                                                    class="fa fa-trash"></i>Sil</a>
 
-                                                                <a class="dropdown-item" href=""
-                                                                   data-toggle="modal"
-                                                                   onclick=deleteCompany('{{ company.uuid }}')><i
-                                                                        class="fa fa-trash"></i>Sil</a>
+                                                        {% endif %}
+                                                    {% endfor %}
 
-                                                            {% endif %}
-                                                        {% endfor %}
-
-                                                    </div>
                                                 </div>
+                                            </div>
 
 
-                                            </td>
-                                        </tr>
+                                        </td>
 
-                                    {% endfor %}
+                                    </tr>
 
+                                {% endfor %}
 
 
                                 </tbody>
@@ -198,6 +215,7 @@
 
                         </div>
                     </div>
+                    <!-- /.card -->
 
 
                 </div>
@@ -205,14 +223,24 @@
 
 
         </div>
+        <!-- /.row (main row) -->
 
     </section>
     {% load static %}
     <script>
         $(function () {
-            debugger;
-            $('#company').DataTable({
+            $('#days').DataTable({
                 dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                },
 
                 'buttons': [
 
@@ -230,7 +258,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar',
+                        title: 'Gruplar',
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
@@ -251,6 +279,9 @@
 
 
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
@@ -258,53 +289,48 @@
                 'info': true,
                 'autoWidth': true,
                 'responsive': true,
-                "processing": true,
-
-                'language': {
-                    "url": "{% static 'datatable_tr.json' %}"
-                },
-                "columns": [
-                    {"data": "id"},
-                    {"data": "name"},
-                    {"data": "degree"},
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.companyuser.user.first_name + ' ' + row.companyuser.user.last_name;
-
-                        }
-                    }
-                ]
             })
 
         })
 
-        function deleteCompany(id) {
+
+        function deleteVacationDate(id) {
             debugger;
             console.log(id);
             var html = ''
             $("#modal-delete").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:delete_company" %}",
+                        url: "{% url "ekabis:delete_vacation_day" %}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
                             uuid: id,
                         },
                         success: function (result) {
+                            if (result.status === 'Success') {
+                                html = 'Tatil günü başarıyla silindi';
 
-                            html = 'Firma Başarıyla Silindi';
-                            debugger;
-                            $(".successModal").html(html);
-                            $('#modal-success').on("shown.bs.modal", function (e) {
-                                $(".btn-ok").click(function () {
+                                let toast = document.getElementById('success_message');
+                                toast.innerHTML = html;
+                                document.getElementById('success_toast').style.display = 'block';
+                                $('.success').toast('show');
+                                $('.toast').fadeOut(5000);
 
-                                    window.location.replace("{% url "ekabis:view_company" %}");
+                                window.location.replace("{% url "ekabis:vacation_days" %}");
 
-                                });
 
-                            }).modal('show');
+                            } else {
+                                debugger;
+                                let toast = document.getElementById('error_message');
+                                html = 'Bu Firma Silinemez';
+                                toast.innerHTML = html;
+                                document.getElementById('error_toast').style.display = 'block';
+                                $('.error').toast('show');
+                                $('.toast').fadeOut(5000);
+
+
+                            }
 
                             console.log(result.status)
                         }
@@ -352,7 +378,7 @@
 
 
     </script>
-
-
 {% endblock %}
+
+
 

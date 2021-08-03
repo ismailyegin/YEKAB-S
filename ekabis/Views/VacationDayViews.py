@@ -1,0 +1,176 @@
+import calendar
+import datetime
+import traceback
+
+from django.contrib import messages
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import resolve
+
+from ekabis.Forms.VacationDayForm import VacationDayForm
+from ekabis.models.VacationDay import VacationDay
+from ekabis.services import general_methods
+from ekabis.services.general_methods import get_error_messages
+from ekabis.services.services import VacationDayService, VacationDayGetService, last_urls
+
+
+def weekday_count(start, end):
+    start_date = datetime.datetime.strptime(start, '%d/%m/%Y')
+    end_date = datetime.datetime.strptime(end, '%d/%m/%Y')
+    week = {}
+    range = (end_date - start_date).days
+    weekends = []
+    while range >= 0:
+        day = calendar.day_name[(start_date.weekday())]
+        if day == 'Saturday' or day == 'Sunday':
+            weekends.append(start_date.date())
+            start_date = start_date + datetime.timedelta(days=1)
+            range = range - 1
+        else:
+            start_date = start_date + datetime.timedelta(days=1)
+            range = range - 1
+
+    return weekends
+
+
+@login_required
+def add_vacation_day(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    vacation_form = VacationDayForm()
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
+                vacation_form = VacationDayForm(request.POST)
+
+                if vacation_form.is_valid():
+                    days = request.POST['reservation']
+                    days = days.split('-')
+                    start_date = datetime.datetime.strptime(days[0].split(' ')[0], '%d/%m/%Y')
+                    end_date = datetime.datetime.strptime(days[1].split(' ')[1], '%d/%m/%Y')
+
+                    range = (end_date - start_date).days
+
+                    while range >= 0:
+                        current = VacationDay.objects.filter(definition=vacation_form.cleaned_data['definition'],
+                                                             date=start_date)
+                        if not current:
+                            day = VacationDay(definition=vacation_form.cleaned_data['definition'],
+                                              date=start_date)
+                            day.save()
+                            start_date = start_date + datetime.timedelta(days=1)
+                            range = range - 1
+                        else:
+                            messages.warning(request, '' + str(start_date.date()) + ' tatil günü kayıtlıdır.')
+                            start_date = start_date + datetime.timedelta(days=1)
+                            range = range - 1
+
+                    log = " Tatil günü eklendi"
+                    log = general_methods.logwrite(request, request.user, log)
+                    messages.success(request, 'Tatil Günü Başarıyla Kayıt Edilmiştir.')
+                    return redirect('ekabis:vacation_days')
+
+                else:
+                    error_message_unit = get_error_messages(vacation_form)
+
+                    return render(request, 'ExtraTime/add_vacation_day.html',
+                                  {'vacation_form': vacation_form, 'error_messages': error_message_unit, 'urls': urls})
+
+            return render(request, 'ExtraTime/add_vacation_day.html',
+                          {'vacation_form': vacation_form, 'error_messages': '', 'urls': urls,
+                           'current_url': current_url.url_name})
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:vacation_days')
+
+
+@login_required
+def return_vacation_day(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+
+    filter = {
+        'isDeleted': False
+    }
+    days = VacationDayService(request, filter).order_by('-id')
+    return render(request, 'ExtraTime/view_vacation_day.html',
+                  {'days': days, 'urls': urls, 'current_url': current_url.url_name})
+
+
+@login_required
+def delete_vacation_date(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                filter = {
+                    'uuid': uuid
+                }
+                obj = VacationDayGetService(request, filter)
+                log = str(obj.definition) + " Tatil Günü silindi"
+                log = general_methods.logwrite(request, request.user, log)
+                obj.isDeleted = True
+                obj.save()
+
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+
+    except obj.DoesNotExist:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+@login_required
+def update_vacation_date(request, uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    filter = {
+        'uuid': uuid
+    }
+    day = VacationDayGetService(request, filter)
+    vacation_form = VacationDayForm(request.POST or None, instance=day)
+    try:
+        with transaction.atomic():
+            if request.method == 'POST':
+                if vacation_form.is_valid():
+                    vacation_form.save()
+                    messages.success(request, 'Tatil Günü Güncellenmiştir')
+                    return redirect('ekabis:vacation_days')
+                else:
+                    error_messages = get_error_messages(vacation_form)
+                    return render(request, 'ExtraTime/update_vacation_date.html',
+                                  {'vacation_form': vacation_form,
+                                   'error_messages': error_messages,
+                                   })
+
+            return render(request, 'ExtraTime/update_vacation_date.html',
+                          {'vacation_form': vacation_form, })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:vacation_days')

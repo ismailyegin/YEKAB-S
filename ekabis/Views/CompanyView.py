@@ -6,6 +6,7 @@ from django.contrib.auth.models import User, Group
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import resolve
 from unicode_tr import unicode_tr
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.CompanyFileNameForm import CompanyFileNameForm
@@ -13,14 +14,14 @@ from ekabis.Forms.CompanyForm import CompanyForm
 from ekabis.Forms.CompanyFormDinamik import CompanyFormDinamik
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
-from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Employee
+from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Employee, Permission
 from ekabis.models.CompanyFileNames import CompanyFileNames
 from ekabis.models.CompanyFiles import CompanyFiles
 from ekabis.models.CompanyUser import CompanyUser
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import CompanyService, CompanyGetService, GroupService, GroupGetService, \
-    CompanyFileNamesService, CompanyFileNamesGetService, YekaCompanyService
+    CompanyFileNamesService, CompanyFileNamesGetService, YekaCompanyService, last_urls
 
 
 @login_required
@@ -138,7 +139,10 @@ def delete_company(request):
 
 @login_required
 def return_list_Company(request):
-    return render(request, 'Company/Companys.html')
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+    return render(request, 'Company/Companys.html', {'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
@@ -152,6 +156,9 @@ def return_update_Company(request, uuid):
         'uuid': uuid
 
     }
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
 
     try:
         company = CompanyGetService(request, companyfilter)
@@ -189,7 +196,7 @@ def return_update_Company(request, uuid):
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
                                    'person_form': person_form, 'user_form': user_form,
-                                   'companyDocumentName': companyDocumentName
+                                   'companyDocumentName': companyDocumentName, 'urls': urls,
                                    })
 
         return render(request, 'Company/CompanyUpdate.html',
@@ -197,8 +204,8 @@ def return_update_Company(request, uuid):
                        'communication_form': communication_form,
                        'company': company, 'error_messages': '',
                        'person_form': person_form,
-                       'user_form': user_form,
-                       'companyDocumentName': companyDocumentName
+                       'user_form': user_form, 'urls': urls, 'current_url': current_url,
+                       'companyDocumentName': companyDocumentName, 'url_name': url_name
 
                        })
 
@@ -372,11 +379,21 @@ def add_consortium(request):
 
 @login_required
 def view_consortium(request):
-    company = {
-        'is_consortium': 'True'
-    }
-    consortium = CompanyService(request, company)
-    return render(request, 'Company/ConsortiumList.html', {'companies': consortium})
+    try:
+        company = {
+            'is_consortium': 'True'
+        }
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        consortium = CompanyService(request, company)
+
+        return render(request, 'Company/ConsortiumList.html',
+                      {'companies': consortium, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
 
 @login_required
@@ -393,6 +410,9 @@ def return_update_consortium(request, uuid):
     }
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         company = CompanyGetService(request, companyfilter)
         filter = {
             'isDeleted': False,
@@ -406,7 +426,6 @@ def return_update_consortium(request, uuid):
         employess = Employee.objects.filter(user__groups__name='firma', isDeleted=False)
         with transaction.atomic():
             if request.method == 'POST':
-
 
                 list = request.POST['consortium_list']
                 consortium_list = list.split(',')
@@ -446,7 +465,8 @@ def return_update_consortium(request, uuid):
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
                                    'companyDocumentName': companyDocumentName, 'companies': companies,
-                                   'consortium': consortium, 'employess': employess,
+                                   'consortium': consortium, 'employess': employess, 'urls': urls,
+                                   'current_url': current_url, 'url_name': url_name
                                    })
 
         return render(request, 'Company/UpdateConsortium.html',
@@ -454,7 +474,8 @@ def return_update_consortium(request, uuid):
                        'communication_form': communication_form,
                        'company': company, 'error_messages': '',
                        'companies': companies, 'employess': employess,
-                       'companyDocumentName': companyDocumentName, 'consortium': consortium,
+                       'companyDocumentName': companyDocumentName, 'consortium': consortium, 'urls': urls,
+                       'current_url': current_url, 'url_name': url_name
 
                        })
 

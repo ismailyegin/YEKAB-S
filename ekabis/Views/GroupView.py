@@ -5,11 +5,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render, redirect
+from django.urls import resolve
+
 from ekabis.Forms.GroupForm import GroupForm
+from ekabis.models import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import GroupService, PermissionService, PermissionGroupService, GroupGetService
+from ekabis.services.services import GroupService, PermissionService, PermissionGroupService, GroupGetService, last_urls
 
 
 @login_required
@@ -57,9 +60,18 @@ def return_list_group(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    groups = GroupService(request, None)
-    return render(request, 'Group/GrupListe.html',
-                  {'groups': groups})
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        groups = GroupService(request, None)
+        return render(request, 'Group/GrupListe.html',
+                      {'groups': groups, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_group')
 
 
 @login_required
@@ -70,6 +82,9 @@ def return_update_group(request, pk):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         groupfilter = {
             'pk': pk
         }
@@ -85,15 +100,19 @@ def return_update_group(request, pk):
                 else:
                     error_messages = get_error_messages(group_form)
                     return render(request, 'Group/grupGuncelle.html',
-                                  {'group_form': group_form, 'error_messages': error_messages
+                                  {'group_form': group_form, 'error_messages': error_messages, 'urls': urls,
+                                   'current_url': current_url, 'url_name': url_name
                                    })
 
             return render(request, 'Group/grupGuncelle.html',
-                          {'group_form': group_form, 'error_messages': ''
+                          {'group_form': group_form, 'error_messages': '', 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name
                            })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+
+
 def change_groupPermission(request, pk):
     perm = general_methods.control_access(request)
     active = general_methods.controlGroup(request)
@@ -102,10 +121,13 @@ def change_groupPermission(request, pk):
         # logout(request)
         # return redirect('accounts:login')
     groupfilter = {
-        'group__pk' : pk
+        'group__pk': pk
     }
-    permGroup = PermissionGroupService(request,groupfilter)
+    permGroup = PermissionGroupService(request, groupfilter)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
                 for item in permGroup:
@@ -115,7 +137,7 @@ def change_groupPermission(request, pk):
                         item.is_active = False
                     item.save()
             return render(request, 'Group/GrupizinEkle.html',
-                          {'permGroup': permGroup})
+                          {'permGroup': permGroup,'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
