@@ -99,13 +99,33 @@
     {% endif %}
 
 
+    <section class="content-header">
 
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Kurul Üye Listesi</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
 
     <section class="content">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card-body">
-                    <div class="card card-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Üye Filtrele</h3>
                         </div>
@@ -137,7 +157,7 @@
                             <!-- /.card-body -->
 
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Ara</button>
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Ara
                             </div>
                         </form>
 
@@ -160,21 +180,17 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Yönetim Kurulu Üyeleri</h3>
-                        </div>
-                        {% for item in perm %}
+                             {% for item in perm %}
                             {% if item == 'add_directorymember' %}
-                                <div class="card-header with-border">
 
-                                    <div class="btn-group">
-                                        <a href="{% url "ekabis:add_directorymember" %}"
-                                           type="button" class="btn btn-success"><i
-                                                class="fa fa-edit"></i> Üye Ekle
-                                        </a>
-                                    </div>
-
-                                </div>
+                                <a href="{% url "ekabis:add_directorymember" %}"
+                                   type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                        class="fa fa-plus" title="Üye Ekle Ekle"></i>
+                                </a>
                             {% endif %}
                         {% endfor %}
+                        </div>
+
                         <div class="card-body">
                             <table id="members" class="table table-bordered table-hover">
                                 <thead>
@@ -245,20 +261,12 @@
         <!-- /.row (main row) -->
 
     </section>
-
+{% load static %}
     <script>
         $(function () {
             $('#members').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Göster",
-                            '-1': "Hepsini Göster"
-                        }
-                    }
-                },
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
@@ -275,46 +283,38 @@
 
                     {
                         extend: 'colvis',
-                        text: "Ekle Çıkar",
-                        titleAttr: 'Ekle Çıkar',
-                        title: 'YEKABİS',
+                        titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'YEKABİS',
-                        text: "Yazdır",
+                        title: 'Firmalar',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: "Pdf",
-                        title: 'YEKABİS',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
                         titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        text: "Excel",
-                        titleAttr: 'Excel Kaydet',
-                        title: 'YEKABİS',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: 'Json',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'YEKABİS.json'
-                            );
-                        }
-                    }
 
 
                 ],
+
+
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
                 'bubble': true,
                 'paging': true,
                 'lengthChange': true,

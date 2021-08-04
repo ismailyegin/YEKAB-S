@@ -53,7 +53,7 @@ gulp.task('build', function () {
 /*
  *	Usage : gulp bump
  *	Prompts: Version increment to bump
- *	Output: - New version number written into package.json & bower.json
+ *	Output: - New version number written into datatable_tr.json & bower.json
  */
 
 gulp.task('bump', function (complete) {
@@ -75,7 +75,7 @@ gulp.task('bump', function (complete) {
         bower.version = newVersion;
 
         // Write these to their own files, then build the output
-        fs.writeFileSync('package.json', JSON.stringify(package, null, 2));
+        fs.writeFileSync('datatable_tr.json', JSON.stringify(package, null, 2));
         fs.writeFileSync('bower.json', JSON.stringify(bower, null, 2));
 
         complete();

@@ -8,7 +8,7 @@ class BusinessBlogParametreForm(ModelForm):
         labels = {'title': 'Tanımı',
                   'type':'Türü',
                   'necessary':'Zorunlu ',
-                  'companynecessary':'Firma müdehale edebilir mi?'}
+                  'companynecessary':'Firma müdahale edebilir mi?'}
         widgets = {
             'title':  forms.TextInput(attrs={'class': 'form-control ','required': 'required'}),
             'type': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',

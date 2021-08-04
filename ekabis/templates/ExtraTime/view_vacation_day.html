@@ -118,9 +118,9 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         {% for url in urls %}
-                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name}}</a>
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
                             </li>
-                            <li class="breadcrumb-item active">{{ current_url }}</li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
                         {% endfor %}
                     </ol>
                 </div>
@@ -174,10 +174,10 @@
                                         <td>
 
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-default">İşlemler</button>
+
                                                 <button type="button"
                                                         class="btn btn-default dropdown-toggle dropdown-icon"
-                                                        data-toggle="dropdown">
+                                                        data-toggle="dropdown"> İşlemler
                                                 </button>
                                                 <div class="dropdown-menu" role="menu">
                                                     {% for item in perm %}

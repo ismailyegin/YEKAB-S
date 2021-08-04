@@ -5,12 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import resolve
 
-from ekabis.models import ConnectionRegion
+from ekabis.models import ConnectionRegion, Permission
 from ekabis.models.VacationDay import VacationDay
 from ekabis.services import general_methods
 from ekabis.services.services import ActiveGroupService, GroupService, ActiveGroupGetService, GroupGetService, \
-    CalendarNameService, YekaService, VacationDayService, ConnectionRegionService
+    CalendarNameService, YekaService, VacationDayService, ConnectionRegionService, last_urls
 
 from ekabis.Forms.CalendarNameForm import CalendarNameForm
 from ekabis.models.CalendarName import CalendarName
@@ -106,6 +107,9 @@ def add_calendarName(request):
     calender_form=CalendarNameForm()
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
                   calender_form = CalendarNameForm(request.POST)
@@ -113,16 +117,18 @@ def add_calendarName(request):
                       name=calender_form.save(commit=False)
                       name.user=request.user
                       name.save()
+            calanders = CalendarName.objects.filter(isDeleted=False)
+            return render(request, 'anasayfa/CalendarNameAdd.html',
+                          {
+                              'calender_form': calender_form,
+                              'calanders': calanders, 'urls': urls,
+                              'current_url': current_url, 'url_name': url_name
+                          })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-    calanders=CalendarName.objects.filter(isDeleted=False)
 
-    return render(request, 'anasayfa/CalendarNameAdd.html',
-                  {
-                      'calender_form':calender_form,
-                      'calanders':calanders
-                  })
+
 
 
 

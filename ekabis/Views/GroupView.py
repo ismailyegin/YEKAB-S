@@ -23,6 +23,9 @@ def add_group(request):
         return redirect('accounts:login')
     group_form = GroupForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
                 group_form = GroupForm(request.POST)
@@ -46,9 +49,9 @@ def add_group(request):
                 else:
                     error_messages = get_error_messages(group_form)
                     return render(request, 'Group/GrupEkle.html',
-                                  {'group_form': group_form, 'error_messages': error_messages, })
+                                  {'group_form': group_form, 'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name })
             return render(request, 'Group/GrupEkle.html',
-                          {'group_form': group_form, 'error_messages': ''})
+                          {'group_form': group_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -61,6 +64,7 @@ def return_list_group(request):
         logout(request)
         return redirect('accounts:login')
     try:
+
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
@@ -137,7 +141,7 @@ def change_groupPermission(request, pk):
                         item.is_active = False
                     item.save()
             return render(request, 'Group/GrupizinEkle.html',
-                          {'permGroup': permGroup,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                          {'permGroup': permGroup,'urls': urls, 'current_url': current_url, 'url_name': url_name,'active':active})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

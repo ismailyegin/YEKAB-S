@@ -11,6 +11,7 @@ from django.shortcuts import redirect, render
 from django.urls import resolve
 
 from ekabis.Forms.VacationDayForm import VacationDayForm
+from ekabis.models import Permission
 from ekabis.models.VacationDay import VacationDay
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
@@ -26,7 +27,7 @@ def weekday_count(start, end):
     while range >= 0:
         day = calendar.day_name[(start_date.weekday())]
         if day == 'Saturday' or day == 'Sunday':
-            weekends.append(start_date.date())
+            weekends.append(start_date.date().strftime("%d/%m/%Y"))
             start_date = start_date + datetime.timedelta(days=1)
             range = range - 1
         else:
@@ -46,8 +47,10 @@ def add_vacation_day(request):
     vacation_form = VacationDayForm()
     urls = last_urls(request)
     current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
 
     try:
+
         with transaction.atomic():
             if request.method == 'POST':
                 vacation_form = VacationDayForm(request.POST)
@@ -83,11 +86,13 @@ def add_vacation_day(request):
                     error_message_unit = get_error_messages(vacation_form)
 
                     return render(request, 'ExtraTime/add_vacation_day.html',
-                                  {'vacation_form': vacation_form, 'error_messages': error_message_unit, 'urls': urls})
+                                  {'vacation_form': vacation_form, 'error_messages': error_message_unit, 'urls': urls,
+                                   'current_url': current_url, 'url_name': url_name})
 
             return render(request, 'ExtraTime/add_vacation_day.html',
                           {'vacation_form': vacation_form, 'error_messages': '', 'urls': urls,
-                           'current_url': current_url.url_name})
+                           'current_url': current_url, 'url_name': url_name,
+                           })
 
     except Exception as e:
         traceback.print_exc()
@@ -101,15 +106,17 @@ def return_vacation_day(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
+    vacation_form = VacationDayForm()
     urls = last_urls(request)
     current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
 
     filter = {
         'isDeleted': False
     }
     days = VacationDayService(request, filter).order_by('-id')
     return render(request, 'ExtraTime/view_vacation_day.html',
-                  {'days': days, 'urls': urls, 'current_url': current_url.url_name})
+                  {'days': days, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
@@ -155,6 +162,9 @@ def update_vacation_date(request, uuid):
     day = VacationDayGetService(request, filter)
     vacation_form = VacationDayForm(request.POST or None, instance=day)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
                 if vacation_form.is_valid():
@@ -165,12 +175,37 @@ def update_vacation_date(request, uuid):
                     error_messages = get_error_messages(vacation_form)
                     return render(request, 'ExtraTime/update_vacation_date.html',
                                   {'vacation_form': vacation_form,
-                                   'error_messages': error_messages,
+                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name
                                    })
 
             return render(request, 'ExtraTime/update_vacation_date.html',
-                          {'vacation_form': vacation_form, })
+                          {'vacation_form': vacation_form, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name, 'error_messages': ''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:vacation_days')
+
+
+def add_business_days(from_date, number_of_days):
+    to_date = from_date
+    while number_of_days:
+        to_date += datetime.timedelta(1)
+        if to_date.weekday() < 5:  # i.e. is not saturday or sunday
+            number_of_days -= 1
+    return to_date
+
+
+def is_vacation_day(date):
+    vacation_date = VacationDay.objects.filter(isDeleted=False)
+    vacation_date_array = []
+    for vacation in vacation_date:
+        vacation_date_array.append((vacation.date).strftime("%d/%m/%Y"))
+    day = calendar.day_name[(date.weekday())]
+    if day == 'Saturday' or day == 'Sunday':
+        return True
+    elif date.strftime("%d/%m/%Y") in vacation_date:
+        return True
+    else:
+        return False

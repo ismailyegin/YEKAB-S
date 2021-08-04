@@ -151,7 +151,27 @@
     {% endif %}
 
 
+ <section class="content-header">
 
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        İş Bloğu</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
 
     <section class="content">
 
@@ -209,10 +229,9 @@
 
 
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-default">İşlemler</button>
                                                     <button type="button"
                                                             class="btn btn-default dropdown-toggle dropdown-icon"
-                                                            data-toggle="dropdown">
+                                                            data-toggle="dropdown"> İşlemler
                                                     </button>
                                                     <div class="dropdown-menu" role="menu">
                                                         {% for p in perm %}

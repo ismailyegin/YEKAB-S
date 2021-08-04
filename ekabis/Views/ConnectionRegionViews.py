@@ -7,16 +7,17 @@ from django.db import transaction
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import resolve
 
 from ekabis.Forms.ConnectionRegionForm import ConnectionRegionForm
 from ekabis.Forms.ConnectionUnitForm import ConnectionUnitForm
-from ekabis.models import YekaCompetition
+from ekabis.models import YekaCompetition, Permission
 from ekabis.models.ConnectionRegion import ConnectionRegion
 from ekabis.models.ConnectionUnit import ConnectionUnit
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import UnitService, ConnectionUnitGetService, \
-    ConnectionRegionGetService, YekaGetService, CityService, CityGetService
+    ConnectionRegionGetService, YekaGetService, CityService, CityGetService, last_urls
 
 
 @login_required
@@ -29,6 +30,9 @@ def return_connectionRegionUnit(request):
     unit_form = ConnectionUnitForm()
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -51,13 +55,13 @@ def return_connectionRegionUnit(request):
                     }
                     units = UnitService(request, unitfilter)
                     return render(request, 'ConnectionRegion/add_unit.html',
-                                  {'unit_form': unit_form, 'units': units, 'error_messages': error_message_unit})
+                                  {'unit_form': unit_form, 'units': units, 'error_messages': error_message_unit,'urls': urls, 'current_url': current_url, 'url_name': url_name})
             unitfilter = {
                 'isDeleted': False
             }
             units = UnitService(request, unitfilter)
             return render(request, 'ConnectionRegion/add_unit.html',
-                          {'unit_form': unit_form, 'units': units, 'error_messages': ''})
+                          {'unit_form': unit_form, 'units': units, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
@@ -107,6 +111,9 @@ def update_unit(request, uuid):
     unit = ConnectionUnitGetService(request, unitfilter)
     unit_form = ConnectionUnitForm(request.POST or None, instance=unit)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -118,10 +125,10 @@ def update_unit(request, uuid):
                 else:
                     error_message_unit = get_error_messages(unit_form)
                     return render(request, 'ConnectionRegion/update_unit.html',
-                                  {'unit_form': unit_form, 'error_messages': error_message_unit, 'units': ''})
+                                  {'unit_form': unit_form, 'error_messages': error_message_unit, 'units': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
 
             return render(request, 'ConnectionRegion/update_unit.html',
-                          {'unit_form': unit_form, 'error_messages': '', 'units': ''})
+                          {'unit_form': unit_form, 'error_messages': '', 'units': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -138,6 +145,9 @@ def add_connectionRegion(request,uuid):
 
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
 
         yeka_filter={
             'uuid' :uuid,
@@ -164,7 +174,7 @@ def add_connectionRegion(request,uuid):
                         messages.warning(request, 'Bölgelerin Kapasite  toplamı Yekanın Kapasitesinden büyük olamaz')
 
                         return render(request, 'ConnectionRegion/add_connectionRegion.html',
-                                      {'region_form': region_form, 'yeka': yeka,
+                                      {'region_form': region_form, 'yeka': yeka,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                                        })
 
                     region.save()
@@ -189,14 +199,14 @@ def add_connectionRegion(request,uuid):
                     error_message_region = get_error_messages(region_form)
 
                     return render(request, 'ConnectionRegion/add_connectionRegion.html',
-                                  {'region_form': region_form, 'yeka':yeka, 'error_messages': error_message_region})
+                                  {'region_form': region_form, 'yeka':yeka, 'error_messages': error_message_region,'urls': urls, 'current_url': current_url, 'url_name': url_name})
             regionfilter = {
                 'isDeleted': False
 
             }
             regions = yeka.connection_region.all()
             return render(request, 'ConnectionRegion/add_connectionRegion.html',
-                          {'region_form': region_form, 'regions': regions, 'error_messages': '', 'yeka':yeka})
+                          {'region_form': region_form, 'regions': regions, 'error_messages': '', 'yeka':yeka,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
@@ -251,6 +261,9 @@ def update_region(request, uuid,yeka):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         regionfilter = {
             'uuid': uuid,
             'isDeleted': False
@@ -312,10 +325,10 @@ def update_region(request, uuid,yeka):
                 else:
                     error_message_unit = get_error_messages(region_form)
                     return render(request, 'ConnectionRegion/update_region.html',
-                                  {'region_form': region_form, 'error_messages': error_message_unit, 'units': ''})
+                                  {'region_form': region_form, 'error_messages': error_message_unit, 'units': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
 
             return render(request, 'ConnectionRegion/update_region.html',
-                          {'region_form': region_form, 'error_messages': '', 'units': ''})
+                          {'region_form': region_form, 'error_messages': '', 'units': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

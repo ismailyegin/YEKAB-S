@@ -11,7 +11,7 @@ class YekaForm(forms.ModelForm):
         fields = ('date', 'definition','capacity')
 
 
-        labels = {'definition': 'Tanım * ','date':'Resmi Gazetede Yayın Tarihi  *' ,'capacity':'Kapasite'}
+        labels = {'definition': 'Tanım * ','date':'Resmi Gazetede İlan Tarihi  *' ,'capacity':'Kapasite'}
         widgets = {
             'definition': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
 

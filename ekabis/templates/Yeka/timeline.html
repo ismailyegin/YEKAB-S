@@ -113,7 +113,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Zaman çizelgesi</h1>
+                       İş Planı</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -195,7 +195,7 @@
                                                     Ekle</a>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
-                                                   href="{% url 'ekabis:add_extratime' yeka.uuid  yekabusinessblok.uuid %}">Ek
+                                                   href="{% url 'ekabis:add_extratime' yeka.business.uuid  yekabusinessblok.uuid %}">Ek
                                                     Süre Ekle</a>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="#">Log Listesi</a>

@@ -123,10 +123,13 @@
                     <h1>
                         YEKA Güncelleme</h1>
                 </div>
-                <div class="col-sm-6">
+                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">YEKA</a></li>
-                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name}}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
                     </ol>
                 </div>
             </div>
@@ -148,7 +151,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA Güncelle</h3>
+                            <h3 class="card-title">{{ yeka.definition }} Güncelle</h3>
                         </div>
 
                         <div class="card-body">

@@ -7,10 +7,12 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import resolve
 
 from ekabis.Forms.BusinessBlogForm import BusinessBlogForm
 from ekabis.Forms.BusinessBlogParametreForm import BusinessBlogParametreForm
 from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
+from ekabis.models import Permission
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
@@ -18,7 +20,7 @@ from ekabis.models.Yeka import Yeka
 from ekabis.models.YekaBussiness import YekaBusiness
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import YekaBusinessGetService
+from ekabis.services.services import YekaBusinessGetService, last_urls
 
 
 @login_required
@@ -27,6 +29,9 @@ def add_yekabusiness(request,uuid):
     yeka=Yeka.objects.get(uuid=uuid)
     form = YekaBusinessForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         if request.method == 'POST':
             with transaction.atomic():
                 form = YekaBusinessForm(request.POST)
@@ -60,12 +65,12 @@ def add_yekabusiness(request,uuid):
                 else:
                     error_messages = get_error_messages(form)
                     return render(request, 'Yeka/yekabusinessAdd.html', {'business_form': form,
-                                                                         'error_messages': error_messages,
+                                                                         'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name,'yeka':yeka,
                                                                          })
 
         return render(request, 'Yeka/yekabusinessAdd.html', {'business': business,
                                                              'yekabusiness_form': form,
-                                                             'error_messages': '',
+                                                             'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name,'yeka':yeka,
                                                              })
     except Exception as e:
         traceback.print_exc()
@@ -135,7 +140,9 @@ def delete_businessBlog(request):
 def add_businessBlogParametre(request, uuid):
     business_form = BusinessBlogParametreForm()
     try:
-
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         if request.method == 'POST':
             with transaction.atomic():
                 business_form = BusinessBlogParametreForm(request.POST)
@@ -156,11 +163,11 @@ def add_businessBlogParametre(request, uuid):
                 else:
                     error_messages = get_error_messages(business_form)
                     return render(request, 'Yeka/parametreAdd.html', {'business_form': business_form,
-                                                                      'error_messages': error_messages,
+                                                                      'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                                                       })
 
         return render(request, 'Yeka/parametreAdd.html', {'business_form': business_form,
-                                                          'error_messages': '',
+                                                          'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name
                                                           })
     except Exception as e:
         traceback.print_exc()
@@ -171,13 +178,19 @@ def add_businessBlogParametre(request, uuid):
 @login_required
 def view_businessBlog(request):
     business_blog = BusinessBlog.objects.filter(isDeleted=False)
-    return render(request, 'Yeka/businessBlogList.html', {'business_blog': business_blog})
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+    return render(request, 'Yeka/businessBlogList.html', {'business_blog': business_blog,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
 def add_businessBlog(request):
     business_form = BusinessBlogForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         if request.method == 'POST':
             with transaction.atomic():
                 business_form = BusinessBlogForm(request.POST)
@@ -192,11 +205,11 @@ def add_businessBlog(request):
                 else:
                     error_messages = get_error_messages(business_form)
                     return render(request, 'Yeka/businessBlogAdd.html', {'business_form': business_form,
-                                                                         'error_messages': error_messages,
+                                                                         'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                                                          })
 
         return render(request, 'Yeka/businessBlogAdd.html', {'business_form': business_form,
-                                                             'error_messages': '',
+                                                             'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name
                                                              })
     except Exception as e:
         traceback.print_exc()
@@ -210,6 +223,9 @@ def change_businessBlog(request, uuid):
     business_form = BusinessBlogForm(request.POST or None, instance=business)
     parametre = business.parametre.filter(isDeleted=False)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         if request.method == 'POST':
             with transaction.atomic():
                 if business_form.is_valid():
@@ -224,12 +240,12 @@ def change_businessBlog(request, uuid):
                     return render(request, 'Yeka/businessBlogUpdate.html', {'business_form': business_form,
                                                                             'error_messages': error_messages,
                                                                             'business': business,
-                                                                            'parametre': parametre
+                                                                            'parametre': parametre,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                                                             })
         return render(request, 'Yeka/businessBlogUpdate.html', {'business_form': business_form,
                                                                 'error_messages': '',
                                                                 'business': business,
-                                                                'parametre': parametre
+                                                                'parametre': parametre,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                                                 })
     except Exception as e:
         traceback.print_exc()
@@ -242,6 +258,9 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
     parametre = BusinessBlogParametreType.objects.get(uuid=uuidparametre)
     business_form = BusinessBlogParametreForm(request.POST or None, instance=parametre)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         if request.method == 'POST':
             with transaction.atomic():
                 if business_form.is_valid():
@@ -255,10 +274,10 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
                 else:
                     error_messages = get_error_messages(business_form)
                     return render(request, 'Yeka/parametreUpdate.html', {'business_form': business_form,
-                                                                         'error_messages': error_messages,
+                                                                         'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                                                          })
         return render(request, 'Yeka/parametreUpdate.html', {'business_form': business_form,
-                                                             'error_messages': '',
+                                                             'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name
                                                              })
     except Exception as e:
         traceback.print_exc()
@@ -273,6 +292,9 @@ def change_yekabusiness(request, uuid,yeka):
 
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         business_filter = {
             'uuid': uuid
         }
@@ -353,13 +375,13 @@ def change_yekabusiness(request, uuid,yeka):
                     return render(request, 'Yeka/YekabusinessUpdate.html', {'business_form': business_form,
                                                                             'error_messages': error_messages,
                                                                             'unbusiness': unbusiness,
-                                                                            'business': business
+                                                                            'business': business,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                                                             })
 
         return render(request, 'Yeka/YekabusinessUpdate.html', {'business_form': business_form,
                                                                 'error_messages': '',
                                                                 'unbusiness': unbusiness,
-                                                                'business': business
+                                                                'business': business,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                                                 })
 
     except Exception as e:
