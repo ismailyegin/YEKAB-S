@@ -6,9 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.urls import resolve
+
 from ekabis.Forms.UserSearchForm import UserSearchForm
+from ekabis.models import Permission
 from ekabis.services import general_methods
-from ekabis.services.services import LogsService
+from ekabis.services.services import LogsService, last_urls
 
 
 @login_required
@@ -21,6 +24,9 @@ def return_log(request):
     logs = None
     user_form = UserSearchForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -54,7 +60,7 @@ def return_log(request):
 
                     logs = LogsService(request, query)
 
-            return render(request, 'Log/Logs.html', {'logs': logs, 'user_form': user_form})
+            return render(request, 'Log/Logs.html', {'logs': logs, 'user_form': user_form,'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

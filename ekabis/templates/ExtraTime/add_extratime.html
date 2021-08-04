@@ -35,7 +35,7 @@
 
     {% endif %}
 
-  <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -91,12 +91,15 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Ek Süre Ekle - {{ yeka.definition }}</h1>
+                        Ek Süre Ekle - {{ name }}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Ek Zaman Ekle</a></li>
-                        {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
                     </ol>
                 </div>
             </div>
@@ -122,6 +125,7 @@
                                 <div class="form-group">
                                     {{ extratime_form }}
                                 </div>
+
 
                             </div>
 

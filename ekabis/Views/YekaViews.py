@@ -7,11 +7,13 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import resolve
 
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
-from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, YekaBusiness, ExtraTime
+from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, YekaBusiness, ExtraTime, \
+    Permission
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
 from ekabis.models.Yeka import Yeka
@@ -24,7 +26,7 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaService, CompanyService, YekaConnectionRegionService, YekaGetService, \
     YekaConnectionRegionGetService, YekaPersonService, \
     EmployeeGetService, YekaCompanyService, CompanyGetService, ExtraTimeService, YekaBusinessBlogGetService, \
-    BusinessBlogGetService, ConnectionRegionService
+    BusinessBlogGetService, ConnectionRegionService, last_urls
 import datetime
 @login_required
 def return_yeka(request):
@@ -34,9 +36,12 @@ def return_yeka(request):
         return redirect('accounts:login')
     yeka_form = YekaForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             return render(request, 'Yeka/view_yeka.html',
-                          {'yeka_form': yeka_form, 'error_messages': '', })
+                          {'yeka_form': yeka_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -48,6 +53,9 @@ def add_yeka(request):
         logout(request)
         return redirect('accounts:login')
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         yeka_form = YekaForm()
         if request.method == 'POST':
             with transaction.atomic():
@@ -68,7 +76,7 @@ def add_yeka(request):
                                   {'yeka_form': yeka_form, 'error_messages': error_message_unit,
                                    })
         return render(request, 'Yeka/add_yeka.html',
-                      {'yeka_form': yeka_form, 'error_messages': ''})
+                      {'yeka_form': yeka_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name })
 
     except Exception as e:
         traceback.print_exc()
@@ -153,6 +161,9 @@ def update_yeka(request, uuid):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         yeka_filter = {
             'uuid': uuid
         }
@@ -232,13 +243,13 @@ def update_yeka(request, uuid):
                 else:
                     error_message_unit = get_error_messages(yeka_form)
                     return render(request, 'Yeka/change_yeka.html',
-                                  {'yeka_form': yeka_form, 'error_messages': error_message_unit,
-                                   'yeka_connections': yeka_regions, 'connection_regions': connection_regions
+                                  {'yeka_form': yeka_form, 'error_messages': error_message_unit,'yeka':yeka,
+                                   'yeka_connections': yeka_regions, 'connection_regions': connection_regions,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                                    })
 
             return render(request, 'Yeka/change_yeka.html',
                           {'yeka_form': yeka_form, 'error_messages': '', 'yeka_connections': yeka_regions,
-                           'connection_regions': connection_regions
+                           'connection_regions': connection_regions,'urls': urls, 'current_url': current_url, 'url_name': url_name,'yeka':yeka,
                            })
     except Exception as e:
         traceback.print_exc()
@@ -485,6 +496,9 @@ def yeka_person_list(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
 
     yeka_filter = {
         'uuid': uuid,
@@ -549,7 +563,7 @@ def yeka_person_list(request, uuid):
         return redirect('ekabis:view_yeka_personel', uuid)
 
     return render(request, 'Yeka/yekaPersonList.html',
-                  {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid})
+                  {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid,'urls': urls, 'current_url': current_url, 'url_name': url_name,'yeka':yeka})
 
 
 
@@ -560,7 +574,9 @@ def yeka_company_list(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
     yeka_filter = {
         'uuid': uuid
     }
@@ -616,7 +632,7 @@ def yeka_company_list(request, uuid):
         return redirect('ekabis:view_yeka_company', yeka.uuid)
 
     return render(request, 'Yeka/yeka_company_list.html',
-                  {'companies': companies, 'yeka_companies': yeka_company, 'yeka_uuid': uuid})
+                  {'companies': companies, 'yeka_companies': yeka_company, 'yeka_uuid': uuid,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 def yeka_company_assignment(request):
@@ -699,6 +715,9 @@ def view_yekabusinessBlog(request, uuid):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         yeka_filter = {
             'uuid': uuid
         }
@@ -710,7 +729,7 @@ def view_yekabusinessBlog(request, uuid):
         yekabusinessbloks = None
 
         extratime_filter = {
-            'yeka': yeka
+            'business': yeka.business
         }
         ekstratimes = ExtraTimeService(request, extratime_filter)
 
@@ -720,7 +739,7 @@ def view_yekabusinessBlog(request, uuid):
         return render(request, 'Yeka/timeline.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
-                       'ekstratimes': ekstratimes
+                       'ekstratimes': ekstratimes,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                        })
 
     except Exception as e:
@@ -737,6 +756,9 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         logout(request)
         return redirect('accounts:login')
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         yeka_filter = {
             'uuid': yeka
         }
@@ -797,7 +819,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
-                          'yeka': yeka
+                          'yeka': yeka,'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
 
@@ -812,7 +834,9 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
         logout(request)
         return redirect('accounts:login')
     try:
-
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         yeka_filter = {
             'uuid': yeka
         }
@@ -845,7 +869,7 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
         return render(request, 'Yeka/add_yekabusinessblog_company.html',
                       {
                           'company_list': company_list,
-                          'yeka': yeka
+                          'yeka': yeka,'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
 
@@ -863,6 +887,9 @@ def view_yekabusiness_gant(request, uuid):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         yeka_filter = {
             'uuid': uuid
         }
@@ -925,7 +952,7 @@ def view_yekabusiness_gant(request, uuid):
         return render(request, 'Yeka/gant.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
-                       'ekstratimes': extratime
+                       'ekstratimes': extratime,'urls': urls, 'current_url': current_url, 'url_name': url_name
                        })
 
     except Exception as e:
@@ -981,6 +1008,9 @@ def view_yekabusinessblog_gant(request, yeka, yekabusiness):
         logout(request)
         return redirect('accounts:login')
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         yeka_filter = {
             'uuid': yeka
         }
@@ -1000,7 +1030,7 @@ def view_yekabusinessblog_gant(request, yeka, yekabusiness):
                       {
                           'yeka': yeka,
                           'yekabusinessblok':yekabussiness,
-                          'ekstratimes':extratime,
+                          'ekstratimes':extratime,'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
 

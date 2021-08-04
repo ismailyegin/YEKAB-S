@@ -58,6 +58,9 @@ def update_user(request, pk):
     user = UserGetService(request, userfilter)
     user_form = UserForm(request.POST or None, instance=user)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -73,10 +76,10 @@ def update_user(request, pk):
                 else:
                     error_messages = get_error_messages(user_form)
                     return render(request, 'kullanici/kullanici-duzenle.html',
-                                  {'user_form': user_form, 'error_messages': error_messages, })
+                                  {'user_form': user_form, 'error_messages': error_messages, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
         return render(request, 'kullanici/kullanici-duzenle.html',
-                      {'user_form': user_form, 'error_messages': ''})
+                      {'user_form': user_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()

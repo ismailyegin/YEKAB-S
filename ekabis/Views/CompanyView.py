@@ -36,6 +36,9 @@ def return_add_Company(request):
     user_form = UserForm()
     person_form = PersonForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -98,12 +101,12 @@ def return_add_Company(request):
                     error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_user
                     return render(request, 'Company/Company.html',
                                   {'company_form': company_form, 'communication_form': communication_form,
-                                   'form': company_form,
+                                   'form': company_form,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                                    'error_messages': error_messages, 'user_form': user_form, 'person_form': person_form})
 
             return render(request, 'Company/Company.html',
                           {'company_form': company_form, 'communication_form': communication_form, 'form': company_form,
-                           'error_messages': '', 'user_form': user_form, 'person_form': person_form})
+                           'error_messages': '', 'user_form': user_form, 'person_form': person_form,'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         print(e)
         traceback.print_exc()
@@ -166,11 +169,13 @@ def return_update_Company(request, uuid):
         'uuid': uuid
 
     }
-    urls = last_urls(request)
-    current_url = resolve(request.path_info)
-    url_name = Permission.objects.get(codename=current_url.url_name)
+
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
         company = CompanyGetService(request, companyfilter)
         company_form = CompanyForm(request.POST or None, instance=company)
         communication_form = CommunicationForm(request.POST or None, instance=company.communication)
@@ -206,7 +211,7 @@ def return_update_Company(request, uuid):
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
                                    'person_form': person_form, 'user_form': user_form,
-                                   'companyDocumentName': companyDocumentName, 'urls': urls,
+                                   'companyDocumentName': companyDocumentName, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                                    })
 
         return render(request, 'Company/CompanyUpdate.html',
@@ -234,6 +239,9 @@ def add_companyfilename(request):
     company_form = CompanyFileNameForm()
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         if request.method == 'POST':
             with transaction.atomic():
                 company_form = CompanyFileNameForm(request.POST)
@@ -246,11 +254,11 @@ def add_companyfilename(request):
                     error_messages = get_error_messages(company_form)
                     return render(request, 'Company/CompanyFileNameAdd.html',
                                   {'company_form': company_form,
-                                   'error_messages': error_messages
+                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                    })
 
         return render(request, 'Company/CompanyFileNameAdd.html',
-                      {'company_form': company_form,
+                      {'company_form': company_form,'urls': urls, 'current_url': current_url, 'url_name': url_name
 
                        })
 
@@ -258,13 +266,15 @@ def add_companyfilename(request):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_company')
-    return render(request, 'Company/CompanyFileNameAdd.html')
 
 
 @login_required
 def view_companyfilename(request):
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
     companyNameList = CompanyFileNamesService(request, None)
-    return render(request, 'Company/CompanyFileNameList.html', {'companyNameList': companyNameList})
+    return render(request, 'Company/CompanyFileNameList.html', {'companyNameList': companyNameList,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
@@ -275,6 +285,9 @@ def change_companyfilename(request, uuid):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         company_name_filter = {
             'uuid': uuid
         }
@@ -291,11 +304,11 @@ def change_companyfilename(request, uuid):
                     error_messages = get_error_messages(company_form)
                     return render(request, 'Company/CompanyFileNameUpdate.html',
                                   {'company_form': company_form,
-                                   'error_messages': error_messages
+                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                    })
 
         return render(request, 'Company/CompanyFileNameUpdate.html',
-                      {'company_form': company_form,
+                      {'company_form': company_form,'urls': urls, 'current_url': current_url, 'url_name': url_name
                        })
     except Exception as e:
         traceback.print_exc()
@@ -350,6 +363,9 @@ def add_consortium(request):
     }
     companies = CompanyService(request, company)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -374,11 +390,11 @@ def add_consortium(request):
                     error_messages = error_messages_communication + error_message_company
                     return render(request, 'Company/AddConsortiumCompany.html',
                                   {'company_form': company_form, 'communication_form': communication_form,
-                                   'error_messages': error_messages, })
+                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name })
 
             return render(request, 'Company/AddConsortiumCompany.html',
                           {'company_form': company_form, 'communication_form': communication_form,
-                           'form': company_form, 'companies': companies,
+                           'form': company_form, 'companies': companies,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                            'error_messages': ''})
     except Exception as e:
         print(e)
@@ -390,6 +406,7 @@ def add_consortium(request):
 @login_required
 def view_consortium(request):
     try:
+
         company = {
             'is_consortium': 'True'
         }

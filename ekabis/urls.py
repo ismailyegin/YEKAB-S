@@ -5,7 +5,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
 
 app_name = 'ekabis'
 urlpatterns = [
-    path('maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
+    path('anasayfa/maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
     # Dashboard
     path('anasayfa/admin/', DashboardViews.return_admin_dashboard, name='view_admin'),
     path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
@@ -13,10 +13,10 @@ urlpatterns = [
 
     # Takvim notları
     path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendarName, name='add_calendarName'),
-    path('tatil-gunleri/', VacationDayViews.return_vacation_day, name='vacation_days'),
-    path('tatil-gunu-ekle/', VacationDayViews.add_vacation_day, name='add_vacation_day'),
-    path('tatil-gunu-sil/', VacationDayViews.delete_vacation_date, name='delete_vacation_day'),
-    path('tatil-gunu-guncelle/<uuid:uuid>', VacationDayViews.update_vacation_date, name='update_vacation_day'),
+    path('yeka/tatil-gunleri/', VacationDayViews.return_vacation_day, name='vacation_days'),
+    path('yeka/tatil-gunu-ekle/', VacationDayViews.add_vacation_day, name='add_vacation_day'),
+    path('yeka/tatil-gunu-sil/', VacationDayViews.delete_vacation_date, name='delete_vacation_day'),
+    path('yeka/tatil-gunu-guncelle/<uuid:uuid>', VacationDayViews.update_vacation_date, name='update_vacation_day'),
 
     # Anasayfa Takvim notlar kaydet
     path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendar, name='add_calendarfdk'),
@@ -31,23 +31,23 @@ urlpatterns = [
     path('personel/personel-profil-guncelle/', EmployeeViews.updateRefereeProfile, name='personel-profil-guncelle'),
 
     # Yönetim
-    path('kurul-uyeleri/', DirectoryViews.return_directory_members, name='view_directoryMember'),
-    path('kurul-uyesi-ekle/', DirectoryViews.add_directory_member, name='add_directorymember'),
-    path('kurul-uyesi-duzenle/<uuid:uuid>/', DirectoryViews.update_directory_member,
+    path('kurul/kurul-uyeleri/', DirectoryViews.return_directory_members, name='view_directoryMember'),
+    path('kurul/kurul-uyesi-ekle/', DirectoryViews.add_directory_member, name='add_directorymember'),
+    path('kurul/kurul-uyesi-duzenle/<uuid:uuid>/', DirectoryViews.update_directory_member,
          name='change_directorymember'),
-    path('kurul-uyeleri/sil/', DirectoryViews.delete_directory_member, name='delete_directorymember'),
+    path('kurul/kurul-uyeleri/sil/', DirectoryViews.delete_directory_member, name='delete_directorymember'),
 
     # yönetim rol
-    path('kurul-uye-rolleri/', DirectoryViews.return_member_roles, name='view_directorymemberrole'),
-    path('kurul-uye-rolleri/sil/', DirectoryViews.delete_member_role,
+    path('kurul/kurul-uye-rolleri/', DirectoryViews.return_member_roles, name='view_directorymemberrole'),
+    path('kurul/kurul-uye-rolleri/sil/', DirectoryViews.delete_member_role,
          name='delete_directorymemberrole'),
-    path('kurul-uye-rol-duzenle/<uuid:uuid>/', DirectoryViews.update_member_role,
+    path('kurul/kurul-uye-rol-duzenle/<uuid:uuid>/', DirectoryViews.update_member_role,
          name='change_directorymemberrole'),
     # yönetim kurul
 
-    path('kurullar/', DirectoryViews.return_commissions, name='view_directorycommission'),
-    path('kurullar/sil/', DirectoryViews.delete_commission, name='delete_directorycommission'),
-    path('kurul-duzenle/<uuid:pk>/', DirectoryViews.update_commission, name='change_directorycommission'),
+    path('kurul/kurul-listesi', DirectoryViews.return_commissions, name='view_directorycommission'),
+    path('kurul/kurul-sil/', DirectoryViews.delete_commission, name='delete_directorycommission'),
+    path('kurul/kurul-duzenle/<uuid:pk>/', DirectoryViews.update_commission, name='change_directorycommission'),
 
     # Kullanıcılar
     path('kullanici/kullanicilar/', UserViews.return_users, name='view_user'),
@@ -78,13 +78,13 @@ urlpatterns = [
 
     #     destek ve talep
 
-    path('destek-talep-listesi/', ClaimView.return_claim, name='view_claim'),
-    path('destek/Destek-Ekle', ClaimView.claim_add, name='add_claim'),
-    path('destek/destek-sil/', ClaimView.delete_claim, name='delete_claim'),
-    path('destek/destek-guncelle/<uuid:uuid>/', ClaimView.claim_update, name='change_claim'),
+    path('destek/destek-talep-listesi/', ClaimView.return_claim, name='view_claim'),
+    path('destek/destek/Destek-Ekle', ClaimView.claim_add, name='add_claim'),
+    path('destek/destek/destek-sil/', ClaimView.delete_claim, name='delete_claim'),
+    path('destek/destek/destek-guncelle/<uuid:uuid>/', ClaimView.claim_update, name='change_claim'),
 
     #     Yardım
-    path('yardim', HelpViews.help, name='view_help'),
+    path('destek/yardim', HelpViews.help, name='view_help'),
 
     # firma
     path('firma/firma-ekle/', CompanyView.return_add_Company, name='add_company'),
@@ -93,7 +93,7 @@ urlpatterns = [
     path('firma/konsorsiyum/', CompanyView.view_consortium, name='view_consortium'),
     path('firma/konsorsiyum-guncelle/<uuid:uuid>/', CompanyView.return_update_consortium, name='change_consortium'),
 
-    path('api-firma-listesi/', APIViews.GetCompany.as_view(), name='view_company-api'),
+    path('firma/api-firma-listesi/', APIViews.GetCompany.as_view(), name='view_company-api'),
     path('firma/firma-guncelle/<uuid:uuid>/', CompanyView.return_update_Company, name='change_company'),
     path('firma/firma-sil/', CompanyView.delete_company, name='delete_company'),
 
@@ -173,7 +173,7 @@ urlpatterns = [
 
     path('yeka/yeka-firmalar/<uuid:uuid>', YekaViews.yeka_company_list, name='view_yeka_company'),
     path('yeka/yeka-firma-ata/', YekaViews.yeka_company_assignment, name='yeka_company_assignment'),
-    path('remove-yeka-company/', YekaViews.yeka_company_remove, name='company_remove_yeka'),
+    path('yeka/remove-yeka-company/', YekaViews.yeka_company_remove, name='company_remove_yeka'),
 
     # yekabusiness
     path('yekaIsBlogu/yeka-IsBlogu-ekle/<uuid:uuid>/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
@@ -195,18 +195,18 @@ urlpatterns = [
     path('isBlogu/parametre-sil/', BusinessBlogViews.delete_businessBlogParametre, name='delete_businessBlogParametre'),
 
     # Ek zaman
-    path('yeka/ekstra/zaman-listesi/', ExtraTimeViews.return_list_extra_time, name='view_extratime'),
-    path('yeka/ekstra/zaman-ekle/<uuid:yeka>/<uuid:businessblog>/', ExtraTimeViews.return_add_extra_time, name='add_extratime'),
-    path('yeka/ekstra/zaman-guncelle/<uuid:uuid>/', ExtraTimeViews.return_update_extra_time, name='change_extratime'),
-    path('yeka/ekstra/zaman-sil/', ExtraTimeViews.delete_extra_time, name='delete_extratime'),
+    path('yeka/ek-sure-listesi/', ExtraTimeViews.return_list_extra_time, name='view_extratime'),
+    path('yeka/ek-sure-ekle/<uuid:business>/<uuid:businessblog>/', ExtraTimeViews.return_add_extra_time, name='add_extratime'),
+    path('yeka/ek-sure-guncelle/<uuid:uuid>/', ExtraTimeViews.return_update_extra_time, name='change_extratime'),
+    path('yeka/ek-sure-sil/', ExtraTimeViews.delete_extra_time, name='delete_extratime'),
 
     # Ekstra zaman file
-    path('yeka/ekstra/zaman-dosya-ekle/<uuid:uuid>/', ExtraTimeViews.add_extratimefile, name='add_extratimefile'),
-    path('yeka/ekstra/zaman-dosya-guncelle/<uuid:uuid>/<uuid:time>', ExtraTimeViews.change_extratimefile, name='change_extratimefile'),
-    path('yeka/ekstra/zaman-sil/', ExtraTimeViews.delete_extratimefile, name='delete_extratimefile'),
+    path('yeka/ek-sure-dosya-ekle/<uuid:uuid>/', ExtraTimeViews.add_extratimefile, name='add_extratimefile'),
+    path('yeka/ek-sure-dosya-guncelle/<uuid:uuid>/<uuid:time>', ExtraTimeViews.change_extratimefile, name='change_extratimefile'),
+    path('yeka/ek-sure-sil/', ExtraTimeViews.delete_extratimefile, name='delete_extratimefile'),
 
 
 
-    path('ilce-getir/', CityViews.get_districts, name='ilce-getir'),
+    path('ilce/ilce-getir/', CityViews.get_districts, name='ilce-getir'),
 
 ]

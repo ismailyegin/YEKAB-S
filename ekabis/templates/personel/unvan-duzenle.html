@@ -4,16 +4,16 @@
 
 
 
-   {% if messages %}
+    {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -37,7 +37,27 @@
 
 
     {% endif %}
+    <section class="content-header">
 
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Unvan Düzenle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
 
     <section class="content">
 
@@ -54,7 +74,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Unvan Düzenle</h3>
+                            <h3 class="card-title">{{ categoryItem.name }} Düzenle</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -72,12 +92,12 @@
                             </div>
                             <!-- /.card-body -->
 
-                             <div class="card-footer">
-                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
-                                    </button>
-                            <small style="color: red">(*) Olan Alanlar zorunludur.</small>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+                                <small style="color: red">(*) Olan Alanlar zorunludur.</small>
 
-                                </div>
+                            </div>
                         </form>
 
 

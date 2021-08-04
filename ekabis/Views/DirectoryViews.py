@@ -9,6 +9,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import resolve
+
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.DirectoryCommissionForm import DirectoryCommissionForm
 from ekabis.Forms.DirectoryForm import DirectoryForm
@@ -21,6 +23,7 @@ from ekabis.Forms.DisabledUserForm import DisabledUserForm
 from ekabis.Forms.UserForm import UserForm
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserSearchForm import UserSearchForm
+from ekabis.models import Permission
 from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMember import DirectoryMember
 from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
@@ -30,7 +33,7 @@ from unicode_tr import unicode_tr
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import PersonService, UserService, GroupService, DirectoryMemberService, \
     DirectoryMemberRoleService, DirectoryCommissionService, DirectoryMemberGetService, DirectoryMemberRoleGetService, \
-    DirectoryCommissionGetService, GroupGetService
+    DirectoryCommissionGetService, GroupGetService, last_urls
 
 
 @login_required
@@ -44,7 +47,9 @@ def add_directory_member(request):
     person_form = PersonForm()
     communication_form = CommunicationForm()
     member_form = DirectoryForm()
-
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
     if request.method == 'POST':
 
         user_form = UserForm(request.POST)
@@ -63,7 +68,7 @@ def add_directory_member(request):
             return render(request, 'yonetim/kurul-uyesi-ekle.html',
                           {'user_form': user_form, 'person_form': person_form,
                            'communication_form': communication_form,
-                           'member_form': member_form})
+                           'member_form': member_form,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
         tc = request.POST.get('tc')
         personfilter = {
@@ -74,7 +79,7 @@ def add_directory_member(request):
             return render(request, 'yonetim/kurul-uyesi-ekle.html',
                           {'user_form': user_form, 'person_form': person_form,
                            'communication_form': communication_form,
-                           'member_form': member_form})
+                           'member_form': member_form,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
         name = request.POST.get('first_name')
         surname = request.POST.get('last_name')
@@ -134,11 +139,11 @@ def add_directory_member(request):
             error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_member
             return render(request, 'yonetim/kurul-uyesi-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                           'member_form': member_form, 'error_messages': error_messages})
+                           'member_form': member_form, 'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     return render(request, 'yonetim/kurul-uyesi-ekle.html',
                   {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                   'member_form': member_form, 'error_messages': ''})
+                   'member_form': member_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
@@ -151,6 +156,9 @@ def return_directory_members(request):
     members = None
     user_form = UserSearchForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -174,7 +182,7 @@ def return_directory_members(request):
                             query &= Q(user__email__icontains=email)
                         members = DirectoryMemberService(request, query)
 
-            return render(request, 'yonetim/kurul-uyeleri.html', {'members': members, 'user_form': user_form})
+            return render(request, 'yonetim/kurul-uyeleri.html', {'members': members, 'user_form': user_form,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
@@ -239,6 +247,9 @@ def update_directory_member(request, uuid):
     member_form = DirectoryForm(request.POST or None, instance=member)
     communication_form = CommunicationForm(request.POST or None, instance=communication)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -266,7 +277,7 @@ def update_directory_member(request, uuid):
                         return render(request, 'yonetim/kurul-uyesi-duzenle.html',
                                       {'user_form': user_form, 'communication_form': communication_form,
                                        'member': member,
-                                       'person_form': person_form, 'member_form': member_form, 'groups': groups,
+                                       'person_form': person_form, 'member_form': member_form, 'groups': groups,'urls': urls, 'current_url': current_url, 'url_name': url_name
 
                                        })
                 #
@@ -305,11 +316,11 @@ def update_directory_member(request, uuid):
                     return render(request, 'yonetim/kurul-uyesi-duzenle.html',
                                   {'user_form': user_form, 'communication_form': communication_form, 'member': member,
                                    'person_form': person_form, 'member_form': member_form, 'groups': groups,
-                                   'error_messages': error_messages
+                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name
                                    })
             return render(request, 'yonetim/kurul-uyesi-duzenle.html',
                           {'user_form': user_form, 'communication_form': communication_form, 'member': member,
-                           'person_form': person_form, 'member_form': member_form, 'groups': groups,
+                           'person_form': person_form, 'member_form': member_form, 'groups': groups,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                            'error_messages': ''
 
                            })
@@ -327,6 +338,9 @@ def return_member_roles(request):
         return redirect('accounts:login')
     member_role_form = DirectoryMemberRoleForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -344,13 +358,13 @@ def return_member_roles(request):
                     memberRoles = DirectoryMemberRoleService(request, None)
                     return render(request, 'yonetim/kurul-uye-rolleri.html',
                                   {'member_role_form': member_role_form, 'memberRoles': memberRoles,
-                                   'error_messages': error_messages})
+                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
             memberfilter = {
                 'isDeleted': False
             }
             memberRoles = DirectoryMemberRoleService(request, memberfilter)
             return render(request, 'yonetim/kurul-uye-rolleri.html',
-                          {'member_role_form': member_role_form, 'memberRoles': memberRoles, 'error_messages': ''})
+                          {'member_role_form': member_role_form, 'memberRoles': memberRoles, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -390,6 +404,9 @@ def update_member_role(request, uuid):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         memberrolefilter = {
             'uuid': uuid
         }
@@ -406,10 +423,10 @@ def update_member_role(request, uuid):
                 else:
                     error_messages = get_error_messages(member_role_form)
                     return render(request, 'yonetim/kurul-uye-rol-duzenle.html',
-                                  {'member_role_form': member_role_form, 'error_messages': error_messages})
+                                  {'member_role_form': member_role_form, 'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
             return render(request, 'yonetim/kurul-uye-rol-duzenle.html',
-                          {'member_role_form': member_role_form, 'error_messages': ''})
+                          {'member_role_form': member_role_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -425,6 +442,9 @@ def return_commissions(request):
     commission_form = DirectoryCommissionForm()
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             commissionfilter = {
                 'isDeleted': False
@@ -450,10 +470,10 @@ def return_commissions(request):
                     error_messages = get_error_messages(commission_form)
                     return render(request, 'yonetim/kurullar.html',
                                   {'commission_form': commission_form, 'commissions': commissions,
-                                   'error_messages': error_messages})
+                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
             return render(request, 'yonetim/kurullar.html',
-                          {'commission_form': commission_form, 'commissions': commissions, 'error_messages': ''})
+                          {'commission_form': commission_form, 'commissions': commissions, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
@@ -499,6 +519,9 @@ def update_commission(request, pk):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         commissonfilter = {
             'uuid': pk
         }
@@ -518,10 +541,10 @@ def update_commission(request, pk):
                 else:
                     error_messages = get_error_messages(commission_form)
                     return render(request, 'yonetim/kurul-duzenle.html',
-                                  {'commission_form': commission_form, 'error_messages': error_messages})
+                                  {'commission_form': commission_form, 'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
             return render(request, 'yonetim/kurul-duzenle.html',
-                          {'commission_form': commission_form, 'error_messages': ''})
+                          {'commission_form': commission_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -548,6 +571,9 @@ def updateDirectoryProfile(request):
     member_form = DisabledDirectoryForm(request.POST or None, instance=request.user)
     password_form = SetPasswordForm(request.user, request.POST)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -583,11 +609,11 @@ def updateDirectoryProfile(request):
                                   {'user_form': user_form, 'communication_form': communication_form,
                                    'person_form': person_form, 'password_form': password_form,
                                    'member_form': member_form,
-                                   'error_messages': error_messages})
+                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
             return render(request, 'yonetim/yonetim-kurul-profil-guncelle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
-                           'person_form': person_form, 'password_form': password_form, 'member_form': member_form,
+                           'person_form': person_form, 'password_form': password_form, 'member_form': member_form,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                            'error_messages': ''})
     except Exception as e:
         traceback.print_exc()

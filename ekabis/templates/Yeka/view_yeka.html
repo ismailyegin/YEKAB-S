@@ -117,8 +117,11 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">YEKA</a></li>
-                        {#<li class="breadcrumb-item active">Advanced Form</li>#}
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name}}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
                     </ol>
                 </div>
             </div>
@@ -301,7 +304,7 @@
                             let url_gant = "{% url 'ekabis:view_yekabusiness_gant' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             url_gant = url_gant.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
 
-                            html = '<td><div class="btn-group"> <button type="button" class="btn btn-default">İşlemler</button>  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> </button> <div class="dropdown-menu" role="menu">';
+                            html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';
                             html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
                             html += '<a href="' + url_region + '" class="dropdown-item" title="Baglantı Bölgeleri" type="button"><i class="fa fa-plus"></i> Baglantı Bölgeleri</a>';
                             html += '<a href="' + url_person + '" class="dropdown-item" title="Personel Ekle" type="button"><i class="fa fa-plus"></i> Personel Ekle</a>';

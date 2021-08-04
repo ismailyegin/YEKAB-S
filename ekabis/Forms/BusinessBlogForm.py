@@ -11,8 +11,8 @@ class BusinessBlogForm(ModelForm):
                   'start_notification',
                   'finish_notification',)
         labels = {'name': 'Tanımı',
-                  'start_notification':'Bildirim Başlangıç İtibaren',
-                  'finish_notification':'Bildirim Bitimden Önce'
+                  'start_notification':'Başlangıçtan İtibaren Gün',
+                  'finish_notification':'Süre Bitiminden Önce Gün'
                   }
 
         widgets = {

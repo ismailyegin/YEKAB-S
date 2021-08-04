@@ -47,15 +47,26 @@
     {% endif %}
 
 
-    <section class="content-header">
-        <h1>
-            Yönetim Kurul Üyesi Düzenle
+      <section class="content-header">
 
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i>Yönetim Kurul Üyesi Düzenle</a></li>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Yönetim Kurul Üye Güncelle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
 
-        </ol>
     </section>
     <section class="content">
 

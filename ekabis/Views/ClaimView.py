@@ -8,8 +8,10 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import resolve
 
 from ekabis.Forms.ClaimForm import ClaimForm
+from ekabis.models import Permission
 from ekabis.services import general_methods
 from ekabis.models.Claim import Claim
 
@@ -17,7 +19,7 @@ from ekabis.Forms.DestekSearchForm import DestekSearchform
 from unicode_tr import unicode_tr
 from ekabis.Forms.UserSearchForm import UserSearchForm
 from ekabis.services.general_methods import get_error_messages
-from ekabis.services.services import ClaimService, ClaimGetService
+from ekabis.services.services import ClaimService, ClaimGetService, last_urls
 
 
 @login_required
@@ -31,6 +33,9 @@ def return_claim(request):
     destek = None
     user_form = UserSearchForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -57,7 +62,7 @@ def return_claim(request):
                         destek = ClaimService(request, query)
 
             return render(request, 'Destek/DestekTalepListesi.html',
-                          {'claims': destek, 'destek_form': destek_form, 'user_form': user_form, })
+                          {'claims': destek, 'destek_form': destek_form, 'user_form': user_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -73,6 +78,9 @@ def claim_add(request):
 
     claim_form = ClaimForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -88,7 +96,7 @@ def claim_add(request):
                     error_messages = get_error_messages(claim_form)
                     return render(request, 'Destek/Desktek-ekle.html',
                                   {'claim_form': claim_form, 'error_messages': error_messages})
-            return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, 'error_messages': ''})
+            return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, 'error_messages': '', 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
@@ -104,6 +112,9 @@ def claim_update(request, uuid):
         return redirect('accounts:login')
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         claim_filter = {
             'uuid': uuid
         }
@@ -119,7 +130,7 @@ def claim_update(request, uuid):
                 else:
                     error_messages = get_error_messages(claim_form)
                     return render(request, 'Destek/Desktek-ekle.html',
-                                  {'claim_form': claim_form, 'error_messages': error_messages})
+                                  {'claim_form': claim_form, 'error_messages': error_messages, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
             return render(request, 'Destek/Desktek-ekle.html', {'claim_form': claim_form, 'error_messages': ''})
     except Exception as e:

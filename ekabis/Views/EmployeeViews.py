@@ -54,6 +54,9 @@ def add_employee(request):
     }
     employee_form.fields['workDefinition'].queryset = CategoryItemService(request, categorItemfilter)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
                 user_form = UserForm(request.POST)
@@ -116,12 +119,14 @@ def add_employee(request):
                     return render(request, 'personel/personel-ekle.html',
                                   {'user_form': user_form, 'person_form': person_form,
                                    'communication_form': communication_form,
-                                   'employee_form': employee_form, 'error_messages': error_messages,
+                                   'employee_form': employee_form, 'error_messages': error_messages,'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name,
                                    })
 
             return render(request, 'personel/personel-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                           'employee_form': employee_form, 'error_messages': '', 'groups': groups
+                           'employee_form': employee_form, 'error_messages': '', 'groups': groups,'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name,
                            })
     except Exception as e:
         traceback.print_exc()
@@ -273,6 +278,9 @@ def return_workdefinitionslist(request):
         return redirect('accounts:login')
     category_item_form = CategoryItemForm()
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -293,7 +301,7 @@ def return_workdefinitionslist(request):
                     
                     error_messages_user = get_error_messages(category_item_form)
                     return render(request, 'personel/unvanListesi.html',
-                                  {'category_item_form': category_item_form,'error_messages':error_messages_user})
+                                  {'category_item_form': category_item_form,'error_messages':error_messages_user,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
         categoryfilter = {
@@ -385,9 +393,13 @@ def edit_workdefinitionUnvan(request, uuid):
     categoryfilter = {
         'uuid': uuid
     }
+    error_messages=''
     categoryItem = CategoryItemGetService(request, categoryfilter)
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -400,10 +412,9 @@ def edit_workdefinitionUnvan(request, uuid):
                     log = general_methods.logwrite(request, request.user, log)
                     return redirect('ekabis:view_categoryitem')
                 else:
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
-                    error_messages_user = get_error_messages(category_item_form)
+                    error_messages = get_error_messages(category_item_form)
         return render(request, 'personel/unvan-duzenle.html',
-                      {'category_item_form': category_item_form, 'error_messages': error_messages_user})
+                      {'category_item_form': category_item_form,'categoryItem':categoryItem, 'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -452,7 +463,9 @@ def updateRefereeProfile(request):
     person_form = DisabledPersonForm(request.POST or None, request.FILES or None, instance=employee.person)
     communication_form = DisabledCommunicationForm(request.POST or None, instance=employee.communication)
     password_form = SetPasswordForm(request.user, request.POST)
-
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
     if request.method == 'POST':
         person_form = DisabledPersonForm(request.POST, request.FILES)
         try:
@@ -471,16 +484,16 @@ def updateRefereeProfile(request):
             return redirect('ekabis:personel-profil-guncelle')
 
         else:
-            error_message_company = get_error_messages(password_form)
+            error_messages = get_error_messages(password_form)
             # error_messages_communication = get_error_messages(communication_form)
             # error_messages_person = get_error_messages(person_form)
             # error_messages_employee = get_error_messages(communication_form)
 
-            error_messages = password_form
+
             return render(request, 'personel/Personel-Profil-güncelle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
                            'person_form': person_form, 'password_form': password_form,
-                           'error_messages': error_messages})
+                           'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
     return render(request, 'personel/Personel-Profil-güncelle.html',
                   {'user_form': user_form, 'communication_form': communication_form,
-                   'person_form': person_form, 'password_form': password_form, 'error_messages': ''})
+                   'person_form': person_form, 'password_form': password_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
