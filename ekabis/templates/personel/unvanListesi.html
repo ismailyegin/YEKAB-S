@@ -137,13 +137,14 @@
                                         <label> {{ category_item_form.name.label }}</label>
                                         {{ category_item_form.name }}
                                     </div>
+                                    <label for="" id="label_name"></label>
 
 
                                     <!-- /.card-body -->
 
                                     <div class="card-footer">
-                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
-                                </button>
+                                        <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                        </button>
 
 
                                         <small style="color: red ">(*) Olan Alanlar zorunludur.</small>
@@ -289,8 +290,21 @@
             });
 
         }
-    </script>
 
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            {% if error_messages %}
+debugger;
+                let messages ={{ error_messages | safe }}
+                if (messages !== '') {
+                    errors_messages({{ error_messages |safe }})
+                }
+            {% endif %}
+        });
+
+    </script>
 
 
 
