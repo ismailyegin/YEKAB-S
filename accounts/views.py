@@ -74,11 +74,11 @@ def forgot(request):
             fdk.save()
 
             html_content = ''
-            subject, from_email, to = 'THF Bilgi Sistemi Kullanıcı Bilgileri', 'fatih@kobiltek.com', mail
+            subject, from_email, to = 'Yekabis Kullanıcı Bilgileri', 'fatih@kobiltek.com', mail
             html_content = '<h2>YEKABİS</h2>'
             html_content = html_content + '<p><strong>Kullanıcı Adınız :' + str(fdk.user.username) + '</strong></p>'
             html_content = html_content + '<p> <strong>Site adresi:</strong> <a href="http://127.0.0.1:8000/newpassword?query=' + str(
-                fdk.uuid) + '">http://127.0.0.1:8000/sbs/profil-guncelle/?query=' + str(fdk.uuid) + '</p></a>'
+                fdk.uuid) + '">/sbs/profil-guncelle/?query=' + str(fdk.uuid) + '</p></a>'
             # html_content = html_content + '<p> <strong>Site adresi:</strong> <a href="http://sbs.badminton.gov.tr/newpassword?query=' + str(
             #     fdk.uuid) + '">http://sbs.badminton.gov.tr/sbs/profil-guncelle/?query=' + str(fdk.uuid) + '</p></a>'
 

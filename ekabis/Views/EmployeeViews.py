@@ -30,6 +30,8 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import CategoryItemService, EmployeeService, EmployeeGetService, CategoryItemGetService, \
     GroupService, GroupGetService, last_urls
 
+from ekabis.models.Settings import Settings
+
 
 @login_required
 def add_employee(request):
@@ -44,7 +46,7 @@ def add_employee(request):
     communication_form = CommunicationForm()
     employee_form = EmployeeForm()
 
-    groups = Group.objects.exclude(name='Admin')
+    groups = Group.objects.exclude(name='Admin').exclude(name='Firma')
 
     categorItemfilter = {
         'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
@@ -87,6 +89,15 @@ def add_employee(request):
                             group = GroupGetService(request, group_filter)
                             personel.user.groups.add(group)
                             personel.save()
+
+
+                    if Settings.objects.filter(key='mail_person'):
+                        if Settings.objects.get(key='mail_person').is_active:
+                            general_methods.sendmail(request,personel.user)
+                    else:
+                        set=Settings(key='mail_person')
+                        set.is_active=False
+                        set.save()
 
                     log = str(user.get_full_name()) + " personelini  kaydetti"
                     log = general_methods.logwrite(request, request.user, log)
@@ -137,6 +148,7 @@ def edit_employee(request, pk):
         user_form = UserForm(request.POST or None, instance=employee.user)
         person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
         communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
+        groups = Group.objects.exclude(name='Admin').exclude(name='Firma')
 
         employee_form = EmployeeForm(request.POST or None, instance=employee)
         categoryfilter = {
@@ -157,6 +169,14 @@ def edit_employee(request, pk):
                     person_form.save()
                     communication_form.save()
                     employee_form.save()
+                    if request.POST.get('group'):
+                        group_filter = {
+                            'pk': request.POST.get('group')
+                        }
+                        if GroupService(request, group_filter):
+                            group = GroupGetService(request, group_filter)
+                            user.groups.add(group)
+                            user.save()
 
                     log = str(user.get_full_name()) + " personel güncellendi"
                     log = general_methods.logwrite(request, request.user, log)
@@ -180,13 +200,14 @@ def edit_employee(request, pk):
                                   {'user_form': user_form, 'communication_form': communication_form,
                                    'person_form': person_form, 'employee_form': employee_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name,
+                                   'groups':groups
                                    })
 
             return render(request, 'personel/personel-duzenle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
                            'person_form': person_form, 'employee_form': employee_form, 'error_messages': '',
-                           'urls': urls, 'current_url': current_url, 'url_name': url_name
+                           'urls': urls, 'current_url': current_url, 'url_name': url_name,'groups':groups
                            })
 
     except Exception as e:

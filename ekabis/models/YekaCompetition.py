@@ -11,6 +11,7 @@ class YekaCompetition(BaseModel):
     city = models.ManyToManyField(City)
     business = models.OneToOneField(YekaBusiness, on_delete=models.CASCADE,null=True,blank=True)
     company=models.ForeignKey(Company,on_delete=models.DO_NOTHING,null=True,blank=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return '%s ' % self.name

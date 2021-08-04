@@ -26,7 +26,7 @@ from ekabis.models.Person import Person
 from ekabis.models.Settings import Settings
 from ekabis.models.ExtraTimeFile import ExtraTimeFile
 
-from ekabis.models import YekaConnectionRegion, YekaPersonHistory, YekaPerson, YekaBusiness, YekaBusinessBlog, \
+from ekabis.models import YekaConnectionRegion, YekaPerson, YekaBusiness, YekaBusinessBlog, \
     YekaBusinessBlogParemetre, ConnectionRegion, ConnectionUnit, CompanyUser, \
     CompanyFiles, CompanyFileNames, CalendarName, Calendar
 from ekabis.models.VacationDay import VacationDay
@@ -35,6 +35,7 @@ def CityService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return City.objects.filter(**filter)
             else:
                 return City.objects.filter(filter,isDeleted=False)
@@ -48,6 +49,7 @@ def YekaCompanyService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return YekaCompany.objects.filter(**filter)
             else:
                 return YekaCompany.objects.filter(filter,isDeleted=False)
@@ -61,6 +63,7 @@ def YekaPersonService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return YekaPerson.objects.filter(**filter)
             else:
                 return YekaPerson.objects.filter(filter,isDeleted=False)
@@ -75,6 +78,7 @@ def YekaCompetitionServiceService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return YekaCompetition.objects.filter(**filter)
             else:
                 return YekaCompetition.objects.filter(filter,isDeleted=False)
@@ -89,6 +93,7 @@ def YekaConnectionRegionService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return YekaConnectionRegion.objects.filter(**filter)
             else:
                 return YekaConnectionRegion.objects.filter(filter,isDeleted=False)
@@ -102,6 +107,7 @@ def ConnectionRegionService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return ConnectionRegion.objects.filter(**filter)
             else:
                 return ConnectionRegion.objects.filter(filter,isDeleted=False)
@@ -117,6 +123,7 @@ def ExtraTimeService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return ExtraTime.objects.filter(**filter)
             else:
                 return ExtraTime.objects.filter(filter,isDeleted=False)
@@ -132,6 +139,7 @@ def CalendarNameService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return CalendarName.objects.filter(**filter)
             else:
                 return CalendarName.objects.filter(filter,isDeleted=False)
@@ -147,6 +155,7 @@ def UserService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+
                 return User.objects.filter(**filter)
             else:
                 return User.objects.filter(filter)
@@ -178,6 +187,7 @@ def GroupService(request, filter):
 def PersonService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return Person.objects.filter(**filter)
         else:
             return Person.objects.filter(isDeleted=False)
@@ -193,6 +203,7 @@ def PersonService(request, filter):
 def CommunicationService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return Communication.objects.filter(**filter)
         else:
             return Communication.objects.filter(isDeleted=False)
@@ -206,6 +217,7 @@ def CommunicationService(request, filter):
 def CategoryItemService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return CategoryItem.objects.filter(**filter)
         else:
             return CategoryItem.objects.filter(isDeleted=False)
@@ -219,7 +231,9 @@ def CategoryItemService(request, filter):
 def CompanyService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return Company.objects.filter(**filter)
+
         else:
             return Company.objects.filter(isDeleted=False)
     except Exception as e:
@@ -233,6 +247,7 @@ def DirectoryMemberService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return DirectoryMember.objects.filter(**filter)
             else:
                 return DirectoryMember.objects.filter(filter,isDeleted=False)
@@ -248,6 +263,7 @@ def DirectoryMemberService(request, filter):
 def DirectoryCommissionService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return DirectoryCommission.objects.filter(**filter)
         else:
             return DirectoryCommission.objects.filter(isDeleted=False)
@@ -263,6 +279,7 @@ def DirectoryMemberRoleService(request, filter):
         with transaction.atomic():
 
             if filter:
+                filter['isDeleted'] = False
                 return DirectoryMemberRole.objects.filter(**filter)
             else:
                 return DirectoryMemberRole.objects.filter(isDeleted=False)
@@ -276,6 +293,7 @@ def EmployeeService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return Employee.objects.filter(**filter)
             else:
                 Employee.objects.filter(filter,isDeleted=False)
@@ -292,6 +310,7 @@ def LogsService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return Logs.objects.filter(**filter)
             else:
                 return Logs.objects.filter(filter,isDeleted=False)
@@ -307,6 +326,7 @@ def LogsService(request, filter):
 def MenuService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return Menu.objects.filter(**filter)
         else:
             return Menu.objects.filter(isDeleted=False)
@@ -320,6 +340,7 @@ def MenuService(request, filter):
 def NotificationService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return Notification.objects.filter(**filter)
         else:
             return Notification.objects.filter(isDeleted=False)
@@ -333,6 +354,7 @@ def NotificationService(request, filter):
 def ActiveGroupService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return ActiveGroup.objects.filter(**filter)
         else:
             return ActiveGroup.objects.filter(isDeleted=False)
@@ -347,6 +369,7 @@ def ActiveGroupService(request, filter):
 def YekaCompetitionPersonService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return YekaCompetitionPerson.objects.filter(**filter)
         else:
             return YekaCompetitionPerson.objects.filter(isDeleted=False)
@@ -359,6 +382,7 @@ def YekaCompetitionPersonService(request, filter):
 def PermissionService(request, filter):
     try:
         if filter:
+            filter['isDeleted'] = False
             return Permission.objects.filter(**filter)
         else:
             return Permission.objects.filter(isDeleted=False)
@@ -372,6 +396,7 @@ def CompanyFileNamesService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return CompanyFileNames.objects.filter(**filter)
             else:
                 return CompanyFileNames.objects.filter(isDeleted=False)
@@ -382,6 +407,7 @@ def ClaimService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return Claim.objects.filter(**filter)
             else:
                 return Claim.objects.filter(filter,isDeleted=False)
@@ -398,6 +424,7 @@ def PermissionGroupService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return PermissionGroup.objects.filter(**filter)
             else:
                 return PermissionGroup.objects.filter(filter,isDeleted=False)
@@ -411,6 +438,7 @@ def SettingsService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
+                filter['isDeleted'] = False
                 return Settings.objects.filter(**filter)
             else:
                 return Settings.objects.filter(filter)
@@ -424,6 +452,7 @@ def UnitService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return ConnectionUnit.objects.filter(**filter)
             else:
                 return ConnectionUnit.objects.filter(isDeleted=False)
@@ -437,6 +466,7 @@ def RegionService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return ConnectionRegion.objects.filter(**filter)
             else:
                 return ConnectionRegion.objects.filter(isDeleted=False)
@@ -449,6 +479,7 @@ def ExtraTimeFileService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return ExtraTimeFile.objects.filter(**filter)
             else:
                 return ExtraTimeFile.objects.filter(isDeleted=False)
@@ -461,6 +492,7 @@ def YekaService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Yeka.objects.filter(**filter)
             else:
                 return Yeka.objects.filter(isDeleted=False)
@@ -473,6 +505,7 @@ def YekaGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Yeka.objects.get(**filter)
             else:
                 return None
@@ -485,6 +518,7 @@ def UserGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+
                 return User.objects.get(**filter)
             else:
                 return None
@@ -497,6 +531,7 @@ def YekaPersonGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaPerson.objects.get(**filter)
             else:
                 return None
@@ -507,6 +542,7 @@ def YekaConnectionRegionGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaConnectionRegion.objects.get(**filter)
             else:
                 return None
@@ -520,6 +556,7 @@ def YekaCompanyGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaCompany.objects.get(**filter)
             else:
                 return None
@@ -530,6 +567,7 @@ def YekaCompanyHistoryGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaCompanyHistory.objects.get(**filter)
             else:
                 return None
@@ -540,6 +578,7 @@ def YekaBusinessGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaBusiness.objects.get(**filter)
             else:
                 return None
@@ -550,6 +589,7 @@ def YekaBusinessBlogGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaBusinessBlog.objects.get(**filter)
             else:
                 return None
@@ -560,6 +600,7 @@ def YekaBusinessBlogParemetreGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaBusinessBlogParemetre.objects.get(**filter)
             else:
                 return None
@@ -574,6 +615,7 @@ def SettingsGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+
                 return Settings.objects.get(**filter)
             else:
                 return None
@@ -586,6 +628,7 @@ def PersonGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Person.objects.get(**filter)
             else:
                 return None
@@ -598,6 +641,7 @@ def PermissionGetService(request, filter,isDeleted=False):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Permission.objects.get(**filter)
             else:
                 return None
@@ -610,6 +654,7 @@ def PermissionGroupGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return PermissionGroup.objects.get(**filter)
             else:
                 return None
@@ -622,6 +667,7 @@ def NotificationGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Notification.objects.get(**filter)
             else:
                 return None
@@ -646,6 +692,7 @@ def MenuGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Menu.objects.get(**filter)
             else:
                 return None
@@ -658,6 +705,7 @@ def LogsGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Logs.objects.get(**filter)
             else:
                 return None
@@ -670,6 +718,7 @@ def HistoryGroupGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return HistoryGroup.objects.get(**filter)
             else:
                 return None
@@ -680,6 +729,7 @@ def ExtraTimeFileGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return ExtraTimeFile.objects.get(**filter)
             else:
                 return None
@@ -693,6 +743,7 @@ def ExtraTimeGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return ExtraTime.objects.get(**filter)
             else:
                 return None
@@ -705,6 +756,7 @@ def EmployeeGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Employee.objects.get(**filter)
             else:
                 return None
@@ -717,6 +769,7 @@ def DirectoryCommissionGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return DirectoryCommission.objects.get(**filter)
             else:
                 return None
@@ -729,6 +782,7 @@ def DirectoryMemberRoleGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return DirectoryMemberRole.objects.get(**filter)
             else:
                 return None
@@ -741,6 +795,7 @@ def DirectoryMemberGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return DirectoryMember.objects.get(**filter)
             else:
                 return None
@@ -753,6 +808,7 @@ def ConnectionUnitGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return ConnectionUnit.objects.get(**filter)
             else:
                 return None
@@ -765,6 +821,7 @@ def ConnectionRegionGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return ConnectionRegion.objects.get(**filter)
             else:
                 return None
@@ -778,6 +835,7 @@ def CompanyUserGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return CompanyUser.objects.get(**filter)
             else:
                 return None
@@ -790,6 +848,7 @@ def CompanyFilesGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return CompanyFiles.objects.get(**filter)
             else:
                 return None
@@ -802,6 +861,7 @@ def CompanyFileNamesGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return CompanyFileNames.objects.get(**filter)
             else:
                 return None
@@ -814,6 +874,7 @@ def CompanyGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Company.objects.get(**filter)
             else:
                 return None
@@ -826,6 +887,7 @@ def CommunicationGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Communication.objects.get(**filter)
             else:
                 return None
@@ -836,6 +898,7 @@ def YekaCompetitionPersonGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaCompetitionPerson.objects.get(**filter)
             else:
                 return None
@@ -847,6 +910,7 @@ def YekaCompetitionGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return YekaCompetition.objects.get(**filter)
             else:
                 return None
@@ -859,6 +923,7 @@ def ClaimGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Claim.objects.get(**filter)
             else:
                 return None
@@ -871,6 +936,7 @@ def CountryGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Country.objects.get(**filter)
             else:
                 return None
@@ -883,6 +949,7 @@ def CityGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return City.objects.get(**filter)
             else:
                 return None
@@ -895,6 +962,7 @@ def CategoryItemGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return CategoryItem.objects.get(**filter)
             else:
                 return None
@@ -907,6 +975,7 @@ def CalendarNameGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return CalendarName.objects.get(**filter)
             else:
                 return None
@@ -919,6 +988,7 @@ def CalendarGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return Calendar.objects.get(**filter)
             else:
                 return None
@@ -930,7 +1000,9 @@ def CalendarGetService(request, filter):
 def BusinessBlogGetService(request, filter):
     try:
         with transaction.atomic():
+
             if filter:
+                filter['isDeleted'] = False
                 return BusinessBlog.objects.get(**filter)
             else:
                 return None
@@ -943,6 +1015,7 @@ def BusinessBlogParametreTypeGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return BusinessBlogParametreType.objects.get(**filter)
             else:
                 return None
@@ -955,6 +1028,7 @@ def ActiveGroupGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return ActiveGroup.objects.get(**filter)
             else:
                 return None
@@ -975,13 +1049,11 @@ def GroupGetService(request, filter):
         pass
 
 
-
-
-
 def GroupExcludeService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+
                 return Group.objects.exclude(**filter)
             else:
                 return None
@@ -993,6 +1065,7 @@ def VacationDayGetService(request, filter):
     try:
         with transaction.atomic():
             if filter:
+                filter['isDeleted'] = False
                 return VacationDay.objects.get(**filter)
             else:
                 return None
@@ -1004,10 +1077,12 @@ def VacationDayGetService(request, filter):
 def VacationDayService(request, filter):
     try:
         with transaction.atomic():
+
             if filter:
+                filter['isDeleted'] = False
                 return VacationDay.objects.filter(**filter)
             else:
-                return None
+                return VacationDay.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         pass

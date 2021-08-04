@@ -1,8 +1,11 @@
+import traceback
 from datetime import datetime
 
 from django.contrib.messages import get_messages
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect
 
+from accounts.models import Forgot
 from ekabis.models import Yeka, YekaPerson
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
@@ -10,8 +13,10 @@ from ekabis.models.Menu import Menu
 from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.services.services import ActiveGroupService, MenuService, EmployeeService, DirectoryMemberService, \
     UserService, PermissionGroupService, ActiveGroupGetService, EmployeeGetService, DirectoryMemberGetService, \
-    YekaPersonService, YekaCompanyService
+    YekaPersonService, YekaCompanyService, UserGetService
 from django.contrib import messages
+
+from ekabis.models.Permission import Permission
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -53,15 +58,23 @@ def getMenu(request):
     permGrup = PermissionGroupService(request, activefilter)
     menu = []
     activ_urls = None
+    url=request.resolver_match.url_name
+    if Permission.objects.filter(codename=request.resolver_match.url_name):
+        login_url=Permission.objects.get(codename=request.resolver_match.url_name)
+        if login_url:
+            if login_url.parent:
+                url = login_url.parent.codename
     for item in menus:
         if item.is_parent == False:
             if item.url:
                 for tk in permGrup:
                     if tk.permissions.codename == item.url.split(":")[1]:
-                        if request.resolver_match.url_name == item.url.split(":")[1]:
+                        if url == item.url.split(":")[1]:
                             activ_urls = item
                         menu.append(item.pk)
                         menu.append(item.parent.pk)
+
+                        pass
 
     menus = Menu.objects.filter(id__in=menu).distinct()
     return {'menus': menus, 'activ_url': activ_urls}
@@ -223,3 +236,33 @@ def yeka_control(request,yeka):
         return url
     else:
         return None
+
+def sendmail(request,pk):
+    try:
+        userfilter = {
+            'pk': pk
+        }
+        user = UserGetService(request, userfilter)
+        fdk = Forgot(user=user, status=False)
+        fdk.save()
+
+        subject, from_email, to = 'Yekabis Kullanıcı Bilgileri', 'fatih@kobiltek.com', user.email
+        html_content = '<h2>YEKABİS</h2>'
+        html_content = html_content + '<p><strong>Kullanıcı Adınız :' + str(fdk.user.username) + '</strong></p>'
+        html_content = html_content + '<p> <strong>Aktivasyon adresi:</strong> <a href="http://127.0.0.1:8000/newpassword?query=' + str(
+            fdk.uuid) + '">/sbs/profil-guncelle/?query=' + str(fdk.uuid) + '</p></a>'
+
+        msg = EmailMultiAlternatives(subject, '', from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
+        log = str(user.get_full_name()) + "yeni şifre emaili gönderildi"
+        log = logwrite(request, fdk.user, log)
+
+        return True
+    except Exception as e:
+        traceback.print_exc()
+
+
+
+

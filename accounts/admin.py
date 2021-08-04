@@ -12,6 +12,7 @@ from ekabis.models.CompanyUser import CompanyUser
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.CalendarName import CalendarName
 from ekabis.models.Calendar import Calendar
+from ekabis.models.Permission import Permission
 
 admin.site.site_header = 'Kobiltek Bilisim Kullanici Yönetim Paneli '  # default: "Django Administration"
 admin.site.index_title = 'Sistem Yönetimi'  # default: "Site administration"
@@ -28,3 +29,4 @@ admin.site.register(Settings)
 admin.site.register(Calendar)
 admin.site.register(CalendarName)
 admin.site.register(YekaBusinessBlog)
+admin.site.register(Permission)

@@ -18,6 +18,7 @@ from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Emplo
 from ekabis.models.CompanyFileNames import CompanyFileNames
 from ekabis.models.CompanyFiles import CompanyFiles
 from ekabis.models.CompanyUser import CompanyUser
+from ekabis.models.Settings import Settings
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import CompanyService, CompanyGetService, GroupService, GroupGetService, \
@@ -79,6 +80,14 @@ def return_add_Company(request):
                         group.save()
                         user.groups.add(group)
                         user.save()
+
+                    if Settings.objects.filter(key='mail_companyuser'):
+                        if Settings.objects.get(key='mail_companyuser').is_active:
+                            general_methods.sendmail(request,user)
+                    else:
+                        set=Settings(key='mail_companyuser')
+                        set.is_active=False
+                        set.save()
                     messages.success(request, 'Firma ve Kullanici Kayıt Edilmiştir.')
                     return redirect('ekabis:view_company')
                 else:

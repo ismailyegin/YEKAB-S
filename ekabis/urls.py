@@ -137,7 +137,9 @@ urlpatterns = [
          YekaCompetitionViews.change_yekacompetitionbusinessBlog, name='change_yekacompetitionbusinessBlog'),
     path('yarisma/yarisma-personeller/<uuid:uuid>', YekaCompetitionViews.yeka_person_list, name='view_yekacompetition_personel'),
 
-
+    # alt yeka
+    path('yarisma/alt-yeka-ekle/<uuid:uuid>', YekaCompetitionViews.add_sumcompetition, name='add_sumcompetition'),
+    path('yarisma/alt-yeka-guncelle/<uuid:uuid>', YekaCompetitionViews.change_sumcompetition,name='change_sumcompetition'),
 
 
     path('baglanti/bolgesi-ekle/<uuid:uuid>', ConnectionRegionViews.add_connectionRegion, name='add_region'),
