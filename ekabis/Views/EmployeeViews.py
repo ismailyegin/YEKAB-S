@@ -278,7 +278,7 @@ def return_workdefinitionslist(request):
 
                 category_item_form = CategoryItemForm(request.POST)
                 name = request.POST.get('name')
-                if name is not None:
+                if category_item_form.is_valid():
                     categoryItem = CategoryItem(name=name)
                     categoryItem.forWhichClazz = "EMPLOYEE_WORKDEFINITION"
                     categoryItem.isFirst = False
@@ -290,8 +290,11 @@ def return_workdefinitionslist(request):
                     return redirect('ekabis:view_categoryitem')
 
                 else:
+                    
+                    error_messages_user = get_error_messages(category_item_form)
+                    return render(request, 'personel/unvanListesi.html',
+                                  {'category_item_form': category_item_form,'error_messages':error_messages_user})
 
-                    messages.warning(request, 'Alanları Kontrol Ediniz')
 
         categoryfilter = {
             'forWhichClazz': "EMPLOYEE_WORKDEFINITION",
@@ -299,7 +302,7 @@ def return_workdefinitionslist(request):
         }
         categoryitem = CategoryItemService(request, categoryfilter)
         return render(request, 'personel/unvanListesi.html',
-                      {'category_item_form': category_item_form, 'categoryitem': categoryitem})
+                      {'category_item_form': category_item_form, 'categoryitem': categoryitem,'error_messages':''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -398,9 +401,9 @@ def edit_workdefinitionUnvan(request, uuid):
                     return redirect('ekabis:view_categoryitem')
                 else:
                     messages.warning(request, 'Alanları Kontrol Ediniz')
-
+                    error_messages_user = get_error_messages(category_item_form)
         return render(request, 'personel/unvan-duzenle.html',
-                      {'category_item_form': category_item_form})
+                      {'category_item_form': category_item_form, 'error_messages': error_messages_user})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

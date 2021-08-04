@@ -43,7 +43,7 @@ def return_add_Company(request):
                 communication_form = CommunicationForm(request.POST, request.FILES)
                 person_form = PersonForm(request.POST, request.FILES)
                 user_form = UserForm(request.POST)
-                if company_form.is_valid() and communication_form and user_form and person_form:
+                if company_form.is_valid() and communication_form.is_valid() and user_form.is_valid() and person_form.is_valid():
                     communication = communication_form.save(commit=False)
                     communication.save()
                     user = User()
@@ -98,7 +98,8 @@ def return_add_Company(request):
                     error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_user
                     return render(request, 'Company/Company.html',
                                   {'company_form': company_form, 'communication_form': communication_form,
-                                   'error_messages': error_messages, })
+                                   'form': company_form,
+                                   'error_messages': error_messages, 'user_form': user_form, 'person_form': person_form})
 
             return render(request, 'Company/Company.html',
                           {'company_form': company_form, 'communication_form': communication_form, 'form': company_form,
