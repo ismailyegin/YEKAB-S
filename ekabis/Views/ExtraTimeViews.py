@@ -76,7 +76,7 @@ def return_add_extra_time(request, business, businessblog):
                                         is_vacation = is_vacation_day(start_date)
                                         if not is_vacation:
                                             add_time = add_time - 1
-                                    while not is_vacation_day(finish_date):
+                                    while is_vacation_day(finish_date) == True:
                                         finish_date = finish_date + datetime.timedelta(days=1)
 
 
