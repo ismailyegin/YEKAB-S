@@ -15,15 +15,15 @@ class YekaBusinessBlogForm(ModelForm):
         model = YekaBusinessBlog
         fields = (
             'indefinite',
-            'startDate',
             'businessTime',
-            # 'finisDate',
-            'status',)
+            'status',
+
+            'startDate',)
         labels = {'startDate': 'Başlama Tarihi',
                   # 'finisDate': 'Bitiş Tarihi',
                   'businessTime': 'Süresi',
                   'status': 'Durumu',
-                  'indefinite':'Süre durumu'}
+                  'indefinite': 'Süre durumu'}
         widgets = {
             'businessTime': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
@@ -31,7 +31,7 @@ class YekaBusinessBlogForm(ModelForm):
             'status': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                           'style': 'width: 100%; '}),
             'indefinite': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                          'style': 'width: 100%; '}),
+                                              'style': 'width: 100%; '}),
             'startDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
                        'onkeydown': 'return false', 'required': 'required'}),
@@ -41,13 +41,13 @@ class YekaBusinessBlogForm(ModelForm):
 
         }
 
-    def __init__(self, business,yekabussiness, *args, **kwargs):
+    def __init__(self, business, yekabussiness, *args, **kwargs):
         super(YekaBusinessBlogForm, self).__init__(*args, **kwargs)
-        business_filter={
-            'pk':business
+        business_filter = {
+            'pk': business
         }
 
-        tbussiness = BusinessBlogGetService(self,business_filter)
+        tbussiness = BusinessBlogGetService(self, business_filter)
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.companynecessary:
                 print('bu alan bütün firmalar icin olmalı')
@@ -55,20 +55,19 @@ class YekaBusinessBlogForm(ModelForm):
                     print('firma bilgisi var ')
                     for company in yekabussiness.companys.filter(isDeleted=False):
                         print(company.name)
-                        title=str(item.title)+"-"+str(company.pk)
-
+                        title = str(item.title) + "-" + str(company.pk)
 
                         if item.type == 'string':
                             self.fields[title] = forms.CharField(max_length=250)
                             if item.necessary:
-                                self.fields[title].widget.attrs = {'required': 'required','class': 'form-control'}
+                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control'}
                             else:
                                 self.fields[title].widget.attrs = {'class': 'form-control', }
 
                         elif item.type == 'date':
                             self.fields[title] = forms.CharField(max_length=50)
                             if item.necessary:
-                                self.fields[title].widget.attrs = {'required': 'required','class': 'form-control', }
+                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control', }
                             else:
                                 self.fields[title].widget.attrs = {'class': 'form-control', }
 
@@ -77,19 +76,19 @@ class YekaBusinessBlogForm(ModelForm):
                             self.fields[title] = forms.CharField(max_length=50)
                             self.fields[title].widget.attrs['onkeypress'] = 'validate(event)'
                             if item.necessary:
-                                self.fields[title].widget.attrs = {'required': 'required','class': 'form-control', }
+                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control', }
                             else:
                                 self.fields[title].widget.attrs = {'class': 'form-control', }
                         elif item.type == 'year':
                             self.fields[title] = forms.CharField(max_length=50)
                             if item.necessary:
-                                self.fields[title].widget.attrs = {'required': 'required','class': 'form-control', }
+                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control', }
                             else:
                                 self.fields[title].widget.attrs = {'class': 'form-control', }
                         elif item.type == 'file':
                             self.fields[title] = forms.FileField(required=False)
                             if item.necessary:
-                                self.fields[title].widget.attrs = {'required': 'required','class': 'form-control', }
+                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control', }
                             else:
                                 self.fields[title].widget.attrs = {'class': 'form-control', }
                         self.fields[title].label = str(item.title) + "-" + str(company.name)
@@ -129,12 +128,10 @@ class YekaBusinessBlogForm(ModelForm):
                     else:
                         self.fields[item.title].widget.attrs = {'class': 'form-control', }
 
-
-    def save(self, yekabusiness, business,*args, **kwargs):
+    def save(self, yekabusiness, business, *args, **kwargs):
 
         tbussiness = BusinessBlog.objects.get(pk=business)
         tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
-
 
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.companynecessary:
@@ -142,12 +139,12 @@ class YekaBusinessBlogForm(ModelForm):
                     title = str(item.title) + "-" + str(company.pk)
                     print(title)
                     if item.type == 'file':
-                        if tyekabusinessblog.paremetre.filter(parametre=item, isDeleted=False,company=company):
+                        if tyekabusinessblog.paremetre.filter(parametre=item, isDeleted=False, company=company):
                             try:
                                 if self.files[title]:
                                     bValue = tyekabusinessblog.paremetre.get(parametre=item)
                                     bValue.file = self.files[title]
-                                    bValue.company=company
+                                    bValue.company = company
                                     bValue.save()
                             except:
                                 print('deger yok ')
@@ -170,7 +167,7 @@ class YekaBusinessBlogForm(ModelForm):
 
             else:
                 if item.type == 'file':
-                    if tyekabusinessblog.paremetre.filter(parametre=item,isDeleted=False):
+                    if tyekabusinessblog.paremetre.filter(parametre=item, isDeleted=False):
                         try:
                             if self.files[item.title]:
                                 bValue = tyekabusinessblog.paremetre.get(parametre=item)
@@ -207,13 +204,12 @@ class YekaBusinessBlogForm(ModelForm):
                         tyekabusinessblog.paremetre.add(parametre)
                         tyekabusinessblog.save()
 
-
         super().save(*args, **kwargs)
 
         return
 
-def update(self,yekabusiness, business,*args, **kwargs):
 
+def update(self, yekabusiness, business, *args, **kwargs):
     tbussiness = BusinessBlog.objects.get(pk=business)
     tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
     for item in tyekabusinessblog.parametre.all():

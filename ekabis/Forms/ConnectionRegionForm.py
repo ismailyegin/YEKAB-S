@@ -6,7 +6,7 @@ class ConnectionRegionForm(forms.ModelForm):
         model = ConnectionRegion
         fields = ('name', 'capacity',)
 
-        labels = {'name': 'Bağlantı Bölgesi '}
+        labels = {'name': 'Bağlantı Bölgesi *','capacity':'Kapasite (MW) *',}
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
             'capacity': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
@@ -17,7 +17,7 @@ class ConnectionRegionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cities'].queryset = City.objects.filter(isDeleted=False)
-        self.fields['cities'].label = 'Şehirler'
+        self.fields['cities'].label = 'Şehirler *'
         self.fields['cities'].widget.attrs = {'class': 'select2 select2-hidden-accessible',
                                                         'style': 'width: 100%;', 'data-select2-id': '7',
                                                         'data-placeholder': 'Bağlanti Bölgesi Seçiniz', }

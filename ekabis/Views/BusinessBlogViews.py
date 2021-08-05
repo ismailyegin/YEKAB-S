@@ -309,9 +309,7 @@ def change_yekabusiness(request, uuid,yeka):
         if request.method == 'POST':
             with transaction.atomic():
 
-                if business_form.is_valid():
-                    yekabu = business_form.save(commit=False)
-                    yekabu.save()
+
                     if request.POST.get('businessblog'):
 
                         blogs = request.POST.get('businessblog').split("-")
@@ -369,14 +367,6 @@ def change_yekabusiness(request, uuid,yeka):
                             i.isDeleted = True
                             i.save()
                     return redirect('ekabis:view_yekabusinessBlog',yeka)
-                else:
-                    error_messages = get_error_messages(business_form)
-
-                    return render(request, 'Yeka/YekabusinessUpdate.html', {'business_form': business_form,
-                                                                            'error_messages': error_messages,
-                                                                            'unbusiness': unbusiness,
-                                                                            'business': business,'urls': urls, 'current_url': current_url, 'url_name': url_name
-                                                                            })
 
         return render(request, 'Yeka/YekabusinessUpdate.html', {'business_form': business_form,
                                                                 'error_messages': '',
