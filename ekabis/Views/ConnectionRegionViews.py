@@ -132,6 +132,21 @@ def update_unit(request, uuid):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+@login_required
+def return_connectionRegion(request,uuid):
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+
+    yeka_filter = {
+        'uuid': uuid,
+        'isDeleted': False,
+    }
+    yeka = YekaGetService(request, yeka_filter)
+    regions = yeka.connection_region.all()
+    return render(request, 'ConnectionRegion/view_connection_region.html',
+                  { 'regions': regions, 'error_messages': '', 'yeka': yeka, 'urls': urls,
+                   'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
@@ -193,7 +208,7 @@ def add_connectionRegion(request,uuid):
                     log = " Bölge eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Bölge Başarıyla Kayıt Edilmiştir.')
-                    return redirect('ekabis:add_region' ,region.uuid)
+                    return redirect('ekabis:view_region' ,yeka.uuid)
 
                 else:
                     error_message_region = get_error_messages(region_form)

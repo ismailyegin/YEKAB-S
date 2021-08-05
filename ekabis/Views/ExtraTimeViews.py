@@ -67,7 +67,7 @@ def return_add_extra_time(request, business, businessblog):
 
                                     add_time = time.time
                                     start_date = parent.startDate.date()
-                                    finish_date=parent.finisDate.date()+ timedelta(days=time.time)
+                                    finish_date=parent.finisDate.date() + timedelta(days=time.time)
                                     finish_time=time.time
                                     count = 0
                                     while add_time > 0:
@@ -95,8 +95,6 @@ def return_add_extra_time(request, business, businessblog):
                                 main = None
                         else:
                             main = None
-                    yekabussinessblog.finisDate = parent.startDate
-                    yekabussinessblog.save()
                     messages.success(request, 'Ek Süre Kayıt Edilmiştir.')
                     return redirect('ekabis:view_extratime')
                 else:

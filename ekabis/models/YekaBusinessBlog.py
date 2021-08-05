@@ -8,12 +8,12 @@ from ekabis.models.YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
 
 class YekaBusinessBlog(BaseModel):
     TRUE_FALSE_CHOICES = (
-        (True, 'Aktif'),
-        (False, 'Pasif')
+        (True, 'Tamamlandı'),
+        (False, 'Devam Ediyor')
     )
     INDEFINETE_CHOICES = (
-        (True, 'SÜRESİZ '),
-        (False, 'SÜRELİ')
+        (True, 'Süresiz '),
+        (False, 'Süreli')
     )
     businessblog = models.ForeignKey(BusinessBlog, on_delete=models.CASCADE,null=True,blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)

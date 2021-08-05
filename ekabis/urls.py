@@ -125,8 +125,10 @@ urlpatterns = [
     path('baglanti/birim-sil/', ConnectionRegionViews.delete_unit, name='delete_unit'),
     path('baglanti/birim-guncelle/<uuid:uuid>/', ConnectionRegionViews.update_unit, name='update_unit'),
 
-    path('yeka/yeka-listesi/<uuid:yeka>', YekaCompetitionViews.view_competition, name='view_competition'),
+    path('yeka/yeka-yarisma-listesi/<uuid:uuid>', YekaCompetitionViews.view_competition, name='view_competition'),
     path('yarisma/yarisma-ekle/<uuid:region>', YekaCompetitionViews.add_competition, name='add_competition'),
+
+
     path('yarisma/yarisma-sil/', YekaCompetitionViews.delete_competition, name='delete_competition'),
     path('yarisma/yarisma-guncelle/<uuid:region>/<uuid:competition>', YekaCompetitionViews.update_competition, name='change_competition'),
     path('yarisma/yarisma-is-bloklari-list/<uuid:uuid>/', YekaCompetitionViews.view_competition_yekabusinessBlog, name='view_competitionbusinessblog'),
@@ -139,10 +141,14 @@ urlpatterns = [
 
     # alt yeka
     path('yarisma/alt-yeka-ekle/<uuid:uuid>', YekaCompetitionViews.add_sumcompetition, name='add_sumcompetition'),
+    path('yarisma/alt-yeka-listesi/<uuid:uuid>', YekaCompetitionViews.return_sub_competition, name='view_sub_competition'),
+
     path('yarisma/alt-yeka-guncelle/<uuid:uuid>', YekaCompetitionViews.change_sumcompetition,name='change_sumcompetition'),
 
 
     path('baglanti/bolgesi-ekle/<uuid:uuid>', ConnectionRegionViews.add_connectionRegion, name='add_region'),
+    path('baglanti/bolge-listesi/<uuid:uuid>', ConnectionRegionViews.return_connectionRegion, name='view_region'),
+
     path('baglanti/bölge-sil/', ConnectionRegionViews.delete_region, name='delete_region'),
     path('baglanti/bolge-guncelle/<uuid:uuid>/<uuid:yeka>', ConnectionRegionViews.update_region, name='update_region'),
 
