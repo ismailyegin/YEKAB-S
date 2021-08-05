@@ -69,7 +69,7 @@
                         left: e.pageX - position.left + 25 + 'px',
                     });
                     $('#il-isimleri').text($(this).attr("id"));
-                    $('#il-isimleri').toggle();
+                    {#$('#il-isimleri').toggle();#}
 
 
                 });
@@ -854,11 +854,11 @@
             if (city.length < 2) {
                 city = '0' + city;
             }
-'#d000ff'
-            var array_color = ['#000000','#fcee8d', '#ff6f00','#d000ff','#0713ff','#ff07c9','#2bb305','#ae18e5', '#00d8ff' ]
+
+            var array_color = ['#fcee8d', '#f6af71', '#fc8553', '#f18e48', '#ff6b07', '#ee4900', '#ff0000']
 
 
-            var value = (count % 7);
+            var value = (count % 6);
             $("g[data-plakakodu=" + city + "] path").css({fill: array_color[value]})
 
 
@@ -873,7 +873,7 @@
                         data.push("{{ item.plateNo }}");
                         count = data.filter(x => x =={{ item.plateNo }}).length;
                         degerAta(count, '{{ item.plateNo }}');
-                        console.log(count,{{ item.plateNo }})
+                        console.log(count, {{ item.plateNo }})
                     {% endfor %}
                 {% endfor %}
             {% endif %}
