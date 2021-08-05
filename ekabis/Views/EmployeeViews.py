@@ -294,6 +294,7 @@ def return_workdefinitionslist(request):
 
                     log = str(name) + " unvanini ekledi"
                     log = general_methods.logwrite(request, request.user, log)
+                    messages.success(request, 'Unvan eklendi')
 
                     return redirect('ekabis:view_categoryitem')
 

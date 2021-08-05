@@ -131,7 +131,7 @@ def return_list_extra_time(request):
     urls = last_urls(request)
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
-    for item in ExtraTimeService(request, ExtraTimefilter):
+    for item in ExtraTimeService(request, ExtraTimefilter).order_by('-creationDate'):
         if Yeka.objects.filter(business=item.business):
             time = {
                 'yeka': Yeka.objects.get(business=item.business).definition,
@@ -220,6 +220,49 @@ def delete_extra_time(request):
                     'uuid': uuid
                 }
                 obj = ExtraTimeGetService(request, extra_time_filter)
+                times=ExtraTime.objects.filter(yekabusinessblog=obj.yekabusinessblog).order_by('-creationDate')
+                if times:
+                    time=times[0]
+                main=obj.yekabusinessblog
+                while main != None:
+                    if YekaBusinessBlog.objects.filter(parent=main, isDeleted=False):
+                        parent = YekaBusinessBlog.objects.get(parent=main, isDeleted=False)
+                        if not parent.indefinite:
+
+                            if time.time_type == 'is_gunu':
+                                after_day = (parent.startDate.date() + datetime.timedelta(days=obj.time)).strftime(
+                                    "%d/%m/%Y")
+
+                                delete_time = time.time
+                                start_date = parent.startDate.date()
+                                finish_date = parent.finisDate.date() - timedelta(days=time.time)
+                                finish_time = time.time
+                                count = 0
+                                while delete_time > 0:
+                                    start_date = start_date + datetime.timedelta(days=-1)
+                                    count = count + 1
+                                    is_vacation = is_vacation_day(start_date)
+                                    if not is_vacation:
+                                        delete_time = delete_time - 1
+                                while is_vacation_day(finish_date) == True:
+                                    finish_date = finish_date - datetime.timedelta(days=-1)
+
+                                parent.startDate = start_date
+                                parent.finisDate = finish_date
+                                parent.save()
+                                main = parent
+                            else:
+                                parent.startDate = parent.startDate.date() - timedelta(days=time.time)
+                                parent.finisDate = parent.finisDate.date() - timedelta(days=time.time)
+                                parent.save()
+                                main = parent
+                        else:
+                            # süresiz ise işlem yapılmayacaktır.
+                            main = None
+                    else:
+                        main = None
+
+
                 obj.isDeleted = True
                 obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})

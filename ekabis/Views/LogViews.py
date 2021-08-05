@@ -44,7 +44,7 @@ def return_log(request):
                     finishDate = datetime.strptime(finishDate, "%d/%m/%Y").date()
 
                 if not (firstName or lastName or email or playDate or finishDate):
-                    logs = LogsService(request, None)
+                    logs = LogsService(request, None).order_by('-id')
                 else:
                     query = Q()
                     if lastName:
@@ -58,7 +58,7 @@ def return_log(request):
                     if finishDate:
                         query &= Q(creationDate__lt=finishDate)
 
-                    logs = LogsService(request, query)
+                    logs = LogsService(request, query).order_by('-id')
 
             return render(request, 'Log/Logs.html', {'logs': logs, 'user_form': user_form,'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:

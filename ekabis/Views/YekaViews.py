@@ -28,6 +28,8 @@ from ekabis.services.services import YekaService, CompanyService, YekaConnection
     EmployeeGetService, YekaCompanyService, CompanyGetService, ExtraTimeService, YekaBusinessBlogGetService, \
     BusinessBlogGetService, ConnectionRegionService, last_urls
 import datetime
+
+
 @login_required
 def return_yeka(request):
     perm = general_methods.control_access(request)
@@ -41,11 +43,14 @@ def return_yeka(request):
         url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             return render(request, 'Yeka/view_yeka.html',
-                          {'yeka_form': yeka_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name })
+                          {'yeka_form': yeka_form, 'error_messages': '', 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
 @login_required
 def add_yeka(request):
     perm = general_methods.control_access(request)
@@ -61,7 +66,7 @@ def add_yeka(request):
             with transaction.atomic():
                 yeka_form = YekaForm(request.POST)
                 if yeka_form.is_valid():
-                    yeka=yeka_form.save(commit=False)
+                    yeka = yeka_form.save(commit=False)
                     yeka.save()
 
                     log = "Yeka eklendi"
@@ -76,7 +81,8 @@ def add_yeka(request):
                                   {'yeka_form': yeka_form, 'error_messages': error_message_unit,
                                    })
         return render(request, 'Yeka/add_yeka.html',
-                      {'yeka_form': yeka_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name })
+                      {'yeka_form': yeka_form, 'error_messages': '', 'urls': urls, 'current_url': current_url,
+                       'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
@@ -199,57 +205,23 @@ def update_yeka(request, uuid):
 
                     yeka.definition = yeka_form.cleaned_data['definition']
                     yeka.date = yeka_form.cleaned_data['date']
+                    yeka.capacity = yeka_form.cleaned_data['capacity']
                     yeka.save()
-
-                    new_regions = request.POST.getlist('region')
-                    current = []
-                    for region in new_regions:
-                        current.append(ConnectionRegion.objects.get(uuid=region))
-                    capacity = 0
-                    for region in current:
-                        capacity = capacity + region.value
-                        if not region in yeka_regions:
-                            new = YekaConnectionRegion(yeka=yeka, connectionRegion=region)
-                            new.save()
-
-                    sub_yeka = Yeka.objects.filter(Q(yekaParent=yeka) & Q(isDeleted=False))
-                    if sub_yeka:
-                        sub_capacity = 0
-                        for sub in sub_yeka:
-                            sub_capacity = sub_capacity + sub.capacity
-                        if capacity >= sub_capacity:
-                            yeka.capacity = capacity
-                            yeka.save()
-                        else:
-                            error_message_unit = get_error_messages(yeka_form)
-                            return render(request, 'Yeka/change_yeka.html',
-                                          {'yeka_form': yeka_form, 'error_messages': error_message_unit,
-                                           'yeka_connections': yeka_regions, 'connection_regions': connection_regions
-                                           })
-
-                    else:
-                        yeka.capacity = capacity
-                        yeka.save()
-
-                    delete_yeka = list(set(yeka_regions) - set(current))
-
-                    for delete_yeka in delete_yeka:
-                        delete = YekaConnectionRegion.objects.get(
-                            Q(connectionRegion__uuid=delete_yeka.uuid) & Q(yeka=yeka))
-                        delete.delete()
 
                     messages.success(request, 'Yeka Başarıyla Güncellendi')
                     return redirect('ekabis:view_yeka')
                 else:
                     error_message_unit = get_error_messages(yeka_form)
                     return render(request, 'Yeka/change_yeka.html',
-                                  {'yeka_form': yeka_form, 'error_messages': error_message_unit,'yeka':yeka,
-                                   'yeka_connections': yeka_regions, 'connection_regions': connection_regions,'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                                  {'yeka_form': yeka_form, 'error_messages': error_message_unit, 'yeka': yeka,
+                                   'yeka_connections': yeka_regions, 'connection_regions': connection_regions,
+                                   'urls': urls, 'current_url': current_url, 'url_name': url_name,
                                    })
 
             return render(request, 'Yeka/change_yeka.html',
                           {'yeka_form': yeka_form, 'error_messages': '', 'yeka_connections': yeka_regions,
-                           'connection_regions': connection_regions,'urls': urls, 'current_url': current_url, 'url_name': url_name,'yeka':yeka,
+                           'connection_regions': connection_regions, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name, 'yeka': yeka,
                            })
     except Exception as e:
         traceback.print_exc()
@@ -508,7 +480,7 @@ def yeka_person_list(request, uuid):
     yeka_person_filter = {
         'yeka': yeka,
         'isDeleted': False,
-        'is_active':True
+        'is_active': True
     }
 
     yeka_person = YekaPersonService(request, yeka_person_filter).order_by('-creationDate')
@@ -559,13 +531,11 @@ def yeka_person_list(request, uuid):
                             person.user.get_full_name()) + " personeli çıkarıldı."
                         log = general_methods.logwrite(request, request.user, log)
 
-
         return redirect('ekabis:view_yeka_personel', uuid)
 
     return render(request, 'Yeka/yekaPersonList.html',
-                  {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid,'urls': urls, 'current_url': current_url, 'url_name': url_name,'yeka':yeka})
-
-
+                  {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid, 'urls': urls,
+                   'current_url': current_url, 'url_name': url_name, 'yeka': yeka})
 
 
 def yeka_company_list(request, uuid):
@@ -600,7 +570,7 @@ def yeka_company_list(request, uuid):
     companies = Company.objects.filter(isDeleted=False).exclude(uuid__in=array)
     if request.POST:
         with transaction.atomic():
-            if request.POST['yeka'] =='add':
+            if request.POST['yeka'] == 'add':
                 companies = request.POST.getlist('company')
                 if companies:
                     for company_id in companies:
@@ -632,7 +602,8 @@ def yeka_company_list(request, uuid):
         return redirect('ekabis:view_yeka_company', yeka.uuid)
 
     return render(request, 'Yeka/yeka_company_list.html',
-                  {'companies': companies, 'yeka_companies': yeka_company, 'yeka_uuid': uuid,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                  {'companies': companies, 'yeka_companies': yeka_company, 'yeka_uuid': uuid, 'urls': urls,
+                   'current_url': current_url, 'url_name': url_name})
 
 
 def yeka_company_assignment(request):
@@ -739,7 +710,7 @@ def view_yekabusinessBlog(request, uuid):
         return render(request, 'Yeka/timeline.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
-                       'ekstratimes': ekstratimes,'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                       'ekstratimes': ekstratimes, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
                        })
 
     except Exception as e:
@@ -773,14 +744,15 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
             'uuid': business
         }
         business = BusinessBlogGetService(request, yeka_business_filter_)
-        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, instance=yekabussiness)
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
 
             if item.company:
-                title=item.parametre.title +"-" + str(item.company.pk)
+                title = item.parametre.title + "-" + str(item.company.pk)
                 if item.parametre.type == 'file':
                     yekaBusinessBlogo_form.fields[title].initial = item.file
-                    yekaBusinessBlogo_form.fields[title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                    yekaBusinessBlogo_form.fields[
+                        title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
                     # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
                     # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
                     # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
@@ -799,27 +771,26 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                 else:
                     yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
 
-
-
-
         if request.POST:
-            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, request.POST or None, request.FILES or None,
+            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, request.POST or None,
+                                                          request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
-                if not   yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
                     startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                    finishDate = startDate + datetime.timedelta(days=int(yekaBusinessBlogo_form.cleaned_data['businessTime']))
+                    finishDate = startDate + datetime.timedelta(
+                        days=int(yekaBusinessBlogo_form.cleaned_data['businessTime']))
                     yekabussiness.finisDate = finishDate
                     yekabussiness.save()
                 else:
-                    yekabussiness.businessTime=0
+                    yekabussiness.businessTime = 0
                     yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
-                          'yeka': yeka,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                          'yeka': yeka, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
 
@@ -849,12 +820,10 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
         yeka = YekaGetService(request, yeka_filter)
         yekabussinessblog = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter)
 
+        yeka = YekaGetService(request, yeka_filter)
+        yekabussinessblog = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter)
 
-        yeka = YekaGetService(request,yeka_filter)
-        yekabussinessblog = YekaBusinessBlogGetService(request,yeka_yekabusiness_filter)
-
-        company_list=YekaCompany.objects.filter(isDeleted=False,yeka=yeka)
-
+        company_list = YekaCompany.objects.filter(isDeleted=False, yeka=yeka)
 
         if request.POST:
             with transaction.atomic():
@@ -869,7 +838,7 @@ def add_yekabusinessblog_company(request, yeka, yekabusinessblog):
         return render(request, 'Yeka/add_yekabusinessblog_company.html',
                       {
                           'company_list': company_list,
-                          'yeka': yeka,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                          'yeka': yeka, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
 
@@ -902,36 +871,36 @@ def view_yekabusiness_gant(request, uuid):
 
         extratime_filter = {
             'business': yeka.business,
-            'isDeleted' : False,
+            'isDeleted': False,
         }
         ekstratimes = ExtraTimeService(request, extratime_filter)
-        extratime=[]
-        endDate=None
+        extratime = []
+        endDate = None
         for item in ekstratimes:
-            if ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).count()>1:
-                extra=ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).order_by('-creationDate')
-                date=None
-                ex=None
+            if ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).count() > 1:
+                extra = ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).order_by('-creationDate')
+                date = None
+                ex = None
                 for busines in range(len(extra)):
 
-                    if busines==0:
-                        if extra[busines]==item:
-                            endDate=item.yekabusinessblog.finisDate
-                            ex=item.yekabusinessblog.creationDate
+                    if busines == 0:
+                        if extra[busines] == item:
+                            endDate = item.yekabusinessblog.finisDate
+                            ex = item.yekabusinessblog.creationDate
 
                         else:
-                            date=extra[busines].yekabusinessblog.finisDate
+                            date = extra[busines].yekabusinessblog.finisDate
                     else:
-                        if extra[busines]==item:
-                            endDate=date+datetime.timedelta(days=item.time)
+                        if extra[busines] == item:
+                            endDate = date + datetime.timedelta(days=item.time)
                             ex = item.yekabusinessblog.creationDate
                         else:
-                            date=extra[busines].yekabusinessblog.finisDate+datetime.timedelta(days=item.time)
+                            date = extra[busines].yekabusinessblog.finisDate + datetime.timedelta(days=item.time)
                 beka = {
                     'uuid': item.uuid,
-                    'content': item.yekabusinessblog.businessblog.name + " Ek Süre"+ str(ex),
+                    'content': item.yekabusinessblog.businessblog.name + " Ek Süre" + str(ex),
                     'start': endDate,
-                    'finish': endDate+datetime.timedelta(days=item.time),
+                    'finish': endDate + datetime.timedelta(days=item.time),
                     'bloguuid': item.yekabusinessblog.uuid,
                 }
                 extratime.append(beka)
@@ -945,14 +914,13 @@ def view_yekabusiness_gant(request, uuid):
                 }
                 extratime.append(beka)
 
-
         if yeka.business:
             yekabusiness = yeka.business
             yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
         return render(request, 'Yeka/gant.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
-                       'ekstratimes': extratime,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                       'ekstratimes': extratime, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                        })
 
     except Exception as e:
@@ -960,6 +928,7 @@ def view_yekabusiness_gant(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
 
 @login_required()
 def view_yekabusiness_gant2(request, uuid):
@@ -975,9 +944,9 @@ def view_yekabusiness_gant2(request, uuid):
         }
         yeka = YekaGetService(request, yeka_filter)
 
-        url=general_methods.yeka_control(request, yeka)
-        if url and url !='view_yekabusinessBlog':
-            return redirect('ekabis:'+url ,yeka.uuid)
+        url = general_methods.yeka_control(request, yeka)
+        if url and url != 'view_yekabusinessBlog':
+            return redirect('ekabis:' + url, yeka.uuid)
         yekabusinessbloks = None
 
         extratime_filter = {
@@ -1021,21 +990,19 @@ def view_yekabusinessblog_gant(request, yeka, yekabusiness):
         }
 
         yekabussiness = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter_)
-        extrafilter={
-            'yekabusinessblog':yekabussiness
+        extrafilter = {
+            'yekabusinessblog': yekabussiness
         }
-        extratime=ExtraTimeService(request,extrafilter)
+        extratime = ExtraTimeService(request, extrafilter)
 
         return render(request, 'Yeka/yekabussinessblog_detail.html',
                       {
                           'yeka': yeka,
-                          'yekabusinessblok':yekabussiness,
-                          'ekstratimes':extratime,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                          'yekabusinessblok': yekabussiness,
+                          'ekstratimes': extratime, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
 
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
-
-
