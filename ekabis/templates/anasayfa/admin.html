@@ -60,38 +60,20 @@
             $("g").hover(
                 function (e) {
                     var id = $(this).attr("id");
-                });
-
-            $("g").click(
-                function (e) {
-                    var id = $(this).attr("id");
-                    $.ajax({
-                        url: "",
-                        type: "POST",
-                        data: {
-
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-
-                            'city': id.toString(),
-                        },
-                        success: function (result) {
-                            var position = $('#svg-turkiye-haritasi').position();
-                            $('#il-isimleri').toggle();
-
-                            $('#il-isimleri').animate({
-                                top: e.pageY - position.top + 25 + 'px',
-                                left: e.pageX - position.left + 25 + 'px',
-
-                            });
+                    var position = $('#svg-turkiye-haritasi').position();
+                    var text = ''
 
 
-                        }
+                    $('#il-isimleri').animate({
+                        top: e.pageY - position.top + 25 + 'px',
+                        left: e.pageX - position.left + 25 + 'px',
                     });
+                    $('#il-isimleri').text($(this).attr("id"));
+                    $('#il-isimleri').toggle();
 
 
                 });
-
-        })
+        });
     </script>
 
     <style type="text/css">
@@ -570,10 +552,6 @@
     <script type="text/javascript">
 
 
-
-
-
-
         function degerAta(count, city) {
 
 
@@ -693,8 +671,8 @@
 
         });
 
-            var page = require('visualization').create();
-            page.render('example.png');
+        var page = require('visualization').create();
+        page.render('example.png');
 
 
     </script>
@@ -851,52 +829,58 @@
     </script>
 
     <script>
+        function increase_brightness(hex, percent) {
+            // strip the leading # if it's there
+            hex = hex.replace(/^\s*#|\s*$/g, '');
+
+            // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
+            if (hex.length == 3) {
+                hex = hex.replace(/(.)/g, '$1$1');
+            }
+
+            var r = parseInt(hex.substr(0, 2), 16),
+                g = parseInt(hex.substr(2, 2), 16),
+                b = parseInt(hex.substr(4, 2), 16);
+
+            return '#' +
+                ((0 | (1 << 8) + r + (256 - r) * percent / 100).toString(16)).substr(1) +
+                ((0 | (1 << 8) + g + (256 - g) * percent / 100).toString(16)).substr(1) +
+                ((0 | (1 << 8) + b + (256 - b) * percent / 100).toString(16)).substr(1);
+        }
+
+
         function degerAta(count, city) {
+            debugger;
+            if (city.length < 2) {
+                city = '0' + city;
+            }
+'#d000ff'
+            var array_color = ['#000000','#fcee8d', '#ff6f00','#d000ff','#0713ff','#ff07c9','#2bb305','#ae18e5', '#00d8ff' ]
 
-                {#renkler güncellenecek#}
-                var patternAColor = '#E9A635';
-                var patternBColor = '#E7721C';
-                var patternCColor = '#EC3333';
 
-
-                switch (count) {
-                    case 1:
-                        $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
-                        break;
-                    case 2:
-                        $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
-                        break;
-                    case 3:
-                        $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
-                        break;
-                    case 4:
-                        $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
-                        break;
-                    case 5:
-                        $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
-                        break;
-                    case 6:
-                        $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
-                        break;
-
-                    default:
-                        $("g[data-plakakodu=" + city + "] path").css({fill: patternCColor})
-                }
+            var value = (count % 7);
+            $("g[data-plakakodu=" + city + "] path").css({fill: array_color[value]})
 
 
         }
+
         $(function () {
             var data = new Array();
             {% if regions %}
                 {% for region in regions %}
                     {% for item in region.cities.all %}
-
+                        debugger;
                         data.push("{{ item.plateNo }}");
                         count = data.filter(x => x =={{ item.plateNo }}).length;
-                        degerAta(count, {{ item.plateNo }});
+                        degerAta(count, '{{ item.plateNo }}');
+                        console.log(count,{{ item.plateNo }})
                     {% endfor %}
                 {% endfor %}
             {% endif %}
+            console.log(data)
+            console.log(data.filter(x => x == '07').length);
+            console.log(data.filter(x => x == '58').length);
+
 
         });
     </script>

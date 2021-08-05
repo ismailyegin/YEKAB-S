@@ -118,7 +118,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         {% for url in urls %}
-                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name}}</a>
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
                             </li>
                             <li class="breadcrumb-item active">{{ url_name.name }}</li>
                         {% endfor %}
@@ -173,8 +173,6 @@
                                 </thead>
 
                                 <tbody>
-
-
 
 
                                 </tbody>
@@ -272,7 +270,9 @@
                     {
                         "data": null,
                         render: function (data, type, row) {
-                            return row.capacity;
+                            var html = '';
+                            html = row.capacity + ' MW'
+                            return html;
 
                         }
                     },
@@ -303,18 +303,34 @@
 
                             let url_gant = "{% url 'ekabis:view_yekabusiness_gant' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             url_gant = url_gant.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
                             html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';
-                            html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
-                            html += '<a href="' + url_region + '" class="dropdown-item" title="Baglantı Bölgeleri" type="button"><i class="fa fa-plus"></i> Baglantı Bölgeleri</a>';
-                            html += '<a href="' + url_person + '" class="dropdown-item" title="Personel Ekle" type="button"><i class="fa fa-plus"></i> Personel Ekle</a>';
 
-                            html += '<a href="' + url_company + '" class="dropdown-item" title="Firma Ekle" type="button"><i class="fa fa-plus"></i> Firma Ekle</a>';
+                            {% for item in perm %}
+                                {% if item == 'change_yeka' %}
+                                    html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
+
+                                {% elif item == 'view_yeka_company'%}
+                                    html += '<a href="' + url_region + '" class="dropdown-item" title="Baglantı Bölgeleri" type="button"><i class="fa fa-plus"></i> Baglantı Bölgeleri</a>';
+
+                                {% elif item == 'view_yeka_personel'%}
+                                    html += '<a href="' + url_person + '" class="dropdown-item" title="Personel Ekle" type="button"><i class="fa fa-plus"></i> Personel Ekle</a>';
+
+                                {% elif item == 'view_yekabusinessBlog'%}
+                                    html += '<a href="' + url_company + '" class="dropdown-item" title="Firma Ekle" type="button"><i class="fa fa-plus"></i> Firma Ekle</a>';
+
+                                {% elif item == 'view_region'%}
+                                    html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Planı Ekle</a>';
+
+                                {% elif item == 'view_yekabusiness_gant'%}
+                                    html += '<a href="' + url_gant + '" class="dropdown-item" title="İş Planı" type="button"><i class="fa fa-plus"></i> İş Planı</a>';
+
+                                {% elif item == 'view_yekabusiness_gant' %}
+                                    html += '<button type="button" onclick="deleteYeka(\'' + full.uuid + '\')" class="dropdown-item" href=""><i class="fa fa-trash"></i>Sil</button></div></div></td>';
+                                {% endif  %}
+                            {% endfor %}
+
                             {#html += '<a href="' + url_sub_yeka + '" class="dropdown-item" title="Alt Yeka Ekle" type="button"><i class="fa fa-plus"></i> Alt Yeka Ekle</a>';#}
-                            html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Planı Ekle</a>';
-                            html += '<a href="' + url_gant + '" class="dropdown-item" title="İş Planı" type="button"><i class="fa fa-plus"></i> İş Planı</a>';
 
-                            html += '<button type="button" onclick="deleteYeka(\'' + full.uuid + '\')" class="dropdown-item" href=""><i class="fa fa-trash"></i>Sil</button></div></div></td>';
 
                             return html;
                         }

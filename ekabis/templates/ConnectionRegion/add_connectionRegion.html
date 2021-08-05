@@ -153,8 +153,7 @@
                                     {% csrf_token %}
 
                                     <div class="form-group">
-                                        <label> {{ region_form.name.label }}</label><small
-                                            style="color: red">*</small>
+                                        <label> {{ region_form.name.label }}</label>
                                         {{ region_form.name }}
                                         <label id="label_name"></label>
 
@@ -162,14 +161,12 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label> {{ region_form.capacity.label }}</label><small
-                                                    style="color: red">*</small>
+                                                <label> {{ region_form.capacity.label }}</label>
                                                 {{ region_form.capacity }}
                                                 <label id="label_value"></label>
                                             </div>
                                             <div class="col-md-6">
-                                                <label> {{ region_form.cities.label }}</label><small
-                                                    style="color: red">*</small>
+                                                <label> {{ region_form.cities.label }}</label>
                                                 {{ region_form.cities }}
                                                 <label id="label_cities"></label>
                                             </div>
