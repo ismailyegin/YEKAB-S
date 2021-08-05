@@ -4,12 +4,14 @@ from ekabis.models.BaseModel import BaseModel
 
 
 class Permission(BaseModel):
+    yeka = 'Yeka'
     employee = 'Personel'
     company = 'Firma'
     main = 'Anasayfa'
     settings = 'Ayarlar'
     other = 'Digerleri'
     Type = (
+        (yeka, 'Yeka'),
         (employee, 'Personel'),
         (company, 'Firma'),
         (main, 'Anasayfa'),

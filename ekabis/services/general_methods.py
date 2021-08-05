@@ -85,17 +85,21 @@ def control_access(request):
     groupfilter = {
         'user': request.user
     }
-    aktifgroup = ActiveGroupGetService(request, groupfilter).group
-    for perm in PermissionGroup.objects.filter(group=aktifgroup, is_active=True):
-        if request.resolver_match.url_name == perm.permissions.codename:
-            print('Okey')
-            is_exist = True
-
+    if  ActiveGroupService(request, groupfilter):
+        aktifgroup = ActiveGroupGetService(request, groupfilter).group
+        for perm in PermissionGroup.objects.filter(group=aktifgroup, is_active=True):
+            if request.resolver_match.url_name == perm.permissions.codename:
+                print('Okey')
+                is_exist = True
+    else:
+        aktifgroup=ActiveGroup(
+            user=request.user,
+            group=request.user.groups.all()[0]
+        )
+        aktifgroup.save()
     if request.user.groups.filter(name="Admin"):
         is_exist = True
     return is_exist
-
-
 def aktif(request):
     userfilter = {
         'pk': request.user.pk
