@@ -195,7 +195,7 @@
     </div>
 
 
-<section class="content-header">
+    <section class="content-header">
 
         <div class="container-fluid">
             <div class="row mb-2">
@@ -224,7 +224,7 @@
         <div class="row">
             <div class="col-lg-12 ">
                 <div class="card-body">
-                    <div class="card card-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Log Filtrele</h3>
                         </div>
@@ -235,47 +235,48 @@
 
                                 <div class="row">
 
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label> {{ user_form.first_name.label }}</label>
-                                        {{ user_form.first_name }}
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> {{ user_form.first_name.label }}</label>
+                                            {{ user_form.first_name }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label> {{ user_form.last_name.label }}</label>
-                                        {{ user_form.last_name }}
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> {{ user_form.last_name.label }}</label>
+                                            {{ user_form.last_name }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label> {{ user_form.email.label }}</label>
-                                        {{ user_form.email }}
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label> {{ user_form.email.label }}</label>
+                                            {{ user_form.email }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label> Başlangıç Tarihi</label>
-                                        <input type="text" name="playDate" value="" class="form-control  pull-right"
-                                               id="datepicker" autocomplete="off" onkeydown="return false">
-                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> Başlangıç Tarihi</label>
+                                            <input type="text" name="playDate" value="" class="form-control  pull-right"
+                                                   id="datepicker" autocomplete="off" onkeydown="return false">
+                                        </div>
 
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label> Bitiş tarihi</label>
-                                        <input type="text" name="finishDate" value="" class="form-control  pull-right"
-                                               id="datepicker2" autocomplete="off" onkeydown="return false">
                                     </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label> Bitiş tarihi</label>
+                                            <input type="text" name="finishDate" value=""
+                                                   class="form-control  pull-right"
+                                                   id="datepicker2" autocomplete="off" onkeydown="return false">
+                                        </div>
 
+                                    </div>
                                 </div>
-</div>
 
                             </div>
                             <!-- /.card-body -->
 
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Ara</button>
+                                <button type="submit" class="btn  btn-outline-primary" style="float: right">Ara</button>
                             </div>
                         </form>
 
@@ -289,7 +290,7 @@
         <div class="row">
             <section class="col-lg-12 ">
                 <div class="card-body">
-                    <div class="card card-primary">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Loglar</h3>
                         </div>
@@ -349,19 +350,14 @@
         <!-- /.row (main row) -->
 
     </section>
-
+    {% load  static %}
     <script>
         $(function () {
             $('#kullanicilar').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Göster",
-                            '-1': "Hepsini Göster"
-                        }
-                    }
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
 
                 lengthMenu: [
@@ -379,46 +375,36 @@
 
                     {
                         extend: 'colvis',
-                        text: "Ekle Çıkar",
-                        titleAttr: 'Ekle Çıkar',
-                         title: 'YEKABİS',
+                        titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'YEKABİS',
-                        text: "Yazdır",
+                        title: 'Yeka Firmaları',
+                        text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: "Pdf",
-                         title: 'YEKABİS',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
                         titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        text: "Excel",
-                        titleAttr: 'Excel Kaydet',
-                         title: 'YEKABİS',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: 'Json',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'YEKABİS.json'
-                            );
-                        }
-                    }
 
 
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'bubble': true,
                 'paging': true,
                 'lengthChange': true,

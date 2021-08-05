@@ -78,7 +78,7 @@ def return_add_Company(request):
                         user.save()
                     else:
                         group = Group(
-                            name='firma'
+                            name='Firma'
                         )
                         group.save()
                         user.groups.add(group)
@@ -450,7 +450,7 @@ def return_update_consortium(request, uuid):
         company_form = CompanyForm(request.POST or None, instance=company)
         communication_form = CommunicationForm(request.POST or None, instance=company.communication)
         companyDocumentName = CompanyFileNames.objects.all()
-        employess = Employee.objects.filter(user__groups__name='firma', isDeleted=False)
+        employess = Employee.objects.filter(user__groups__name='Firma', isDeleted=False)
         with transaction.atomic():
             if request.method == 'POST':
 

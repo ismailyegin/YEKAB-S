@@ -92,7 +92,7 @@ def delete_businessBlogParametre(request):
 
                 obj = BusinessBlogParametreType.objects.get(uuid=uuid)
                 #
-                log = str(obj.pk) + " iş blogu parametresi silindi"
+                log = str(obj.pk) + " İş bloğu parametresi silindi"
                 log = general_methods.logwrite(request, request.user, log)
                 obj.isDeleted = True
                 obj.save()
@@ -120,7 +120,7 @@ def delete_businessBlog(request):
 
                 obj = BusinessBlog.objects.get(uuid=uuid)
                 #
-                log = str(obj.pk) + " iş blogu  silindi"
+                log = str(obj.pk) + " İş bloğu  silindi"
                 log = general_methods.logwrite(request, request.user, log)
                 obj.isDeleted = True
                 obj.save()
@@ -198,8 +198,8 @@ def add_businessBlog(request):
                 if business_form.is_valid():
                     business = business_form.save(commit=False)
                     business.save()
-                    messages.success(request, 'is  Blogu  Eklenmiştir.')
-                    log = str(business.name) + "'is  Blogu  Eklenmiştir."
+                    messages.success(request, 'İş  Blogu  Eklenmiştir.')
+                    log = str(business.name) + "'İş  Blogu  Eklenmiştir."
                     log = general_methods.logwrite(request, request.user, log)
                     return redirect('ekabis:view_businessBlog')
                 else:
@@ -231,8 +231,8 @@ def change_businessBlog(request, uuid):
                 if business_form.is_valid():
                     business = business_form.save(commit=False)
                     business.save()
-                    messages.success(request, 'iş  Blogu  güncellenmiştir.')
-                    log = str(business.name) + "'is  Blogu  güncellenmiştir."
+                    messages.success(request, 'İş  bloğu  güncellenmiştir.')
+                    log = str(business.name) + 'İş  bloğu  güncellenmiştir.'
                     log = general_methods.logwrite(request, request.user, log)
                     return redirect('ekabis:view_businessBlog')
                 else:
