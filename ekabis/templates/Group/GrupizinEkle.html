@@ -151,6 +151,46 @@
 
                             {% csrf_token %}
                             <div class="row">
+                            {#                            yeka#}
+                                <div class="col-md-6">
+                                    <div class="card card-outline card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Yeka İzinleri</h3>
+
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+
+                                            {% for perm in  permGroup %}
+
+                                                {% if perm.permissions.group == "Yeka" %}
+                                                    <div class="custom-control custom-switch form-control-lg">
+                                                        {% if perm.is_active %}
+
+                                                            <input type="checkbox" checked class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label"
+                                                               for="item-{{ perm.pk }}">{{ perm.permissions.name }}</label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
                                 {#                            personel#}
                                 <div class="col-md-6">
                                     <div class="card card-outline card-primary">
