@@ -15,7 +15,7 @@ from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
 from ekabis.Forms.YekaCompetitionForm import YekaCompetitionForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.models import YekaCompetition, YekaBusiness, YekaBusinessBlog, BusinessBlog, Employee, YekaPerson, \
-    YekaPersonHistory, Permission
+    YekaPersonHistory, Permission, ConnectionRegion
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.services import general_methods
@@ -23,10 +23,12 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaGetService, ConnectionRegionGetService, YekaCompetitionGetService, \
     YekaBusinessGetService, YekaBusinessBlogGetService, BusinessBlogGetService, YekaCompetitionPersonService, \
     EmployeeGetService, last_urls
-import  datetime
+import datetime
 from django.db.models import Sum
+
+
 @login_required
-def view_competition(request,uuid):
+def view_competition(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -35,12 +37,19 @@ def view_competition(request,uuid):
     yeka_form = YekaForm()
 
     try:
+        region_filter = {
+            'uuid': uuid,
+            'isDeleted': False,
+        }
+        region = ConnectionRegionGetService(request, region_filter)
+        competitions = region.yekacompetition.filter(isDeleted=False)
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             return render(request, 'Competition/view_competition.html',
-                          {'yeka_form': yeka_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name })
+                          {'region': region, 'competitions': competitions, 'yeka_form': yeka_form, 'error_messages': '',
+                           'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
@@ -48,10 +57,8 @@ def view_competition(request,uuid):
         return redirect('ekabis:view_yeka')
 
 
-
-
 @login_required
-def add_competition(request,region):
+def add_competition(request, region):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -63,11 +70,11 @@ def add_competition(request,region):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
-        region_filter={
-            'uuid' :region,
-            'isDeleted' : False,
+        region_filter = {
+            'uuid': region,
+            'isDeleted': False,
         }
-        region=ConnectionRegionGetService(request,region_filter)
+        region = ConnectionRegionGetService(request, region_filter)
         with transaction.atomic():
 
             if request.method == 'POST':
@@ -76,16 +83,14 @@ def add_competition(request,region):
 
                 if competition_form.is_valid():
 
-
-
                     competition = competition_form.save(commit=False)
 
                     total = int(
                         YekaCompetition.objects.filter(connectionregion=region).distinct().aggregate(Sum('capacity'))[
                             'capacity__sum'] or 0)
-                    total +=competition.capacity
+                    total += competition.capacity
 
-                    if total>region.capacity:
+                    if total > region.capacity:
                         messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
                         return render(request, 'Competition/add_competition.html',
                                       {'competition_form': competition_form, 'region': region,
@@ -141,27 +146,31 @@ def add_competition(request,region):
                                 yeka_business.save()
                                 yeka_business.businessblogs.add(yeka_businessblog)
                                 yeka_business.save()
-                            competition.business=yeka_business
+                            competition.business = yeka_business
                             competition.save()
                     log = " Yeka Yarışması  eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
-                    return redirect('ekabis:add_competition' ,region.uuid)
+                    return redirect('ekabis:view_competition', region.uuid)
 
                 else:
                     error_message_region = get_error_messages(competition_form)
 
                     return render(request, 'Competition/add_competition.html',
-                                  {'competition_form': competition_form, 'region':region, 'error_messages': error_message_region,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                                  {'competition_form': competition_form, 'region': region,
+                                   'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name})
 
             competitions = region.yekacompetition.filter(isDeleted=False)
             return render(request, 'Competition/add_competition.html',
-                          {'competition_form': competition_form, 'competitions': competitions, 'error_messages': '', 'region':region,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                          {'competition_form': competition_form, 'competitions': competitions, 'error_messages': '',
+                           'region': region, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
 
 @login_required
 def delete_competition(request):
@@ -195,8 +204,10 @@ def delete_competition(request):
     except obj.DoesNotExist:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
 @login_required
-def update_competition(request, region,competition):
+def update_competition(request, region, competition):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -214,7 +225,7 @@ def update_competition(request, region,competition):
             'uuid': competition,
             'isDeleted': False,
         }
-        competition=YekaCompetitionGetService(request,competition_filter)
+        competition = YekaCompetitionGetService(request, competition_filter)
         competition_form = YekaCompetitionForm(request.POST or None, instance=competition)
         with transaction.atomic():
             if request.method == 'POST':
@@ -229,7 +240,8 @@ def update_competition(request, region,competition):
                     if total > region.capacity:
                         messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
                         return render(request, 'Competition/change_competition.html',
-                                      {'competition_form': competition_form, 'region': region,'urls': urls, 'current_url': current_url, 'url_name': url_name,'competition':competition,
+                                      {'competition_form': competition_form, 'region': region, 'urls': urls,
+                                       'current_url': current_url, 'url_name': url_name, 'competition': competition,
                                        })
                     competition.save()
                     for item in region.cities.all():
@@ -247,11 +259,13 @@ def update_competition(request, region,competition):
 
                     return render(request, 'Competition/change_competition.html',
                                   {'competition_form': competition_form, 'region': region,
-                                   'error_messages': error_message_region,'urls': urls, 'current_url': current_url, 'url_name': url_name,'competition':competition,})
+                                   'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name, 'competition': competition, })
 
             competitions = region.yekacompetition.filter(isDeleted=False)
             return render(request, 'Competition/change_competition.html',
-                          {'competition_form': competition_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name,'competition':competition,
+                          {'competition_form': competition_form, 'error_messages': '', 'urls': urls,
+                           'current_url': current_url, 'url_name': url_name, 'competition': competition,
                            'region': region})
 
     except Exception as e:
@@ -287,7 +301,6 @@ def view_competition_yekabusinessBlog(request, uuid):
         # }
         # ekstratimes = ExtraTimeService(request, extratime_filter)
 
-
         if competition.business:
             yekabusiness = competition.business
             yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
@@ -298,7 +311,7 @@ def view_competition_yekabusinessBlog(request, uuid):
         return render(request, 'Competition/timeline.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'competition': competition,
-                       'ekstratimes': None,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                       'ekstratimes': None, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                        })
 
     except Exception as e:
@@ -307,10 +320,11 @@ def view_competition_yekabusinessBlog(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
+
 @login_required
-def add_yekacompetitionbusiness(request,uuid):
+def add_yekacompetitionbusiness(request, uuid):
     business = BusinessBlog.objects.filter(isDeleted=False)
-    competition=YekaCompetition.objects.get(uuid=uuid)
+    competition = YekaCompetition.objects.get(uuid=uuid)
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -342,14 +356,14 @@ def add_yekacompetitionbusiness(request,uuid):
                         yekabusiness.businessblogs.add(blog)
                         yekabusiness.save()
 
-                    return redirect('ekabis:view_competitionbusinessblog',competition.uuid)
-
-
+                    return redirect('ekabis:view_competitionbusinessblog', competition.uuid)
 
         return render(request, 'Competition/competition_businessblog_Add.html', {'business': business,
 
-                                                             'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name
-                                                             })
+                                                                                 'error_messages': '', 'urls': urls,
+                                                                                 'current_url': current_url,
+                                                                                 'url_name': url_name
+                                                                                 })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -357,10 +371,7 @@ def add_yekacompetitionbusiness(request,uuid):
 
 
 @login_required
-def change_yekacompetitionbusiness(request, uuid,competition):
-
-
-
+def change_yekacompetitionbusiness(request, uuid, competition):
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -389,36 +400,34 @@ def change_yekacompetitionbusiness(request, uuid,competition):
                         blog = None
                         # olmayanları sil
                         if business:
-                            removeBusiness = business.exclude(isDeleted=False , id__in=blogs)
+                            removeBusiness = business.exclude(isDeleted=False, id__in=blogs)
                             for i in removeBusiness:
                                 i.isDeleted = True
                                 i.save()
 
-
                         # olmayanı ekle sıralması degileni kaydet
                         for i in range(len(blogs)):
-
 
                             # is blogu varsa
                             if yekabusiness.businessblogs.filter(isDeleted=False, pk=blogs[i]):
                                 if i == 0:
                                     blog = yekabusiness.businessblogs.get(isDeleted=False, pk=blogs[i])
                                     blog.parent = None
-                                    blog.sorting=i+1
+                                    blog.sorting = i + 1
                                     blog.save()
                                     parent = blog
 
                                 else:
                                     blog = yekabusiness.businessblogs.get(isDeleted=False, pk=blogs[i])
                                     blog.parent = parent
-                                    blog.sorting=i+1
+                                    blog.sorting = i + 1
                                     blog.save()
                                     parent = blog
                             # is blogu yoksa
                             else:
                                 if i == 0:
                                     blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
-                                                            sorting=i+1)
+                                                            sorting=i + 1)
                                     blog.save()
                                     parent = blog
 
@@ -439,22 +448,24 @@ def change_yekacompetitionbusiness(request, uuid,competition):
                             i.isDeleted = True
                             i.save()
 
-
-                    return redirect('ekabis:view_competitionbusinessblog',competition)
+                    return redirect('ekabis:view_competitionbusinessblog', competition)
                 else:
                     error_messages = get_error_messages(business_form)
 
-                    return render(request, 'Competition/competition_businessblog_change.html', {'business_form': business_form,
-                                                                            'error_messages': error_messages,
-                                                                            'unbusiness': unbusiness,
-                                                                            'business': business,'urls': urls, 'current_url': current_url, 'url_name': url_name
-                                                                            })
+                    return render(request, 'Competition/competition_businessblog_change.html',
+                                  {'business_form': business_form,
+                                   'error_messages': error_messages,
+                                   'unbusiness': unbusiness,
+                                   'business': business, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                                   })
 
         return render(request, 'Competition/competition_businessblog_change.html', {'business_form': business_form,
-                                                                'error_messages': '',
-                                                                'unbusiness': unbusiness,
-                                                                'business': business,'urls': urls, 'current_url': current_url, 'url_name': url_name
-                                                                })
+                                                                                    'error_messages': '',
+                                                                                    'unbusiness': unbusiness,
+                                                                                    'business': business, 'urls': urls,
+                                                                                    'current_url': current_url,
+                                                                                    'url_name': url_name
+                                                                                    })
 
     except Exception as e:
         traceback.print_exc()
@@ -486,14 +497,15 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
             'uuid': business
         }
         business = BusinessBlogGetService(request, yeka_business_filter_)
-        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, instance=yekabussiness)
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
         for item in yekabussiness.paremetre.all():
 
             if item.company:
-                title=item.parametre.title +"-" + str(item.company.pk)
+                title = item.parametre.title + "-" + str(item.company.pk)
                 if item.parametre.type == 'file':
                     yekaBusinessBlogo_form.fields[title].initial = item.file
-                    yekaBusinessBlogo_form.fields[title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                    yekaBusinessBlogo_form.fields[
+                        title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
                     # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
                     # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
                     # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
@@ -512,27 +524,26 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                 else:
                     yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
 
-
-
-
         if request.POST:
-            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk,yekabussiness, request.POST or None, request.FILES or None,
+            yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, request.POST or None,
+                                                          request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
-                if not   yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
                     startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                    finishDate = startDate + datetime.timedelta(days=int(yekaBusinessBlogo_form.cleaned_data['businessTime']))
+                    finishDate = startDate + datetime.timedelta(
+                        days=int(yekaBusinessBlogo_form.cleaned_data['businessTime']))
                     yekabussiness.finisDate = finishDate
                     yekabussiness.save()
                 else:
-                    yekabussiness.businessTime=0
+                    yekabussiness.businessTime = 0
                     yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
-                return redirect('ekabis:view_competitionbusinessblog',competition.uuid)
+                return redirect('ekabis:view_competitionbusinessblog', competition.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
-                          'competition': competition,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                          'competition': competition, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
 
@@ -555,12 +566,12 @@ def yeka_person_list(request, uuid):
     yekacompetition_person_filter = {
         'competition': competition,
         'isDeleted': False,
-        'is_active':True
+        'is_active': True
     }
     urls = last_urls(request)
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
-    yeka_person = YekaCompetitionPersonService(request,yekacompetition_person_filter).order_by('-creationDate')
+    yeka_person = YekaCompetitionPersonService(request, yekacompetition_person_filter).order_by('-creationDate')
     array = []
     for person in yeka_person:
         array.append(person.employee.uuid)
@@ -580,7 +591,8 @@ def yeka_person_list(request, uuid):
                         person_yeka = YekaCompetitionPerson(competition=competition, employee=person, is_active=True)
                         person_yeka.save()
 
-                        personHistory = YekaCompetitionPersonHistory(competition=competition, person=person, is_active=True)
+                        personHistory = YekaCompetitionPersonHistory(competition=competition, person=person,
+                                                                     is_active=True)
                         personHistory.save()
 
                         log = str(competition.name) + ' adlı yekaya - ' + str(
@@ -601,22 +613,51 @@ def yeka_person_list(request, uuid):
                         yeka_person.is_active = False
                         yeka_person.save()
 
-                        personHistory = YekaCompetitionPersonHistory(competition=yeka_person.competition, person=person, is_active=False)
+                        personHistory = YekaCompetitionPersonHistory(competition=yeka_person.competition, person=person,
+                                                                     is_active=False)
                         personHistory.save()
 
                         log = str(yeka_person.competition.name) + ' adlı yekadan -' + str(
                             person.user.get_full_name()) + " personeli çıkarıldı."
                         log = general_methods.logwrite(request, request.user, log)
 
-
         return redirect('ekabis:view_yekacompetition_personel', uuid)
 
     return render(request, 'Yeka/yekaPersonList.html',
-                  {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid,'urls': urls, 'current_url': current_url, 'url_name': url_name,'competition':competition,})
+                  {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid, 'urls': urls,
+                   'current_url': current_url, 'url_name': url_name, 'competition': competition, })
 
 
 @login_required
-def add_sumcompetition(request,uuid):
+def return_sub_competition(request, uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        competition_filter = {
+            'uuid': uuid,
+            'isDeleted': False,
+        }
+        parent_competition = YekaCompetitionGetService(request, competition_filter)
+        competitions = YekaCompetition.objects.filter(parent=parent_competition)
+        region=ConnectionRegion.objects.get(yekacompetition=parent_competition)
+        return render(request, 'Competition/view_sub_competition.html',
+                      {'parent_competition': parent_competition, 'competitions': competitions,'region':region,
+                      'urls': urls, 'current_url': current_url, 'url_name': url_name})
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+@login_required
+def add_sumcompetition(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -625,12 +666,16 @@ def add_sumcompetition(request,uuid):
     competition_form = YekaCompetitionForm()
 
     try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
 
-        competition_filter={
-            'uuid' :uuid,
-            'isDeleted' : False,
+        competition_filter = {
+            'uuid': uuid,
+            'isDeleted': False,
         }
-        parent_competition=YekaCompetitionGetService(request,competition_filter)
+        parent_competition = YekaCompetitionGetService(request, competition_filter)
+
         with transaction.atomic():
 
             if request.method == 'POST':
@@ -639,23 +684,20 @@ def add_sumcompetition(request,uuid):
 
                 if competition_form.is_valid():
 
-
-
                     competition = competition_form.save(commit=False)
-
 
                     # baglı oldugu yarışmanın kapsitesinden fazla olamaz
                     total = int(
                         YekaCompetition.objects.filter(parent=parent_competition).distinct().aggregate(Sum('capacity'))[
                             'capacity__sum'] or 0)
-                    total +=competition.capacity
+                    total += competition.capacity
 
-                    if total>parent_competition.capacity:
+                    if total > parent_competition.capacity:
                         messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
                         return render(request, 'Competition/add_competition.html',
                                       {'competition_form': competition_form, 'parent_competition': parent_competition,
                                        })
-                    competition.parent=parent_competition
+                    competition.parent = parent_competition
                     competition.save()
 
                     if parent_competition.business:
@@ -696,29 +738,35 @@ def add_sumcompetition(request,uuid):
                                 yeka_business.save()
                                 yeka_business.businessblogs.add(yeka_businessblog)
                                 yeka_business.save()
-                            competition.business=yeka_business
+                            competition.business = yeka_business
                             competition.save()
                     log = " Alt Yeka Ara  eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
-                    return redirect('ekabis:add_sumcompetition' , parent_competition.uuid)
+                    return redirect('ekabis:view_sub_competition', parent_competition.uuid)
 
                 else:
                     error_message_region = get_error_messages(competition_form)
 
-                    return render(request, 'Competition/add_sumcompetition.html',
-                                  {'competition_form': competition_form, 'parent_competition':parent_competition, 'error_messages': error_message_region})
+                    return render(request, 'Competition/add_sub_competition.html',
+                                  {'competition_form': competition_form, 'parent_competition': parent_competition,
+                                   'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name})
 
             competitions = YekaCompetition.objects.filter(parent=parent_competition)
-            return render(request, 'Competition/add_sumcompetition.html',
-                          {'competition_form': competition_form, 'competitions': competitions, 'error_messages': '', 'parent_competition':parent_competition})
+            return render(request, 'Competition/add_sub_competition.html',
+                          {'competition_form': competition_form, 'competitions': competitions, 'error_messages': '',
+                           'parent_competition': parent_competition, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name})
 
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
 @login_required
-def change_sumcompetition(request,uuid):
+def change_sumcompetition(request, uuid):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -729,7 +777,7 @@ def change_sumcompetition(request,uuid):
             'uuid': uuid,
             'isDeleted': False,
         }
-        competition=YekaCompetitionGetService(request,competition_filter)
+        competition = YekaCompetitionGetService(request, competition_filter)
         competition_form = YekaCompetitionForm(request.POST or None, instance=competition)
         with transaction.atomic():
             if request.method == 'POST':
@@ -760,10 +808,9 @@ def change_sumcompetition(request,uuid):
                                   {'competition_form': competition_form, 'compeititon': competition,
                                    'error_messages': error_message_region})
 
-
             return render(request, 'Competition/change_sumcompetition.html',
                           {'competition_form': competition_form, 'error_messages': '',
-                            'competition':competition})
+                           'competition': competition})
 
     except Exception as e:
         traceback.print_exc()

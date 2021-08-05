@@ -116,8 +116,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
+                    {% if region %} <h1>
+                        {{ region.name }} -Alt Yeka Yarışması Listesi</h1>
+                    {% elif competition %}
                     <h1>
-                        {{ region.name }} - Yeka Yarışması Listesi</h1>
+                        {{ competition.name }} -Alt Yeka Yarışması Listesi</h1>
+                    {% endif %}
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -144,11 +148,11 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Yeka Yarışma Listesi</h3>
+                            <h3 class="card-title">Alt Yeka Yarışma Listesi</h3>
                             {% for item in perm %}
-                                {% if item == 'add_competition' %}
+                                {% if item == 'add_sumcompetition' %}
 
-                                    <a href="{% url "ekabis:add_competition" region.uuid %}" title="Yeka Yarışması Ekle"
+                                    <a href="{% url "ekabis:add_sumcompetition" parent_competition.uuid %}" title="Alt Yeka Yarışması Ekle"
                                        type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
                                             class="fa fa-plus"></i>
                                     </a>
@@ -159,69 +163,66 @@
                         </div>
 
 
-                            <div class="card-body">
+                        <div class="card-body">
 
-                                <table id="region" class="table table-bordered table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Yarışma Tanımı</th>
-                                        <th>Kapasite</th>
-                                        <th>İşlemler</th>
+                            <table id="region" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Yarışma Tanımı</th>
+                                    <th>Kapasite</th>
+                                    <th>İşlemler</th>
 
-                                    </tr>
-                                    </thead>
+                                </tr>
+                                </thead>
 
-                                    <tbody>
+                                <tbody>
 
-                                    {% if competitions.all %}
-                                        {% for competition in competitions %}
-                                            <tr>
-                                                <td>{{ forloop.counter }} </td>
-                                                <td>{{ competition.name }}</td>
-                                                <td>{{ competition.capacity }}</td>
-                                                <td>
+                                    {% for competition in competitions %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ competition.name }}</td>
+                                            <td>{{ competition.capacity }}</td>
+                                            <td>
 
-                                                    <div class="btn-group">
-                                                        <button type="button"
-                                                                class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                data-toggle="dropdown"> İşlemler
-                                                        </button>
-                                                        <div class="dropdown-menu" role="menu">
+                                                <div class="btn-group">
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown"> İşlemler
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
 
 
-                                                            <a onclick="deleteRegion({{ competition.uuid }})"
-                                                               class="dropdown-item" title="Sil" type="button"><i
-                                                                    class="fa fa-edit"></i>Sil</a>
+                                                        <a onclick="deleteRegion({{ competition.uuid }})"
+                                                           class="dropdown-item" title="Sil" type="button"><i
+                                                                class="fa fa-edit"></i>Sil</a>
 
-                                                            <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
-                                                               class="dropdown-item" title="İş Planı Ekle"
-                                                               type="button"><i class="fa fa-edit"></i>İş Planı</a>
-                                                            <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
-                                                               class="dropdown-item" title="Personel Ekle"
-                                                               type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
-                                                            <a href="{% url "ekabis:change_competition" region.uuid competition.uuid %}"
-                                                               class="dropdown-item" title="Düzenle " type="button"><i
-                                                                    class="fa fa-edit"></i>Düzenle </a>
-                                                            <a href="{% url "ekabis:view_sub_competition"  competition.uuid %}"
-                                                               class="dropdown-item" title="Düzenle " type="button"><i
-                                                                    class="fa fa-edit"></i>Alt Yeka Listesi </a>
+                                                        <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
+                                                           class="dropdown-item" title="İş Planı Ekle"
+                                                           type="button"><i class="fa fa-edit"></i>İş Planı</a>
+                                                        <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
+                                                           class="dropdown-item" title="Personel Ekle"
+                                                           type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
+                                                        <a href="{% url "ekabis:change_competition" region.uuid competition.uuid %}"
+                                                           class="dropdown-item" title="Düzenle " type="button"><i
+                                                                class="fa fa-edit"></i>Düzenle </a>
 
-                                                        </div>
+
                                                     </div>
+                                                </div>
 
 
-                                            </tr>
+                                        </tr>
 
-                                        {% endfor %}
-                                    {% endif %}
-
-
-                                    </tbody>
-                                </table>
+                                    {% endfor %}
 
 
-                            </div>
+                                </tbody>
+                            </table>
+
+
+                        </div>
+
                     </div>
 
 
@@ -305,64 +306,6 @@
             })
 
         })
-
-        function deleteRegion(id) {
-            var html = ''
-            $("#modal-delete").on("shown.bs.modal", function (e) {
-                $("#btn-conf1").click(function () {
-                    debugger;
-
-                    $.ajax({
-                        url: "{% url "ekabis:delete_region"%}",
-                        type: "POST",
-                        data: {
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            isActive: 'False',
-                            uuid: id
-                        },
-
-                        success: function (result) {
-                            if (result.status === 'Fail') {
-
-
-                                html = result.msg;
-                                debugger;
-                                $(".errorModal").html(html);
-                                $('#modal-error').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:add_competition" region.uuid %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-                            } else {
-                                html = 'Bölge Başarıyla Silindi';
-                                $(".successModal").html(html);
-                                $('#modal-success').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:add_competition" region.uuid %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-
-                            }
-
-                        },
-
-
-                    });
-                });
-            }).modal('show');
-            $('#btn-close').click(function () {
-                $('#modal-danger').modal('hide');
-            });
-
-        }
 
 
     </script>

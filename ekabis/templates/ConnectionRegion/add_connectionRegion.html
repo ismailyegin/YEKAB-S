@@ -190,66 +190,7 @@
                                 </div>
                             </form>
                         </div>
-                        {% if regions %}
-                            <div class="card-body">
 
-                                <table id="region" class="table table-bordered table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Bağlantı Bölgesi</th>
-                                        <th>Kapasite</th>
-                                        <th>İşlemler</th>
-
-
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                    {% if regions.all %}
-                                        {% for region in regions %}
-                                            <tr>
-                                                <td>{{ forloop.counter }} </td>
-                                                <td>{{ region.name }}</td>
-                                                <td>{{ region.capacity }}</td>
-                                                <td>
-
-                                                    <div class="btn-group">
-                                                        <button type="button"
-                                                                class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                data-toggle="dropdown"> İşlemler
-                                                        </button>
-                                                        <div class="dropdown-menu" role="menu">
-
-
-                                                            <a onclick="deleteRegion({{ region.uuid }})"
-                                                               class="dropdown-item" title="Sil" type="button"><i
-                                                                    class="fa fa-edit"></i>Sil</a>
-                                                            <a href="{% url "ekabis:update_region" region.uuid yeka.uuid %}"
-                                                               class="dropdown-item" title="Düzenle" type="button"><i
-                                                                    class="fa fa-edit"></i>Düzenle</a>
-                                                            <a href="{% url "ekabis:add_competition" region.uuid %}"
-                                                               class="dropdown-item" title="Yarışma Ekle" type="button"><i
-                                                                    class="fa fa-plus"></i> Yeka Yarışmaları</a>
-
-
-                                                        </div>
-                                                    </div>
-
-
-                                            </tr>
-
-                                        {% endfor %}
-                                    {% endif %}
-
-
-                                    </tbody>
-                                </table>
-
-
-                            </div>
-                        {% endif %}
                     </div>
 
 
