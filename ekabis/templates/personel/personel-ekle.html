@@ -46,7 +46,7 @@
 
     {% endif %}
 
-      <section class="content-header">
+    <section class="content-header">
 
         <div class="container-fluid">
             <div class="row mb-2">
@@ -73,10 +73,10 @@
             {% csrf_token %}
             <div class="row">
 
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Genel Bilgiler</h3>
+                            <h3 class="card-title">Personel Bilgileri</h3>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -92,7 +92,7 @@
                                 <div class="col-lg-6">
 
                                     <div class="form-group">
-                                        <label> {{ person_form.tc.label }}</label><small style="color: red">*</small>
+                                        <label> {{ person_form.tc.label }}</label>
                                         {{ person_form.tc }}
                                         <label for="" id="label_tc"></label>
 
@@ -100,27 +100,16 @@
 
 
                                     <div class="form-group">
-                                        <label> {{ user_form.first_name.label }}</label> <small
-                                            style="color: red">*</small>
+                                        <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
                                         <label for="" id="label_first_name"></label>
 
                                     </div>
 
                                     <div class="form-group">
-                                        <label> {{ user_form.last_name.label }}</label> <small
-                                            style="color: red">*</small>
+                                        <label> {{ user_form.last_name.label }}</label>
                                         {{ user_form.last_name }}
                                         <label id="label_last_name"></label>
-
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label> {{ person_form.gender.label }}</label><small
-                                            style="color: red">*</small>
-                                        {{ person_form.gender }}
-                                        <label for="" id="label_gender"></label>
 
                                     </div>
 
@@ -130,37 +119,30 @@
                                 <div class="col-lg-6">
 
                                     <div class="form-group">
-                                        <label> {{ person_form.birthDate.label }}</label>
-                                        {{ person_form.birthDate }}
-                                        <label for="" id="label_birthDate"></label>
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label> {{ employee_form.workDefinition.label }}</label><small
-                                            style="color: red">*</small>
-                                        {{ employee_form.workDefinition }}
-                                        <label for="" id="label_workDefinition"></label>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ person_form.bloodType.label }}</label> <small
-                                            style="color: red">*</small>
-                                        {{ person_form.bloodType }}
-                                        <label for="" id="label_bloodType"></label>
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Grubunu Seçiniz</label> <small style="color: red">*</small>
+                                        <label>Grubunu Seçiniz *</label>
                                         <select name="group" class="form-control select2 select2-hidden-accessible"
                                                 style="width: 100%; " id="group" name="group" required="required">
                                             {% for item in groups %}
-                                            <option value="{{ item.pk }}" selected>{{ item.name }}</option>
+                                                <option value="{{ item.pk }}" selected>{{ item.name }}</option>
 
-                                                {% endfor %}
+                                            {% endfor %}
 
                                         </select>
+                                        <label for="" id="label_group"></label>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ user_form.email.label }}</label>
+                                        {{ user_form.email }}
+                                        <label for="" id="label_email"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber.label }}</label>
+                                        {{ communication_form.phoneNumber }}
+                                        <label for="" id="label_phoneNumber"></label>
+
                                     </div>
 
 
@@ -173,78 +155,6 @@
                                     style="float: right">Kaydet
                             </button>
                             <small style="color: red">(*)Olan Alanlar zorunludur.</small>
-                        </div>
-
-
-                    </div>
-
-                </div>
-                <div class="col-lg-6">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">İletişim Bilgileri</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ user_form.email.label }}</label> <small style="color: red">*</small>
-                                        {{ user_form.email }}
-                                        <label for="" id="label_email"></label>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber.label }}</label> <small
-                                            style="color: red">*</small>
-                                        {{ communication_form.phoneNumber }}
-                                        <label for="" id="label_phoneNumber"></label>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber2.label }}</label>
-                                        {{ communication_form.phoneNumber2 }}
-                                        <label for="" id="label_phoneNumber2"></label>
-
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.country.label }}</label>
-                                        {{ communication_form.country }}
-                                        <label for="" id="label_country"></label>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.city.label }}</label>
-                                        {{ communication_form.city }}
-                                        <label for="" id="label_city"></label>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.postalCode.label }}</label>
-                                        {{ communication_form.postalCode }}
-                                        <label for="" id="label_postalCode"></label>
-
-                                    </div>
-
-
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.address.label }}</label>
-                                        {{ communication_form.address }}
-                                        <label for="" id="label_address"></label>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" type="submit" style="float: right">Kaydet</button>
-                            <small style="color: red">(*) Olan Alanlar zorunludur.</small>
-
                         </div>
 
 

@@ -109,7 +109,6 @@ urlpatterns = [
     path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename,
          name='change_companyfilename'),
 
-
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
     path('grup/grup-listesi/', GroupView.return_list_group, name='view_group'),
@@ -128,23 +127,28 @@ urlpatterns = [
     path('yeka/yeka-yarisma-listesi/<uuid:uuid>', YekaCompetitionViews.view_competition, name='view_competition'),
     path('yarisma/yarisma-ekle/<uuid:region>', YekaCompetitionViews.add_competition, name='add_competition'),
 
-
     path('yarisma/yarisma-sil/', YekaCompetitionViews.delete_competition, name='delete_competition'),
-    path('yarisma/yarisma-guncelle/<uuid:region>/<uuid:competition>', YekaCompetitionViews.update_competition, name='change_competition'),
-    path('yarisma/yarisma-is-bloklari-list/<uuid:uuid>/', YekaCompetitionViews.view_competition_yekabusinessBlog, name='view_competitionbusinessblog'),
-    path('yarisma/yarisma-IsBlogu-ekle/<uuid:uuid>/', YekaCompetitionViews.add_yekacompetitionbusiness, name='add_yekacompetitionbusiness'),
-    path('yarisma/yarisma-IsBlogu-guncelle/<uuid:uuid>/<uuid:competition>/', YekaCompetitionViews.change_yekacompetitionbusiness,
+    path('yarisma/yarisma-guncelle/<uuid:region>/<uuid:competition>', YekaCompetitionViews.update_competition,
+         name='change_competition'),
+    path('yarisma/yarisma-is-bloklari-list/<uuid:uuid>/', YekaCompetitionViews.view_competition_yekabusinessBlog,
+         name='view_competitionbusinessblog'),
+    path('yarisma/yarisma-IsBlogu-ekle/<uuid:uuid>/', YekaCompetitionViews.add_yekacompetitionbusiness,
+         name='add_yekacompetitionbusiness'),
+    path('yarisma/yarisma-IsBlogu-guncelle/<uuid:uuid>/<uuid:competition>/',
+         YekaCompetitionViews.change_yekacompetitionbusiness,
          name='change_yekacompetitionbusiness'),
     path('yarisma/yarisma-is-bloklari-ekle/<uuid:competition>/<uuid:yekabusiness>/<uuid:business>/',
          YekaCompetitionViews.change_yekacompetitionbusinessBlog, name='change_yekacompetitionbusinessBlog'),
-    path('yarisma/yarisma-personeller/<uuid:uuid>', YekaCompetitionViews.yeka_person_list, name='view_yekacompetition_personel'),
+    path('yarisma/yarisma-personeller/<uuid:uuid>', YekaCompetitionViews.yeka_person_list,
+         name='view_yekacompetition_personel'),
 
     # alt yeka
     path('yarisma/alt-yeka-ekle/<uuid:uuid>', YekaCompetitionViews.add_sumcompetition, name='add_sumcompetition'),
-    path('yarisma/alt-yeka-listesi/<uuid:uuid>', YekaCompetitionViews.return_sub_competition, name='view_sub_competition'),
+    path('yarisma/alt-yeka-listesi/<uuid:uuid>', YekaCompetitionViews.return_sub_competition,
+         name='view_sub_competition'),
 
-    path('yarisma/alt-yeka-guncelle/<uuid:uuid>', YekaCompetitionViews.change_sumcompetition,name='change_sumcompetition'),
-
+    path('yarisma/alt-yeka-guncelle/<uuid:uuid>', YekaCompetitionViews.change_sumcompetition,
+         name='change_sumcompetition'),
 
     path('baglanti/bolgesi-ekle/<uuid:uuid>', ConnectionRegionViews.add_connectionRegion, name='add_region'),
     path('baglanti/bolge-listesi/<uuid:uuid>', ConnectionRegionViews.return_connectionRegion, name='view_region'),
@@ -164,12 +168,15 @@ urlpatterns = [
 
     path('yeka/yeka-is-bloklari-semasi/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant'),
     path('yeka/yeka-is-bloklari-gant/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant2'),
-    path('yeka/yeka-is-bloklari-incele-gant-detay/<uuid:yeka>/<uuid:yekabusiness>/', YekaViews.view_yekabusinessblog_gant, name='view_yekabusinessblog_gant'),
+    path('yeka/yeka-is-bloklari-incele-gant-detay/<uuid:yeka>/<uuid:yekabusiness>/',
+         YekaViews.view_yekabusinessblog_gant, name='view_yekabusinessblog_gant'),
 
-    #yekabusinessBlog
+    # yekabusinessBlog
     path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
-    path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<uuid:yekabusiness>/<uuid:business>/', YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
-    path('yeka/yeka-is-bloklari-firma-ekle/<uuid:yeka>/<uuid:yekabusinessblog>/',YekaViews.add_yekabusinessblog_company, name='add_yekabusinessblog_company'),
+    path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<uuid:yekabusiness>/<uuid:business>/',
+         YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
+    path('yeka/yeka-is-bloklari-firma-ekle/<uuid:yeka>/<uuid:yekabusinessblog>/',
+         YekaViews.add_yekabusinessblog_company, name='add_yekabusinessblog_company'),
 
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
     path('yeka/alt-yekalar/<uuid:uuid>', YekaViews.return_sub_yeka, name='view_sub_yeka'),
@@ -186,7 +193,7 @@ urlpatterns = [
     path('yekaIsBlogu/yeka-IsBlogu-guncelle/<uuid:uuid>/<uuid:yeka>/', BusinessBlogViews.change_yekabusiness,
          name='change_yekabusiness'),
     path('yekaIsBlogu/yekaIsBlogu-sil/', BusinessBlogViews.delete_yekabusiness, name='delete_yekabusiness'),
-#alt yeka
+    # alt yeka
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
     # business
     path('isBlogu/isBlogu-listesi/', BusinessBlogViews.view_businessBlog, name='view_businessBlog'),
@@ -202,17 +209,22 @@ urlpatterns = [
 
     # Ek zaman
     path('yeka/ek-sure-listesi/', ExtraTimeViews.return_list_extra_time, name='view_extratime'),
-    path('yeka/ek-sure-ekle/<uuid:business>/<uuid:businessblog>/', ExtraTimeViews.return_add_extra_time, name='add_extratime'),
+    path('yeka/ek-sure-ekle/<uuid:business>/<uuid:businessblog>/', ExtraTimeViews.return_add_extra_time,
+         name='add_extratime'),
     path('yeka/ek-sure-guncelle/<uuid:uuid>/', ExtraTimeViews.return_update_extra_time, name='change_extratime'),
     path('yeka/ek-sure-sil/', ExtraTimeViews.delete_extra_time, name='delete_extratime'),
 
     # Ekstra zaman file
     path('yeka/ek-sure-dosya-ekle/<uuid:uuid>/', ExtraTimeViews.add_extratimefile, name='add_extratimefile'),
-    path('yeka/ek-sure-dosya-guncelle/<uuid:uuid>/<uuid:time>', ExtraTimeViews.change_extratimefile, name='change_extratimefile'),
+    path('yeka/ek-sure-dosya-guncelle/<uuid:uuid>/<uuid:time>', ExtraTimeViews.change_extratimefile,
+         name='change_extratimefile'),
     path('yeka/ek-sure-sil/', ExtraTimeViews.delete_extratimefile, name='delete_extratimefile'),
 
-
-
     path('ilce/ilce-getir/', CityViews.get_districts, name='ilce-getir'),
+    path('firma/firma-kullanicilari/<uuid:uuid>/', CompanyView.return_user_company, name='view_company_user'),
+    path('firma/firma-kullanicisi-ekle/', CompanyView.add_company_user, name='add_company_user'),
+    path('firma/firma-kullanici-listesi/', CompanyView.company_users, name='company_users'),
+
+    path('firma/firma-kullanicisi-gorevlendir/<uuid:uuid>/', CompanyView.assigment_company_user, name='assigment_company_user'),
 
 ]

@@ -44,15 +44,9 @@ def add_employee(request):
     user_form = UserForm()
     person_form = PersonForm()
     communication_form = CommunicationForm()
-    employee_form = EmployeeForm()
 
     groups = Group.objects.exclude(name='Admin').exclude(name='Firma')
 
-    categorItemfilter = {
-        'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
-
-    }
-    employee_form.fields['workDefinition'].queryset = CategoryItemService(request, categorItemfilter)
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -65,7 +59,7 @@ def add_employee(request):
 
                 employe_form = EmployeeForm(request.POST)
 
-                if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and employe_form.is_valid():
+                if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid():
                     user = User()
                     user.username = user_form.cleaned_data['email']
                     user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
@@ -80,7 +74,6 @@ def add_employee(request):
 
                     personel = Employee(
                         user=user, person=person, communication=communication,
-                        workDefinition=employe_form.cleaned_data['workDefinition']
 
                     )
                     personel.save()
@@ -119,13 +112,13 @@ def add_employee(request):
                     return render(request, 'personel/personel-ekle.html',
                                   {'user_form': user_form, 'person_form': person_form,
                                    'communication_form': communication_form,
-                                   'employee_form': employee_form, 'error_messages': error_messages,'urls': urls, 'current_url': current_url,
+                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url,
                                    'url_name': url_name,
                                    })
 
             return render(request, 'personel/personel-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                           'employee_form': employee_form, 'error_messages': '', 'groups': groups,'urls': urls, 'current_url': current_url,
+                           'error_messages': '', 'groups': groups,'urls': urls, 'current_url': current_url,
                                    'url_name': url_name,
                            })
     except Exception as e:
@@ -155,11 +148,7 @@ def edit_employee(request, pk):
         communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
         groups = Group.objects.exclude(name='Admin').exclude(name='Firma')
 
-        employee_form = EmployeeForm(request.POST or None, instance=employee)
-        categoryfilter = {
-            'forWhichClazz': "EMPLOYEE_WORKDEFINITION"
-        }
-        employee_form.fields['workDefinition'].queryset = CategoryItemService(request, categoryfilter)
+
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -173,7 +162,6 @@ def edit_employee(request, pk):
                     user.save()
                     person_form.save()
                     communication_form.save()
-                    employee_form.save()
                     if request.POST.get('group'):
                         group_filter = {
                             'pk': request.POST.get('group')
@@ -198,12 +186,11 @@ def edit_employee(request, pk):
                     error_message_company = get_error_messages(user_form)
                     error_messages_communication = get_error_messages(communication_form)
                     error_messages_person = get_error_messages(person_form)
-                    error_messages_employee = get_error_messages(employee_form)
 
-                    error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_employee
+                    error_messages = error_messages_communication + error_message_company + error_messages_person
                     return render(request, 'personel/personel-duzenle.html',
                                   {'user_form': user_form, 'communication_form': communication_form,
-                                   'person_form': person_form, 'employee_form': employee_form,
+                                   'person_form': person_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
                                    'url_name': url_name,
                                    'groups':groups
@@ -211,7 +198,7 @@ def edit_employee(request, pk):
 
             return render(request, 'personel/personel-duzenle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
-                           'person_form': person_form, 'employee_form': employee_form, 'error_messages': '',
+                           'person_form': person_form, 'error_messages': '',
                            'urls': urls, 'current_url': current_url, 'url_name': url_name,'groups':groups
                            })
 

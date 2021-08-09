@@ -10,6 +10,8 @@ class CompanyUser(BaseModel):
     person = models.OneToOneField(Person, on_delete=models.CASCADE, null=True, blank=True)
     communication = models.OneToOneField(Communication, on_delete=models.CASCADE, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    authorization_period_start = models.DateField(blank=True, null=True)
+    authorization_period_finish = models.DateField(blank=True, null=True)
 
     class Meta:
         default_permissions = ()

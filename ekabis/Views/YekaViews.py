@@ -12,6 +12,7 @@ from django.urls import resolve
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
+from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, YekaBusiness, ExtraTime, \
     Permission
 from ekabis.models.Company import Company
@@ -772,15 +773,35 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                     yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
 
         if request.POST:
+
             yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, request.POST or None,
                                                           request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
+                finish_date = ''
+                start_date = ''
+                time = yekaBusinessBlogo_form.cleaned_data['businessTime']
                 if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                    time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
                     startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                    finishDate = startDate + datetime.timedelta(
-                        days=int(yekaBusinessBlogo_form.cleaned_data['businessTime']))
-                    yekabussiness.finisDate = finishDate
+                    if time_type == 'is_gunu':
+                        time = yekaBusinessBlogo_form.cleaned_data['businessTime']
+                        add_time = time
+                        start_date = startDate.date()
+                        count = 0
+                        while add_time > 0:
+                            start_date = start_date + datetime.timedelta(days=1)
+                            count = count + 1
+                            is_vacation = is_vacation_day(start_date)
+                            if not is_vacation:
+                                add_time = add_time - 1
+
+
+                    else:
+                        startDate = startDate.date() + datetime.timedelta(days=time)
+
+                    yekabussiness.startDate = startDate
+                    yekabussiness.finisDate = start_date
                     yekabussiness.save()
                 else:
                     yekabussiness.businessTime = 0

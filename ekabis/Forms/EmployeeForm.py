@@ -12,10 +12,4 @@ class EmployeeForm(ModelForm):
             'workDefinition',)
         labels = {'workDefinition': 'İş Tanımı'}
 
-        widgets = {
 
-            'workDefinition': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                        'style': 'width: 100%; ', 'required': 'required'}),
-
-
-        }

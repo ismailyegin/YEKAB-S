@@ -14,10 +14,10 @@ class CompanyFormDinamik(ModelForm):
             'taxnumber',
             'mail',
         )
-        labels = {'name': 'Firma İsmi',
+        labels = {'name': 'Firma İsmi *',
                   'degree': 'Unvan',
-                  'taxOffice': 'Vergi Dairesi',
-                  'taxnumber': 'Vergi Numarası',
+                  'taxOffice': 'Vergi Dairesi ',
+                  'taxnumber': 'Vergi Numarası ',
                   'mail': 'Mail Adresi ',
                   }
         widgets = {
@@ -43,7 +43,7 @@ class CompanyFormDinamik(ModelForm):
 
 
 
-    def save(self,communication,company_user):
+    def save(self,communication):
         parametre = CompanyFileNames.objects.filter(is_active=True)
         company=Company(
             name = self.data['name'],
@@ -52,7 +52,6 @@ class CompanyFormDinamik(ModelForm):
             taxnumber = self.data['taxnumber'],
             mail = self.data['mail'],
             communication=communication,
-            companyuser=company_user
                     )
         company.save()
         for item in parametre:

@@ -2,27 +2,32 @@
 
 {% block content %}
 
-    <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-active"
+         aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <h4 class="modal-title">Uyarı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
 
                 </div>
-                <div class="modal-body errorModal">
-                    ...
+                <div class="modal-body">
+                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
-
-                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
     </div>
+
 
     <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
@@ -47,6 +52,7 @@
         <!-- /.modal-dialog -->
     </div>
 
+
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -58,7 +64,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Yekayı Silmek istediğinizden emin misiniz ?</p>
+                    <p>Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -72,6 +78,16 @@
         <!-- /.modal-dialog -->
     </div>
 
+    <div id="toast-container" class="toasts-top-right">
+
+        <div class="toast toast-error error" aria-live="polite" style="display: none" id="error_toast">
+            <div class="toast-message" id="error_message">
+
+            </div>
+        </div>
+
+
+    </div>
 
     {% if messages %}
         {% for message in messages %}
@@ -107,13 +123,15 @@
 
     {% endif %}
 
+
     <section class="content-header">
+
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        YEKA Listesi</h1>
+                        Firma Kullanıcı Listesi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -128,10 +146,6 @@
         </div>
 
     </section>
-
-
-
-
     <section class="content">
 
         <div class="row">
@@ -143,44 +157,83 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">YEKA LİSTESİ</h3>
+                            <h3 class="card-title">Kullanıcı Listesi</h3>
                             {% for item in perm %}
-                                {% if item == 'add_yeka' %}
+                                {% if item == 'add_company' %}
 
-                                    <a href="{% url "ekabis:add_yeka" %}"
+                                    <a href="{% url "ekabis:add_company_user" %}"
                                        type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
-                                            class="fa fa-plus" title="Yeni Yeka Ekle"></i>
+                                            class="fa fa-plus" title="Firma Ekle"></i>
                                     </a>
-
                                 {% endif %}
                             {% endfor %}
                         </div>
 
-
                         <div class="card-body">
-
-                            <table id="yeka" class="table table-bordered table-hover">
+                            <table id="company_user" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Tanım</th>
-                                    <th>Tarih</th>
-                                    <th>Kapasite</th>
-                                    <th>İşlemler</th>
-
-
+                                    <th>#</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Telefon</th>
+                                    <th>Email</th>
+                                    <th>Kullanıcı Durumu</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
-
                                 <tbody>
+                                {% for company_user in company %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ company_user.user.first_name }} {{ company_user.user.last_name }} </td>
+                                        <td>{{ company_user.communication.phoneNumber }}</td>
+                                        <td>{{ company_user.user.email }} </td>
+                                        {% if company_user.user.is_active %}
+                                            <td>
+                                                <a onclick="activeUser({{ company_user.user.pk }})" type="button"
+                                                   class="btn bg-gradient-success btn-sm">Aktif
+                                                </a>
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                                <a onclick="activeUser({{ company_user.user.pk }})" type="button"
+                                                   class="btn bg-gradient-danger btn-sm">Pasif
+                                                </a>
+                                            </td>
 
 
+                                        {% endif %}
+                                        <td>
+                                            <div class="btn-group">
+
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown"> İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% for item in perm %}
+                                                        {% if item == '' %}
+                                                            <a href=""
+                                                               type="button" class="dropdown-item"
+                                                               style="float: right"><i
+                                                                    class="fa fa-plus"
+                                                                    title="Firma Kullanıcı Görevlendirme"></i>Kullanıcı Görevlendirme
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+
+
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
                                 </tbody>
                             </table>
 
-
                         </div>
-
                     </div>
 
 
@@ -195,19 +248,15 @@
     <script>
         $(function () {
 
-            $('#yeka').DataTable({
-
-                "processing": true,
-                "serverSide": true,
-                "paging": true,
-                "ordering": true,
-
-
-                "ajax": {
-                    "url": "{% url 'ekabis:view_yeka-api' %}",
-                    "type": "POST",
-                },
+            debugger;
+            $('#company_user').DataTable({
                 dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
 
                 'buttons': [
 
@@ -225,7 +274,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar',
+                        title: 'Yeka Firmaları',
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
@@ -246,105 +295,26 @@
 
 
                 ],
-
-
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'language': {
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
-                "columns": [
-                    {"data": "id"},
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.definition;
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.date;
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            var html = '';
-                            html = row.capacity + ' MW'
-                            return html;
-
-                        }
-                    },
-
-                    {
-                        "data": null,
-                        render: function (full) {
-                            console.log(full.content);
-                            let html;
-                            debugger;
-                            let url_update = "{% url 'ekabis:change_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url_company = "{% url 'ekabis:view_yeka_company' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_company = url_company.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url_person = "{% url 'ekabis:view_yeka_personel' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_person = url_person.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            {#let url_sub_yeka = "{% url 'ekabis:view_sub_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
-                            {#url_sub_yeka = url_sub_yeka.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
-
-                            let url_business = "{% url 'ekabis:view_yekabusinessBlog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_business = url_business.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url_region = "{% url 'ekabis:view_region' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_region = url_region.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url_gant = "{% url 'ekabis:view_yekabusiness_gant' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_gant = url_gant.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-                            html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';
-
-                            {% for item in perm %}
-                                {% if item ==  'view_yeka_company'%}
-                                    html += '<a href="' + url_region + '" class="dropdown-item" title="Baglantı Bölgeleri" type="button"><i class="fa fa-plus"></i> Baglantı Bölgeleri</a>';
-
-                                {% elif item == 'change_yeka' %}
-                                    html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
-
-                                {% elif item == 'view_yeka_personel'%}
-                                    html += '<a href="' + url_person + '" class="dropdown-item" title="Personel Ekle" type="button"><i class="fa fa-plus"></i> Personel Ekle</a>';
-
-                                {% elif item == 'view_yekabusinessBlog'%}
-                                    html += '<a href="' + url_company + '" class="dropdown-item" title="Firma Ekle" type="button"><i class="fa fa-plus"></i> Firma Ekle</a>';
-
-                                {% elif item == 'view_region'%}
-                                    html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Planı Ekle</a>';
-
-                                {% elif item == 'view_yekabusiness_gant'%}
-                                    html += '<a href="' + url_gant + '" class="dropdown-item" title="İş Planı" type="button"><i class="fa fa-plus"></i> İş Planı</a>';
-
-                                {% elif item == 'view_yekabusiness_gant' %}
-                                    html += '<button type="button" onclick="deleteYeka(\'' + full.uuid + '\')" class="dropdown-item" href=""><i class="fa fa-trash"></i>Sil</button></div></div></td>';
-                                {% endif  %}
-                            {% endfor %}
-
-                            {#html += '<a href="' + url_sub_yeka + '" class="dropdown-item" title="Alt Yeka Ekle" type="button"><i class="fa fa-plus"></i> Alt Yeka Ekle</a>';#}
-
-
-                            return html;
-                        }
-                    }
-                ],
-                "search": {
-                    "caseInsensitive": true
-                }
-
-
-            });
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
 
 
         })
+
 
         function getCookie(name) {
             var cookieValue = null;
@@ -379,53 +349,85 @@
             }
         });
 
-    </script>
 
+    </script>
     <script>
-        function deleteYeka(id) {
+        function deleteCompany(id) {
             debugger;
             console.log(id);
             var html = ''
             $("#modal-delete").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:delete_yeka" %}",
+                        url: "{% url "ekabis:delete_company" %}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
                             uuid: id,
                         },
                         success: function (result) {
-                            if (result.status === 'Fail') {
-
-
-                                html = result.msg;
+                            if (result.status === 'Success') {
+                                html = 'Firma Başarıyla Silindi';
                                 debugger;
-                                $(".errorModal").html(html);
-                                $('#modal-error').on("shown.bs.modal", function (e) {
-                                    $(".btn-ok").click(function () {
-
-                                        window.location.replace("{% url "ekabis:view_yeka" %}");
-
-                                    });
-
-                                }).modal('show');
-                                console.log(result.status)
-                            } else {
-                                html = 'YEKA Başarıyla Silindi';
                                 $(".successModal").html(html);
                                 $('#modal-success').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
 
-                                        window.location.replace("{% url "ekabis:view_yeka" %}");
+                                        window.location.replace("{% url "ekabis:view_company" %}");
 
                                     });
 
                                 }).modal('show');
-                                console.log(result.status)
+                            } else {
+                                debugger;
+                                let toast = document.getElementById('error_message');
+                                html = 'Bu Firma Silinemez';
+                                toast.innerHTML = html;
+                                document.getElementById('error_toast').style.display = 'block';
+                                $('.error').toast('show');
+                                $('.toast').fadeOut(5000);
+
 
                             }
 
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-delete').modal('hide');
+            });
+
+        }
+
+        function activeUser(id) {
+
+            console.log(id);
+            var html = ''
+            $("#modal-active").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:view_status" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Kullanıcı Durumu Değiştirildi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:view_company" %}")
+
+
+                                });
+
+                            }).modal('show');
                         }
                     });
                 });
@@ -437,21 +439,7 @@
         }
     </script>
 
-    <script>
-        $(document).ready(function () {
 
-            {% if error_messages  %}
-                errors_messages({{ error_messages |safe }})
-            {% endif %}
-        });
-    </script>
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-        });
-    </script>
+
 {% endblock %}
+
