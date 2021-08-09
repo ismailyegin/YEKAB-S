@@ -305,8 +305,15 @@
                             url_gant = url_gant.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
                             html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';
 
+
+                            url_delete="deleteYeka('"+full.uuid+"')"
                             {% for item in perm %}
-                                {% if item == 'change_yeka' %}
+
+                                {% if item == 'delete_yeka' %}
+
+                                    html += '<a onclick="'+url_delete+'" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
+
+                                {% elif item == 'change_yeka' %}
                                     html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
 
                                 {% elif item == 'view_yeka_company'%}
@@ -431,7 +438,7 @@
                 });
             }).modal('show');
             $('#btn-close1').click(function () {
-                $('#modal-active').modal('hide');
+                $('#modal-delete').modal('hide');
             });
 
         }

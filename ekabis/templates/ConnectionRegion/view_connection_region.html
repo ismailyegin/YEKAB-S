@@ -191,7 +191,7 @@
                                                         <div class="dropdown-menu" role="menu">
 
 
-                                                            <a onclick="deleteRegion({{ region.uuid }})"
+                                                            <a onclick="deleteRegion('{{ region.uuid }}')"
                                                                class="dropdown-item" title="Sil" type="button"><i
                                                                     class="fa fa-edit"></i>Sil</a>
                                                             <a href="{% url "ekabis:update_region" region.uuid yeka.uuid %}"
@@ -326,7 +326,7 @@
                                 $('#modal-error').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
 
-                                        window.location.replace("{% url "ekabis:add_region" yeka.uuid %}");
+                                        window.location.replace("{% url "ekabis:view_region" yeka.uuid %}");
 
                                     });
 
@@ -338,7 +338,7 @@
                                 $('#modal-success').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
 
-                                        window.location.replace("{% url "ekabis:add_region" yeka.uuid %}");
+                                        window.location.replace("{% url "ekabis:view_region" yeka.uuid %}");
 
                                     });
 

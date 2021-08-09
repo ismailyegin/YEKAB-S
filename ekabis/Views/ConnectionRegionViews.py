@@ -143,7 +143,7 @@ def return_connectionRegion(request,uuid):
         'isDeleted': False,
     }
     yeka = YekaGetService(request, yeka_filter)
-    regions = yeka.connection_region.all()
+    regions = yeka.connection_region.filter(isDeleted=False)
     return render(request, 'ConnectionRegion/view_connection_region.html',
                   { 'regions': regions, 'error_messages': '', 'yeka': yeka, 'urls': urls,
                    'current_url': current_url, 'url_name': url_name})
@@ -243,20 +243,20 @@ def delete_region(request):
             if request.method == 'POST' and request.is_ajax():
                 uuid = request.POST['uuid']
                 regionfilter = {
-                    'uuid': uuid
+                    'uuid': uuid,
                 }
                 obj = ConnectionRegionGetService(request, regionfilter)
-                # not: Silme işleminde kontrol yapılacak yarışma var mı şimdi yarışma alanını yazmadıgım için kontrol edemiyorum
-                region_capacities = YekaCompetition.objects.filter(isDeleted=False)
-                if region_capacities:
-                    return JsonResponse(
-                        {'status': 'Fail', 'msg': 'Bölge için tanımlanmış yarışmalar  var. Bölge silinemez'})
-                else:
-                    log = str(obj.name) + "Bölge silindi"
-                    log = general_methods.logwrite(request, request.user, log)
-                    obj.isDeleted = True
-                    obj.save()
-                    return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+                if obj:
+                    if obj.yekacompetition.count() > 0:
+                        return JsonResponse(
+                            {'status': 'Fail', 'msg': 'Bölge için tanımlanmış yarışmalar  var. Bölge silinemez'})
+                    else:
+                        log = str(obj.name) + "Bölge Başarıyla silindi"
+                        log = general_methods.logwrite(request, request.user, log)
+                        obj.isDeleted = True
+                        obj.save()
+                        return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
 
 
             else:

@@ -602,7 +602,7 @@
                 {% for yekabusinessblok in item.business.businessblogs.all %}
 
 
-                    {%  if not  yekabusinessblok.indefinite %}
+                    {%  if   yekabusinessblok.status %}
                         {
                             id: "{{ yekabusinessblok.uuid}}",
                             content: "{{ yekabusinessblok.businessblog.name }}",
@@ -610,7 +610,7 @@
                             end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
                             url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
                             group: {{ item.pk }},
-
+                            className: 'green',
                         },
                     {% else %}
                         {
@@ -619,7 +619,7 @@
                             start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
                             url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
                             group: {{ item.pk }},
-                            className: 'green',
+                            className: 'red',
                         },
                     {% endif %}
 
@@ -644,8 +644,6 @@
             height: '500px',
             width: '100%',
             locale: 'tr',
-
-
         };
         var timeline = new vis.Timeline(container, items, groups, options);
         timeline.on('click', function (properties) {

@@ -26,7 +26,7 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaService, CompanyService, YekaConnectionRegionService, YekaGetService, \
     YekaConnectionRegionGetService, YekaPersonService, \
     EmployeeGetService, YekaCompanyService, CompanyGetService, ExtraTimeService, YekaBusinessBlogGetService, \
-    BusinessBlogGetService, ConnectionRegionService, last_urls
+    BusinessBlogGetService, ConnectionRegionService, last_urls, YekaCompetitionGetService
 import datetime
 
 
@@ -784,6 +784,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                     yekabussiness.save()
                 else:
                     yekabussiness.businessTime = 0
+                    yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
                     yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
@@ -1006,3 +1007,87 @@ def view_yekabusinessblog_gant(request, yeka, yekabusiness):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+@login_required()
+def view_yekacompetition_business_gant(request, uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        yekacompetition_filter = {
+            'uuid': uuid
+        }
+        yeka = YekaCompetitionGetService(request, yekacompetition_filter)
+
+        url = general_methods.competition_control(request, yeka)
+        if url and url != 'view_yekacompeittion_business_gant':
+            return redirect('ekabis:' + url, yeka.uuid)
+        yekabusinessbloks = None
+
+        extratime_filter = {
+            'business': yeka.business,
+            'isDeleted': False,
+        }
+        ekstratimes = ExtraTimeService(request, extratime_filter)
+        extratime = []
+        endDate = None
+        for item in ekstratimes:
+            if ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).count() > 1:
+                extra = ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).order_by('-creationDate')
+                date = None
+                ex = None
+                for busines in range(len(extra)):
+
+                    if busines == 0:
+                        if extra[busines] == item:
+                            endDate = item.yekabusinessblog.finisDate
+                            ex = item.yekabusinessblog.creationDate
+
+                        else:
+                            date = extra[busines].yekabusinessblog.finisDate
+                    else:
+                        if extra[busines] == item:
+                            endDate = date + datetime.timedelta(days=item.time)
+                            ex = item.yekabusinessblog.creationDate
+                        else:
+                            date = extra[busines].yekabusinessblog.finisDate + datetime.timedelta(days=item.time)
+                beka = {
+                    'uuid': item.uuid,
+                    'content': item.yekabusinessblog.businessblog.name + " Ek Süre" + str(ex),
+                    'start': endDate,
+                    'finish': endDate + datetime.timedelta(days=item.time),
+                    'bloguuid': item.yekabusinessblog.uuid,
+                }
+                extratime.append(beka)
+            else:
+                beka = {
+                    'uuid': item.uuid,
+                    'content': item.yekabusinessblog.businessblog.name + " Ek Süre",
+                    'start': item.yekabusinessblog.finisDate,
+                    'finish': item.yekabusinessblog.finisDate + datetime.timedelta(days=item.time),
+                    'bloguuid': item.yekabusinessblog.uuid,
+                }
+                extratime.append(beka)
+
+        if yeka.business:
+            yekabusiness = yeka.business
+            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+        return render(request, 'Yeka/gant.html',
+                      {'yekabusinessbloks': yekabusinessbloks,
+                       'yeka': yeka,
+                       'ekstratimes': extratime, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                       })
+
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+

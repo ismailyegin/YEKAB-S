@@ -67,9 +67,9 @@ class YekaBusinessBlogForm(ModelForm):
                         elif item.type == 'date':
                             self.fields[title] = forms.CharField(max_length=50)
                             if item.necessary:
-                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control', }
+                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control datepicker6', }
                             else:
-                                self.fields[title].widget.attrs = {'class': 'form-control', }
+                                self.fields[title].widget.attrs = {'class': 'form-control datepicker6', }
 
                         elif item.type == 'number':
 
@@ -82,9 +82,9 @@ class YekaBusinessBlogForm(ModelForm):
                         elif item.type == 'year':
                             self.fields[title] = forms.CharField(max_length=50)
                             if item.necessary:
-                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control', }
+                                self.fields[title].widget.attrs = {'required': 'required', 'class': 'form-control dateyear', }
                             else:
-                                self.fields[title].widget.attrs = {'class': 'form-control', }
+                                self.fields[title].widget.attrs = {'class': 'form-control  dateyear', }
                         elif item.type == 'file':
                             self.fields[title] = forms.FileField(required=False)
                             if item.necessary:
@@ -103,9 +103,9 @@ class YekaBusinessBlogForm(ModelForm):
                 elif item.type == 'date':
                     self.fields[item.title] = forms.CharField(max_length=50)
                     if item.necessary:
-                        self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control', }
+                        self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control datepicker6', }
                     else:
-                        self.fields[item.title].widget.attrs = {'class': 'form-control', }
+                        self.fields[item.title].widget.attrs = {'class': 'form-control datepicker6', }
 
                 elif item.type == 'number':
 
@@ -118,9 +118,9 @@ class YekaBusinessBlogForm(ModelForm):
                 elif item.type == 'year':
                     self.fields[item.title] = forms.CharField(max_length=50)
                     if item.necessary:
-                        self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control', }
+                        self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control dateyear' , }
                     else:
-                        self.fields[item.title].widget.attrs = {'class': 'form-control', }
+                        self.fields[item.title].widget.attrs = {'class': 'form-control dateyear', }
                 elif item.type == 'file':
                     self.fields[item.title] = forms.FileField(required=False)
                     if item.necessary:
