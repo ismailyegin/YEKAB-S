@@ -12,7 +12,7 @@ class CompanyForm(ModelForm):
             'taxnumber',
             'mail',
         )
-        labels = {'name': 'Firma İsmi',
+        labels = {'name': 'Firma İsmi *',
                   'degree': 'Unvan',
                   'taxOffice': 'Vergi Dairesi',
                   'taxnumber': 'Vergi Numarası',

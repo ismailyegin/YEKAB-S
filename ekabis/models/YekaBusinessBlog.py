@@ -20,6 +20,7 @@ class YekaBusinessBlog(BaseModel):
     startDate = models.DateTimeField(null=True, blank=True)
     finisDate = models.DateTimeField(null=True, blank=True)
     businessTime = models.IntegerField(null=True, blank=True)
+    time_type = models.CharField(null=True, blank=True, max_length=100)
     status = models.BooleanField(default=False ,choices=TRUE_FALSE_CHOICES)
     sorting = models.IntegerField(default=0)
     companys=models.ManyToManyField(Company)

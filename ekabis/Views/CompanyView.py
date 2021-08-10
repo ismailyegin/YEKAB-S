@@ -12,6 +12,7 @@ from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.CompanyFileNameForm import CompanyFileNameForm
 from ekabis.Forms.CompanyForm import CompanyForm
 from ekabis.Forms.CompanyFormDinamik import CompanyFormDinamik
+from ekabis.Forms.CompanyUserForm import CompanyUserForm
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
 from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Employee, Permission
@@ -22,7 +23,7 @@ from ekabis.models.Settings import Settings
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import CompanyService, CompanyGetService, GroupService, GroupGetService, \
-    CompanyFileNamesService, CompanyFileNamesGetService, YekaCompanyService, last_urls
+    CompanyFileNamesService, CompanyFileNamesGetService, YekaCompanyService, last_urls, UserService
 
 
 @login_required
@@ -33,8 +34,6 @@ def return_add_Company(request):
         return redirect('accounts:login')
     company_form = CompanyFormDinamik()
     communication_form = CommunicationForm()
-    user_form = UserForm()
-    person_form = PersonForm()
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -44,69 +43,35 @@ def return_add_Company(request):
 
                 company_form = CompanyFormDinamik(request.POST, request.FILES)
                 communication_form = CommunicationForm(request.POST, request.FILES)
-                person_form = PersonForm(request.POST, request.FILES)
-                user_form = UserForm(request.POST)
-                if company_form.is_valid() and communication_form.is_valid() and user_form.is_valid() and person_form.is_valid():
+                if company_form.is_valid() and communication_form.is_valid():
                     communication = communication_form.save(commit=False)
                     communication.save()
-                    user = User()
-                    user.username = request.POST.get('email')
-                    user.first_name = unicode_tr(request.POST.get('first_name')).upper()
-                    user.last_name = unicode_tr(request.POST.get('last_name')).upper()
-                    user.email = request.POST.get('email')
-                    user.save()
-                    person = person_form.save(commit=False)
-                    person.save()
-                    company_user = CompanyUser(
-                        person=person,
-                        user=user,
-                        communication=communication,
-                    )
 
-                    company_user.save()
-                    company = company_form.save(communication, company_user)
+                    company = company_form.save(communication)
                     company.save()
 
-                    # kullanici kayıt olunca gruba eklenmesi yoksa  açılmasi gerekli
-                    groupfilter = {
-                        'name': 'Firma'
-                    }
-
-                    if GroupService(request, groupfilter):
-                        group = GroupGetService(request, groupfilter)
-                        user.groups.add(group)
-                        user.save()
-                    else:
-                        group = Group(
-                            name='Firma'
-                        )
-                        group.save()
-                        user.groups.add(group)
-                        user.save()
-
-                    if Settings.objects.filter(key='mail_companyuser'):
-                        if Settings.objects.get(key='mail_companyuser').is_active:
-                            general_methods.sendmail(request,user)
-                    else:
-                        set=Settings(key='mail_companyuser')
-                        set.is_active=False
-                        set.save()
-                    messages.success(request, 'Firma ve Kullanici Kayıt Edilmiştir.')
+                    # if Settings.objects.filter(key='mail_companyuser'):
+                    #     if Settings.objects.get(key='mail_companyuser').is_active:
+                    #         general_methods.sendmail(request, user)
+                    # else:
+                    #     set = Settings(key='mail_companyuser')
+                    #     set.is_active = False
+                    #     set.save()
+                    messages.success(request, 'Firma Kayıt Edilmiştir.')
                     return redirect('ekabis:view_company')
                 else:
                     error_message_company = get_error_messages(company_form)
                     error_messages_communication = get_error_messages(communication_form)
-                    error_messages_person = get_error_messages(person_form)
-                    error_messages_user = get_error_messages(user_form)
-                    error_messages = error_messages_communication + error_message_company + error_messages_person + error_messages_user
+
+                    error_messages = error_messages_communication + error_message_company
                     return render(request, 'Company/Company.html',
                                   {'company_form': company_form, 'communication_form': communication_form,
-                                   'form': company_form,'urls': urls, 'current_url': current_url, 'url_name': url_name,
-                                   'error_messages': error_messages, 'user_form': user_form, 'person_form': person_form})
+                                   'form': company_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                                   'error_messages': error_messages, })
 
             return render(request, 'Company/Company.html',
                           {'company_form': company_form, 'communication_form': communication_form, 'form': company_form,
-                           'error_messages': '', 'user_form': user_form, 'person_form': person_form,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                           'error_messages': '', 'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         print(e)
         traceback.print_exc()
@@ -159,6 +124,172 @@ def return_list_Company(request):
 
 
 @login_required
+def return_user_company(request, uuid):
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+    filter = {
+        'uuid': uuid
+    }
+    company = CompanyGetService(request, filter)
+    return render(request, 'Company/company_users.html',
+                  {'urls': urls, 'current_url': current_url, 'url_name': url_name, 'company': company})
+
+
+@login_required
+def company_users(request):
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+
+    company = CompanyUser.objects.filter(isDeleted=False, user__is_active=True)
+    return render(request, 'Company/view_company_user.html',
+                  {'urls': urls, 'current_url': current_url, 'url_name': url_name, 'company': company})
+
+
+@login_required
+def add_company_user(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    user_form = UserForm()
+    person_form = PersonForm()
+    communication_form = CommunicationForm()
+    company_user_form = CompanyUserForm()
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        with transaction.atomic():
+            if request.method == 'POST':
+                user_form = UserForm(request.POST)
+                person_form = PersonForm(request.POST, request.FILES)
+                communication_form = CommunicationForm(request.POST)
+                company_user_form = CompanyUserForm(request.POST)
+
+                if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and company_user_form:
+                    user = User()
+                    user.username = user_form.cleaned_data['email']
+                    user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
+                    user.last_name = unicode_tr(user_form.cleaned_data['last_name']).upper()
+                    user.email = user_form.cleaned_data['email']
+                    user.save()
+
+                    person = person_form.save(commit=False)
+                    communication = communication_form.save(commit=False)
+                    person.save()
+                    communication.save()
+
+                    user = CompanyUser(
+                        user=user, person=person, communication=communication,
+                        authorization_period_start=company_user_form.cleaned_data['authorization_period_start'],
+                        authorization_period_finish=company_user_form.cleaned_data['authorization_period_finish']
+                    )
+                    user.save()
+
+                    user.user.groups.add(Group.objects.get(name='Firma'))
+                    user.save()
+
+                    if Settings.objects.filter(key='mail_company_user'):
+                        if Settings.objects.get(key='mail_company_user').is_active:
+                            general_methods.sendmail(request, user.user)
+                    else:
+                        set = Settings(key='mail_person')
+                        set.is_active = False
+                        set.save()
+
+                    log = str(user.user.get_full_name()) + " kullanıcı  kayıt edildi."
+                    log = general_methods.logwrite(request, request.user, log)
+                    messages.success(request, 'Firma Kullanıcısı Başarıyla Kayıt Edilmiştir.')
+
+                    return redirect('ekabis:view_company')
+
+                else:
+
+                    error_message_company = get_error_messages(user_form)
+                    error_messages_person = get_error_messages(person_form)
+                    error_messages_communication = get_error_messages(communication_form)
+                    error_messages = error_messages_communication + error_message_company + error_messages_person
+
+                    return render(request, 'Company/add_company_user.html',
+                                  {'user_form': user_form, 'person_form': person_form,
+                                   'communication_form': communication_form,
+                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name, 'company_user_form': company_user_form
+                                   })
+
+            return render(request, 'Company/add_company_user.html',
+                          {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
+                           'error_messages': '', 'urls': urls, 'current_url': current_url,
+                           'company_user_form': company_user_form,
+                           'url_name': url_name,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_company')
+
+
+def assigment_company_user(request, uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+
+    filter = {
+        'uuid': uuid,
+
+    }
+    company = CompanyGetService(request, filter)
+
+    array = []
+
+    for company_user in company.companyuser.all():
+        array.append(company_user.uuid)
+
+    company_users = CompanyUser.objects.filter(isDeleted=False, user__is_active=True).exclude(uuid__in=array).order_by(
+        '-creationDate')
+
+    # ekstra servis yazılacak
+    if request.POST:
+        with transaction.atomic():
+            if request.POST['company_user'] == 'add':
+                companyUser = request.POST.getlist('users')
+                if companyUser:
+                    for id in companyUser:
+                        company_user = CompanyUser.objects.get(pk=id)
+                        company.companyuser.add(company_user)
+
+
+            else:
+                persons = request.POST.getlist('users')
+                if persons:
+                    for id in persons:
+                        company_user = CompanyUser.objects.get(pk=id)
+                        filter = {
+                            'companyuser': company_user
+                        }
+                        current_company_user = CompanyGetService(request, filter)
+
+                        if current_company_user:
+                            current_company_user.companyuser.remove(company_user)
+
+        return redirect('ekabis:view_company_user', company.uuid)
+
+    return render(request, 'Company/company_user_list.html',
+                  {'yeka_uuid': uuid, 'urls': urls, 'users': company_users,
+                   'current_url': current_url, 'url_name': url_name, 'company': company})
+
+
+@login_required
 def return_update_Company(request, uuid):
     perm = general_methods.control_access(request)
 
@@ -170,7 +301,6 @@ def return_update_Company(request, uuid):
 
     }
 
-
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -179,8 +309,6 @@ def return_update_Company(request, uuid):
         company = CompanyGetService(request, companyfilter)
         company_form = CompanyForm(request.POST or None, instance=company)
         communication_form = CommunicationForm(request.POST or None, instance=company.communication)
-        person_form = PersonForm(request.POST or None, request.FILES or None, instance=company.companyuser.person)
-        user_form = UserForm(request.POST or None, instance=company.companyuser.user)
         companyDocumentName = CompanyFileNames.objects.all()
         with transaction.atomic():
             if request.method == 'POST':
@@ -193,14 +321,12 @@ def return_update_Company(request, uuid):
                     companyfile.save()
                     company.files.add(companyfile)
                     company.save()
-                if company_form.is_valid() and communication_form.is_valid() and user_form and person_form:
+                if company_form.is_valid() and communication_form.is_valid():
                     communication = communication_form.save(commit=False)
                     communication.save()
                     company = company_form.save(commit=False)
                     company.communication = communication
                     company.save()
-                    user_form.save()
-                    person_form.save()
                     messages.success(request, 'Firma Güncellenmiştir.')
                 else:
                     error_message_company = get_error_messages(company_form)
@@ -210,16 +336,16 @@ def return_update_Company(request, uuid):
                                   {'company_form': company_form,
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
-                                   'person_form': person_form, 'user_form': user_form,
-                                   'companyDocumentName': companyDocumentName, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+
+                                   'companyDocumentName': companyDocumentName, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name
                                    })
 
         return render(request, 'Company/CompanyUpdate.html',
                       {'company_form': company_form,
                        'communication_form': communication_form,
                        'company': company, 'error_messages': '',
-                       'person_form': person_form,
-                       'user_form': user_form, 'urls': urls, 'current_url': current_url,
+                       'urls': urls, 'current_url': current_url,
                        'companyDocumentName': companyDocumentName, 'url_name': url_name
 
                        })
@@ -254,11 +380,12 @@ def add_companyfilename(request):
                     error_messages = get_error_messages(company_form)
                     return render(request, 'Company/CompanyFileNameAdd.html',
                                   {'company_form': company_form,
-                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name
                                    })
 
         return render(request, 'Company/CompanyFileNameAdd.html',
-                      {'company_form': company_form,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                      {'company_form': company_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name
 
                        })
 
@@ -274,7 +401,8 @@ def view_companyfilename(request):
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
     companyNameList = CompanyFileNamesService(request, None)
-    return render(request, 'Company/CompanyFileNameList.html', {'companyNameList': companyNameList,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+    return render(request, 'Company/CompanyFileNameList.html',
+                  {'companyNameList': companyNameList, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
@@ -304,11 +432,12 @@ def change_companyfilename(request, uuid):
                     error_messages = get_error_messages(company_form)
                     return render(request, 'Company/CompanyFileNameUpdate.html',
                                   {'company_form': company_form,
-                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name
                                    })
 
         return render(request, 'Company/CompanyFileNameUpdate.html',
-                      {'company_form': company_form,'urls': urls, 'current_url': current_url, 'url_name': url_name
+                      {'company_form': company_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                        })
     except Exception as e:
         traceback.print_exc()
@@ -390,11 +519,13 @@ def add_consortium(request):
                     error_messages = error_messages_communication + error_message_company
                     return render(request, 'Company/AddConsortiumCompany.html',
                                   {'company_form': company_form, 'communication_form': communication_form,
-                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name })
+                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name})
 
             return render(request, 'Company/AddConsortiumCompany.html',
                           {'company_form': company_form, 'communication_form': communication_form,
-                           'form': company_form, 'companies': companies,'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                           'form': company_form, 'companies': companies, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name,
                            'error_messages': ''})
     except Exception as e:
         print(e)

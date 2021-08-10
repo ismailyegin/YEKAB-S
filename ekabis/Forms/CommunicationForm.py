@@ -23,33 +23,8 @@ class CommunicationForm(ModelForm):
                   'city': 'İl', }
         widgets = {
 
-            'address': forms.Textarea(
-                attrs={'class': 'form-control ', 'rows': '2', "style": "text-transform:uppercase"}),
-            'addressHome': forms.Textarea(
-                attrs={'class': 'form-control ', 'rows': '2', "style": "text-transform:uppercase"}),
-            'addressJop': forms.Textarea(
-                attrs={'class': 'form-control ', 'rows': '2', "style": "text-transform:uppercase"}),
-
             'phoneNumber': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
 
-            'phoneNumber2': forms.TextInput(
-                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
-
-            'postalCode': forms.TextInput(attrs={'class': 'form-control '}),
-
-            'city': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                        'style': 'width: 100%;'}),
-
-            'country': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                           'style': 'width: 100%;'}),
-
-            'phoneHome': forms.TextInput(
-                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
-                       'minlength': '11'}),
-
-            'phoneJop': forms.TextInput(
-                attrs={'class': 'form-control ', 'onkeypress': 'validate(event)', 'maxlength': '11',
-                       'minlength': '11'}),
 
         }

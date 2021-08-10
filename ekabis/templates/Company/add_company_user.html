@@ -4,32 +4,43 @@
     {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container" class="toasts-top-right">
-                {% if message.tags == 'warning' %}
-                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
-                        <div class="toast-message">
-                            {% for message in messages %}
-                                {{ message }}
-                            {% endfor %}
-                        </div>
-                    </div>
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-warning"></i> Hata!</h4>
 
 
-
-                {% endif %}
-
-                {% if message.tags == 'success' %}
-                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
-                        <div class="toast-message"> {% for message in messages %}
-                            {{ message }}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
                         {% endfor %}
-                        </div>
-                    </div>
+                    </ul>
 
 
+                </div>
 
-                {% endif %}
-            </div>
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
         {% endfor %}
 
 
@@ -37,11 +48,11 @@
 
     <section class="content-header">
 
-
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Personel Güncelle</h1>
+                    <h1>
+                        Firma Kullanıcısı Ekle</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -58,48 +69,32 @@
     </section>
     <section class="content">
 
-        <form method="post" enctype="multipart/form-data" role="form" onsubmit="tckimlikkontorolu()">
+        <form method="post" enctype="multipart/form-data" role="form" name="personForm" id="personForm">
             {% csrf_token %}
             <div class="row">
 
                 <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Personel Bilgileri</h3>
+                            <h3 class="card-title">Firma Kullanıcı Bilgileri</h3>
                         </div>
                         <div class="card-body">
                             <div class="row">
-
-
                                 <div class="col-lg-12 text-center">
                                     <div class="form-group">
                                         <label> {{ person_form.profileImage.label }}</label>
-
-                                        <center>
-
-                                            {% if person_form.instance.profileImage %}
-                                                <img
-                                                        src="{{ MEDIA_URL }}{{ person_form.instance.profileImage }}"
-                                                        class="img-responsive img-bordered imagesize " alt="Resim Yok"
-                                                        style="height: 150px;width: 150px;"
-                                                ><br>
-                                            {% endif %}
-                                        </center>
-
                                         {{ person_form.profileImage }}
-                                        <label id="label_profileImage"></label>
+                                        <label for="" id="label_profileImage"></label>
 
                                     </div>
-
 
                                 </div>
                                 <div class="col-lg-6">
 
-
                                     <div class="form-group">
                                         <label> {{ person_form.tc.label }}</label>
                                         {{ person_form.tc }}
-                                        <label id="label_tc"></label>
+                                        <label for="" id="label_tc"></label>
 
                                     </div>
 
@@ -107,7 +102,7 @@
                                     <div class="form-group">
                                         <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
-                                        <label id="label_first_name"></label>
+                                        <label for="" id="label_first_name"></label>
 
                                     </div>
 
@@ -117,54 +112,53 @@
                                         <label id="label_last_name"></label>
 
                                     </div>
+                                    <div class="form-group">
+                                        <label> {{ user_form.email.label }}</label>
+                                        {{ user_form.email }}
+                                        <label for="" id="label_email"></label>
 
+                                    </div>
 
                                 </div>
 
                                 <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Grubunu Seçiniz</label> <small style="">*</small>
-                                        <select name="group" class="form-control select2 select2-hidden-accessible"
-                                                style="width: 100%; " id="group" name="group" required="required">
-                                            {% for item in groups %}
-                                                <option value="{{ item.pk }}" selected>{{ item.name }}</option>
 
-                                            {% endfor %}
-                                        </select>
-                                        <label id="label_group"></label>
 
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ user_form.email.label }}</label>
-                                        {{ user_form.email }}
-                                        <label id="label_email"></label>
-
-                                    </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber.label }}</label>
                                         {{ communication_form.phoneNumber }}
-                                        <label id="label_phoneNumber"></label>
+                                        <label for="" id="label_phoneNumber"></label>
 
                                     </div>
+                                    <div class="form-group">
+                                        <label> {{ company_user_form.authorization_period_start.label }}</label>
+                                        {{ company_user_form.authorization_period_start }}
+                                        <label for="" id="label_phoneNumber"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ company_user_form.authorization_period_finish.label }}</label>
+                                        {{ company_user_form.authorization_period_finish }}
+                                        <label for="" id="label_phoneNumber"></label>
+
+                                    </div>
+
+
                                 </div>
 
-
                             </div>
-
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                            <button class="btn btn-outline-primary" type="button" onclick="tckimlikkontorolu()"
+                                    style="float: right">Kaydet
                             </button>
-
+                            <small style="color: red">(*)Olan Alanlar zorunludur.</small>
                         </div>
+
+
                     </div>
 
-
                 </div>
-
-
-            </div>
-
 
             </div>
 
@@ -172,9 +166,10 @@
 
 
     </section>
+
     <script>
         function tckimlikkontorolu() {
-
+            debugger;
             // geleni her zaman String'e çevirelim!
             tcno = String($('#tc').val());
 
@@ -188,8 +183,10 @@
             }
             // Tcno 11 karakter uzunluğunda olmalı!
             if (tcno.length !== 11) {
+                debugger;
                 alert('Tc 11 degerden  küçük olamaz');
-                document.getElementById("tc").style.color = "red";
+                document.getElementById("tc").style.borderStyle = "red";
+
                 return false;
 
             }
@@ -237,7 +234,8 @@
                 return false;
             }
 
-            return true;
+            debugger;
+            document.getElementById("personForm").submit();
 
 
         }

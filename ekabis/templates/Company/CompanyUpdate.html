@@ -1,16 +1,16 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 
-     {% if messages %}
+    {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -42,7 +42,7 @@
                     <div class="modal-header">
 
                         <h4 class="modal-title">Bilgileri Giriniz</h4>
-                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
@@ -54,8 +54,8 @@
                                 <option value="{{ item.pk }}">{{ item.name }}</option>
                             {% endfor %}
                         </select>
-                    <label for="id_file1">Döküman İsmi </label><br>
-                    <input type="file" name="documanfile"  id="id_file">
+                        <label for="id_file1">Döküman İsmi </label><br>
+                        <input type="file" name="documanfile" id="id_file">
 
                     </div>
 
@@ -81,14 +81,14 @@
                         <h1>{{ company.name }} - Firma Güncelle</h1>
                     </div>
                     <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        {% for url in urls %}
-                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
-                            </li>
-                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
-                        {% endfor %}
-                    </ol>
-                </div>
+                        <ol class="breadcrumb float-sm-right">
+                            {% for url in urls %}
+                                <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                                </li>
+                                <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
                 </div>
             </div>
 
@@ -100,87 +100,51 @@
             <div class="row">
 
                 <div class="col-lg-5">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Genel Bilgiler</h3>
-                        </div>
-                        <div class="card-body">
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Genel Bilgiler</h3>
+                            </div>
+                            <div class="card-body">
 
-                            {% for item in company_form %}
+                                {% for item in company_form %}
+                                    <div class="form-group">
+                                        <label>{{ item.label }}</label><br>
+
+                                        {{ item }}
+                                        <label for="" id="label_{{ item.name }}"></label>
+                                    </div>
+                                {% endfor %}
+
                                 <div class="form-group">
-                                    <label>{{ item.label }}</label><br>
+                                    <label> {{ communication_form.phoneNumber.label }}</label>
+                                    {{ communication_form.phoneNumber }}
+                                    <label for="" id="label_phoneNumber"></label>
 
-                                    {{ item }}
-                                    <label for="" id="label_{{ item.name }}"></label>
+
                                 </div>
-                            {% endfor %}
 
-                        </div>
-                       <div class="card-footer">
+                            </div>
+                            <div class="card-footer">
                                 <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
                                 </button>
 
                             </div>
 
 
+                        </div>
                     </div>
+
 
                 </div>
                 <div class="col-lg-7">
                     <div class="col-lg-12">
 
-                        <div class="card card-primary collapsed-card">
+                        <div class="card card-primary card-outline collapsed-card">
 
 
                             <div class="card-header with-border">
-                                <h3 class="card-title">İLETİŞİM BİLGİLERİ</h3>
-
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                            class="fas fa-plus"></i>
-                                    </button>
-
-
-                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
-                                        <i class="fas fa-expand"></i>
-                                    </button>
-
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-
-
-                                <!-- /.card-tools -->
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body" style="display: none;">
-
-
-                                <div class="row">
-                                    {{ communication_form }}
-                                </div>
-
-
-                            </div>
-
-                            <!-- /.card-body -->
-
-                             <div class="card-footer">
-                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
-                                </button>
-                        </div>
-
-
-                    </div>
-                    </div>
-                    <div class="col-lg-12">
-
-                        <div class="card card-primary collapsed-card">
-
-
-                            <div class="card-header with-border">
-                                <h3 class="card-title">DÖKÜMAN BİLGİLERİ</h3>
+                                <h3 class="card-title">DOKÜMAN BİLGİLERİ</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
@@ -205,8 +169,8 @@
                             <div class="card-body" style="display: none;">
 
 
-
-                                <button class="btn btn-success" id="btnDokuman" type="button"> Döküman Ekle</button>
+                                <button class="btn btn-outline-primary" id="btnDokuman" type="button"
+                                        title="Doküman Ekle" style="float:right;"><i class="fa fa-plus"></i></button>
 
 
                             </div>
@@ -266,7 +230,7 @@
 
 
                             </div>
-                              <div class="card-footer">
+                            <div class="card-footer">
                                 <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
                                 </button>
 
@@ -278,7 +242,7 @@
                     </div>
                     <div class="col-lg-12">
 
-                        <div class="card card-primary collapsed-card">
+                        <div class="card card-primary card-outline collapsed-card">
                             <div class="card-header with-border">
                                 <h3 class="card-title">KULLANICI BİLGİLERİ</h3>
                                 <div class="card-tools">
@@ -340,27 +304,26 @@
                     </div>
 
 
-
-            </div>
+                </div>
 
 
         </section>
     </form>
-{% load static %}
+    {% load static %}
     <script>
 
         $(document).ready(function () {
 
 
             $('#btnDokuman').click(function (e) {
-                    $("#addDocument").modal('show');
-                    $('#edit-btn-closereddet').click(function () {
+                $("#addDocument").modal('show');
+                $('#edit-btn-closereddet').click(function () {
 
 
-                        $('#addDocument').modal('hide');
-                        $('.modal').modal('hide');
+                    $('#addDocument').modal('hide');
+                    $('.modal').modal('hide');
 
-                    });
+                });
 
             });
 
@@ -371,7 +334,6 @@
 
             $('#dokuman').DataTable({
                 dom: 'Bfrtip',
-
 
 
                 lengthMenu: [
@@ -416,10 +378,10 @@
 
 
                 ],
-                  "search": {
+                "search": {
                     "caseInsensitive": true,
                 },
-                 'language': {
+                'language': {
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
                 'paging': true,

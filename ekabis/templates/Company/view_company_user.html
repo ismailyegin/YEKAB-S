@@ -3,7 +3,30 @@
 {% block content %}
 
 
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-active"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
 
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 
 
     <!-- success modal -->
@@ -108,7 +131,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Firma Listesi</h1>
+                        Firma Kullanıcı Listesi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -134,11 +157,11 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Firmalar</h3>
+                            <h3 class="card-title">Kullanıcı Listesi</h3>
                             {% for item in perm %}
                                 {% if item == 'add_company' %}
 
-                                    <a href="{% url "ekabis:add_company" %}"
+                                    <a href="{% url "ekabis:add_company_user" %}"
                                        type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
                                             class="fa fa-plus" title="Firma Ekle"></i>
                                     </a>
@@ -147,18 +170,66 @@
                         </div>
 
                         <div class="card-body">
-                            <table id="company" class="table table-bordered table-hover" cellspacing="0" width="100%">
+                            <table id="company_user" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>İsim</th>
-                                    <th>Ünvan</th>
-                                    <th>İşlemler</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Telefon</th>
+                                    <th>Email</th>
+                                    <th>Kullanıcı Durumu</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {% for company_user in company %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ company_user.user.first_name }} {{ company_user.user.last_name }} </td>
+                                        <td>{{ company_user.communication.phoneNumber }}</td>
+                                        <td>{{ company_user.user.email }} </td>
+                                        {% if company_user.user.is_active %}
+                                            <td>
+                                                <a onclick="activeUser({{ company_user.user.pk }})" type="button"
+                                                   class="btn bg-gradient-success btn-sm">Aktif
+                                                </a>
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                                <a onclick="activeUser({{ company_user.user.pk }})" type="button"
+                                                   class="btn bg-gradient-danger btn-sm">Pasif
+                                                </a>
+                                            </td>
 
 
+                                        {% endif %}
+                                        <td>
+                                            <div class="btn-group">
+
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown"> İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% for item in perm %}
+                                                        {% if item == '' %}
+                                                            <a href=""
+                                                               type="button" class="dropdown-item"
+                                                               style="float: right"><i
+                                                                    class="fa fa-plus"
+                                                                    title="Firma Kullanıcı Görevlendirme"></i>Kullanıcı Görevlendirme
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+
+
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
                                 </tbody>
                             </table>
 
@@ -178,19 +249,14 @@
         $(function () {
 
             debugger;
-            $('#company').DataTable({
-
-                "processing": true,
-                "serverSide": true,
-                "paging": true,
-                "ordering": true,
-
-
-                "ajax": {
-                    "url": "{% url 'ekabis:view_company-api' %}",
-                    "type": "POST",
-                },
+            $('#company_user').DataTable({
                 dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
 
                 'buttons': [
 
@@ -208,7 +274,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar',
+                        title: 'Yeka Firmaları',
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
@@ -229,45 +295,22 @@
 
 
                 ],
-
-
+                "search": {
+                    "caseInsensitive": true,
+                },
                 'language': {
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
-                "columns": [
-                    {"data": "id"},
-                    {"data": "name"},
-                    {"data": "degree"},
-
-                    {
-                        "data": null,
-                        render: function (full, data, type, row) {
-                            console.log(full.content);
-                            let html;
-                            debugger;
-                            let url = "{% url "ekabis:change_company" '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url = url.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url2 = "{% url "ekabis:view_company_user" '7829c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url2 = url2.replace('7829c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-
-                            html = '<td><div class="btn-group"> <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">İşlemler </button> <div class="dropdown-menu" role="menu">'
-                            html += '<a  href="' + url + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
-                            html += '<a  href="' + url2 + '" class="dropdown-item" title="Kullanıcı Listesi" type="button"><i class="fa fa-user"></i>Kullanıcı Listesi</a>';
-
-                            html += '<button type="button" onclick="deleteCompany(\'' + full.uuid + '\')" class="dropdown-item" href=""><i class="fa fa-trash"></i>Sil</button></div></div></td>';
-
-                            return html;
-                        }
-                    }
-                ],
-                "search": {
-                    "caseInsensitive": true
-                }
-
-
-            });
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
 
 
         })
@@ -356,7 +399,47 @@
                 $('#modal-delete').modal('hide');
             });
 
-        }</script>
+        }
+
+        function activeUser(id) {
+
+            console.log(id);
+            var html = ''
+            $("#modal-active").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:view_status" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Kullanıcı Durumu Değiştirildi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:view_company" %}")
+
+
+                                });
+
+                            }).modal('show');
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-active').modal('hide');
+            });
+
+        }
+    </script>
+
+
 
 {% endblock %}
 

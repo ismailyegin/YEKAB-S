@@ -9,6 +9,8 @@ from ekabis.models.YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
 from ekabis.services.services import BusinessBlogGetService
 import datetime
 
+CHOICES = (('is_gunu', 'İş Günü'), ('takvim_gunu', 'Takvim Günü'),)
+
 
 class YekaBusinessBlogForm(ModelForm):
     class Meta:
@@ -17,16 +19,20 @@ class YekaBusinessBlogForm(ModelForm):
             'indefinite',
             'businessTime',
             'status',
+            'time_type',
 
             'startDate',)
         labels = {'startDate': 'Başlama Tarihi',
                   # 'finisDate': 'Bitiş Tarihi',
                   'businessTime': 'Süresi',
                   'status': 'Durumu',
-                  'indefinite': 'Süre durumu'}
+                  'indefinite': 'Süre durumu',
+                  'time_type': 'Süre Türü'}
         widgets = {
             'businessTime': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
+            'time_type': forms.Select(choices=CHOICES, attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                                              'style': 'width: 100%; ', }),
 
             'status': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                           'style': 'width: 100%; '}),

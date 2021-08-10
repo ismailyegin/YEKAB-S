@@ -196,56 +196,11 @@
                             <th>#</th>
                             <th>Ad Soyad</th>
                             <th> Email</th>
-                            <th>Unvan</th>
-                            {% if aktif == 'Yonetim' or aktif == 'Admin' %}
-                                <th></th>
-                            {% endif %}
+                            <th></th>
+
                         </tr>
                         </thead>
                         <tbody>
-{#                        {% if employees.all %}#}
-{#                            {% for athlete in employees %}#}
-{#                                <tr>#}
-{#                                    <td>{{ forloop.counter }} </td>#}
-{#                                    <td>{{ athlete.user.first_name }} {{ athlete.user.last_name }} </td>#}
-{#                                    <td>{{ athlete.user.email }}</td>#}
-{#                                    <td>{{ athlete.workDefinition }} </td>#}
-{#                                    <td>#}
-{#                                        <div class="btn-group">#}
-{#                                            <button type="button" class="btn btn-default">İşlemler</button>#}
-{#                                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon"#}
-{#                                                    data-toggle="dropdown">#}
-{#                                            </button>#}
-{#                                            <div class="dropdown-menu" role="menu">#}
-{#                                                {% for item in perm %}#}
-{#                                                    {% if item == 'change_employee' %}#}
-{##}
-{#                                                        <a href="{% url "ekabis:change_employee" athlete.uuid %}"#}
-{#                                                           class="dropdown-item"> <i#}
-{#                                                                class="fa fa-edit" title="Düzenle"></i> Düzenle#}
-{#                                                        </a>#}
-{#                                                    {% endif %}#}
-{#                                                {% endfor %}#}
-{#                                                {% for item in perm %}#}
-{#                                                    {% if item == 'delete_employee' %}#}
-{##}
-{#                                                        <a class="dropdown-item"#}
-{#                                                           data-toggle="modal"#}
-{#                                                           onclick=deleteEmployee('{{ athlete.uuid }}')> <i#}
-{#                                                                class="fa fa-trash" title="Sil"></i> Sil</a>#}
-{##}
-{#                                                    {% endif %}#}
-{#                                                {% endfor %}#}
-{##}
-{#                                            </div>#}
-{#                                        </div>#}
-{##}
-{#                                    </td>#}
-{##}
-{#                                </tr>#}
-{##}
-{#                            {% endfor %}#}
-{#                        {% endif %}#}
 
 
                         </tbody>
@@ -333,13 +288,6 @@
                         "data": null,
                         render: function (data, type, row) {
                             return row.user.email ;
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.workDefinition.name ;
 
                         }
                     },

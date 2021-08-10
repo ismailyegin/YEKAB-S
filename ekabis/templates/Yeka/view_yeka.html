@@ -309,6 +309,7 @@
                             url_delete="deleteYeka('"+full.uuid+"')"
                             {% for item in perm %}
 
+
                                 {% if item == 'delete_yeka' %}
 
                                     html += '<a onclick="'+url_delete+'" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
@@ -317,7 +318,11 @@
                                     html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
 
                                 {% elif item == 'view_yeka_company'%}
+
                                     html += '<a href="' + url_region + '" class="dropdown-item" title="Baglantı Bölgeleri" type="button"><i class="fa fa-plus"></i> Baglantı Bölgeleri</a>';
+
+                                {% elif item == 'change_yeka' %}
+                                    html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
 
                                 {% elif item == 'view_yeka_personel'%}
                                     html += '<a href="' + url_person + '" class="dropdown-item" title="Personel Ekle" type="button"><i class="fa fa-plus"></i> Personel Ekle</a>';
