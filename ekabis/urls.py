@@ -167,6 +167,7 @@ urlpatterns = [
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
 
     path('yeka/yeka-is-bloklari-semasi/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant'),
+    path('yeka/yeka-yarismasi-is-bloklari-semasi/<uuid:uuid>/', YekaViews.view_yekacompetition_business_gant, name='view_yekacompeittion_business_gant'),
     path('yeka/yeka-is-bloklari-gant/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant2'),
     path('yeka/yeka-is-bloklari-incele-gant-detay/<uuid:yeka>/<uuid:yekabusiness>/',
          YekaViews.view_yekabusinessblog_gant, name='view_yekabusinessblog_gant'),

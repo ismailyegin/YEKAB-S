@@ -80,7 +80,7 @@ def YekaPersonService(request, filter):
         traceback.print_exc()
 
 
-def YekaCompetitionServiceService(request, filter):
+def YekaCompetitionService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):

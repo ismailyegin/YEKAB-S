@@ -61,7 +61,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Bölgeyi Silmek istediğinizden emin misiniz ?</p>
+                    <p>Yeka Yarışmasını Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -190,13 +190,13 @@
                                                         <div class="dropdown-menu" role="menu">
 
 
-                                                            <a onclick="deleteRegion({{ competition.uuid }})"
+                                                            <a onclick="deleteCompetition('{{ competition.uuid }}')"
                                                                class="dropdown-item" title="Sil" type="button"><i
                                                                     class="fa fa-edit"></i>Sil</a>
 
                                                             <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
                                                                class="dropdown-item" title="İş Planı Ekle"
-                                                               type="button"><i class="fa fa-edit"></i>İş Planı</a>
+                                                               type="button"><i class="fa fa-edit"></i>İş Planı Ekle</a>
                                                             <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
                                                                class="dropdown-item" title="Personel Ekle"
                                                                type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
@@ -206,6 +206,12 @@
                                                             <a href="{% url "ekabis:view_sub_competition"  competition.uuid %}"
                                                                class="dropdown-item" title="Düzenle " type="button"><i
                                                                     class="fa fa-edit"></i>Alt Yeka Listesi </a>
+
+
+
+                                                               <a href="{% url "ekabis:view_yekacompeittion_business_gant"  competition.uuid %}"
+                                                               class="dropdown-item" title="İş Planı " type="button"><i
+                                                                    class="fa fa-edit"></i>İş Planı  </a>
 
                                                         </div>
                                                     </div>
@@ -306,19 +312,18 @@
 
         })
 
-        function deleteRegion(id) {
-            var html = ''
+        function deleteCompetition(id) {
             $("#modal-delete").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
                     debugger;
 
                     $.ajax({
-                        url: "{% url "ekabis:delete_region"%}",
+                        url: "{% url "ekabis:delete_competition"%}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
                             isActive: 'False',
-                            uuid: id
+                            uuid: id.toString()
                         },
 
                         success: function (result) {
@@ -331,19 +336,19 @@
                                 $('#modal-error').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
 
-                                        window.location.replace("{% url "ekabis:add_competition" region.uuid %}");
+                                        window.location.replace("{% url "ekabis:view_competition" region.uuid %}");
 
                                     });
 
                                 }).modal('show');
                                 console.log(result.status)
                             } else {
-                                html = 'Bölge Başarıyla Silindi';
+                                html = 'Yarışma Başarıyla Silindi';
                                 $(".successModal").html(html);
                                 $('#modal-success').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
 
-                                        window.location.replace("{% url "ekabis:add_competition" region.uuid %}");
+                                        window.location.replace("{% url "ekabis:view_competition" region.uuid %}");
 
                                     });
 

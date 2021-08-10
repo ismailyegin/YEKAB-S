@@ -22,7 +22,7 @@ from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaGetService, ConnectionRegionGetService, YekaCompetitionGetService, \
     YekaBusinessGetService, YekaBusinessBlogGetService, BusinessBlogGetService, YekaCompetitionPersonService, \
-    EmployeeGetService, last_urls
+    EmployeeGetService, last_urls, ExtraTimeService, YekaCompetitionService
 import datetime
 from django.db.models import Sum
 
@@ -184,21 +184,28 @@ def delete_competition(request):
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
                 uuid = request.POST['uuid']
-                regionfilter = {
+                competition_filter = {
                     'uuid': uuid
                 }
-                obj = ConnectionRegionGetService(request, regionfilter)
-                # not: Silme işleminde kontrol yapılacak yarışma var mı şimdi yarışma alanını yazmadıgım için kontrol edemiyorum
-                region_capacities = YekaCompetition.objects.filter(isDeleted=False)
-                if region_capacities:
-                    return JsonResponse(
-                        {'status': 'Fail', 'msg': 'Bölge için tanımlanmış yarışmalar  var. Bölge silinemez'})
+                obj = YekaCompetitionGetService(request, competition_filter)
+                parent_filter={
+                    'parent':obj
+                }
+
+                if YekaCompetitionService(request,parent_filter):
+
+                    return JsonResponse({'status': 'Fail', 'msg': ' Baglı Alt Yeka Oldugu icin Silinemez'})
+
                 else:
-                    log = str(obj.name) + "Bölge silindi"
+                    log = str(obj.name) + "Yeka Yarışması silindi"
                     log = general_methods.logwrite(request, request.user, log)
                     obj.isDeleted = True
                     obj.save()
                     return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+
+
+
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
     except obj.DoesNotExist:
@@ -291,15 +298,15 @@ def view_competition_yekabusinessBlog(request, uuid):
         }
         competition = YekaCompetitionGetService(request, competition_filter)
 
-        # url = general_methods.yeka_control(request, yeka)
-        # if url and url != 'view_yekabusinessBlog':
-        #     return redirect('ekabis:' + url, yeka.uuid)
-        # yekabusinessbloks = None
-        #
-        # extratime_filter = {
-        #     'yeka': yeka
-        # }
-        # ekstratimes = ExtraTimeService(request, extratime_filter)
+        url = general_methods.competition_control(request, competition)
+        if url and url != 'view_competitionbusinessblog':
+            return redirect('ekabis:' + url, competition.uuid)
+        yekabusinessbloks = None
+
+        extratime_filter = {
+            'business': competition.business
+        }
+        ekstratimes = ExtraTimeService(request, extratime_filter)
 
         if competition.business:
             yekabusiness = competition.business
@@ -645,7 +652,7 @@ def return_sub_competition(request, uuid):
             'isDeleted': False,
         }
         parent_competition = YekaCompetitionGetService(request, competition_filter)
-        competitions = YekaCompetition.objects.filter(parent=parent_competition)
+        competitions = YekaCompetition.objects.filter(parent=parent_competition, isDeleted=False)
         region=ConnectionRegion.objects.get(yekacompetition=parent_competition)
         return render(request, 'Competition/view_sub_competition.html',
                       {'parent_competition': parent_competition, 'competitions': competitions,'region':region,

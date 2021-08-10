@@ -61,7 +61,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Bölgeyi Silmek istediğinizden emin misiniz ?</p>
+                    <p>Alt Yeka yı  Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -193,7 +193,7 @@
                                                     <div class="dropdown-menu" role="menu">
 
 
-                                                        <a onclick="deleteRegion({{ competition.uuid }})"
+                                                        <a onclick="deleteCompetition('{{ competition.uuid }}')"
                                                            class="dropdown-item" title="Sil" type="button"><i
                                                                 class="fa fa-edit"></i>Sil</a>
 
@@ -306,6 +306,62 @@
             })
 
         })
+      function deleteCompetition(id) {
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    debugger;
+
+                    $.ajax({
+                        url: "{% url "ekabis:delete_competition"%}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            uuid: id.toString()
+                        },
+
+                        success: function (result) {
+                            if (result.status === 'Fail') {
+
+
+                                html = result.msg;
+                                debugger;
+                                $(".errorModal").html(html);
+                                $('#modal-error').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                        window.location.replace("{% url "ekabis:view_sub_competition" parent_competition.uuid %}");
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+                            } else {
+                                html = 'Yarışma Başarıyla Silindi';
+                                $(".successModal").html(html);
+                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                          window.location.replace("{% url "ekabis:view_sub_competition" parent_competition.uuid %}");
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+
+                            }
+
+                        },
+
+
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
 
 
     </script>
