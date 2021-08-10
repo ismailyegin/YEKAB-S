@@ -1,4 +1,5 @@
 from django.db import models
+from unicode_tr import unicode_tr
 
 from ekabis.models import ConnectionRegion
 from ekabis.models.ConnectionUnit import ConnectionUnit
@@ -18,3 +19,9 @@ class Yeka(BaseModel):
 
     def __str__(self):
         return '%s ' % self.definition
+
+    def save(self, force_insert=False, force_update=False):
+        if self.definition:
+            self.definition = unicode_tr(self.definition).upper()
+
+        super(Yeka, self).save(force_insert, force_update)

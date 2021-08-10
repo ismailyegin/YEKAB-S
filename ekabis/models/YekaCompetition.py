@@ -1,4 +1,5 @@
 from django.db import models
+from unicode_tr import unicode_tr
 
 from ekabis.models import Company
 from ekabis.models.City import City
@@ -15,6 +16,10 @@ class YekaCompetition(BaseModel):
 
     def __str__(self):
         return '%s ' % self.name
+    def save(self, force_insert=False, force_update=False):
+        if self.name:
+            self.name = unicode_tr(self.name).upper()
 
-    class Meta:
-        default_permissions = ()
+        super(YekaCompetition, self).save(force_insert, force_update)
+
+

@@ -11,9 +11,10 @@ from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
 from ekabis.models.PermissionGroup import PermissionGroup
+from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.services.services import ActiveGroupService, MenuService, EmployeeService, DirectoryMemberService, \
     UserService, PermissionGroupService, ActiveGroupGetService, EmployeeGetService, DirectoryMemberGetService, \
-    YekaPersonService, YekaCompanyService, UserGetService
+    YekaPersonService, YekaCompanyService, UserGetService, YekaCompetitionPersonService
 from django.contrib import messages
 
 from ekabis.models.Permission import Permission
@@ -236,6 +237,36 @@ def yeka_control(request,yeka):
     if not (YekaPersonService(request,yekafilter)):
         messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
         url="view_yeka_personel"
+    if url :
+        return url
+    else:
+        return None
+
+
+
+
+def competition_control(request,competiton):
+    storage = get_messages(request)
+    for message in storage:
+        if message.level_tag =='warning':
+            return None
+    message=[]
+
+    url=None
+    # Çalısma sırasına göre  sıraladık ona göre if döngülerinin sonucunda deger alacak
+
+    if not (competiton.business):
+        messages.add_message(request, messages.WARNING, 'İş Blokları Bilgileri Eksik.')
+        url="view_competitionbusinessblog"
+
+    # if not (YekaCompanyService(request,yekafilter)):
+    #     messages.add_message(request, messages.WARNING, 'Firma Bilgileri Eksik.')
+    #     url="view_yeka_company"
+
+
+    if not (YekaCompetitionPersonService(request,{'competition':competiton})):
+        messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
+        url="view_yekacompetition_personel"
     if url :
         return url
     else:
