@@ -9,16 +9,14 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import SettingsService, SettingsGetService
 from ekabis.Forms.SettingsForm import SettingsForm
 
-
+# Sistem ayarlarının listelendigi sayfa
 @login_required
 def view_settinsList(request):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
         return redirect('accounts:login')
-
-    # Sistemde ayar verisi yoksa gönderilecek bir sayfa tasarlanmalı
-    setting = SettingsService(request, None)[0]
+    setting = SettingsService(request, None)
     return render(request, 'Ayar/ayarlistesi.html',
                   {'settings': setting})
 
@@ -31,10 +29,10 @@ def change_serttings(request, pk):
         return redirect('accounts:login')
 
     try:
-        groupfilter = {
+        setting_filter = {
             'pk': pk
         }
-        setting = SettingsGetService(request, groupfilter) if SettingsService(request, groupfilter) else None
+        setting = SettingsGetService(request, setting_filter) if SettingsService(request, setting_filter) else None
         settings_form = SettingsForm(request.POST or None, instance=setting)
         if request.method == 'POST':
             if settings_form.is_valid():
