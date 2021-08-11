@@ -10,7 +10,7 @@ class OnarimSayfasiMiddleware(object):
 
     def __call__(self, request):
 
-        if Settings.objects.get(key='maintenance').value:
+        if Settings.objects.get(key='maintenance').value == 'True':
             if not '/maintenance-page/' in request.path:
                 return redirect('ekabis:view_repair_page')
 
