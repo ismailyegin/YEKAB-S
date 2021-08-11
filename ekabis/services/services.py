@@ -1124,7 +1124,7 @@ def last_urls(request):
         with transaction.atomic():
             if request.META.get('HTTP_REFERER'):
                 urlpath = urlparse(request.META.get('HTTP_REFERER')).path
-                url = urlpath.split('/yekabis/')[1]
+                url = urlpath.split('/yekabis/yekabis/')[1]
                 for urlpattern in urlpatterns:
 
                     if str("/".join(str(urlpattern.pattern).split("/", 3)[:2])) == str("/".join(str(url).split("/", 3)[:2])):

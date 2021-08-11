@@ -207,6 +207,7 @@ def update_yeka(request, uuid):
                     yeka.definition = yeka_form.cleaned_data['definition']
                     yeka.date = yeka_form.cleaned_data['date']
                     yeka.capacity = yeka_form.cleaned_data['capacity']
+                    yeka.type = yeka_form.cleaned_data['type']
                     yeka.save()
 
                     messages.success(request, 'Yeka Başarıyla Güncellendi')
@@ -1111,4 +1112,3 @@ def view_yekacompetition_business_gant(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
-

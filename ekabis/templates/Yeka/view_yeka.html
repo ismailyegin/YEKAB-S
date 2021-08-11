@@ -166,6 +166,7 @@
                                     <th>Tanım</th>
                                     <th>Tarih</th>
                                     <th>Kapasite</th>
+                                    <th>Kaynak Türü</th>
                                     <th>İşlemler</th>
 
 
@@ -276,6 +277,8 @@
 
                         }
                     },
+                    {"data": "type"},
+
 
                     {
                         "data": null,
@@ -306,13 +309,13 @@
                             html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';
 
 
-                            url_delete="deleteYeka('"+full.uuid+"')"
+                            url_delete = "deleteYeka('" + full.uuid + "')"
                             {% for item in perm %}
 
 
                                 {% if item == 'delete_yeka' %}
 
-                                    html += '<a onclick="'+url_delete+'" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
+                                    html += '<a onclick="' + url_delete + '" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
 
                                 {% elif item == 'change_yeka' %}
                                     html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';

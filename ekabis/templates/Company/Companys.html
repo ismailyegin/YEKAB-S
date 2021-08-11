@@ -248,13 +248,11 @@
                             let url = "{% url "ekabis:change_company" '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             url = url.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
 
-                            let url2 = "{% url "ekabis:view_company_user" '7829c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url2 = url2.replace('7829c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
 
 
                             html = '<td><div class="btn-group"> <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">İşlemler </button> <div class="dropdown-menu" role="menu">'
                             html += '<a  href="' + url + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
-                            html += '<a  href="' + url2 + '" class="dropdown-item" title="Kullanıcı Listesi" type="button"><i class="fa fa-user"></i>Kullanıcı Listesi</a>';
 
                             html += '<button type="button" onclick="deleteCompany(\'' + full.uuid + '\')" class="dropdown-item" href=""><i class="fa fa-trash"></i>Sil</button></div></div></td>';
 
