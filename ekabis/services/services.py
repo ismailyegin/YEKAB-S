@@ -6,7 +6,8 @@ from django.db.models import Q
 from django.urls import resolve
 
 from ekabis.models import ConnectionRegion, Yeka, YekaPersonHistory, YekaCompany, \
-    YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType, YekaCompetition
+    YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType, \
+    YekaCompetition, HelpMenu
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
@@ -865,6 +866,17 @@ def CompanyUserGetService(request, filter):
         traceback.print_exc()
         pass
 
+def HelpMenuGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                filter['isDeleted'] = False
+                return HelpMenu.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
 
 def CompanyFilesGetService(request, filter):
     try:
@@ -1124,7 +1136,7 @@ def last_urls(request):
         with transaction.atomic():
             if request.META.get('HTTP_REFERER'):
                 urlpath = urlparse(request.META.get('HTTP_REFERER')).path
-                url = urlpath.split('/yekabis/yekabis/')[1]
+                url = urlpath.split('/yekabis/')[1]
                 for urlpattern in urlpatterns:
 
                     if str("/".join(str(urlpattern.pattern).split("/", 3)[:2])) == str("/".join(str(url).split("/", 3)[:2])):
