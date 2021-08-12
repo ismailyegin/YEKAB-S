@@ -21,6 +21,9 @@ import datetime
 from ekabis.services.services import UserGetService
 
 
+from ekabis.models.BlockEnumField import BlockEnumFields
+
+
 @login_required
 def return_directory_dashboard(request):
     perm = general_methods.control_access(request)
