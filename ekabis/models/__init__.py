@@ -40,3 +40,4 @@ from .Calendar import Calendar
 from .CalendarName import CalendarName
 from .ExtraTime import ExtraTime
 from .ConsortiumCompany import ConsortiumCompany
+from .HelpMenu import HelpMenu

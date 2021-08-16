@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <meta name="description" content="SPOR  BİLGİ SİSTEMİ"/>
-    <meta name="keywords" content="SPOR  BİLGİ SİSTEMİ"/>
+    <meta name="description" content="YEKABİS"/>
+    <meta name="keywords" content="YEKABİS"/>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {% load static %}
 
-    <link rel="shortcut icon" type="image/png" href="/media/ekebis-icon.ico"/>
+    <link rel="shortcut icon" type="image/png" href="/yekabis/yekabis/media/ekebis-icon.ico"/>
     <title>YEKABİS </title>
 
 
@@ -76,6 +76,7 @@
     <!-- dropzonejs -->
     <link rel="stylesheet" href="{% static 'plugins/dropzone/min/dropzone.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
 
 
     {#    <!-- jQuery -->#}
@@ -121,10 +122,10 @@
             {#                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">#}
             {#                    <a href="#" class="dropdown-item">#}
             {#                        <!-- Message Start -->#}
-            {#                        <div class="media">#}
+            {#                        <div class="yekabis/media">#}
             {#                            <img src="{% static 'dist/img/user1-128x128.jpg' %}" alt="User Avatar"#}
             {#                                 class="img-size-50 mr-3 img-circle">#}
-            {#                            <div class="media-body">#}
+            {#                            <div class="yekabis/media-body">#}
             {#                                <h3 class="dropdown-item-title">#}
             {#                                    Selim Dogru#}
             {#                                    <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>#}
@@ -138,10 +139,10 @@
             {#                    <div class="dropdown-divider"></div>#}
             {#                    <a href="#" class="dropdown-item">#}
             {#                        <!-- Message Start -->#}
-            {#                       <div class="media">#}
+            {#                       <div class="yekabis/media">#}
             {#                            <img src="{% static 'dist/img/user8-128x128.jpg' %}" alt="User Avatar"#}
             {#                                 class="img-size-50 img-circle mr-3">#}
-            {#                            <div class="media-body">#}
+            {#                            <div class="yekabis/media-body">#}
             {#                                <h3 class="dropdown-item-title">#}
             {#                                    Ahmet Kıranç#}
             {#                                    <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>#}
@@ -155,10 +156,10 @@
             {#                    <div class="dropdown-divider"></div>#}
             {#                   <a href="#" class="dropdown-item">#}
             {#                        <!-- Message Start -->#}
-            {#                        <div class="media">#}
+            {#                        <div class="yekabis/media">#}
             {#                            <img src="{% static 'dist/img/user3-128x128.jpg' %}" alt="User Avatar"#}
             {#                                 class="img-size-50 img-circle mr-3">#}
-            {#                            <div class="media-body">#}
+            {#                            <div class="yekabis/media-body">#}
             {#                                <h3 class="dropdown-item-title">#}
             {#                                   Aslıhan Yigiter#}
             {#                                    <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>#}
@@ -201,8 +202,13 @@
             {#                </div>#}
             {#           </li>#}
             <li class="nav-item">
-                <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <a class="nav-link" data-widget="fullscreen" role="button">
                     <i class="fas fa-expand-arrows-alt"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="help_text('deneme')" role="button">
+                    <i class="fas fa-question"></i>
                 </a>
             </li>
 
@@ -221,7 +227,7 @@
                     {% if person.profileImage %}
 
                         <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"
-                             src="/media/{{ person.profileImage }}">
+                             src="/yekabis/media/{{ person.profileImage }}">
 
                     {% else %}
                         <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"
@@ -234,7 +240,7 @@
                         {% if person.profileImage %}
 
                             <img alt="İmage" style="height: 100px; width: 100px;" class="rounded-circle"
-                                 src="/media/{{ person.profileImage }}">
+                                 src="/yekabis/media/{{ person.profileImage }}">
 
                         {% else %}
                             <img alt="İmage" style="height: 100px; width: 100px;" class="rounded-circle"
@@ -372,8 +378,29 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+
+        <div class="modal fade help-text" id="help-text" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalScrollableTitle">Sayfa Bilgilendirme Metni</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text">
+                        {{ text | safe }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
         <script src="{% static 'alert/sweetalert.min.js' %}"></script>
         {% block content %}
+
 
 
 
@@ -484,9 +511,16 @@
 {#<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>#}
 <script src="{% static 'alert/sweetalert.min.js' %}"></script>
 <script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
+<script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
 
 <script>
 
+    function help_text(text) {
+        debugger;
+        $('#help-text').modal('show');
+        console.log(text)
+
+    }
 
     $(function () {
 
@@ -538,7 +572,7 @@
                 "toLabel": "To",
                 "customRangeLabel": "Custom",
                 "daysOfWeek": [
-                    "Paz","Pzt", "Sal", "Çar", "Per", "Cum", "Cmt",
+                    "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt",
                 ],
                 "monthNames": [
                     "Ocak",
@@ -667,9 +701,10 @@
     $(document).ready(function () {
         $('.toast').fadeOut(5000);
 
-    });</script>
+    });
 
 
+</script>
 </body>
 </html>
 

@@ -1,7 +1,7 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
-    ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews
+    ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -169,7 +169,8 @@ urlpatterns = [
     path('yeka/yeka-guncelle/<uuid:uuid>', YekaViews.update_yeka, name='change_yeka'),
 
     path('yeka/yeka-is-bloklari-semasi/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant'),
-    path('yeka/yeka-yarismasi-is-bloklari-semasi/<uuid:uuid>/', YekaViews.view_yekacompetition_business_gant, name='view_yekacompeittion_business_gant'),
+    path('yeka/yeka-yarismasi-is-bloklari-semasi/<uuid:uuid>/', YekaViews.view_yekacompetition_business_gant,
+         name='view_yekacompeittion_business_gant'),
     path('yeka/yeka-is-bloklari-gant/<uuid:uuid>/', YekaViews.view_yekabusiness_gant, name='view_yekabusiness_gant2'),
     path('yeka/yeka-is-bloklari-incele-gant-detay/<uuid:yeka>/<uuid:yekabusiness>/',
          YekaViews.view_yekabusinessblog_gant, name='view_yekabusinessblog_gant'),
@@ -228,6 +229,11 @@ urlpatterns = [
     path('firma/firma-kullanicisi-ekle/', CompanyView.add_company_user, name='add_company_user'),
     path('firma/firma-kullanici-listesi/', CompanyView.company_users, name='company_users'),
 
-    path('firma/firma-kullanicisi-gorevlendir/<uuid:uuid>/', CompanyView.assigment_company_user, name='assigment_company_user'),
+    path('firma/firma-kullanicisi-gorevlendir/<uuid:uuid>/', CompanyView.assigment_company_user,
+         name='assigment_company_user'),
+    # Yardım Menusu
+    path('yardim/yardim-metni-ekle/', HelpMenuViews.help_text_add, name='add_help_text'),
+    path('yardim/yardim-metin-listesi/', HelpMenuViews.return_help_text, name='view_help_text'),
+    path('yardim/yardim-metni-duzenle/<uuid:uuid>', HelpMenuViews.update_help_menu, name='change_help_text'),
 
 ]

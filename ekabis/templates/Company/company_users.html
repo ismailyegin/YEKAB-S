@@ -158,6 +158,16 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Kullanıcı Listesi</h3>
+                            {% for item in perm %}
+                                {% if item == 'assigment_company_user' %}
+                                    <a href="{% url "ekabis:assigment_company_user" company.uuid %}"
+                                       type="button" class="btn btn-outline-primary"
+                                       style="float: right"><i
+                                            class="fa fa-plus"
+                                            title="Firma Kullanıcı Görevlendirme"></i>Kullanıcı Görevlendirme
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
 
                         </div>
 
@@ -182,17 +192,13 @@
                                         <td>{{ company_user.user.email }} </td>
                                         {% if company_user.user.is_active %}
                                             <td>
-                                                <a onclick="activeUser({{ company_user.user.pk }})" type="button"
-                                                   class="btn bg-gradient-success btn-sm">Aktif
-                                                </a>
+                                               Aktif
                                             </td>
                                         {% else %}
                                             <td>
-                                                <a onclick="activeUser({{ company_user.user.pk }})" type="button"
-                                                   class="btn bg-gradient-danger btn-sm">Pasif
-                                                </a>
-                                            </td>
+                                               Pasif
 
+                                            </td>
 
                                         {% endif %}
                                         <td>
@@ -203,17 +209,23 @@
                                                         data-toggle="dropdown"> İşlemler
                                                 </button>
                                                 <div class="dropdown-menu" role="menu">
-                                                    {% for item in perm %}
-                                                        {% if item == 'assigment_company_user' %}
-                                                            <a href="{% url "ekabis:assigment_company_user" company.uuid %}"
-                                                               type="button" class="dropdown-item"
-                                                               style="float: right"><i
-                                                                    class="fa fa-plus"
-                                                                    title="Firma Kullanıcı Görevlendirme"></i>Kullanıcı Görevlendirme
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
+                                                    {% if company_user.user.is_active %}
 
+                                                        <a onclick="activeUser({{ company_user.user.pk }})"
+                                                           type="button"
+                                                            class="dropdown-item"><i class="fa fa-ban"></i> Pasif Yap
+                                                        </a>
+
+                                                    {% else %}
+
+                                                        <a onclick="activeUser({{ company_user.user.pk }})"
+                                                           type="button"
+                                                           class="dropdown-item"><i class="fa fa-check"></i> Aktif Yap
+                                                        </a>
+
+
+
+                                                    {% endif %}
 
                                                 </div>
                                             </div>
