@@ -44,6 +44,8 @@ class Person(BaseModel):
     bloodType = models.CharField(max_length=128, verbose_name='Kan Grubu', choices=BLOODTYPE, default=AB1, null=True,
                                  blank=True)
     gender = models.IntegerField(blank=True, null=True, choices=GENDER_CHOICES)
+    failed_login = models.IntegerField(null=True, blank=True, default=0)
+    failed_time = models.DateTimeField(null=True, blank=True,auto_now=True)
 
     class Meta:
         default_permissions = ()

@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import resolve
 
@@ -88,7 +88,7 @@ def add_yeka(request):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_yeka')
+        raise Http404()
 
 
 @login_required
@@ -159,6 +159,8 @@ def delete_yeka(request):
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
 
+
+
 @login_required
 def update_yeka(request, uuid):
     perm = general_methods.control_access(request)
@@ -172,7 +174,7 @@ def update_yeka(request, uuid):
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
         yeka_filter = {
-            'uuid': uuid
+            'pk': uuid
         }
 
         yeka = YekaGetService(request, yeka_filter)
@@ -207,6 +209,7 @@ def update_yeka(request, uuid):
                     yeka.definition = yeka_form.cleaned_data['definition']
                     yeka.date = yeka_form.cleaned_data['date']
                     yeka.capacity = yeka_form.cleaned_data['capacity']
+                    yeka.type = yeka_form.cleaned_data['type']
                     yeka.save()
 
                     messages.success(request, 'Yeka Başarıyla Güncellendi')
@@ -226,8 +229,7 @@ def update_yeka(request, uuid):
                            })
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_yeka')
+        return HttpResponse(status=500)
 
 
 @login_required
@@ -1111,4 +1113,3 @@ def view_yekacompetition_business_gant(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
-

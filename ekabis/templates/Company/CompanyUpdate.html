@@ -1,6 +1,50 @@
 {% extends 'base_layout.html' %}
 {% block content %}
+<div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-active"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
 
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     {% if messages %}
         {% for message in messages %}
 
@@ -267,6 +311,93 @@
                             <div class="card-body" style="display: none;">
 
 
+
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Kullanıcı Listesi</h3>
+                            {% for item in perm %}
+                                {% if item == 'assigment_company_user' %}
+                                    <a href="{% url "ekabis:assigment_company_user" company.uuid %}"
+                                       type="button" class="btn btn-outline-primary"
+                                       style="float: right"><i
+                                            class="fa fa-plus"
+                                            title="Firma Kullanıcı Görevlendirme"></i>Kullanıcı Görevlendirme
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="card-body">
+                            <table id="company_user" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Telefon</th>
+                                    <th>Email</th>
+                                    <th>Kullanıcı Durumu</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for company_user in company.companyuser.all %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ company_user.user.first_name }} {{ company_user.user.last_name }} </td>
+                                        <td>{{ company_user.communication.phoneNumber }}</td>
+                                        <td>{{ company_user.user.email }} </td>
+                                        {% if company_user.user.is_active %}
+                                            <td>
+                                               Aktif
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                               Pasif
+
+                                            </td>
+
+                                        {% endif %}
+                                        <td>
+                                            <div class="btn-group">
+
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown"> İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% if company_user.user.is_active %}
+
+                                                        <a onclick="activeUser({{ company_user.user.pk }})"
+                                                           type="button"
+                                                            class="dropdown-item"><i class="fa fa-ban"></i> Pasif Yap
+                                                        </a>
+
+                                                    {% else %}
+
+                                                        <a onclick="activeUser({{ company_user.user.pk }})"
+                                                           type="button"
+                                                           class="dropdown-item"><i class="fa fa-check"></i> Aktif Yap
+                                                        </a>
+
+
+
+                                                    {% endif %}
+
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
                                 <div class="row">
 
                                     <div class="col-lg-6">
@@ -396,7 +527,42 @@
 
         });
 
+  function activeUser(id) {
 
+            console.log(id);
+            var html = ''
+            $("#modal-active").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:view_status" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Kullanıcı Durumu Değiştirildi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:view_company" %}")
+
+
+                                });
+
+                            }).modal('show');
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-active').modal('hide');
+            });
+
+        }
     </script>
 
 

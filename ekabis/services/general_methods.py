@@ -4,9 +4,10 @@ from datetime import datetime
 from django.contrib.messages import get_messages
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect
+from django.urls import resolve
 
 from accounts.models import Forgot
-from ekabis.models import Yeka, YekaPerson
+from ekabis.models import Yeka, YekaPerson, HelpMenu
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
@@ -18,6 +19,7 @@ from ekabis.services.services import ActiveGroupService, MenuService, EmployeeSe
 from django.contrib import messages
 
 from ekabis.models.Permission import Permission
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -59,9 +61,9 @@ def getMenu(request):
     permGrup = PermissionGroupService(request, activefilter)
     menu = []
     activ_urls = None
-    url=request.resolver_match.url_name
+    url = request.resolver_match.url_name
     if Permission.objects.filter(codename=request.resolver_match.url_name):
-        login_url=Permission.objects.get(codename=request.resolver_match.url_name)
+        login_url = Permission.objects.get(codename=request.resolver_match.url_name)
         if login_url:
             if login_url.parent:
                 url = login_url.parent.codename
@@ -86,14 +88,14 @@ def control_access(request):
     groupfilter = {
         'user': request.user
     }
-    if  ActiveGroupService(request, groupfilter):
+    if ActiveGroupService(request, groupfilter):
         aktifgroup = ActiveGroupGetService(request, groupfilter).group
         for perm in PermissionGroup.objects.filter(group=aktifgroup, is_active=True):
             if request.resolver_match.url_name == perm.permissions.codename:
                 print('Okey')
                 is_exist = True
     else:
-        aktifgroup=ActiveGroup(
+        aktifgroup = ActiveGroup(
             user=request.user,
             group=request.user.groups.all()[0]
         )
@@ -101,6 +103,8 @@ def control_access(request):
     if request.user.groups.filter(name="Admin"):
         is_exist = True
     return is_exist
+
+
 def aktif(request):
     userfilter = {
         'pk': request.user.pk
@@ -126,7 +130,7 @@ def aktif(request):
         perm = []
 
         groupfilter = {
-            'group_id':aktifgroup.group_id,
+            'group_id': aktifgroup.group_id,
             'is_active': True
         }
         permission = PermissionGroupService(request, groupfilter)
@@ -210,69 +214,77 @@ def get_error_messages(form):
     return {}
 
 
+def get_help_text(request):
+    current_url_name = resolve(request.path_info).url_name
+    help_text = ''
+    texts = HelpMenu.objects.filter(isDeleted=False)
+    for text in texts:
+        if text.url == current_url_name:
+           help_text=text.text
+    return {'text': help_text}
+
+
 def do_something_with_the_message(message):
     pass
 
 
-def yeka_control(request,yeka):
+def yeka_control(request, yeka):
     storage = get_messages(request)
     for message in storage:
-        if message.level_tag =='warning':
+        if message.level_tag == 'warning':
             return None
-    message=[]
-    yekafilter={
-        'yeka':yeka
+    message = []
+    yekafilter = {
+        'yeka': yeka
     }
-    url=None
+    url = None
     # Çalısma sırasına göre  sıraladık ona göre if döngülerinin sonucunda deger alacak
 
     if not (yeka.business):
         messages.add_message(request, messages.WARNING, 'İş Blokları Bilgileri Eksik.')
-        url="view_yekabusinessBlog"
+        url = "view_yekabusinessBlog"
 
     # if not (YekaCompanyService(request,yekafilter)):
     #     messages.add_message(request, messages.WARNING, 'Firma Bilgileri Eksik.')
     #     url="view_yeka_company"
 
-    if not (YekaPersonService(request,yekafilter)):
+    if not (YekaPersonService(request, yekafilter)):
         messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
-        url="view_yeka_personel"
-    if url :
+        url = "view_yeka_personel"
+    if url:
         return url
     else:
         return None
 
 
-
-
-def competition_control(request,competiton):
+def competition_control(request, competiton):
     storage = get_messages(request)
     for message in storage:
-        if message.level_tag =='warning':
+        if message.level_tag == 'warning':
             return None
-    message=[]
+    message = []
 
-    url=None
+    url = None
     # Çalısma sırasına göre  sıraladık ona göre if döngülerinin sonucunda deger alacak
 
     if not (competiton.business):
         messages.add_message(request, messages.WARNING, 'İş Blokları Bilgileri Eksik.')
-        url="view_competitionbusinessblog"
+        url = "view_competitionbusinessblog"
 
     # if not (YekaCompanyService(request,yekafilter)):
     #     messages.add_message(request, messages.WARNING, 'Firma Bilgileri Eksik.')
     #     url="view_yeka_company"
 
-
-    if not (YekaCompetitionPersonService(request,{'competition':competiton})):
+    if not (YekaCompetitionPersonService(request, {'competition': competiton})):
         messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
-        url="view_yekacompetition_personel"
-    if url :
+        url = "view_yekacompetition_personel"
+    if url:
         return url
     else:
         return None
 
-def sendmail(request,pk):
+
+def sendmail(request, pk):
     try:
         userfilter = {
             'pk': pk
@@ -297,7 +309,3 @@ def sendmail(request,pk):
         return True
     except Exception as e:
         traceback.print_exc()
-
-
-
-

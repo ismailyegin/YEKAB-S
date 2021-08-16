@@ -62,14 +62,13 @@ def return_admin_dashboard(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-
     yeka = YekaService(request, None)
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
 
     return render(request, 'anasayfa/admin.html', {
         'yeka': yeka,
-        'regions': regions, 'vacation_days': days
+        'regions': regions, 'vacation_days': days,
     })
 
 
