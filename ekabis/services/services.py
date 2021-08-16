@@ -451,7 +451,6 @@ def SettingsService(request, filter):
     try:
         if filter:
             if type(filter) != type(Q()):
-                filter['isDeleted'] = False
                 return Settings.objects.filter(**filter)
             else:
                 return Settings.objects.filter(filter)

@@ -19,6 +19,7 @@ from ekabis.services.services import ActiveGroupService, MenuService, EmployeeSe
 from django.contrib import messages
 
 from ekabis.models.Permission import Permission
+from ekabis.models.BlockEnumField import BlockEnumFields
 
 
 def get_client_ip(request):
@@ -307,5 +308,38 @@ def sendmail(request, pk):
         log = logwrite(request, fdk.user, log)
 
         return True
+    except Exception as e:
+        traceback.print_exc()
+
+
+
+
+
+
+
+# gönderilen parametrenin sabit mi oldugu kontrol edilecek kontrol icin iş blogu gönderilmeli onun içinde bakılmalı -
+def  fixed_block_parameeter_control(request,block_name,parameter_name):
+    try:
+        is_active=False
+        if BlockEnumFields.fixed_blocks.value:
+            for item in BlockEnumFields.fixed_blocks.value:
+                if item['tr_name']==block_name:
+                    if item['fixed_parameter']:
+                        for k in item['fixed_parameter']:
+                            print(k['name'])
+                            if k['name'] == parameter_name:
+                                is_active = True
+        return is_active
+    except Exception as e:
+        traceback.print_exc()
+# bu deger sabit bir blok mu kontrol yapıldı
+def  fixed_block_control(request,name):
+    try:
+        is_active=False
+        if BlockEnumFields.fixed_blocks.value:
+            for item in BlockEnumFields.fixed_blocks.value:
+                if item['tr_name'] == name:
+                    is_active=True
+        return is_active
     except Exception as e:
         traceback.print_exc()

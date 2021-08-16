@@ -117,14 +117,18 @@ def delete_businessBlog(request):
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
                 uuid = request.POST['uuid']
-
                 obj = BusinessBlog.objects.get(uuid=uuid)
-                #
-                log = str(obj.pk) + " İş bloğu  silindi"
-                log = general_methods.logwrite(request, request.user, log)
-                obj.isDeleted = True
-                obj.save()
-                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+                if not general_methods.fixed_block_control(request,obj.name):
+                    log = str(obj.pk) + " İş bloğu  silindi"
+                    log = general_methods.logwrite(request, request.user, log)
+                    obj.isDeleted = True
+                    obj.save()
+                    return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+                else:
+                    return JsonResponse({'status': 'Fail', 'msg': 'Sabit  Blok Oldugu için Silinemez'})
+
+
 
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
@@ -181,7 +185,8 @@ def view_businessBlog(request):
     urls = last_urls(request)
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
-    return render(request, 'Yeka/businessBlogList.html', {'business_blog': business_blog,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+    return render(request, 'Yeka/businessBlogList.html',
+                  {'business_blog': business_blog,'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
 @login_required
@@ -229,12 +234,26 @@ def change_businessBlog(request, uuid):
         if request.method == 'POST':
             with transaction.atomic():
                 if business_form.is_valid():
-                    business = business_form.save(commit=False)
-                    business.save()
-                    messages.success(request, 'İş  bloğu  güncellenmiştir.')
-                    log = str(business.name) + 'İş  bloğu  güncellenmiştir.'
-                    log = general_methods.logwrite(request, request.user, log)
-                    return redirect('ekabis:view_businessBlog')
+                    if not general_methods.fixed_block_control(request,BusinessBlog.objects.get(uuid=uuid).name):
+                        business = business_form.save(commit=False)
+                        business.save()
+                        messages.success(request, 'İş  bloğu  güncellenmiştir.')
+                        log = str(business.name) + 'İş  bloğu  güncellenmiştir.'
+                        log = general_methods.logwrite(request, request.user, log)
+                        return redirect('ekabis:view_businessBlog')
+                    else:
+                        business = business_form.save(commit=False)
+                        if BusinessBlog.objects.get(uuid=uuid).name != business.name:
+                            messages.warning(request, 'İş  bloğu  sabit oldugu icin güncellenemez.')
+                            business.name=BusinessBlog.objects.get(uuid=uuid).name
+                            business.save()
+                        else:
+                            business.save()
+                            messages.success(request, 'İş  bloğu  güncellenmiştir.')
+                            return redirect('ekabis:view_businessBlog')
+
+
+
                 else:
                     error_messages = get_error_messages(business_form)
                     return render(request, 'Yeka/businessBlogUpdate.html', {'business_form': business_form,
