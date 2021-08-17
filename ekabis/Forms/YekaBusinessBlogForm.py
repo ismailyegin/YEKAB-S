@@ -7,6 +7,8 @@ from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
 from ekabis.services.services import BusinessBlogGetService
+from datetime import datetime
+from django.utils import formats
 import datetime
 
 CHOICES = (('is_gunu', 'İş Günü'), ('takvim_gunu', 'Takvim Günü'),)
@@ -21,13 +23,17 @@ class YekaBusinessBlogForm(ModelForm):
             'status',
             'time_type',
 
-            'startDate',)
-        labels = {'startDate': 'Başlama Tarihi',
+            'startDate',
+            'explanation',
+         )
+        labels = {
+                  'startDate': 'Başlama Tarihi',
                   # 'finisDate': 'Bitiş Tarihi',
                   'businessTime': 'Süresi',
                   'status': 'Durumu',
-                  'indefinite': 'Süre durumu',
-                  'time_type': 'Süre Türü'}
+                  'indefinite': 'Süre Durumu',
+                  'time_type': 'Süre Türü',
+        'explanation':'Açıklama '}
         widgets = {
             'businessTime': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
@@ -41,6 +47,8 @@ class YekaBusinessBlogForm(ModelForm):
             'startDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
                        'onkeydown': 'return false', 'required': 'required'}),
+            'explanation': forms.TextInput(
+                attrs={'class': 'form-control', 'rows': '3'}),
             # 'finisDate': forms.DateInput(
             #     attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
             #            'onkeydown': 'return false', 'required': 'required'}),
@@ -49,11 +57,14 @@ class YekaBusinessBlogForm(ModelForm):
 
     def __init__(self, business, yekabussiness, *args, **kwargs):
         super(YekaBusinessBlogForm, self).__init__(*args, **kwargs)
+        if yekabussiness.parent.finisDate:
+             self.fields['startDate'].label = 'Başlama Tarihi   ('+str(yekabussiness.parent.businessblog.name) +' bitiş Tarihi:'+str(yekabussiness.parent.finisDate.strftime("%d-%m-%Y"))+')'
+
         business_filter = {
             'pk': business
         }
-
         tbussiness = BusinessBlogGetService(self, business_filter)
+
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.companynecessary:
                 print('bu alan bütün firmalar icin olmalı')

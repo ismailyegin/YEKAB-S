@@ -31,6 +31,11 @@ from ekabis.models import YekaConnectionRegion, YekaPerson, YekaBusiness, YekaBu
     YekaBusinessBlogParemetre, ConnectionRegion, ConnectionUnit, CompanyUser, \
     CompanyFiles, CompanyFileNames, CalendarName, Calendar
 from ekabis.models.VacationDay import VacationDay
+from ekabis.models.Newspaper import Newspaper
+
+from ekabis.models.YekaApplicationFileName import YekaApplicationFileName
+from ekabis.models.YekaApplicationFile import YekaApplicationFile
+from ekabis.models.YekaApplication import YekaApplication
 
 
 def CityService(request, filter):
@@ -1161,3 +1166,94 @@ def last_urls(request):
     except Exception as e:
         traceback.print_exc()
         pass
+def NewspaperService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return Newspaper.objects.filter(**filter)
+            else:
+                return Newspaper.objects.filter(filter, isDeleted=False)
+        else:
+            return Newspaper.objects.filter(isDeleted=False)
+    except ExtraTime.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+def NewspaperGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                filter['isDeleted'] = False
+                return Newspaper.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def YekaApplicationFileNameGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                filter['isDeleted'] = False
+                return YekaApplicationFileName.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+
+def YekaApplicationFileNameService(request, filter):
+    try:
+        if filter:
+            filter['isDeleted'] = False
+            return YekaApplicationFileName.objects.filter(**filter)
+        else:
+            return YekaApplicationFileName.objects.filter(isDeleted=False)
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+def YekaApplicationGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                filter['isDeleted'] = False
+                return YekaApplication.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+
+def YekaApplicationService(request, filter):
+    try:
+        if filter:
+            filter['isDeleted'] = False
+            return YekaApplication.objects.filter(**filter)
+        else:
+            return YekaApplication.objects.filter(isDeleted=False)
+    except Exception as e:
+        traceback.print_exc()
+        pass
+def YekaBusinessService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return YekaBusiness.objects.filter(**filter)
+            else:
+                return YekaBusiness.objects.filter(filter, isDeleted=False)
+        else:
+            return City.objects.filter(isDeleted=False)
+    except City.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()

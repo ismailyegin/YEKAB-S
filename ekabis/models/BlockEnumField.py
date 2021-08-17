@@ -14,7 +14,7 @@ class BlockEnumFields(enum.Enum):
             ],
         },
         {
-            'tr_name': 'Resmî Gazete İlanı',
+            'tr_name': 'Resmi Gazete İlanı',
             'en_name': '',
             'order': 2,
             'fixed_parameter': [

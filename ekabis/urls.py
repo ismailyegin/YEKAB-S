@@ -1,8 +1,7 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
-    ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews
-
+    ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews,YekaBussinessBlogStaticView
 app_name = 'ekabis'
 urlpatterns = [
     path('anasayfa/maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
@@ -179,7 +178,7 @@ urlpatterns = [
     path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
     path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<uuid:yekabusiness>/<uuid:business>/',
          YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
-    path('yeka/yeka-is-bloklari-firma-ekle/<uuid:yeka>/<uuid:yekabusinessblog>/',
+    path('yeka/yeka-is-bloklari-firma-ekle/<uuid:business>/<uuid:yekabusinessblog>/',
          YekaViews.add_yekabusinessblog_company, name='add_yekabusinessblog_company'),
 
     path('yeka/alt-yeka-ekle/<uuid:uuid>', YekaViews.alt_yeka_ekle, name='add_sub_yeka'),
@@ -188,9 +187,10 @@ urlpatterns = [
 
     path('yeka/yeka-personeller/<uuid:uuid>', YekaViews.yeka_person_list, name='view_yeka_personel'),
 
-    path('yeka/yeka-firmalar/<uuid:uuid>', YekaViews.yeka_company_list, name='view_yeka_company'),
-    path('yeka/yeka-firma-ata/', YekaViews.yeka_company_assignment, name='yeka_company_assignment'),
-    path('yeka/remove-yeka-company/', YekaViews.yeka_company_remove, name='company_remove_yeka'),
+    # Yeka firma atama olmayacak başvurular olacak
+    # path('yeka/yeka-firmalar/<uuid:uuid>', YekaViews.yeka_company_list, name='view_yeka_company'),
+    # path('yeka/yeka-firma-ata/', YekaViews.yeka_company_assignment, name='yeka_company_assignment'),
+    # path('yeka/remove-yeka-company/', YekaViews.yeka_company_remove, name='company_remove_yeka'),
 
     # yekabusiness
     path('yekaIsBlogu/yeka-IsBlogu-ekle/<uuid:uuid>/', BusinessBlogViews.add_yekabusiness, name='add_yekabusiness'),
@@ -235,5 +235,43 @@ urlpatterns = [
     path('yardim/yardim-metni-ekle/', HelpMenuViews.help_text_add, name='add_help_text'),
     path('yardim/yardim-metin-listesi/', HelpMenuViews.return_help_text, name='view_help_text'),
     path('yardim/yardim-metni-duzenle/<uuid:uuid>', HelpMenuViews.update_help_menu, name='change_help_text'),
+
+
+
+    # Resmi Gazete
+    path('yeka/resim-gazete-listesi/', YekaBussinessBlogStaticView.view_newspaper, name='view_newspaper'),
+    path('yeka/resim-gazete-ekle/<uuid:business>/<uuid:businessblog>/', YekaBussinessBlogStaticView.add_newspaper,
+         name='add_newspaper'),
+    path('yeka/resim-gazete-guncelle/<uuid:uuid>/', YekaBussinessBlogStaticView.change_newspaper, name='change_newspaper'),
+    path('yeka/resim-gazete-sil/', YekaBussinessBlogStaticView.delete_newspaper, name='delete_newspaper'),
+
+
+
+    #Basvuru Dosya İsimleri
+    path('yeka/yeka-basvuru-dosya-isim-listesi/', YekaBussinessBlogStaticView.view_yekaapplicationfilename, name='view_yekaapplicationfilename'),
+    path('yeka/yeka-basvuru-dosya-isim-ekle/', YekaBussinessBlogStaticView.add_yekaapplicationfilename,
+         name='add_yekaapplicationfilename'),
+    path('yeka/yeka-basvuru-dosya-isim-guncelle/<uuid:uuid>/', YekaBussinessBlogStaticView.change_yekaapplicationfilename, name='change_yekaapplicationfilename'),
+    path('yeka/yeka-basvuru-dosya-isim-sil/', YekaBussinessBlogStaticView.delete_yekaapplicationfilename, name='delete_yekaapplicationfilename'),
+
+    #basvuru ayarları
+
+    path('yeka/basvuru-ayarlari-ekle/<uuid:business>/<uuid:businessblog>/', YekaBussinessBlogStaticView.add_yekaapplication,
+         name='add_yekaapplication'),
+    path('yeka/basvuru-ayarlari-guncelle/<uuid:uuid>', YekaBussinessBlogStaticView.change_yekaapplication,
+         name='change_yekaapplication'),
+
+    #basvurular
+
+    path('yeka/yeka-basvuru-listesi/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.view_application,
+         name='view_application'),
+
+    path('yeka/yeka-basvuru-ekle/', YekaBussinessBlogStaticView.add_application,
+         name='add_application'),
+    path('yeka/yeka-basvuru-guncelle/<uuid:uuid>/',
+         YekaBussinessBlogStaticView.change_application, name='change_application'),
+    path('yeka/yeka-basvuru-sil/', YekaBussinessBlogStaticView.delete_application,
+         name='delete_application'),
+
 
 ]

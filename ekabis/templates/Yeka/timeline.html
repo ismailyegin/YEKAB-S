@@ -195,10 +195,32 @@
                                                 <a class="dropdown-item"
                                                    href="{% url 'ekabis:change_yekabusinessBlog' yeka.uuid  yekabusinessblok.uuid  yekabusinessblok.businessblog.uuid %}">İncele</a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item"
-                                                   href="{% url 'ekabis:add_yekabusinessblog_company' yeka.uuid  yekabusinessblok.uuid %}">Firma
-                                                    Ekle</a>
-                                                <div class="dropdown-divider"></div>
+                                                {#                                                iş blogunda firma ekleme alanı iptal edilerek kazanan firma ve basvuru ile yarısan firmalar olarak ayrıldı.#}
+                                                {#                                                <a class="dropdown-item"#}
+                                                {#                                                   href="{% url 'ekabis:add_yekabusinessblog_company' yeka.uuid  yekabusinessblok.uuid %}">Firma#}
+                                                {#                                                    Ekle</a>#}
+                                                {#                                                <div class="dropdown-divider"></div>#}
+                                                {% if yekabusinessblok.businessblog.name == 'Resmi Gazete İlanı' %}
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:add_newspaper' yeka.business.uuid  yekabusinessblok.uuid %}">Gazete
+                                                        Ekle</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
+
+
+
+
+                                                {#                                            Basvurların alınması Alanı #}
+                                                {% if yekabusinessblok.businessblog.name == 'Başvurunun Alınması' %}
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:view_application' yeka.business.uuid  yekabusinessblok.uuid %}">Başvurular</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:add_yekaapplication' yeka.business.uuid  yekabusinessblok.uuid %}">Başvuru  Ayarları</a>
+                                                    <div class="dropdown-divider"></div>
+                                                {% endif %}
                                                 <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
                                                    href="{% url 'ekabis:add_extratime' yeka.business.uuid  yekabusinessblok.uuid %}">Ek
                                                     Süre Ekle</a>
@@ -238,6 +260,7 @@
                                                         </div>
                                                     {% endif %}
 
+
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Süre Durumu:</label>
@@ -246,6 +269,79 @@
                                                                    disabled="">
                                                         </div>
                                                     </div>
+
+                                                <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Durumu</label>
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="{% if yekabusinessblok.status %}Tamamlandı{% else %}Devam Ediyor{% endif %}"
+                                                                   disabled="">
+                                                        </div>
+                                                    </div>
+
+{#                                                sadece resmi gazetede görünecek alan#}
+
+                                                    {% if yekabusinessblok.businessblog.name == 'Resmi Gazete İlanı' %}
+                                                        {% for newspaper in newspapers %}
+
+                                                            {% if newspaper.yekabusinessblog == yekabusinessblok %}
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label class="text-center"> Resmi Gazete {{ forloop.counter }}</label>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-3">
+                                                                                <label>İlan Tarihi</label>
+                                                                            </div>
+                                                                            <div class="col-lg-9">
+                                                                                <input type="text" class="form-control"
+                                                                                       placeholder="{{ newspaper.listingDate }} "
+                                                                                       disabled="">
+                                                                            </div>
+                                                                        </div>
+
+                                                                         <div class="row">
+                                                                            <div class="col-lg-3">
+                                                                                <label>Sayısı</label>
+                                                                            </div>
+                                                                            <div class="col-lg-9">
+                                                                               <input type="text" class="form-control"
+                                                                               placeholder="{{ newspaper.newspaperCount }} "
+                                                                               disabled="">
+                                                                            </div>
+                                                                        </div>
+                                                                         <div class="row">
+                                                                            <div class="col-lg-3">
+                                                                                <label>İlan Metni</label>
+                                                                            </div>
+                                                                            <div class="col-lg-9">
+                                                                               <input type="text" class="form-control"
+                                                                               placeholder="{{ newspaper.newspapwerText }} "
+                                                                               disabled="">
+                                                                            </div>
+                                                                        </div>
+                                                                         <div class="row">
+                                                                            <div class="col-lg-3">
+                                                                                <label>Dosya</label>
+                                                                            </div>
+                                                                            <div class="col-lg-9">
+                                                                                          <input type="text" class="form-control"
+                                                                               placeholder="{{ newspaper.file }} "
+                                                                               disabled="">
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+
+                                                                    </div>
+                                                                </div>
+
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                    {% endif %}
+
 
 
 
@@ -269,14 +365,6 @@
 
                                                         {% endfor %}
                                                     {% endif %}
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group">
-                                                            <label>Durumu</label>
-                                                            <input type="text" class="form-control"
-                                                                   placeholder="{% if yekabusinessblok.status %}Tamamlandı{% else %}Devam Ediyor{% endif %}"
-                                                                   disabled="">
-                                                        </div>
-                                                    </div>
 
                                                     {% for item in yekabusinessblok.paremetre.all %}
                                                         {% if item.company %}
@@ -338,45 +426,7 @@
                                                 </div>
 
                                             </div>
-                                            {% if yekabusinessblok.companys.all %}
-                                                <div class="timeline-footer">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h3 class="card-title">Firma Bilgileri</h3>
 
-                                                                </div>
-                                                                <!-- /.card-header -->
-                                                                <div class="card-body table-responsive p-0">
-                                                                    <table class="table table-head-fixed text-nowrap">
-                                                                        <thead>
-                                                                        <tr>
-                                                                            <th>#</th>
-                                                                            <th>Firma</th>
-
-                                                                        </tr>
-                                                                        </thead>
-                                                                        <tbody>
-
-                                                                        {% for company in yekabusinessblok.companys.all %}
-                                                                            <tr>
-                                                                                <td>{{ forloop.counter }}</td>
-                                                                                <td>{{ company.name }}</td>
-                                                                            </tr>
-                                                                        {% endfor %}
-
-
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                                <!-- /.card-body -->
-                                                            </div>
-                                                            <!-- /.card -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="time-label">

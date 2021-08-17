@@ -168,6 +168,22 @@ def show_urls(request):
     return redirect('accounts:login')
 
 
+
+
+
+def handler404(request, *args, **argv):
+    return redirect('accounts:handler404template')
+
+def handler500(request, *args, **argv):
+    return redirect('accounts:handler500template')
+
+def handle400Template(request):
+    return render(request, '404.html')
+
+def handle500Template(request):
+    return render(request, '500.html')
+
+
 def handler404(request, *args, **argv):
     return redirect('accounts:404')
 

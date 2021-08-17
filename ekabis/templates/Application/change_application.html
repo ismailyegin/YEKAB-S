@@ -1,0 +1,231 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Basvuru Ayarları - {{ name }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">{{ yekabussinessblog.businessblog.name }}</h3>
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="card-body">
+
+
+                                <div class="form-group">
+
+                                    <div class="col-md-12">
+
+                                        <label> {{ application_form.preRegistration.label }}</label>
+                                        {{ application_form.preRegistration }}
+
+                                        <label id="label_preRegistration"></label>
+
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label> {{ application_form.startDate.label }}</label>
+                                        {{ application_form.startDate }}
+                                        <label id="label_startDate"></label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label> {{ application_form.finishDate.label }}</label>
+                                        {{ application_form.finishDate }}
+                                        <label id="label_finishDate"></label>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-outline card-primary">
+                         <div class="card-header with-border">
+                            <h3 class="card-title">Belgeleri Seç</h3>
+                            {% for item in perm %}
+                                {% if item == 'view_yekaapplicationfilename' %}
+
+                                    <a href="{% url "ekabis:view_yekaapplicationfilename" %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" title="Dosya Listesi"></i>
+                                    </a>
+
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            {% for perm in  files %}
+
+
+                                <div class="custom-control custom-switch form-control-lg">
+
+
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="item-{{ perm.pk }}"
+                                           name="{{ perm.pk }}">
+
+                                    <label class="custom-control-label"
+                                           for="item-{{ perm.pk }}">{{ perm.filename }}</label>
+                                </div>
+
+                            {% endfor %}
+
+                            {% for perm in  application.necessary.all%}
+
+
+                                <div class="custom-control custom-switch form-control-lg">
+
+
+                                    <input type="checkbox" checked class="custom-control-input"
+                                           id="item-{{ perm.pk }}"
+                                           name="{{ perm.pk }}">
+
+                                    <label class="custom-control-label"
+                                           for="item-{{ perm.pk }}">{{ perm.filename }}</label>
+                                </div>
+
+                            {% endfor %}
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+
+    </section>
+
+
+    <script>
+        $(document).ready(function () {
+            {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
+    </script>
+
+{% endblock %}
+
+

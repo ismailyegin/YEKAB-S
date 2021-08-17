@@ -26,3 +26,4 @@ class YekaBusinessBlog(BaseModel):
     companys=models.ManyToManyField(Company)
     paremetre=models.ManyToManyField(YekaBusinessBlogParemetre,null=True,blank=True)
     indefinite=models.BooleanField(default=False,choices=INDEFINETE_CHOICES)
+    explanation=models.TextField(null=True,blank=True)
