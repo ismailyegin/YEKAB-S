@@ -888,6 +888,20 @@ def add_yekabusinessblog_company(request, business, yekabusinessblog):
                             company.save()
                             application.companys.add(company)
                             application.save()
+# ilk eklemede degerleri boş girecek şekilde ekledik sonra bu degerler girilecek
+                            for necessary in application.necessary.all():
+                                file=YekaApplicationFile(
+                                    filename=necessary,
+                                )
+                                file.save()
+                                company.files.add(file)
+                                company.save()
+
+
+
+
+
+
 # Yeka olma durumu
                 if Yeka.objects.filter(business=yekabusiness):
                     yeka = Yeka.objects.get(business=yekabusiness)
