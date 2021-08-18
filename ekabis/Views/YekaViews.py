@@ -67,11 +67,9 @@ def add_yeka(request):
             with transaction.atomic():
                 yeka_form = YekaForm(request.POST)
                 if yeka_form.is_valid():
-                    yeka = yeka_form.save(commit=False)
+                    yeka = yeka_form.save(request, commit=False)
                     yeka.save()
 
-                    log = "Yeka eklendi"
-                    log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Yeka Başarıyla Kayıt Edilmiştir.')
                     return redirect('ekabis:view_yeka')
 
@@ -150,6 +148,8 @@ def delete_yeka(request):
                 else:
                     obj.isDeleted = True
                     obj.save()
+                    log =str(obj.definition) + ' adlı yeka silindi.'
+                    log = general_methods.logwrite(request, request.user, log)
                     return JsonResponse({'status': 'Success', 'msg': 'save successfully'})
 
             else:
@@ -157,8 +157,6 @@ def delete_yeka(request):
     except:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
-
-
 
 
 @login_required
@@ -205,7 +203,7 @@ def update_yeka(request, uuid):
             if request.method == 'POST':
 
                 if yeka_form.is_valid():
-
+                    yeka = yeka_form.save(request, commit=False)
                     yeka.definition = yeka_form.cleaned_data['definition']
                     yeka.date = yeka_form.cleaned_data['date']
                     yeka.capacity = yeka_form.cleaned_data['capacity']

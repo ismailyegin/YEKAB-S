@@ -1,16 +1,19 @@
 import calendar
 import datetime
+import json
 import traceback
 
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import resolve
 
 from ekabis.Forms.VacationDayForm import VacationDayForm
+from ekabis.Forms.VacationDayUpdateForm import VacationDayUpdateForm
 from ekabis.models import Permission
 from ekabis.models.VacationDay import VacationDay
 from ekabis.services import general_methods
@@ -56,6 +59,7 @@ def add_vacation_day(request):
                 vacation_form = VacationDayForm(request.POST)
 
                 if vacation_form.is_valid():
+                    form = vacation_form.save(request, commit=False)
                     days = request.POST['reservation']
                     days = days.split('-')
                     start_date = datetime.datetime.strptime(days[0].split(' ')[0], '%d/%m/%Y')
@@ -77,8 +81,6 @@ def add_vacation_day(request):
                             start_date = start_date + datetime.timedelta(days=1)
                             range = range - 1
 
-                    log = " Tatil günü eklendi"
-                    log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Tatil Günü Başarıyla Kayıt Edilmiştir.')
                     return redirect('ekabis:vacation_days')
 
@@ -134,8 +136,7 @@ def delete_vacation_date(request):
                     'uuid': uuid
                 }
                 obj = VacationDayGetService(request, filter)
-                log = str(obj.definition) + " Tatil Günü silindi"
-                log = general_methods.logwrite(request, request.user, log)
+
                 obj.isDeleted = True
                 obj.save()
 
@@ -159,16 +160,24 @@ def update_vacation_date(request, uuid):
     filter = {
         'uuid': uuid
     }
+
     day = VacationDayGetService(request, filter)
-    vacation_form = VacationDayForm(request.POST or None, instance=day)
+    day_as_json_pre = serializers.serialize('json', VacationDay.objects.filter(uuid=uuid))
+
+    vacation_form = VacationDayUpdateForm(request.POST or None, instance=day)
+
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
+
                 if vacation_form.is_valid():
-                    vacation_form.save()
+                    vacation_form.save(request, commit=False)
+                    day.definition = vacation_form.cleaned_data['definition']
+                    day.date = vacation_form.cleaned_data['date']
+                    day.save()
                     messages.success(request, 'Tatil Günü Güncellenmiştir')
                     return redirect('ekabis:vacation_days')
                 else:

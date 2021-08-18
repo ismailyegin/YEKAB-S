@@ -60,6 +60,7 @@ def add_employee(request):
                 employe_form = EmployeeForm(request.POST)
 
                 if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid():
+                    form = user_form.save(request, commit=False)
                     user = User()
                     user.username = user_form.cleaned_data['email']
                     user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
@@ -67,8 +68,8 @@ def add_employee(request):
                     user.email = user_form.cleaned_data['email']
                     user.save()
 
-                    person = person_form.save(commit=False)
-                    communication = communication_form.save(commit=False)
+                    person = person_form.save(request, commit=False)
+                    communication = communication_form.save(request, commit=False)
                     person.save()
                     communication.save()
 
@@ -86,17 +87,15 @@ def add_employee(request):
                             personel.user.groups.add(group)
                             personel.save()
 
-
                     if Settings.objects.filter(key='mail_person'):
-                        if Settings.objects.get(key='mail_person').is_active:
-                            general_methods.sendmail(request,personel.user)
+                        if Settings.objects.get(key='mail_person').value == 'True':
+                            general_methods.sendmail(request, personel.user)
                     else:
-                        set=Settings(key='mail_person')
-                        set.is_active=False
+                        set = Settings(key='mail_person')
+                        set.value = 'False'
                         set.save()
 
-                    log = str(user.get_full_name()) + " personelini  kaydetti"
-                    log = general_methods.logwrite(request, request.user, log)
+
                     messages.success(request, 'Personel Başarıyla Kayıt Edilmiştir.')
 
                     return redirect('ekabis:view_employee')
@@ -112,14 +111,14 @@ def add_employee(request):
                     return render(request, 'personel/personel-ekle.html',
                                   {'user_form': user_form, 'person_form': person_form,
                                    'communication_form': communication_form,
-                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url,
+                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
                                    'url_name': url_name,
                                    })
 
             return render(request, 'personel/personel-ekle.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
-                           'error_messages': '', 'groups': groups,'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name,
+                           'error_messages': '', 'groups': groups, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name,
                            })
     except Exception as e:
         traceback.print_exc()
@@ -142,26 +141,30 @@ def edit_employee(request, pk):
         employefilter = {
             'uuid': pk
         }
+
         employee = EmployeeGetService(request, employefilter)
+        user = employee.user
+        active_group=user.groups.last()
         user_form = UserForm(request.POST or None, instance=employee.user)
         person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
         communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
         groups = Group.objects.exclude(name='Admin').exclude(name='Firma')
 
-
         with transaction.atomic():
             if request.method == 'POST':
 
-                if user_form.is_valid() and communication_form.is_valid() and person_form.is_valid() and employee_form.is_valid():
+                if user_form.is_valid() and communication_form.is_valid() and person_form.is_valid():
 
-                    user = user_form.save(commit=False)
+                    form = user_form.save(request, commit=False)
                     user.username = user_form.cleaned_data['email']
                     user.first_name = user_form.cleaned_data['first_name']
                     user.last_name = user_form.cleaned_data['last_name']
                     user.email = user_form.cleaned_data['email']
                     user.save()
-                    person_form.save()
-                    communication_form.save()
+                    person = person_form.save(request, commit=False)
+                    person.save()
+                    communication = communication_form.save(request, commit=False)
+                    communication.save()
                     if request.POST.get('group'):
                         group_filter = {
                             'pk': request.POST.get('group')
@@ -171,8 +174,6 @@ def edit_employee(request, pk):
                             user.groups.add(group)
                             user.save()
 
-                    log = str(user.get_full_name()) + " personel güncellendi"
-                    log = general_methods.logwrite(request, request.user, log)
 
                     messages.success(request, 'Personel Başarıyla Güncellenmiştir.')
 
@@ -193,13 +194,13 @@ def edit_employee(request, pk):
                                    'person_form': person_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
                                    'url_name': url_name,
-                                   'groups':groups
+                                   'groups': groups
                                    })
 
             return render(request, 'personel/personel-duzenle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
                            'person_form': person_form, 'error_messages': '',
-                           'urls': urls, 'current_url': current_url, 'url_name': url_name,'groups':groups
+                           'urls': urls, 'current_url': current_url, 'url_name': url_name, 'groups': groups
                            })
 
     except Exception as e:
@@ -279,18 +280,17 @@ def return_workdefinitionslist(request):
                     categoryItem.isFirst = False
                     categoryItem.save()
 
-                    log = str(name) + " unvanini ekledi"
-                    log = general_methods.logwrite(request, request.user, log)
+
                     messages.success(request, 'Unvan eklendi')
 
                     return redirect('ekabis:view_categoryitem')
 
                 else:
-                    
+
                     error_messages_user = get_error_messages(category_item_form)
                     return render(request, 'personel/unvanListesi.html',
-                                  {'category_item_form': category_item_form,'error_messages':error_messages_user,'urls': urls, 'current_url': current_url, 'url_name': url_name})
-
+                                  {'category_item_form': category_item_form, 'error_messages': error_messages_user,
+                                   'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
         categoryfilter = {
             'forWhichClazz': "EMPLOYEE_WORKDEFINITION",
@@ -298,7 +298,7 @@ def return_workdefinitionslist(request):
         }
         categoryitem = CategoryItemService(request, categoryfilter)
         return render(request, 'personel/unvanListesi.html',
-                      {'category_item_form': category_item_form, 'categoryitem': categoryitem,'error_messages':''})
+                      {'category_item_form': category_item_form, 'categoryitem': categoryitem, 'error_messages': ''})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -358,8 +358,7 @@ def edit_workdefinition(request, pk):
                     categoryItem.save()
                     messages.success(request, 'Başarıyla Güncellendi')
 
-                    log = str(request.POST.get('name')) + " is tanimi güncelledi"
-                    log = general_methods.logwrite(request, log)
+
                     return redirect('ekabis:istanimiListesi')
                 else:
                     messages.warning(request, 'Alanları Kontrol Ediniz')
@@ -381,7 +380,7 @@ def edit_workdefinitionUnvan(request, uuid):
     categoryfilter = {
         'uuid': uuid
     }
-    error_messages=''
+    error_messages = ''
     categoryItem = CategoryItemGetService(request, categoryfilter)
     category_item_form = CategoryItemForm(request.POST or None, instance=categoryItem)
     try:
@@ -396,13 +395,13 @@ def edit_workdefinitionUnvan(request, uuid):
                     categoryItem.save()
                     messages.success(request, 'Başarıyla Güncellendi')
 
-                    log = str(request.POST.get('name')) + " Unvan güncelledi"
-                    log = general_methods.logwrite(request, request.user, log)
                     return redirect('ekabis:view_categoryitem')
                 else:
                     error_messages = get_error_messages(category_item_form)
         return render(request, 'personel/unvan-duzenle.html',
-                      {'category_item_form': category_item_form,'categoryItem':categoryItem, 'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                      {'category_item_form': category_item_form, 'categoryItem': categoryItem,
+                       'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
+                       'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -477,11 +476,12 @@ def updateRefereeProfile(request):
             # error_messages_person = get_error_messages(person_form)
             # error_messages_employee = get_error_messages(communication_form)
 
-
             return render(request, 'personel/Personel-Profil-güncelle.html',
                           {'user_form': user_form, 'communication_form': communication_form,
                            'person_form': person_form, 'password_form': password_form,
-                           'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                           'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name})
     return render(request, 'personel/Personel-Profil-güncelle.html',
                   {'user_form': user_form, 'communication_form': communication_form,
-                   'person_form': person_form, 'password_form': password_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
+                   'person_form': person_form, 'password_form': password_form, 'error_messages': '', 'urls': urls,
+                   'current_url': current_url, 'url_name': url_name})

@@ -86,7 +86,7 @@ def claim_add(request):
 
                 claim_form = ClaimForm(request.POST)
                 if claim_form.is_valid():
-                    claimSave = claim_form.save(commit=False)
+                    claimSave = claim_form.save(request,commit=False)
                     claimSave.user = request.user
                     claimSave.save()
 
@@ -124,7 +124,8 @@ def claim_update(request, uuid):
             if request.method == 'POST':
 
                 if claim_form.is_valid():
-                    claim_form.save()
+                    claim=claim_form.save(request,commit=False)
+                    claim.save()
                     messages.success(request, 'Destek Talep  Güncellendi.')
                     return redirect('ekabis:view_claim')
                 else:

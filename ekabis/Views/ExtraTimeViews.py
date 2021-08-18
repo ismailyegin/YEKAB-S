@@ -50,7 +50,7 @@ def return_add_extra_time(request, business, businessblog):
             if request.method == 'POST':
                 extratime_form = ExtraTimeForm(request.POST)
                 if extratime_form.is_valid():
-                    time = extratime_form.save(commit=False)
+                    time = extratime_form.save(request, commit=False)
                     time.user = request.user
                     time.yekabusinessblog = yekabussinessblog
                     time.business = yekabusiness
@@ -67,8 +67,8 @@ def return_add_extra_time(request, business, businessblog):
 
                                     add_time = time.time
                                     start_date = parent.startDate.date()
-                                    finish_date=parent.finisDate.date() + timedelta(days=time.time)
-                                    finish_time=time.time
+                                    finish_date = parent.finisDate.date() + timedelta(days=time.time)
+                                    finish_time = time.time
                                     count = 0
                                     while add_time > 0:
                                         start_date = start_date + datetime.timedelta(days=1)
@@ -78,8 +78,6 @@ def return_add_extra_time(request, business, businessblog):
                                             add_time = add_time - 1
                                     while is_vacation_day(finish_date) == True:
                                         finish_date = finish_date + datetime.timedelta(days=1)
-
-
 
                                     parent.startDate = start_date
                                     parent.finisDate = finish_date
@@ -181,7 +179,8 @@ def return_update_extra_time(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
                 if extratime_form.is_valid():
-                    extratime_form.save()
+                    extra = extratime_form.save(request, commit=False)
+                    extra.save()
                     messages.success(request, 'Ek Süre Güncellenmiştir')
                     return redirect('ekabis:view_extratime')
                 else:
@@ -220,10 +219,10 @@ def delete_extra_time(request):
                     'uuid': uuid
                 }
                 obj = ExtraTimeGetService(request, extra_time_filter)
-                times=ExtraTime.objects.filter(yekabusinessblog=obj.yekabusinessblog).order_by('-creationDate')
+                times = ExtraTime.objects.filter(yekabusinessblog=obj.yekabusinessblog).order_by('-creationDate')
                 if times:
-                    time=times[0]
-                main=obj.yekabusinessblog
+                    time = times[0]
+                main = obj.yekabusinessblog
                 while main != None:
                     if YekaBusinessBlog.objects.filter(parent=main, isDeleted=False):
                         parent = YekaBusinessBlog.objects.get(parent=main, isDeleted=False)
@@ -261,7 +260,6 @@ def delete_extra_time(request):
                             main = None
                     else:
                         main = None
-
 
                 obj.isDeleted = True
                 obj.save()
@@ -359,7 +357,7 @@ def change_extratimefile(request, uuid, time):
         with transaction.atomic():
             if request.method == 'POST':
                 if extratime_form.is_valid():
-                    time = extratime_form.save(commit=False)
+                    time = extratime_form.save(request,commit=False)
                     time.save()
                     extratime.files.add(time)
                     extratime.save()

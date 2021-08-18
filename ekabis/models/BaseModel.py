@@ -1,5 +1,7 @@
 import uuid
 from django.db import models
+from django.http import request
+
 
 
 class BaseModel(models.Model):
@@ -11,3 +13,8 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True  # Set this model as Abstract
+
+    # def save(self, *args, **kwargs):
+    #     request = kwargs.get('request', None)
+    #     model = self._meta.object_name
+    #     model_log(request,self)

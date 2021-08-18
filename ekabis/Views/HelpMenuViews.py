@@ -34,6 +34,7 @@ def help_text_add(request):
                 help_form = HelpMenuForm(request.POST)
                 help_menu = HelpMenu()
                 if help_form.is_valid():
+                    help = help_form.save(request,commit=False)
                     help_menu.text = help_form.cleaned_data['text']
                     help_menu.url = request.POST['url']
                     help_menu.save()
@@ -88,7 +89,8 @@ def update_help_menu(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
                 if help_form.is_valid():
-                    help_form.save()
+                    help = help_form.save(request, commit=False)
+                    help.save()
                     messages.success(request, 'Yardım Metni Güncellenmiştir')
                     return redirect('ekabis:view_help_text')
                 else:

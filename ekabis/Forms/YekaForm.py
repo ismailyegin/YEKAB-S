@@ -1,5 +1,6 @@
 from django import forms
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models import Company, Person, Employee
 from ekabis.models.Yeka import Yeka
 
@@ -11,7 +12,7 @@ STATUS_CHOICES = (
 )
 
 
-class YekaForm(forms.ModelForm):
+class YekaForm(BaseForm):
     class Meta:
         model = Yeka
 

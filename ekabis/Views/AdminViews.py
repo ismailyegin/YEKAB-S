@@ -9,7 +9,8 @@ from django.shortcuts import render, redirect
 from ekabis.Forms.DisabledUserForm import DisabledUserForm
 from ekabis.services import general_methods
 from ekabis.models import DirectoryMember, Employee
-from ekabis.services.services import CategoryItemService,DirectoryCommissionService, DirectoryMemberRoleService, GroupGetService, \
+from ekabis.services.services import CategoryItemService, DirectoryCommissionService, DirectoryMemberRoleService, \
+    GroupGetService, \
     CommunicationGetService, PersonGetService, UserGetService
 
 
@@ -68,6 +69,8 @@ def activeGroup(request, pk):
             user.is_staff = True
             user.is_active = True
             user.save()
+            log = str(user.get_full_name()) + " grubu " + str(group.name)+" olarak güncellendi"
+            log = general_methods.logwrite(request, request.user, log)
             return redirect('ekabis:view_admin')
         elif group.name == "Personel":
             employe = Employee(person=person,
@@ -78,6 +81,8 @@ def activeGroup(request, pk):
             employe.save()
             user.groups.add(group)
             user.save()
+            log = str(user.get_full_name()) + " grubu " + str(group.name)+" olarak güncellendi"
+            log = general_methods.logwrite(request, request.user, log)
             return redirect('ekabis:view_personel', pk=employe.pk)
 
         elif group.name == "Yonetim":
@@ -87,12 +92,14 @@ def activeGroup(request, pk):
             member.save()
             user.groups.add(group)
             user.save()
+            log = str(user.get_full_name()) + " grubu " + str(group.name) + " olarak güncellendi"
+            log = general_methods.logwrite(request, request.user, log)
             return redirect('ekabis:view_directoryMember', pk=member.pk)
         return {}
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
+
 def viewRepairPage(request):
     return render(request, 'maintenancePage.html')
-

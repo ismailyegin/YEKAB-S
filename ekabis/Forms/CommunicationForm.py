@@ -1,11 +1,12 @@
 from django import forms
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.Communication import Communication
 from ekabis.models.Country import Country
 
 
-class CommunicationForm(ModelForm):
+class CommunicationForm(BaseForm):
 
     class Meta:
         model = Communication

@@ -126,8 +126,13 @@
                                         <label>Grubunu Seçiniz</label> <small style="">*</small>
                                         <select name="group" class="form-control select2 select2-hidden-accessible"
                                                 style="width: 100%; " id="group" name="group" required="required">
+                                            <option value="{{ user_form.instance.groups.last.pk }}"
+                                                    selected>{{ user_form.instance.groups.last.name }}</option>
+
                                             {% for item in groups %}
-                                                <option value="{{ item.pk }}" selected>{{ item.name }}</option>
+                                                {% if item != user_form.instance.groups.last %}
+                                                    <option value="{{ item.pk }}">{{ item.name }}</option>
+                                                {% endif %}
 
                                             {% endfor %}
                                         </select>

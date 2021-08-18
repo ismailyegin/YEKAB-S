@@ -1,6 +1,7 @@
 import traceback
 from datetime import datetime
 
+from django.contrib.admin.models import LogEntry
 from django.contrib.messages import get_messages
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect
@@ -36,6 +37,7 @@ def logwrite(request, user, log):
         logs = Logs(user=user, subject=log, ip=get_client_ip(request))
         logs.save()
 
+        # Txt dosyaya kayıt
         # f = open("log.txt", "a")
         # log = get_client_ip(request) + "    [" + datetime.today().strftime('%d-%m-%Y %H:%M') + "] " + str(
         #     user) + " " + log + " \n "
@@ -221,7 +223,7 @@ def get_help_text(request):
     texts = HelpMenu.objects.filter(isDeleted=False)
     for text in texts:
         if text.url == current_url_name:
-           help_text=text.text
+            help_text = text.text
     return {'text': help_text}
 
 
@@ -312,18 +314,13 @@ def sendmail(request, pk):
         traceback.print_exc()
 
 
-
-
-
-
-
 # gönderilen parametrenin sabit mi oldugu kontrol edilecek kontrol icin iş blogu gönderilmeli onun içinde bakılmalı -
-def  fixed_block_parameeter_control(request,block_name,parameter_name):
+def fixed_block_parameeter_control(request, block_name, parameter_name):
     try:
-        is_active=False
+        is_active = False
         if BlockEnumFields.fixed_blocks.value:
             for item in BlockEnumFields.fixed_blocks.value:
-                if item['tr_name']==block_name:
+                if item['tr_name'] == block_name:
                     if item['fixed_parameter']:
                         for k in item['fixed_parameter']:
                             print(k['name'])
@@ -332,14 +329,28 @@ def  fixed_block_parameeter_control(request,block_name,parameter_name):
         return is_active
     except Exception as e:
         traceback.print_exc()
+
+
 # bu deger sabit bir blok mu kontrol yapıldı
-def  fixed_block_control(request,name):
+def fixed_block_control(request, name):
     try:
-        is_active=False
+        is_active = False
         if BlockEnumFields.fixed_blocks.value:
             for item in BlockEnumFields.fixed_blocks.value:
                 if item['tr_name'] == name:
-                    is_active=True
+                    is_active = True
         return is_active
+    except Exception as e:
+        traceback.print_exc()
+
+
+def log(request, self):
+    try:
+        log = Logs()
+        log.user = request.user
+        log.ip = get_client_ip(request)
+        url = Permission.objects.get(codename=request.resolver_match.url_name).name
+        log.subject = url
+        return log
     except Exception as e:
         traceback.print_exc()

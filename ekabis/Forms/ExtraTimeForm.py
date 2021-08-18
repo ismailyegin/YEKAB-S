@@ -1,10 +1,12 @@
 from django import forms
+
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.ExtraTime import ExtraTime
 
 CHOICES = (('is_gunu', 'İş Günü'), ('takvim_gunu', 'Takvim Günü'),)
 
 
-class ExtraTimeForm(forms.ModelForm):
+class ExtraTimeForm(BaseForm):
     class Meta:
         model = ExtraTime
         fields = ('time', 'time_type')

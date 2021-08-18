@@ -83,7 +83,7 @@ def add_competition(request, region):
 
                 if competition_form.is_valid():
 
-                    competition = competition_form.save(commit=False)
+                    competition = competition_form.save(request,commit=False)
 
                     total = int(
                         YekaCompetition.objects.filter(connectionregion=region).distinct().aggregate(Sum('capacity'))[
@@ -194,10 +194,10 @@ def delete_competition(request):
 
                 if YekaCompetitionService(request,parent_filter):
 
-                    return JsonResponse({'status': 'Fail', 'msg': ' Baglı Alt Yeka Oldugu icin Silinemez'})
+                    return JsonResponse({'status': 'Fail', 'msg': ' Bağlı alt YEKA olduğu için silinemez.'})
 
                 else:
-                    log = str(obj.name) + "Yeka Yarışması silindi"
+                    log = str(obj.name) + "Yeka yarışması silindi."
                     log = general_methods.logwrite(request, request.user, log)
                     obj.isDeleted = True
                     obj.save()
@@ -237,7 +237,7 @@ def update_competition(request, region, competition):
         with transaction.atomic():
             if request.method == 'POST':
                 if competition_form.is_valid():
-                    competition = competition_form.save(commit=False)
+                    competition = competition_form.save(request,commit=False)
 
                     total = int(
                         YekaCompetition.objects.filter(connectionregion=region).distinct().aggregate(Sum('capacity'))[
@@ -256,8 +256,7 @@ def update_competition(request, region, competition):
                         competition.save()
                     region.yekacompetition.add(competition)
                     region.save()
-                    log = " Yeka Yarışması  güncellendi"
-                    log = general_methods.logwrite(request, request.user, log)
+
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
                     return redirect('ekabis:add_competition', region.uuid)
 
@@ -362,6 +361,9 @@ def add_yekacompetitionbusiness(request, uuid):
                             parent = blog
                         yekabusiness.businessblogs.add(blog)
                         yekabusiness.save()
+                        log = str(competition.name) + ' adlı yarışmaya - ' + str(
+                            blog.businessblog.name) + " adlı iş bloğu atandı."
+                        log = general_methods.logwrite(request, request.user, log)
 
                     return redirect('ekabis:view_competitionbusinessblog', competition.uuid)
 
@@ -398,7 +400,7 @@ def change_yekacompetitionbusiness(request, uuid, competition):
             with transaction.atomic():
 
                 if business_form.is_valid():
-                    yekabu = business_form.save(commit=False)
+                    yekabu = business_form.save(request,commit=False)
                     yekabu.save()
                     if request.POST.get('businessblog'):
 
@@ -536,6 +538,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                                                           request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
+
                 if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
                     startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
                     finishDate = startDate + datetime.timedelta(
@@ -691,7 +694,7 @@ def add_sumcompetition(request, uuid):
 
                 if competition_form.is_valid():
 
-                    competition = competition_form.save(commit=False)
+                    competition = competition_form.save(request,commit=False)
 
                     # baglı oldugu yarışmanın kapsitesinden fazla olamaz
                     total = int(
@@ -747,8 +750,7 @@ def add_sumcompetition(request, uuid):
                                 yeka_business.save()
                             competition.business = yeka_business
                             competition.save()
-                    log = " Alt Yeka Ara  eklendi"
-                    log = general_methods.logwrite(request, request.user, log)
+
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
                     return redirect('ekabis:view_sub_competition', parent_competition.uuid)
 
@@ -789,7 +791,7 @@ def change_sumcompetition(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
                 if competition_form.is_valid():
-                    competition = competition_form.save(commit=False)
+                    competition = competition_form.save(request,commit=False)
 
                     total = int(
                         YekaCompetition.objects.filter(parent=competition.parent).distinct().aggregate(Sum('capacity'))[
@@ -803,8 +805,7 @@ def change_sumcompetition(request, uuid):
                                        })
                     competition.save()
 
-                    log = " Yeka Yarışması  güncellendi"
-                    log = general_methods.logwrite(request, request.user, log)
+
                     messages.success(request, 'Alt Yeka  Güncellenmiştir.')
                     return redirect('ekabis:add_sumcompetition', competition.parent.uuid)
 

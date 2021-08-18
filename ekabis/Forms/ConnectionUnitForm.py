@@ -1,9 +1,10 @@
 from django import forms
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.ConnectionUnit import ConnectionUnit
 
 
-class ConnectionUnitForm(forms.ModelForm):
+class ConnectionUnitForm(BaseForm):
     class Meta:
         model = ConnectionUnit
         fields = ('name',)

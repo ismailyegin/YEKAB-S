@@ -1,8 +1,10 @@
 
 from django import forms
+
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.ExtraTimeFile import ExtraTimeFile
 
-class ExtraTimeFileForm(forms.ModelForm):
+class ExtraTimeFileForm(BaseForm):
     class Meta:
         model = ExtraTimeFile
         fields = ('definition','file')
