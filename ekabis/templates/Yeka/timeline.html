@@ -211,6 +211,17 @@
 
 
 
+                                                {#                                                Kabuller#}
+                                                {% if yekabusinessblok.businessblog.name == 'Kabuller' %}
+
+                                                    <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
+                                                       href="{% url 'ekabis:view_yeka_accept' yeka.business.uuid  yekabusinessblok.uuid %}">Kabul
+                                                        Listesi</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
+
+
                                                 {#                                            Basvurların alınması Alanı #}
                                                 {% if yekabusinessblok.businessblog.name == 'Başvurunun Alınması' %}
 
@@ -218,22 +229,14 @@
                                                        href="{% url 'ekabis:view_application' yeka.business.uuid  yekabusinessblok.uuid %}">Başvurular</a>
                                                     <div class="dropdown-divider"></div>
                                                     <a class="dropdown-item"
-                                                       href="{% url 'ekabis:add_yekaapplication' yeka.business.uuid  yekabusinessblok.uuid %}">Başvuru  Ayarları</a>
+                                                       href="{% url 'ekabis:add_yekaapplication' yeka.business.uuid  yekabusinessblok.uuid %}">Başvuru
+                                                        Ayarları</a>
                                                     <div class="dropdown-divider"></div>
                                                 {% endif %}
+
                                                 <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
                                                    href="{% url 'ekabis:add_extratime' yeka.business.uuid  yekabusinessblok.uuid %}">Ek
                                                     Süre Ekle</a>
-
-{#                                                <div class="dropdown-divider"></div>#}
-{#                                                <a class="dropdown-item" href="#">Log Listesi</a>#}
-
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
-                                                   href="{% url 'ekabis:view_yeka_accept' yeka.business.uuid  yekabusinessblok.uuid %}">Kabul
-                                                    Listesi</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Log Listesi</a>
 
                                             </div>
                                             <h3 class="timeline-header"><a
@@ -279,7 +282,7 @@
                                                         </div>
                                                     </div>
 
-                                                <div class="col-sm-6">
+                                                    <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Durumu</label>
                                                             <input type="text" class="form-control"
@@ -288,7 +291,7 @@
                                                         </div>
                                                     </div>
 
-{#                                                sadece resmi gazetede görünecek alan#}
+                                                    {#                                                sadece resmi gazetede görünecek alan#}
 
                                                     {% if yekabusinessblok.businessblog.name == 'Resmi Gazete İlanı' %}
                                                         {% for newspaper in newspapers %}
@@ -296,7 +299,8 @@
                                                             {% if newspaper.yekabusinessblog == yekabusinessblok %}
                                                                 <div class="col-sm-6">
                                                                     <div class="form-group">
-                                                                        <label class="text-center"> Resmi Gazete {{ forloop.counter }}</label>
+                                                                        <label class="text-center"> Resmi
+                                                                            Gazete {{ forloop.counter }}</label>
                                                                         <div class="row">
                                                                             <div class="col-lg-3">
                                                                                 <label>İlan Tarihi</label>
@@ -308,39 +312,36 @@
                                                                             </div>
                                                                         </div>
 
-                                                                         <div class="row">
+                                                                        <div class="row">
                                                                             <div class="col-lg-3">
                                                                                 <label>Sayısı</label>
                                                                             </div>
                                                                             <div class="col-lg-9">
-                                                                               <input type="text" class="form-control"
-                                                                               placeholder="{{ newspaper.newspaperCount }} "
-                                                                               disabled="">
+                                                                                <input type="text" class="form-control"
+                                                                                       placeholder="{{ newspaper.newspaperCount }} "
+                                                                                       disabled="">
                                                                             </div>
                                                                         </div>
-                                                                         <div class="row">
+                                                                        <div class="row">
                                                                             <div class="col-lg-3">
                                                                                 <label>İlan Metni</label>
                                                                             </div>
                                                                             <div class="col-lg-9">
-                                                                               <input type="text" class="form-control"
-                                                                               placeholder="{{ newspaper.newspapwerText }} "
-                                                                               disabled="">
+                                                                                <input type="text" class="form-control"
+                                                                                       placeholder="{{ newspaper.newspapwerText }} "
+                                                                                       disabled="">
                                                                             </div>
                                                                         </div>
-                                                                         <div class="row">
+                                                                        <div class="row">
                                                                             <div class="col-lg-3">
                                                                                 <label>Dosya</label>
                                                                             </div>
                                                                             <div class="col-lg-9">
-                                                                                          <input type="text" class="form-control"
-                                                                               placeholder="{{ newspaper.file }} "
-                                                                               disabled="">
+                                                                                <input type="text" class="form-control"
+                                                                                       placeholder="{{ newspaper.file }} "
+                                                                                       disabled="">
                                                                             </div>
                                                                         </div>
-
-
-
 
 
                                                                     </div>
