@@ -5,7 +5,7 @@ from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.VacationDay import VacationDay
 
 
-class VacationDayForm(BaseForm):
+class VacationDayUpdateForm(BaseForm):
     class Meta:
         model = VacationDay
         fields = ('definition', 'date')
@@ -13,8 +13,8 @@ class VacationDayForm(BaseForm):
         widgets = {
             'definition': forms.TextInput(
                 attrs={'class': 'form-control', 'required': 'required'}),
-            'date': forms.DateInput(
-                attrs={'class': 'form-control  float-right', 'id':"reservation", 'autocomplete': 'off',
+              'date': forms.DateInput(
+                attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
                        'onkeydown': 'return false', 'required': 'required'}),
 
         }

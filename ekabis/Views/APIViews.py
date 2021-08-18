@@ -4,13 +4,14 @@ from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from ekabis.models import Company, Employee, Yeka
+from ekabis.models import Company, Employee, Yeka, Logs
 from ekabis.models.LogAPIObject import LogAPIObject
 from ekabis.serializers.CompanySerializers import CompanyResponseSerializer
 from ekabis.serializers.EmployeeSerializers import EmployeeResponseSerializer
+from ekabis.serializers.LogSerializers import LogResponseSerializer
 from ekabis.serializers.YekaSerializer import YekaResponseSerializer
 from ekabis.services import general_methods
-from ekabis.services.services import EmployeeService, YekaService
+from ekabis.services.services import EmployeeService, YekaService, LogsService
 
 
 class GetCompany(APIView):
@@ -105,7 +106,7 @@ class GetYeka(APIView):
 
         all_objects = Yeka.objects.filter(isDeleted=False).filter(yekaParent=None).filter(
             definition__icontains=request.data['search[value]']).order_by('-id')[
-                     int(start):end]
+                      int(start):end]
 
         filteredTotal = Yeka.objects.filter(isDeleted=False).filter(yekaParent=None).filter(
             definition__icontains=request.data['search[value]']).count()
@@ -119,7 +120,7 @@ class GetYeka(APIView):
         serializer_context = {
             'request': request,
         }
-        serializer =YekaResponseSerializer(logApiObject, context=serializer_context)
+        serializer = YekaResponseSerializer(logApiObject, context=serializer_context)
         return Response(serializer.data)
 
 
@@ -144,7 +145,7 @@ class GetSubYeka(APIView):
 
         all_objects = Yeka.objects.filter(isDeleted=False).filter(yekaParent=None).filter(
             definition__icontains=request.data['search[value]']).order_by('-id')[
-                     int(start):end]
+                      int(start):end]
 
         filteredTotal = Yeka.objects.filter(isDeleted=False).filter(yekaParent=None).filter(
             definition__icontains=request.data['search[value]']).count()
@@ -159,5 +160,42 @@ class GetSubYeka(APIView):
             'request': request,
 
         }
-        serializer =YekaResponseSerializer(logApiObject, context=serializer_context)
+        serializer = YekaResponseSerializer(logApiObject, context=serializer_context)
+        return Response(serializer.data)
+
+
+class GetLog(APIView):
+
+    def post(self, request, format=None):
+        perm = general_methods.control_access(request)
+        if not perm:
+            logout(request)
+            return redirect('accounts:login')
+        draw = request.data['draw']
+        start = request.data['start']
+        length = request.data['length']
+        end = int(start) + int(length)
+
+        count = LogsService(request, None).count()
+
+        all_objects = Logs.objects.filter(isDeleted=False).filter(
+            user__first_name__icontains=request.data['search[value]']).filter(
+            user__last_name__icontains=request.data['search[value]']).order_by('-id')[
+                      int(start):end]
+
+        filteredTotal = Logs.objects.filter(isDeleted=False).filter(
+            user__first_name__icontains=request.data['search[value]']).filter(
+            user__last_name__icontains=request.data['search[value]']).count()
+
+        logApiObject = LogAPIObject()
+        logApiObject.data = all_objects
+        logApiObject.draw = int(request.POST['draw'])
+        logApiObject.recordsTotal = int(count)
+        logApiObject.recordsFiltered = int(filteredTotal)
+
+        serializer_context = {
+            'request': request,
+
+        }
+        serializer = LogResponseSerializer(logApiObject, context=serializer_context)
         return Response(serializer.data)

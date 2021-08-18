@@ -1,10 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.Claim import Claim
 
 
-class ClaimForm(ModelForm):
+class ClaimForm(BaseForm):
     class Meta:
         model = Claim
 

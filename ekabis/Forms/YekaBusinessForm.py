@@ -1,7 +1,9 @@
 from django import forms
+
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.YekaBussiness import YekaBusiness
 
-class YekaBusinessForm(forms.ModelForm):
+class YekaBusinessForm(BaseForm):
     class Meta:
         model = YekaBusiness
         fields = ('name', )

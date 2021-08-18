@@ -36,7 +36,8 @@ def change_serttings(request, pk):
         settings_form = SettingsForm(request.POST or None, instance=setting)
         if request.method == 'POST':
             if settings_form.is_valid():
-                settings_form.save()
+                setting_form=settings_form.save(request,commit=False)
+                setting_form.save()
                 messages.success(request, 'Ayarlar Güncellenmiştir.')
                 return redirect('ekabis:view_settings')
 

@@ -373,15 +373,12 @@
     </script>
 
     <script>
-        $(document).ready(function () {
 
-            {% if error_messages  %}
+
+        $(function () {
+             {% if error_messages  %}
                 errors_messages({{ error_messages |safe }})
             {% endif %}
-        });
-    </script>
-    <script>
-        $(function () {
             //Initialize Select2 Elements
             $('.select2').select2()
             $('.select2bs4').select2({

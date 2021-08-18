@@ -30,7 +30,7 @@ def add_group(request):
             if request.method == 'POST':
                 group_form = GroupForm(request.POST)
                 if group_form.is_valid():
-                    group = group_form.save(commit=False)
+                    group = group_form.save(request, commit=False)
                     group.save()
 
                     for item in PermissionService(request, None):
@@ -42,16 +42,16 @@ def add_group(request):
                             perm = PermissionGroup(group=group, permissions=item, is_active=False)
                             perm.save()
 
-                    log = group.name + ' Grubunu Kaydetti'
-                    log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Grup Kayıt Edilmiştir.')
                     return redirect('ekabis:view_group')
                 else:
                     error_messages = get_error_messages(group_form)
                     return render(request, 'Group/GrupEkle.html',
-                                  {'group_form': group_form, 'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name })
+                                  {'group_form': group_form, 'error_messages': error_messages, 'urls': urls,
+                                   'current_url': current_url, 'url_name': url_name})
             return render(request, 'Group/GrupEkle.html',
-                          {'group_form': group_form, 'error_messages': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
+                          {'group_form': group_form, 'error_messages': '', 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -97,7 +97,8 @@ def return_update_group(request, pk):
         with transaction.atomic():
             if request.method == 'POST':
                 if group_form.is_valid():
-                    group_form.save()
+                    group=group_form.save(request, commit=False)
+                    group.save()
                     messages.success(request, 'Grup Güncellenmiştir.')
                     return redirect('ekabis:view_group')
 
@@ -141,7 +142,8 @@ def change_groupPermission(request, pk):
                         item.is_active = False
                     item.save()
             return render(request, 'Group/GrupizinEkle.html',
-                          {'permGroup': permGroup,'urls': urls, 'current_url': current_url, 'url_name': url_name,'active':active})
+                          {'permGroup': permGroup, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                           'active': active})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

@@ -1,7 +1,7 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
-    ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews
+    ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, AcceptViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -68,7 +68,7 @@ urlpatterns = [
     path('personel/Unvan-sil/', EmployeeViews.delete_employeetitle, name='delete_categoryitem'),
 
     #   log kayıtlari
-    path('log/log-kayitlari/', LogViews.return_log, name='view_logs'),
+    path('log/log-kayitlari/', LogViews.view_log, name='view_logs'),
 
     # activ grup  güncelle
     path('rol/guncelle/<int:pk>/', DashboardViews.activeGroup, name='change_activegroup'),
@@ -119,7 +119,6 @@ urlpatterns = [
 
     path('ayar/sistem-ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/sistem-ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
-
 
     # Bağlantı Bölgesi
     path('baglanti/birim-ekle/', ConnectionRegionViews.return_connectionRegionUnit, name='view_units'),
@@ -235,5 +234,16 @@ urlpatterns = [
     path('yardim/yardim-metni-ekle/', HelpMenuViews.help_text_add, name='add_help_text'),
     path('yardim/yardim-metin-listesi/', HelpMenuViews.return_help_text, name='view_help_text'),
     path('yardim/yardim-metni-duzenle/<uuid:uuid>', HelpMenuViews.update_help_menu, name='change_help_text'),
+
+    path('log/api-log-listesi/', APIViews.GetLog.as_view(), name='view_log_api'),
+
+    # KABULLER
+    path('yeka/kabul-listesi/<uuid:business>/<uuid:businessblog>/', AcceptViews.view_yeka_accept,
+         name='view_yeka_accept'),
+    path('yeka/kabul-ekle/<uuid:uuid>/', AcceptViews.add_yeka_accept,
+         name='add_yeka_accept'),
+    path('yeka/kabul-guncelle/<uuid:uuid>/<uuid:accept_uuid>/', AcceptViews.change_accept,
+         name='change_yeka_accept'),
+    path('yeka/kabul-sil/', AcceptViews.delete_accept, name='delete_accept'),
 
 ]

@@ -1,10 +1,11 @@
 from django import forms
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.Employee import Employee
 
 
-class YekaPersonForm(forms.ModelForm):
+class YekaPersonForm(BaseForm):
     class Meta:
         model = YekaPerson
         fields = ('employee','yeka')

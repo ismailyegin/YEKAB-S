@@ -1,10 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.BusinessBlog import BusinessBlog
 
 
-class BusinessBlogForm(ModelForm):
+class BusinessBlogForm(BaseForm):
     class Meta:
         model = BusinessBlog
         fields = ('name',

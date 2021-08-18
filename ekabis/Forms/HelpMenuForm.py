@@ -1,9 +1,10 @@
 from django import forms
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.HelpMenu import HelpMenu
 
 
-class HelpMenuForm(forms.ModelForm):
+class HelpMenuForm(BaseForm):
     class Meta:
         model = HelpMenu
         fields = ('text',)

@@ -3,8 +3,9 @@
 from django import forms
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.CompanyFileNames import CompanyFileNames
-class CompanyFileNameForm(ModelForm):
+class CompanyFileNameForm(BaseForm):
     class Meta:
         model = CompanyFileNames
         fields = (

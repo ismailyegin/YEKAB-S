@@ -222,80 +222,14 @@
 
 
         <div class="row">
-            <div class="col-lg-12 ">
-                <div class="card-body">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Log Filtrele</h3>
-                        </div>
-                        <form method="post" role="form">
-                            <div class="card-body">
-                                {% csrf_token %}
-
-
-                                <div class="row">
-
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label> {{ user_form.first_name.label }}</label>
-                                            {{ user_form.first_name }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label> {{ user_form.last_name.label }}</label>
-                                            {{ user_form.last_name }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label> {{ user_form.email.label }}</label>
-                                            {{ user_form.email }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label> Başlangıç Tarihi</label>
-                                            <input type="text" name="playDate" value="" class="form-control  pull-right"
-                                                   id="datepicker" autocomplete="off" onkeydown="return false">
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label> Bitiş tarihi</label>
-                                            <input type="text" name="finishDate" value=""
-                                                   class="form-control  pull-right"
-                                                   id="datepicker2" autocomplete="off" onkeydown="return false">
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                            <!-- /.card-body -->
-
-                            <div class="card-footer">
-                                <button type="submit" class="btn  btn-outline-primary" style="float: right">Ara</button>
-                            </div>
-                        </form>
-
-
-                    </div>
-                </div>
-                <!-- /.card -->
-            </div>
-        </div>
-
-        <div class="row">
             <section class="col-lg-12 ">
                 <div class="card-body">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Loglar</h3>
+                            <h3 class="card-title">Log Kayıtları</h3>
                         </div>
                         <div class="card-body">
-                            <table id="kullanicilar" class="table table-bordered table-hover">
+                            <table id="logs" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -309,34 +243,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% if logs.all %}
-                                    {% for log in logs %}
-                                        <tr>
-                                            <td>{{ forloop.counter }} </td>
-                                            <td>{{ log.ip }} </td>
-                                            <td>{{ log.creationDate }} </td>
-                                            <td>{{ log.user.first_name }} {{ log.user.last_name }} </td>
-                                            <td>{{ log.subject }} </td>
-                                            <td id="pre-{{ log.pk }}"></td>
-                                            <td id="next-{{ log.pk }}"></td>
-
-                                            {#                                            <td>#}
-                                            {#                                                <div class="btn-group">#}
-                                            {##}
-                                            {#                                                    <a class="btn btn-success"#}
-                                            {#                                                       data-toggle="modal" onclick=sendInform({{ user.pk }})><i#}
-                                            {#                                                            class="fa  fa-arrow-circle-right"></i>Şifre Gönder</a>#}
-                                            {##}
-                                            {#                                                    <a class="btn btn-danger"#}
-                                            {#                                                       data-toggle="modal" onclick=activeUser({{ user.pk }})><i#}
-                                            {#                                                            class="fa fa-lock"></i>Aktif/Pasifleştir</a>#}
-                                            {#                                                </div>#}
-                                            {#                                            </td>#}
-
-                                        </tr>
-
-                                    {% endfor %}
-                                {% endif %}
 
 
                                 </tbody>
@@ -357,23 +263,23 @@
     </section>
     {% load  static %}
     <script>
+        let count = 1;
         $(function () {
-            $('#kullanicilar').DataTable({
-                dom: 'Bfrtip',
+            table = $('#logs').DataTable({
+
+                "processing": true,
+                "serverSide": true,
+                "paging": true,
+                "ordering": true,
+
 
                 "ajax": {
                     "url": "{% url 'ekabis:view_log_api' %}",
                     "type": "POST",
+
                 },
 
-                'language': {
-                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
-                },
-
-                lengthMenu: [
-                    [10, 25, 50, 100, -1],
-                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
-                ],
+                dom: 'Bfrtip',
 
                 'buttons': [
 
@@ -391,7 +297,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Yeka Firmaları',
+                        title: 'Firmalar',
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
@@ -412,23 +318,84 @@
 
 
                 ],
-                "search": {
-                    "caseInsensitive": true,
+
+
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
-                'bubble': true,
-                'paging': true,
-                'lengthChange': true,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': true,
-                'responsive': true,
-                'select': true,
-            })
+                "columns": [
+                    {"data": "id"},
+
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.ip;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.creationDate;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            var html = '';
+                            html = row.user.first_name + ' ' + row.user.last_name
+                            return html;
+
+                        }
+                    },
+                    {"data": "subject"},
+
+                    {
+                        "data": null,
+                        render: function (full, data, type, row) {
+                            debugger;
+                            let html = ''
+                            var obj = (JSON.parse(full.previousData))
+                            return full.previousData
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (full, data, type, row) {
+                            debugger;
+                            let html = ''
+                            var obj = JSON.parse(full.nextData)
+                            return full.nextData;
+
+                        }
+                    },
+
+
+                ],
+
+                "search": {
+                    "caseInsensitive": true
+                }
+
+
+            });
+            table.on('draw.dt', function () {
+                var info = table.page.info();
+                table.column(0, {
+                    search: 'applied',
+                    order: 'applied',
+                    page: 'applied'
+                }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1 + info.start;
+                });
+            });
 
         })
 
-         function getCookie(name) {
+
+        function getCookie(name) {
             var cookieValue = null;
             var i = 0;
             if (document.cookie && document.cookie !== '') {
@@ -460,7 +427,6 @@
                 }
             }
         });
-
 
 
     </script>

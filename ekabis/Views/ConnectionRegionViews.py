@@ -43,8 +43,7 @@ def return_connectionRegionUnit(request):
                     unit = ConnectionUnit(name=unit_form.cleaned_data['name'])
                     unit.save()
 
-                    log = " Birim eklendi"
-                    log = general_methods.logwrite(request, request.user, log)
+
                     messages.success(request, 'Birim Başarıyla Kayıt Edilmiştir.')
                     return redirect('ekabis:view_units')
 
@@ -84,8 +83,6 @@ def delete_unit(request):
                     'uuid': uuid
                 }
                 obj = ConnectionUnitGetService(request, unitfilter)
-                log = str(obj.name) + " Birim silindi"
-                log = general_methods.logwrite(request, request.user, log)
                 obj.isDeleted = True
                 obj.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
@@ -118,6 +115,7 @@ def update_unit(request, uuid):
             if request.method == 'POST':
 
                 if unit_form.is_valid():
+                    unit=unit_form.save(request,commit=False)
                     unit.name = unit_form.cleaned_data['name']
                     unit.save()
                     messages.success(request, 'Başarıyla Güncellendi')
@@ -179,7 +177,7 @@ def add_connectionRegion(request,uuid):
 
 
 
-                    region = region_form.save(commit=False)
+                    region = region_form.save(request,commit=False)
                     total = int(
                         ConnectionRegion.objects.filter(yeka=yeka).distinct().aggregate(Sum('capacity'))[
                             'capacity__sum'] or 0)
@@ -205,8 +203,7 @@ def add_connectionRegion(request,uuid):
                         region.cities.add(CityGetService(request, city_filter))
                         region.save()
 
-                    log = " Bölge eklendi"
-                    log = general_methods.logwrite(request, request.user, log)
+
                     messages.success(request, 'Bölge Başarıyla Kayıt Edilmiştir.')
                     return redirect('ekabis:view_region' ,yeka.uuid)
 
@@ -298,8 +295,8 @@ def update_region(request, uuid,yeka):
             if request.method == 'POST':
 
                 if region_form.is_valid():
-                    region=region_form.save(commit=False)
-                    region = region_form.save(commit=False)
+                    region=region_form.save(request,commit=False)
+                    region = region_form.save(request,commit=False)
                     total = int(
                         ConnectionRegion.objects.exclude(uuid=region.uuid).filter(yeka=yeka).distinct().aggregate(Sum('capacity'))[
                             'capacity__sum'] or 0)
