@@ -3,3 +3,4 @@ class LogAPIObject(object):
     recordsTotal = 0
     recordsFiltered = 0
     data = ""
+    count=0

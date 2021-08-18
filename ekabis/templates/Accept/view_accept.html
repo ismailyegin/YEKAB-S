@@ -1,26 +1,52 @@
 {% extends 'base_layout.html' %}
+
 {% block content %}
-    <div id="toast-container" class="toasts-top-right">
 
-        <div class="toast toast-error error" aria-live="polite" style="display: none" id="error_toast">
-            <div class="toast-message" id="error_message">
 
+    <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body errorModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
             </div>
+            <!-- /.modal-content -->
         </div>
-
-
+        <!-- /.modal-dialog -->
     </div>
-    <div id="toast-container" class="toasts-top-right">
 
-        <div class="toast toast-success success " aria-live="polite" style="display: none" id="success_toast">
-            <div class="toast-message" id="success_message">
-
-            </div>
-        </div>
-
-
-    </div>
     <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -32,7 +58,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz ?</p>
+                    <p>Yekayı Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -47,13 +73,10 @@
     </div>
 
 
-
-
     {% if messages %}
-         <div id="toast-container" class="toasts-top-right">
         {% for message in messages %}
 
-
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
@@ -78,11 +101,13 @@
 
 
                 {% endif %}
-
+            </div>
         {% endfor %}
 
-         </div>
+
     {% endif %}
+
+
 
 
 
@@ -113,7 +138,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Tatil Günleri Listesi</h1>
+                        {{ name }} - Kabul Listesi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -128,51 +153,58 @@
         </div>
 
     </section>
-
-
     <section class="content">
-
         <div class="row">
-
             <section class="col-lg-12 ">
-
-
                 <div class="card-body">
 
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Tatil Günleri</h3>
+                            <h3 class="card-title"> Kabul
+                                Listesi</h3>
                             {% for item in perm %}
-                                {% if item == 'add_vacation_day' %}
-                                    <a href="{% url "ekabis:add_vacation_day" %}"
-                                       class="btn btn-outline-primary" style="float: right"> <i
-                                            class="fa fa-plus" title="Tatil Günü Ekle"></i>
+                                {% if item == 'add_yeka_accept' %}
+
+                                    <a href="{% url "ekabis:add_yeka_accept" accept.uuid %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" title="Yeni Kabul Ekle"></i>
                                     </a>
+
                                 {% endif %}
                             {% endfor %}
                         </div>
 
                         <div class="card-body">
-                            <table id="days" class="table table-bordered table-hover">
+                            <table id="accept" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Açıklama</th>
-                                    <th>Tarih</th>
+                                    <td>Kabul Tarihi</td>
+                                    <td>Kabul Tutanağı</td>
+                                    <td>Toplam Kurulu Güç</td>
+                                    <td>Güncel İşletmedeki Güç</td>
                                     <td>İşlemler</td>
 
 
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for day in days %}
+
+                                {% for item in accept.accept.all %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>{{ day.definition }}</td>
-                                        <td>{{ day.date.date }}</td>
+                                        <td>{{ item.date }}</td>
                                         <td>
-
+                                            <a target="_blank" href="/media/{{ item.report }}">{{ item.report }}</a>
+                                        </td>
+                                        <td>
+                                            {{ item.installedPower }}
+                                        </td>
+                                        <td>
+                                            {{ item.currentPower }}
+                                        </td>
+                                        <td>
                                             <div class="btn-group">
 
                                                 <button type="button"
@@ -180,29 +212,25 @@
                                                         data-toggle="dropdown"> İşlemler
                                                 </button>
                                                 <div class="dropdown-menu" role="menu">
-                                                    {% for item in perm %}
-                                                        {% if item == 'update_vacation_day' %}
-                                                            <a href="{% url 'ekabis:update_vacation_day' day.uuid %}"
+                                                    {% for p in perm %}
+                                                        {% if p == 'change_yeka_accept' %}
+                                                            <a href="{% url 'ekabis:change_yeka_accept' item.uuid accept.uuid %}"
                                                                class="dropdown-item"> <i
                                                                     class="fa fa-edit" title="Düzenle"></i> Düzenle
                                                             </a>
                                                         {% endif %}
-                                                    {% endfor %}
-                                                    {% for item in perm %}
-                                                        {% if item == 'delete_vacation_day' %}
-
+                                                        {% if p == 'delete_accept' %}
                                                             <a class="dropdown-item" href=""
                                                                data-toggle="modal"
-                                                               onclick=deleteVacationDate('{{ day.uuid }}')><i
+                                                               onclick="deleteAccept('{{ item.uuid }}')"><i
                                                                     class="fa fa-trash"></i>Sil</a>
 
                                                         {% endif %}
                                                     {% endfor %}
 
+
                                                 </div>
                                             </div>
-
-
                                         </td>
 
                                     </tr>
@@ -226,10 +254,10 @@
         <!-- /.row (main row) -->
 
     </section>
-    {% load static %}
+    {% load  static %}
     <script>
         $(function () {
-            $('#days').DataTable({
+            $('#accept').DataTable({
                 dom: 'Bfrtip',
 
 
@@ -237,10 +265,6 @@
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
-
-                'language': {
-                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
-                },
 
                 'buttons': [
 
@@ -258,7 +282,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Gruplar',
+                        title: 'YEKA LİSTESİ',
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
@@ -279,9 +303,11 @@
 
 
                 ],
-
                 "search": {
                     "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
                 'paging': true,
                 'lengthChange': true,
@@ -292,95 +318,45 @@
                 'responsive': true,
             })
 
-
         })
+    </script>
 
+    <script>  function deleteAccept(id) {
+        debugger;
+        console.log(id);
+        var html = ''
+        $("#modal-delete").on("shown.bs.modal", function (e) {
+            $("#btn-conf1").click(function () {
+                $.ajax({
+                    url: "{% url "ekabis:delete_accept" %}",
+                    type: "POST",
+                    data: {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                        uuid: id,
+                    },
+                    success: function (result) {
 
-        function deleteVacationDate(id) {
-            debugger;
-            console.log(id);
-            var html = ''
-            $("#modal-delete").on("shown.bs.modal", function (e) {
-                $("#btn-conf1").click(function () {
-                    $.ajax({
-                        url: "{% url "ekabis:delete_vacation_day" %}",
-                        type: "POST",
-                        data: {
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            uuid: id,
-                        },
-                        success: function (result) {
-                            if (result.status === 'Success') {
-                                html = 'Tatil günü başarıyla silindi';
+                        html = 'Ek Süre Başarıyla Silindi';
+                        debugger;
+                        $(".successModal").html(html);
+                        $('#modal-success').on("shown.bs.modal", function (e) {
+                            $(".btn-ok").click(function () {
 
-                                let toast = document.getElementById('success_message');
-                                toast.innerHTML = html;
-                                document.getElementById('success_toast').style.display = 'block';
-                                $('.success').toast('show');
-                                $('.toast').fadeOut(5000);
+                                window.location.replace("{% url "ekabis:view_extratime" %}");
 
-                                window.location.replace("{% url "ekabis:vacation_days" %}");
+                            });
 
+                        }).modal('show');
 
-                            } else {
-                                debugger;
-                                let toast = document.getElementById('error_message');
-                                html = 'Bu Firma Silinemez';
-                                toast.innerHTML = html;
-                                document.getElementById('error_toast').style.display = 'block';
-                                $('.error').toast('show');
-                                $('.toast').fadeOut(5000);
-
-
-                            }
-
-                            console.log(result.status)
-                        }
-                    });
-                });
-            }).modal('show');
-            $('#btn-close1').click(function () {
-                $('#modal-delete').modal('hide');
-            });
-
-        }
-
-        function getCookie(name) {
-            var cookieValue = null;
-            var i = 0;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (i; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
+                        console.log(result.status)
                     }
-                }
-            }
-            return cookieValue;
-        }
-
-        var csrftoken = getCookie('csrftoken');
-
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        $.ajaxSetup({
-            crossDomain: false, // obviates need for sameOrigin test
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type)) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
+                });
+            });
+        }).modal('show');
+        $('#btn-close1').click(function () {
+            $('#modal-active').modal('hide');
         });
 
-
-    </script>
+    }</script>
 {% endblock %}
-
-
 

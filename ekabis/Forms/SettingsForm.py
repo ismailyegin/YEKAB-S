@@ -1,6 +1,8 @@
 from django import forms
+
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.Settings import Settings
-class SettingsForm(forms.ModelForm):
+class SettingsForm(BaseForm):
     class Meta:
         model = Settings
         fields = ( 'value','label','explanation')

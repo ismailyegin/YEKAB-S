@@ -5,8 +5,10 @@ from django.db import models
 
 from unicode_tr import unicode_tr
 
+from ekabis.Forms.BaseForm import BaseForm
 
-class UserForm(ModelForm):
+
+class UserForm(BaseForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'is_active')

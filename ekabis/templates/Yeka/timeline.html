@@ -224,8 +224,17 @@
                                                 <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
                                                    href="{% url 'ekabis:add_extratime' yeka.business.uuid  yekabusinessblok.uuid %}">Ek
                                                     Süre Ekle</a>
+
 {#                                                <div class="dropdown-divider"></div>#}
 {#                                                <a class="dropdown-item" href="#">Log Listesi</a>#}
+
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
+                                                   href="{% url 'ekabis:view_yeka_accept' yeka.business.uuid  yekabusinessblok.uuid %}">Kabul
+                                                    Listesi</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Log Listesi</a>
+
                                             </div>
                                             <h3 class="timeline-header"><a
                                                     href="#">{{ yekabusinessblok.businessblog.name }}</a>

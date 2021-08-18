@@ -1,6 +1,8 @@
 from django import forms
+
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models import ConnectionRegion, City
-class ConnectionRegionForm(forms.ModelForm):
+class ConnectionRegionForm(BaseForm):
     cities = forms.ModelMultipleChoiceField(queryset=None)
     class Meta:
         model = ConnectionRegion

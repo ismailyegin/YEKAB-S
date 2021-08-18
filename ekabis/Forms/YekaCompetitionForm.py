@@ -1,10 +1,11 @@
 from django import forms
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models import YekaCompetition, City
 from ekabis.models.YekaCompetition import YekaCompetition
 
 
-class YekaCompetitionForm(forms.ModelForm):
+class YekaCompetitionForm(BaseForm):
 
     class Meta:
         model = YekaCompetition

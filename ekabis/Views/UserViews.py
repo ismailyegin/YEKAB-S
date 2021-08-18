@@ -65,6 +65,7 @@ def update_user(request, pk):
             if request.method == 'POST':
 
                 if user_form.is_valid():
+                    user = user_form.save(request,commit=False)
                     user.username = user_form.cleaned_data['email']
                     user.first_name = user_form.cleaned_data['first_name']
                     user.last_name = user_form.cleaned_data['last_name']

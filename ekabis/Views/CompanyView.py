@@ -44,7 +44,7 @@ def return_add_Company(request):
                 company_form = CompanyFormDinamik(request.POST, request.FILES)
                 communication_form = CommunicationForm(request.POST, request.FILES)
                 if company_form.is_valid() and communication_form.is_valid():
-                    communication = communication_form.save(commit=False)
+                    communication = communication_form.save(request,commit=False)
                     communication.save()
 
                     company = company_form.save(communication)
@@ -179,8 +179,8 @@ def add_company_user(request):
                     user.email = user_form.cleaned_data['email']
                     user.save()
 
-                    person = person_form.save(commit=False)
-                    communication = communication_form.save(commit=False)
+                    person = person_form.save(request,commit=False)
+                    communication = communication_form.save(request,commit=False)
                     person.save()
                     communication.save()
 
@@ -195,15 +195,14 @@ def add_company_user(request):
                     user.save()
 
                     if Settings.objects.filter(key='mail_company_user'):
-                        if Settings.objects.get(key='mail_company_user').is_active:
+                        if Settings.objects.get(key='mail_company_user').value == 'True':
                             general_methods.sendmail(request, user.user)
                     else:
-                        set = Settings(key='mail_person')
-                        set.is_active = False
+                        set = Settings(key='mail_company_user')
+                        set.value = 'False'
                         set.save()
 
-                    log = str(user.user.get_full_name()) + " kullanıcı  kayıt edildi."
-                    log = general_methods.logwrite(request, request.user, log)
+
                     messages.success(request, 'Firma Kullanıcısı Başarıyla Kayıt Edilmiştir.')
 
                     return redirect('ekabis:view_company')
@@ -305,9 +304,9 @@ def return_update_Company(request, uuid):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
-
         company = CompanyGetService(request, companyfilter)
         company_form = CompanyForm(request.POST or None, instance=company)
+        communication=company.communication
         communication_form = CommunicationForm(request.POST or None, instance=company.communication)
         companyDocumentName = CompanyFileNames.objects.all()
         with transaction.atomic():
@@ -322,10 +321,14 @@ def return_update_Company(request, uuid):
                     company.files.add(companyfile)
                     company.save()
                 if company_form.is_valid() and communication_form.is_valid():
-                    communication = communication_form.save(commit=False)
+                    communication_ = communication_form.save(request,commit=False)
+                    communication.phoneNumber=communication_form.cleaned_data['phoneNumber']
                     communication.save()
-                    company = company_form.save(commit=False)
+                    company_ = company_form.save(request,commit=False)
                     company.communication = communication
+                    company.name=company_form.cleaned_data['name']
+                    company.degree=company_form.cleaned_data['degree']
+                    company.taxnumber=company_form.cleaned_data['taxnumber']
                     company.save()
                     messages.success(request, 'Firma Güncellenmiştir.')
                 else:
@@ -373,7 +376,8 @@ def add_companyfilename(request):
                 company_form = CompanyFileNameForm(request.POST)
 
                 if company_form.is_valid():
-                    company_form.save()
+                    company=company_form.save(request,commit=False)
+                    company.save()
                     messages.success(request, 'Döküman İsim Eklenmiştir.')
                     return redirect('ekabis:view_companyfilename')
                 else:
@@ -425,7 +429,8 @@ def change_companyfilename(request, uuid):
             with transaction.atomic():
 
                 if company_form.is_valid():
-                    company_form.save()
+                    company=company_form.save(request,commit=False)
+                    company.save()
                     messages.success(request, 'Döküman İsim Eklenmiştir.')
                     return redirect('ekabis:view_companyfilename')
                 else:
@@ -459,7 +464,7 @@ def delete_companyfilename(request, uuid):
                     'uuid': uuid
                 }
                 obj = CompanyFileNamesGetService(request, company_name_filter)
-                log = str(obj.name) + " firma dokuman  silindi"
+                log = str(obj.name) + " firma doküman  silindi"
                 log = general_methods.logwrite(request, request.user, log)
 
                 obj.isDeleted = True
@@ -502,7 +507,7 @@ def add_consortium(request):
                 communication_form = CommunicationForm(request.POST, request.FILES)
 
                 if company_form.is_valid() and communication_form:
-                    communication = communication_form.save(commit=False)
+                    communication = communication_form.save(request,commit=False)
                     communication.save()
 
                     company = company_form.save(communication, None)
@@ -606,9 +611,9 @@ def return_update_consortium(request, uuid):
                     company.files.add(companyfile)
                     company.save()
                 if company_form.is_valid() and communication_form.is_valid():
-                    communication = communication_form.save(commit=False)
+                    communication = communication_form.save(request,commit=False)
                     communication.save()
-                    company = company_form.save(commit=False)
+                    company = company_form.save(request,commit=False)
                     company.communication = communication
                     company.save()
 
