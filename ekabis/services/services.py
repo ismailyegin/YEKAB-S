@@ -1257,3 +1257,29 @@ def YekaBusinessService(request, filter):
         return None
     except Exception as e:
         traceback.print_exc()
+
+
+def YekaApplicationFileGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                filter['isDeleted'] = False
+                return YekaApplicationFile.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+
+def YekaApplicationFileService(request, filter):
+    try:
+        if filter:
+            filter['isDeleted'] = False
+            return YekaApplicationFile.objects.filter(**filter)
+        else:
+            return YekaApplicationFile.objects.filter(isDeleted=False)
+    except Exception as e:
+        traceback.print_exc()
+        pass

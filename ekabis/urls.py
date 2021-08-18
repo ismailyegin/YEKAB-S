@@ -255,23 +255,15 @@ urlpatterns = [
     path('yeka/yeka-basvuru-dosya-isim-sil/', YekaBussinessBlogStaticView.delete_yekaapplicationfilename, name='delete_yekaapplicationfilename'),
 
     #basvuru ayarları
-
     path('yeka/basvuru-ayarlari-ekle/<uuid:business>/<uuid:businessblog>/', YekaBussinessBlogStaticView.add_yekaapplication,
          name='add_yekaapplication'),
     path('yeka/basvuru-ayarlari-guncelle/<uuid:uuid>', YekaBussinessBlogStaticView.change_yekaapplication,
          name='change_yekaapplication'),
 
     #basvurular
-
     path('yeka/yeka-basvuru-listesi/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.view_application,
          name='view_application'),
-
-    path('yeka/yeka-basvuru-ekle/', YekaBussinessBlogStaticView.add_application,
-         name='add_application'),
-    path('yeka/yeka-basvuru-guncelle/<uuid:uuid>/',
-         YekaBussinessBlogStaticView.change_application, name='change_application'),
-    path('yeka/yeka-basvuru-sil/', YekaBussinessBlogStaticView.delete_application,
-         name='delete_application'),
-
-
+    #basvuru dosya ekleme
+    path('yeka/yeka-basvuru-dosya-ekle/<uuid:business>/<uuid:businessblog>/<uuid:applicationfile>', YekaBussinessBlogStaticView.view_applicationfile,
+         name='view_applicationfile'),
 ]

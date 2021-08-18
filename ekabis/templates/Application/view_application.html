@@ -251,7 +251,24 @@
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ item.company.name}} </td>
-                                            <td>{% for file in item.files.all %} {{ file.filename }}{% endfor %} </td>
+                                            <td>
+                                                {% for file in item.files.all %}
+
+                                                    {% if file.file %}
+                                                    <a class="btn btn-success" href="{% url 'ekabis:view_applicationfile'  application.business.uuid  application.yekabusinessblog.uuid  file.uuid %}" >
+
+                                                    {{ file.filename.filename }}
+                                                    </a>
+                                                        {% else %}
+                                                        <a class="btn btn-danger" href="{% url 'ekabis:view_applicationfile'  application.business.uuid  application.yekabusinessblog.uuid  file.uuid%}" >
+
+                                                    {{ file.filename.filename }}
+                                                    </a>
+                                                    {% endif %}
+
+
+
+                                            {% endfor %} </td>
 
                                         </tr>
 

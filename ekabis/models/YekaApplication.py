@@ -19,5 +19,6 @@ class YekaApplication(BaseModel):
     startDate=models.DateField(null=True, blank=True)
     finishDate=models.DateField(null=True,blank=True)
     preRegistration=models.BooleanField(choices=necesssary_choices,default=False)
+
     necessary=models.ManyToManyField(YekaApplicationFileName)
     companys=models.ManyToManyField(YekaCompany)

@@ -22,10 +22,10 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import ExtraTimeGetService, last_urls, \
     NewspaperGetService, NewspaperService, YekaApplicationFileNameService, YekaApplicationFileNameGetService, \
     YekaApplicationGetService, YekaApplicationService, YekaBusinessService, YekaBusinessGetService, \
-    YekaBusinessBlogGetService
+    YekaBusinessBlogGetService, YekaApplicationFileGetService
 
 from ekabis.Forms.NewspaperForm import NewspaperForm
-
+from ekabis.Forms.YekaApplicationFileForm import YekaApplicationFileForm
 # test amaclı yazıldı silinecek
 from ekabis.models.YekaApplication import YekaApplication
 
@@ -467,9 +467,6 @@ def change_yekaapplication(request,uuid):
                             print(e)
                             traceback.print_exc()
 
-
-
-
                     messages.success(request, 'Basarıyla Güncellenmistir.')
                     return redirect('ekabis:change_yekaapplication',app.uuid)
                 else:
@@ -492,56 +489,9 @@ def change_yekaapplication(request,uuid):
 
 #basvurular
 
-
-@login_required
-def add_application(request):
-    perm = general_methods.control_access(request)
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-
-    try:
-        urls = last_urls(request)
-        current_url = resolve(request.path_info)
-        url_name = Permission.objects.get(codename=current_url.url_name)
-
-        filename_form = YekaApplicationFileNameForm()
-
-        filenames =YekaApplicationFileNameService(request,None)
-        with transaction.atomic():
-            if request.method == 'POST':
-                filename_form = YekaApplicationFileNameForm(request.POST , request.FILES)
-                if filename_form.is_valid():
-                    filename= filename_form.save(commit=False)
-                    filename.save()
-                    messages.success(request, 'Dosya ismi  Eklenmiştir .')
-                    return redirect('ekabis:view_yekaapplicationfilename')
-                else:
-                    error_messages = get_error_messages(filename_form)
-                    return render(request, 'Application/add_applicationfilename.html',
-                                  {'filename_form': filename_form,
-                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name, 'filenames': filenames,
-                                   })
-
-            return render(request, 'Application/add_applicationfilename.html',
-                          {'filename_form': filename_form,
-                            'filenames': filenames,
-                         'urls': urls, 'current_url': current_url,
-                           'url_name': url_name,
-                           })
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_yeka')
-
-
 @login_required
 def view_application(request,business,businessblog):
     perm = general_methods.control_access(request)
-
-
-
     if not perm:
         logout(request)
         return redirect('accounts:login')
@@ -564,25 +514,37 @@ def view_application(request,business,businessblog):
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
 
-
-
     return render(request, 'Application/view_application.html',
                   {'application': application, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
+
 @login_required
-def change_application(request, uuid):
+def view_applicationfile(request,business,businessblog,applicationfile):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    filename_filter = {
-        'uuid': uuid
-    }
-    filename = YekaApplicationFileNameGetService(request, filename_filter)
-
-    filename_form = YekaApplicationFileNameForm(request.POST or None, instance=filename)
     try:
+        filter = {
+            'uuid': business
+        }
+        yekabusiness = YekaBusinessGetService(request, filter)
+        filter = {
+            'uuid': businessblog
+        }
+        businessblog = YekaBusinessBlogGetService(request, filter)
+
+        filter = {
+            'business': yekabusiness
+        }
+        application = YekaApplicationGetService(request, filter)
+
+        filter = {
+            'uuid': applicationfile
+        }
+        applicationfile = YekaApplicationFileGetService(request, filter)
+        filename_form = YekaApplicationFileForm(request.POST or None,request.FILES or None, instance=applicationfile)
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
@@ -590,51 +552,24 @@ def change_application(request, uuid):
             if request.method == 'POST':
                 if filename_form.is_valid():
                     filename_form.save()
-                    messages.success(request, 'Dosya İsmi  Güncellenmiştir')
-                    return redirect('ekabis:view_yekaapplicationfilename')
+                    messages.success(request, 'Dosya Güncellenmiştir')
+                    return redirect('ekabis:view_application',yekabusiness.uuid,businessblog.uuid)
                 else:
                     error_messages = get_error_messages(filename_form)
-                    return render(request, 'Application/change_applicationfilename.html',
-                                  {'filename_form': filename_form,
-                                   'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
-
+                    return render(request, 'Application/view_applicationfile.html',
+                                  {'application': application,
+                                   'urls': urls,
+                                   'current_url': current_url,
+                                   'url_name': url_name,
+                                   'error_messages': error_messages,
+                                   'filename_form':filename_form
                                    })
-
-            return render(request, 'Application/change_applicationfilename.html',
-                          {'filename_form': filename_form, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name
-
+            return render(request, 'Application/view_applicationfile.html',
+                          {'application': application, 'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'filename_form':filename_form
                            })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
-
-
-@login_required
-def delete_application(request):
-    perm = general_methods.control_access(request)
-
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-    try:
-        with transaction.atomic():
-            if request.method == 'POST' and request.is_ajax():
-                uuid = request.POST['uuid']
-                filter = {
-                    'uuid': uuid
-                }
-                obj = YekaApplicationFile(request, filter)
-                obj.isDeleted = True
-                obj.save()
-                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
-
-
-            else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
-    except:
-        traceback.print_exc()
-        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
-
