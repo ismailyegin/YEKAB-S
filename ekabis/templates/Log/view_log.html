@@ -1,7 +1,9 @@
 {% extends 'base_layout.html' %}
-
+{% load static %}
 {% block content %}
 
+    <script src="{% static 'json-viewer/jquery.json-viewer.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'json-viewer/jquery.json-viewer.css' %}">
 
 
 
@@ -227,7 +229,9 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Log Kayıtları</h3>
+
                         </div>
+
                         <div class="card-body">
                             <table id="logs" class="table table-bordered table-hover">
                                 <thead>
@@ -264,6 +268,7 @@
     {% load  static %}
     <script>
         let count = 1;
+        var array = [];
         $(function () {
             table = $('#logs').DataTable({
 
@@ -271,11 +276,12 @@
                 "serverSide": true,
                 "paging": true,
                 "ordering": true,
+                "responsive": true,
 
 
                 "ajax": {
                     "url": "{% url 'ekabis:view_log_api' %}",
-                    "type": "POST",
+                    "type": "POST"
 
                 },
 
@@ -354,20 +360,24 @@
                     {
                         "data": null,
                         render: function (full, data, type, row) {
-                            debugger;
-                            let html = ''
-                            var obj = (JSON.parse(full.previousData))
-                            return full.previousData
+                            if (array.includes(full.id)) {
+                            } else {
+                                array.push(full.id)
+                            }
+                            return viewer(full, 'pre')
+
 
                         }
                     },
                     {
                         "data": null,
                         render: function (full, data, type, row) {
-                            debugger;
-                            let html = ''
-                            var obj = JSON.parse(full.nextData)
-                            return full.nextData;
+                            if (array.includes(full.id)) {
+                            } else {
+                                array.push(full.id)
+                            }
+                            return viewer(full, 'next')
+
 
                         }
                     },
@@ -390,9 +400,58 @@
                 }).nodes().each(function (cell, i) {
                     cell.innerHTML = i + 1 + info.start;
                 });
+
+                for (var i = 0; i < array.length; i++) {
+                    json(array[i])
+
+                }
+
             });
 
+
         })
+
+        function viewer(full, x) {
+            var html = ''
+            var input = ''
+            if (x === 'next') {
+                html = '<h id="' + x + full.id + '">' + full.nextData;
+                +'</h>';
+
+            } else {
+                html = '<h id="' + x + full.id + '">' + full.previousData;
+                +'</h>';
+
+
+            }
+
+            return html;
+        }
+
+        function json(id) {
+
+            if (document.getElementById('next' + id)) {
+                debugger;
+
+                let input = document.getElementById('next' + id).textContent;
+                if (input != "") {
+                    input = eval('(' + input + ')');
+                    $('#next' + id + '').jsonViewer(input, {})
+                }
+
+            }
+            if (document.getElementById('pre' + id)) {
+                let input = document.getElementById('pre' + id).textContent;
+                if (input != "") {
+                    input = eval('(' + input + ')');
+                    $('#pre' + id + '').jsonViewer(input, {})
+                }
+
+
+            }
+
+
+        }
 
 
         function getCookie(name) {
