@@ -5,7 +5,7 @@ class BlockEnumFields(enum.Enum):
     fixed_blocks = [
         {
             'tr_name': 'Yarışma Dokümanlarına İlişkin Bakan Onayı',
-            'en_name': 'Official Gazette Announcement of Ministerial Approval Regarding Competition Documents',
+            'en_name': 'Official Gazette Announcement of Ministerial Approval Regarding YekaCompetition Documents',
             'order': 1,
             'fixed_parameter':[
                 {

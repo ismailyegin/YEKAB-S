@@ -119,7 +119,7 @@ urlpatterns = [
     path('ayar/sistem-ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/sistem-ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
 
-    # Bağlantı Bölgesi
+    # Birim Alanı
     path('baglanti/birim-ekle/', ConnectionRegionViews.return_connectionRegionUnit, name='view_units'),
     path('baglanti/birim-sil/', ConnectionRegionViews.delete_unit, name='delete_unit'),
     path('baglanti/birim-guncelle/<uuid:uuid>/', ConnectionRegionViews.update_unit, name='update_unit'),
@@ -280,11 +280,22 @@ urlpatterns = [
 
 
     #yarisma
-    path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.view_competition,
-         name='view_competition'),
-    path('yeka/yeka-yarisma-firma-ekle/<uuid:business>/<uuid:businessblog>/<uuid:competiton>',
+    path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_competition,
+         name='change_competition'),
+
+    path('yeka/yeka-yarisma-firma-ekle/<uuid:competition>',
          YekaBussinessBlogStaticView.add_competition_company,
          name='add_competition_company'),
+    path('yeka/yeka-yarisma-firma-guncelle/<uuid:competition>/<uuid:uuid>',
+         YekaBussinessBlogStaticView.change_competition_company,
+         name='change_competition_company'),
+    path('yeka/yeka-yarisma-firma-sil/',
+         YekaBussinessBlogStaticView.delete_competition_company,
+         name='delete_competition_company'),
 
+    # sözleşme
+
+    path('yeka/yeka-yarisma-sozlesme/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_yekacontract,
+         name='change_yekacontract'),
 
 ]
