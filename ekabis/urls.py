@@ -279,4 +279,12 @@ urlpatterns = [
     path('yeka/kabul-sil/', AcceptViews.delete_accept, name='delete_accept'),
 
 
+    #yarisma
+    path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.view_competition,
+         name='view_competition'),
+    path('yeka/yeka-yarisma-firma-ekle/<uuid:business>/<uuid:businessblog>/<uuid:competiton>',
+         YekaBussinessBlogStaticView.add_competition_company,
+         name='add_competition_company'),
+
+
 ]

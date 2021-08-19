@@ -38,6 +38,9 @@ from ekabis.models.YekaApplicationFile import YekaApplicationFile
 from ekabis.models.YekaApplication import YekaApplication
 
 
+from ekabis.models.Competition import Competition
+from ekabis.models.CompetitionCompany import CompetitionCompany
+
 def CityService(request, filter):
     try:
         if filter:
@@ -1280,6 +1283,59 @@ def YekaApplicationFileService(request, filter):
             return YekaApplicationFile.objects.filter(**filter)
         else:
             return YekaApplicationFile.objects.filter(isDeleted=False)
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+
+#yarisma
+
+def CompetitionGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                filter['isDeleted'] = False
+                return Competition.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+
+def CompetitionService(request, filter):
+    try:
+        if filter:
+            filter['isDeleted'] = False
+            return Competition.objects.filter(**filter)
+        else:
+            return Competition.objects.filter(isDeleted=False)
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+def CompetitionCompanyGetService(request, filter):
+    try:
+        with transaction.atomic():
+            if filter:
+                filter['isDeleted'] = False
+                return CompetitionCompany.objects.get(**filter)
+            else:
+                return None
+    except Exception as e:
+        traceback.print_exc()
+        pass
+
+
+def CompetitionCompanyService(request, filter):
+    try:
+        if filter:
+            filter['isDeleted'] = False
+            return CompetitionCompany.objects.filter(**filter)
+        else:
+            return CompetitionCompany.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         pass
