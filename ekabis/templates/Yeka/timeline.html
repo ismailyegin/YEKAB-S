@@ -209,14 +209,23 @@
                                                 {% endif %}
 
 
-                                                                 {# Yarisma#}
+                                                {# Yarisma#}
                                                 {% if yekabusinessblok.businessblog.name == 'Yarışmanın Yapılması' %}
 
                                                     <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
-                                                       href="{% url 'ekabis:view_competition' yeka.business.uuid  yekabusinessblok.uuid %}">Yarışma Ayarları</a>
+                                                       href="{% url 'ekabis:view_competition' yeka.business.uuid  yekabusinessblok.uuid %}">Yarışma
+                                                        Ayarları</a>
                                                     <div class="dropdown-divider"></div>
 
                                                 {% endif %}
+
+
+
+                                                    <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
+                                                       href="{% url 'ekabis:view_yeka_factory' yeka.business.uuid  yekabusinessblok.uuid %}">Fabrika Listesi</a>
+                                                    <div class="dropdown-divider"></div>
+
+
 
 
 

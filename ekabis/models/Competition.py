@@ -10,7 +10,7 @@ class Competition(BaseModel):
     yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.CASCADE)
 
     company=models.ManyToManyField(CompetitionCompany)
-    report=models.FileField(pload_to='yarisma/', null=True, blank=True, verbose_name='Yarışma Tutanagı')
+    report=models.FileField(upload_to='yarisma/', null=True, blank=True, verbose_name='Yarışma Tutanagı')
     date = models.DateField(null=True, blank=True,verbose_name='Yarisma Tarihi')
 
 

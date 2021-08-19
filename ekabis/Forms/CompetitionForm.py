@@ -1,6 +1,8 @@
 from django import forms
 from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.Competition import Competition
+
+
 class CompanyUserForm(BaseForm):
     class Meta:
         model = Competition
