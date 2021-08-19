@@ -298,4 +298,47 @@ urlpatterns = [
     path('yeka/yeka-yarisma-sozlesme/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_yekacontract,
          name='change_yekacontract'),
 
+    #aday yeka (Yekanın konumu icin öneriler)
+
+    path('yeka/aday-yeka/<uuid:business>/<uuid:businessblog>',
+         YekaBussinessBlogStaticView.change_yekaproposal,
+         name='change_yekaproposal'),
+
+    path('yeka/aday-yeka-ekle/<uuid:uuid>',
+         YekaBussinessBlogStaticView.add_proposal,
+         name='add_proposal'),
+
+    path('yeka/aday-yeka-guncelle/<uuid:uuid>/<uuid:proposal>',
+         YekaBussinessBlogStaticView.change_proposal,
+         name='change_proposal'),
+
+    path('yeka/aday-sil/',
+         YekaBussinessBlogStaticView.delete_proposal,
+         name='delete_proposal'),
+
+
+#kurum önerileri
+
+    path('yeka/aday-yeka-kurum-görüsleri/<uuid:business>/<uuid:businessblog>',
+         YekaBussinessBlogStaticView.change_proposal_active,
+         name='change_proposal_active'),
+
+    path('yeka/aday-yeka-kurum-listesi/<uuid:business>/<uuid:businessblog>',
+         YekaBussinessBlogStaticView.view_institution,
+         name='view_institution'),
+
+    path('yeka/aday-yeka-kurum-guncelle/<uuid:business>/<uuid:businessblog>/<uuid:uuid>',
+         YekaBussinessBlogStaticView.change_institution,
+         name='change_institution'),
+
+    path('yeka/aday-yeka-kurum-sil/',
+         YekaBussinessBlogStaticView.delete_institution,
+         name='delete_institution'),
+
+
+
+
+
+
+
 ]

@@ -228,6 +228,30 @@
 
                                                 {% endif %}
 
+{#Aday yeka #}
+
+                                            {% if yekabusinessblok.businessblog.name == 'Aday YEKA Önerilmesi' %}
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:change_yekaproposal' yeka.business.uuid  yekabusinessblok.uuid %}">Aday Yeka listesi</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
+
+                                            {#Aday yeka #}
+
+                                            {% if yekabusinessblok.businessblog.name == 'ADAY YEKA Kurum Görüşlerinin Alınması' %}
+
+                                                     <a class="dropdown-item"
+                                                       href="{% url 'ekabis:change_yekaproposal' yeka.business.uuid  yekabusinessblok.uuid %}">Aday Yeka Kurum Görüşleri</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:change_proposal_active' yeka.business.uuid  yekabusinessblok.uuid %}">Yeka Kurum Ayarları</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
+
 
 
 

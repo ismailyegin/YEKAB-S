@@ -4,8 +4,6 @@ from ekabis.models.Company import Company
 from ekabis.models.BaseModel import BaseModel
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
-
-
 class YekaBusinessBlog(BaseModel):
     TRUE_FALSE_CHOICES = (
         (True, 'Tamamlandı'),

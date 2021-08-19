@@ -40,7 +40,14 @@ from ekabis.Forms.CompetitionForm import CompetitionForm
 from ekabis.models.YekaContract import YekaContract
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 
+from ekabis.models.Proposal import Proposal
+from ekabis.models.YekaProposal import YekaProposal
+from ekabis.Forms.ProposalForm import ProposalForm
 
+
+from ekabis.models.Institution import Institution
+from ekabis.models.ProposalActive import ProposalActive
+from ekabis.Forms.InstitutionForm import InstitutionForm
 @login_required
 def add_newspaper(request, business, businessblog):
     perm = general_methods.control_access(request)
@@ -859,3 +866,384 @@ def change_yekacontract(request, business, businessblog):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka',)
 
+
+#
+# aday yeka
+
+
+@login_required
+def change_yekaproposal(request, business, businessblog):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
+        yekabusiness = YekaBusiness.objects.get(uuid=business)
+
+        yekaproposal=None
+        if  YekaProposal.objects.filter(business=yekabusiness):
+            yekaproposal=YekaProposal.objects.get(business=yekabusiness)
+        else:
+            yekaproposal=YekaProposal(
+                yekabusinessblog=yekabussinessblog,
+                business=yekabusiness
+            )
+            yekaproposal.save()
+
+        name = ''
+        if Yeka.objects.filter(business=yekabusiness):
+            name = Yeka.objects.get(business=yekabusiness).definition
+        elif YekaCompetition.objects.filter(business=yekabusiness):
+            name = YekaCompetition.objects.get(business=yekabusiness).name
+
+        return render(request, 'Proposal/change_yekaproposal.html',
+                          {'yekaproposal': yekaproposal,
+                           'business': business,
+                           'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name, 'name': name,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka',)
+
+
+
+# Aday yeka ekle
+
+
+
+
+@login_required
+def add_proposal(request,uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        yeka_proposal = YekaProposal.objects.get(uuid=uuid)
+
+        proposal_form=ProposalForm()
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                proposal_form = ProposalForm(request.POST or None ,request.FILES or None)
+                if proposal_form.is_valid():
+                    company=proposal_form.save(request,commit=False)
+                    company.save()
+                    yeka_proposal.proposal.add(company)
+                    yeka_proposal.save()
+                    messages.success(request, 'Aday Yeka  Eklenmistir')
+                    return redirect('ekabis:change_yekaproposal',yeka_proposal.business.uuid , yeka_proposal.yekabusinessblog.uuid)
+                else:
+                    error_messages = get_error_messages(proposal_form)
+                    return render(request, 'Proposal/add_proposal.html',
+                                  {
+                                   'urls': urls,
+                                   'current_url': current_url,
+                                   'url_name': url_name,
+                                   'error_messages': error_messages,
+                                   'proposal_form':proposal_form
+                                   })
+            return render(request, 'Proposal/add_proposal.html',
+                          { 'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'proposal_form':proposal_form
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+@login_required
+def change_proposal(request,uuid,proposal):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        yeka_proposal = YekaProposal.objects.get(uuid=uuid)
+        proposal=Proposal.objects.get(uuid=proposal)
+        proposal_form=ProposalForm(request.POST or None,request.FILES or None,instance=proposal)
+
+
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        with transaction.atomic():
+
+            if request.method == 'POST':
+
+                if proposal_form.is_valid():
+                    company=proposal_form.save(request,commit=False)
+                    company.save()
+
+                    messages.success(request, 'Aday Yeka Güncellenmiştir.')
+                    return redirect('ekabis:change_yekaproposal',yeka_proposal.business.uuid , yeka_proposal.yekabusinessblog.uuid)
+                else:
+                    error_messages = get_error_messages(proposal_form)
+                    return render(request, 'Proposal/change_proposal.html',
+                                  {
+                                   'urls': urls,
+                                   'current_url': current_url,
+                                   'url_name': url_name,
+                                   'error_messages': error_messages,
+                                   'proposal_form':proposal_form
+                                   })
+            return render(request, 'Proposal/change_proposal.html',
+                          { 'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'proposal_form':proposal_form
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+@login_required
+def delete_proposal(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                obj=Proposal.objects.get(uuid=uuid)
+                obj.isDeleted = True
+                obj.save()
+
+                #delete log yazılacak
+
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+
+
+#kurum görüşlerinim alınması
+
+
+@login_required
+def change_proposal_active(request, business, businessblog):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
+        yekabusiness = YekaBusiness.objects.get(uuid=business)
+
+        pro_active=ProposalActive.objects.filter(business=yekabusiness)
+        #
+        # olmayanların eklemesini yaptık
+        array=[]
+        for item in pro_active:
+            array.append(item.institution.pk)
+
+        for item in Institution.objects.exclude(id__in=array).filter(isDeleted=False):
+            active=ProposalActive(
+                business=yekabusiness,
+                institution=item
+            )
+            active.save()
+        pro_active = ProposalActive.objects.filter(business=yekabusiness)
+        name=general_methods.yekaname(yekabusiness)
+
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                for item in pro_active:
+                    try:
+                        if request.POST.get(str(item.pk)):
+                            if ProposalActive.objects.filter(uuid=item.uuid, isDeleted=False) != None:
+                                pro=ProposalActive.objects.get(uuid=item.uuid)
+                                pro.is_active=True
+                                pro.save()
+
+                        else:
+                            if ProposalActive.objects.filter(uuid=item.uuid, isDeleted=False) != None:
+                                pro = ProposalActive.objects.get(uuid=item.uuid)
+                                pro.is_active = False
+                                pro.save()
+                    except Exception as e:
+                        print(e)
+                        traceback.print_exc()
+                pro_active = ProposalActive.objects.filter(business=yekabusiness)
+
+            return render(request, 'Proposal/change_proposal_active.html',
+                          {'pro_active': pro_active,
+                           'yekabusiness': yekabusiness,
+                           'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name, 'name': name,
+                           })
+
+
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka',)
+
+
+
+@login_required
+def view_institution(request, business, businessblog):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
+        yekabusiness = YekaBusiness.objects.get(uuid=business)
+        institutions=Institution.objects.filter(isDeleted=False)
+        institution_form=InstitutionForm()
+        name = general_methods.yekaname(yekabusiness)
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                institution_form = InstitutionForm(request.POST or None)
+                if institution_form.is_valid():
+                    ins = institution_form.save(request,commit=False)
+                    ins.save()
+                    messages.success(request, 'Kurum Eklenmistir')
+                    return redirect('ekabis:view_institution',yekabusiness.uuid,yekabussinessblog.uuid)
+                else:
+                    error_messages = get_error_messages(institution_form)
+                    return render(request, 'Proposal/view_institution.html',
+                                  {'institutions': institutions,
+                                   'business': business,
+                                   'yekabussinessblog': yekabussinessblog,
+                                   'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name, 'name': name,
+                                   'institution_form': institution_form,
+                                   'error_messages': error_messages,
+                                   })
+
+
+            return render(request, 'Proposal/view_institution.html',
+                          {'institutions': institutions,
+                           'business': business,
+                           'yekabussinessblog': yekabussinessblog,
+                           'urls': urls, 'current_url': current_url,
+                           'url_name': url_name, 'name': name,
+                           'institution_form': institution_form
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka',)
+
+
+
+@login_required
+def change_institution(request, business, businessblog,uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
+        yekabusiness = YekaBusiness.objects.get(uuid=business)
+
+        institutions=Institution.objects.filter(isDeleted=False)
+        institution=Institution.objects.get(uuid=uuid)
+        institution_form=InstitutionForm(request.POST or None,instance=institution)
+        name = ''
+        if Yeka.objects.filter(business=yekabusiness):
+            name = Yeka.objects.get(business=yekabusiness).definition
+        elif YekaCompetition.objects.filter(business=yekabusiness):
+            name = YekaCompetition.objects.get(business=yekabusiness).name
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                if institution_form.is_valid():
+                    ins = institution_form.save(request, commit=False)
+                    ins.save()
+                    messages.success(request, 'Kurum Eklenmistir')
+                    return redirect('ekabis:view_institution',yekabusiness.uuid,yekabussinessblog.uuid)
+                else:
+                    error_messages = get_error_messages(institution_form)
+                    return render(request, 'Proposal/view_institution.html',
+                                  {'institutions': institutions,
+                                   'yekabusiness': yekabusiness,
+                                   'yekabussinessblog': yekabussinessblog,
+                                   'urls': urls, 'current_url': current_url,
+                                   'url_name': url_name, 'name': name,
+                                   'institution_form': institution_form,
+                                   'error_messages': error_messages,
+                                   })
+
+
+            return render(request, 'Proposal/view_institution.html',
+                          {'institutions': institutions,
+                           'business': business,
+                           'yekabussinessblog': yekabussinessblog,
+                           'urls': urls, 'current_url': current_url,
+                           'url_name': url_name, 'name': name,
+                           'institution_form': institution_form
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka',)
+
+
+
+@login_required
+def delete_institution(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                obj=Institution.objects.get(uuid=uuid)
+                obj.isDeleted = True
+                obj.save()
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
