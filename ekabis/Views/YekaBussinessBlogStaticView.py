@@ -573,3 +573,89 @@ def view_applicationfile(request,business,businessblog,applicationfile):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+#yarisma
+
+@login_required
+def view_competition(request,business,businessblog):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    filter = {
+        'uuid': business
+    }
+    yekabusiness=YekaBusinessGetService(request,filter)
+    filter={
+        'uuid':businessblog
+    }
+    businessblog=YekaBusinessBlogGetService(request,filter)
+
+    filter={
+        'business':yekabusiness
+    }
+    application=YekaApplicationGetService(request,filter)
+
+
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+
+    return render(request, 'Application/view_application.html',
+                  {'application': application, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+
+
+@login_required
+def add_competition_company(request,business,businessblog,applicationfile):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        filter = {
+            'uuid': business
+        }
+        yekabusiness = YekaBusinessGetService(request, filter)
+        filter = {
+            'uuid': businessblog
+        }
+        businessblog = YekaBusinessBlogGetService(request, filter)
+
+        filter = {
+            'business': yekabusiness
+        }
+        application = YekaApplicationGetService(request, filter)
+
+        filter = {
+            'uuid': applicationfile
+        }
+        applicationfile = YekaApplicationFileGetService(request, filter)
+        filename_form = YekaApplicationFileForm(request.POST or None,request.FILES or None, instance=applicationfile)
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        with transaction.atomic():
+            if request.method == 'POST':
+                if filename_form.is_valid():
+                    filename_form.save()
+                    messages.success(request, 'Dosya Güncellenmiştir')
+                    return redirect('ekabis:view_application',yekabusiness.uuid,businessblog.uuid)
+                else:
+                    error_messages = get_error_messages(filename_form)
+                    return render(request, 'Application/view_applicationfile.html',
+                                  {'application': application,
+                                   'urls': urls,
+                                   'current_url': current_url,
+                                   'url_name': url_name,
+                                   'error_messages': error_messages,
+                                   'filename_form':filename_form
+                                   })
+            return render(request, 'Application/view_applicationfile.html',
+                          {'application': application, 'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'filename_form':filename_form
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')

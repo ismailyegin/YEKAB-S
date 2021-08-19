@@ -1,9 +1,7 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
-
-    ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews,YekaBussinessBlogStaticView
-
+    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews,ExtraTimeViews, APIViews, CityViews, VacationDayViews,\
+    YekaCompetitionViews, HelpMenuViews,YekaBussinessBlogStaticView,AcceptViews
 app_name = 'ekabis'
 urlpatterns = [
     path('anasayfa/maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
@@ -279,6 +277,14 @@ urlpatterns = [
     path('yeka/kabul-guncelle/<uuid:uuid>/<uuid:accept_uuid>/', AcceptViews.change_accept,
          name='change_yeka_accept'),
     path('yeka/kabul-sil/', AcceptViews.delete_accept, name='delete_accept'),
+
+
+    #yarisma
+    path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.view_competition,
+         name='view_competition'),
+    path('yeka/yeka-yarisma-firma-ekle/<uuid:business>/<uuid:businessblog>/<uuid:competiton>',
+         YekaBussinessBlogStaticView.add_competition_company,
+         name='add_competition_company'),
 
 
 ]
