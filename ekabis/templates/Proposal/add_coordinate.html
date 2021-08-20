@@ -91,7 +91,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Aday Yeka listesi- {{ name }}  </h1>
+                        Ek Süre Ekle - {{ name }}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -111,49 +111,60 @@
         <form method="post" enctype="multipart/form-data" role="form">
             {% csrf_token %}
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-3">
                     <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">{{ yekabussinessblog.businessblog.name }}</h3>
 
 
-                     <div class="card-header with-border">
-                            <h3 class="card-title">Aday Yeka Listesi</h3>
-                            {% for item in perm %}
-                                {% if item == 'add_proposal' %}
-
-                                    <a href="{% url "ekabis:add_proposal" yekaproposal.uuid %}"
-                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
-                                            class="fa fa-plus" title="Aday Yeka Ekle"></i>
-                                    </a>
-
-                                {% endif %}
-                            {% endfor %}
                         </div>
                         <div class="card-body">
                             <div class="card-body">
- <table id="company" class="table table-bordered table-hover">
+
+
+                                <div class="form-group">
+                                    {{ coordinate_form }}
+                                </div>
+
+
+                            </div>
+
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Ek Süreler </h3>
+
+                        </div>
+
+                        <div class="card-body">
+                            <table id="company" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Basvuru Tarihi</th>
-                                    <th>Kapasite</th>
-                                    <th>Tarım Yazısı</th>
-                                    <th>Bilgi Formu</th>
-                                    <th>Kordinatlar</th>
-                                    <th>Konumlar</th>
+                                    <th>X Koordinatı</th>
+                                    <th>Y Koordinatı</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                {% for proposal in yekaproposal.proposal.all %}
+                                {% for coordinate in coordinates %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>{{ proposal.date }}</td>
-                                        <td>{{ proposal.capacity }}</td>
-                                        <td>{{ proposal.farm_form }}</td>
-                                        <td>{{ proposal.information_form}}</td>
-                                    <th> {% for item in proposal.coordinate.all %}{{ item.x }}-{{ item.y }}{% endfor %}</th>
-                                    <th>{% for item in proposal.location.all %}{{ item.city }} /{{ item.district }} /{{ item.neighborhood }}{% endfor %}</th>
+                                        <td>
+                                            {{ coordinate.x }}
+                                        </td>
+                                        <td>
+                                            {{ coordinate.y }}
+                                        </td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-default">İşlemler</button>
@@ -163,32 +174,23 @@
                                                 </button>
                                                 <div class="dropdown-menu" role="menu">
                                                     {% for item in perm %}
-                                                        {% if item == 'change_proposal' %}
-                                                            <a href="{% url 'ekabis:change_proposal' yekaproposal.uuid  proposal.uuid %}"
+                                                        {% if item == 'change_extratime' %}
+                                                            <a href=""
                                                                class="dropdown-item"> <i
                                                                     class="fa fa-edit" title="Düzenle"></i> Düzenle
                                                             </a>
                                                         {% endif %}
                                                     {% endfor %}
-                                                {% for item in perm %}
-                                                        {% if item == 'add_coordinate' %}
-                                                            <a href="{% url 'ekabis:add_coordinate' proposal.uuid  yekaproposal.uuid %}"
-                                                               class="dropdown-item"> <i
-                                                                    class="fa fa-edit" title="Düzenle"></i> Koordinat Listesi
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
                                                     {% for item in perm %}
-                                                        {% if item == 'delete_proposal' %}
+                                                        {% if item == 'delete_extratime' %}
 
                                                             <a class="dropdown-item" href=""
                                                                data-toggle="modal"
-                                                               onclick=deleteExtraTime('{{ proposal.uuid }}')><i
+                                                               onclick=""><i
                                                                     class="fa fa-trash"></i>Sil</a>
 
                                                         {% endif %}
                                                     {% endfor %}
-
 
                                                 </div>
                                             </div>
@@ -203,11 +205,9 @@
                                 </tbody>
                             </table>
 
-
                         </div>
                     </div>
                 </div>
-
             </div>
         </form>
 
@@ -274,43 +274,6 @@
 
         })
 
-        function deleteExtraTime(id) {
-            debugger;
-            console.log(id);
-            var html = ''
-            $("#modal-delete").on("shown.bs.modal", function (e) {
-                $("#btn-conf1").click(function () {
-                    $.ajax({
-                        url: "{% url "ekabis:delete_proposal" %}",
-                        type: "POST",
-                        data: {
-                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            uuid: id,
-                        },
-                        success: function (result) {
-
-                            html = ' Başarıyla Silindi';
-                            debugger;
-                            $(".successModal").html(html);
-                            $('#modal-success').on("shown.bs.modal", function (e) {
-                                $(".btn-ok").click(function () {
-
-                                    window.location.replace("{% url "ekabis:change_yekaproposal" yekaproposal.business.uuid yekaproposal.yekabusinessblog.uuid %}");
-
-                                });
-
-                            }).modal('show');
-
-                            console.log(result.status)
-                        }
-                    });
-                });
-            }).modal('show');
-            $('#btn-close1').click(function () {
-                $('#modal-active').modal('hide');
-            });
-
-        }
     </script>
     <script>
         $(document).ready(function () {

@@ -38,13 +38,13 @@ def view_yeka_accept(request, business, businessblog):
         elif YekaCompetition.objects.filter(business=yekabusiness):
             name = YekaCompetition.objects.get(business=yekabusiness).name
 
-        if not YekaAccept.objects.filter(yekabusinessblog=yekabussinessblog):
+        if not YekaAccept.objects.filter(business=yekabusiness):
             accept = YekaAccept()
             accept.yekabusinessblog = yekabussinessblog
             accept.business = yekabusiness
             accept.save()
         else:
-            accept = YekaAccept.objects.get(yekabusinessblog=yekabussinessblog)
+            accept = YekaAccept.objects.get(business=yekabusiness)
 
         return render(request, 'Accept/view_accept.html',
                       {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,

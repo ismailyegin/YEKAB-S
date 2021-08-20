@@ -324,7 +324,7 @@ urlpatterns = [
 
 #kurum önerileri
 
-    path('yeka/aday-yeka-kurum-görüsleri/<uuid:business>/<uuid:businessblog>',
+    path('yeka/aday-yeka-kurum-gorusleri/<uuid:business>/<uuid:businessblog>',
          YekaBussinessBlogStaticView.change_proposal_active,
          name='change_proposal_active'),
 
@@ -359,5 +359,10 @@ urlpatterns = [
     path('yeka/fabrika-dokuman-guncelle/<uuid:uuid>/<uuid:factory_uuid>/', FactoryViews.update_factory_file, name='change_factory_file'),
     path('fabrika/fabrika-sil/', FactoryViews.delete_factory, name='delete_factory'),
     path('fabrika/dokuman-sil/', FactoryViews.delete_factory_file, name='delete_factory_file'),
+
+
+    #Koordinat
+    path('aday-yeka/koordinat-ekle/<uuid:uuid>/<uuid:yeka_proposal_uuid>/', YekaBussinessBlogStaticView.add_coordinate,
+         name='add_coordinate'),
 
 ]

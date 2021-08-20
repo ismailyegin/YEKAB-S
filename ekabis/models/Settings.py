@@ -12,3 +12,6 @@ class Settings(models.Model):
     label = models.CharField(blank=True, null=True, max_length=250)
     explanation=models.CharField(blank=True, null=True, max_length=500)
 
+    def __str__(self):
+        return '%s' % self.label
+
