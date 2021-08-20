@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.urls import resolve
 
 from accounts.models import Forgot
-from ekabis.models import Yeka, YekaPerson, HelpMenu
+from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
@@ -354,3 +354,12 @@ def log(request, self):
         return log
     except Exception as e:
         traceback.print_exc()
+
+
+def yekaname(yekabusiness):
+    name=None
+    if Yeka.objects.filter(business=yekabusiness):
+        name = Yeka.objects.get(business=yekabusiness).definition
+    elif YekaCompetition.objects.filter(business=yekabusiness):
+        name = YekaCompetition.objects.get(business=yekabusiness).name
+    return name

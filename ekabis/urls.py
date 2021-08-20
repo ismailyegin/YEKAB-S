@@ -122,7 +122,7 @@ urlpatterns = [
     path('ayar/sistem-ayar-listesi/', SettingsViews.view_settinsList, name='view_settings'),
     path('ayar/sistem-ayar-guncelleme/<int:pk>/', SettingsViews.change_serttings, name='change_settings'),
 
-    # Bağlantı Bölgesi
+    # Birim Alanı
     path('baglanti/birim-ekle/', ConnectionRegionViews.return_connectionRegionUnit, name='view_units'),
     path('baglanti/birim-sil/', ConnectionRegionViews.delete_unit, name='delete_unit'),
     path('baglanti/birim-guncelle/<uuid:uuid>/', ConnectionRegionViews.update_unit, name='update_unit'),
@@ -282,12 +282,68 @@ urlpatterns = [
          name='change_yeka_accept'),
     path('yeka/kabul-sil/', AcceptViews.delete_accept, name='delete_accept'),
 
-    # yarisma
-    path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.view_competition,
-         name='view_competition'),
-    path('yeka/yeka-yarisma-firma-ekle/<uuid:business>/<uuid:businessblog>/<uuid:competiton>',
+
+    #yarisma
+    path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_competition,
+         name='change_competition'),
+
+    path('yeka/yeka-yarisma-firma-ekle/<uuid:competition>',
+
          YekaBussinessBlogStaticView.add_competition_company,
          name='add_competition_company'),
+    path('yeka/yeka-yarisma-firma-guncelle/<uuid:competition>/<uuid:uuid>',
+         YekaBussinessBlogStaticView.change_competition_company,
+         name='change_competition_company'),
+    path('yeka/yeka-yarisma-firma-sil/',
+         YekaBussinessBlogStaticView.delete_competition_company,
+         name='delete_competition_company'),
+
+    # sözleşme
+
+    path('yeka/yeka-yarisma-sozlesme/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_yekacontract,
+         name='change_yekacontract'),
+
+    #aday yeka (Yekanın konumu icin öneriler)
+
+    path('yeka/aday-yeka/<uuid:business>/<uuid:businessblog>',
+         YekaBussinessBlogStaticView.change_yekaproposal,
+         name='change_yekaproposal'),
+
+    path('yeka/aday-yeka-ekle/<uuid:uuid>',
+         YekaBussinessBlogStaticView.add_proposal,
+         name='add_proposal'),
+
+    path('yeka/aday-yeka-guncelle/<uuid:uuid>/<uuid:proposal>',
+         YekaBussinessBlogStaticView.change_proposal,
+         name='change_proposal'),
+
+    path('yeka/aday-sil/',
+         YekaBussinessBlogStaticView.delete_proposal,
+         name='delete_proposal'),
+
+
+#kurum önerileri
+
+    path('yeka/aday-yeka-kurum-görüsleri/<uuid:business>/<uuid:businessblog>',
+         YekaBussinessBlogStaticView.change_proposal_active,
+         name='change_proposal_active'),
+
+    path('yeka/aday-yeka-kurum-listesi/<uuid:business>/<uuid:businessblog>',
+         YekaBussinessBlogStaticView.view_institution,
+         name='view_institution'),
+
+    path('yeka/aday-yeka-kurum-guncelle/<uuid:business>/<uuid:businessblog>/<uuid:uuid>',
+         YekaBussinessBlogStaticView.change_institution,
+         name='change_institution'),
+
+    path('yeka/aday-yeka-kurum-sil/',
+         YekaBussinessBlogStaticView.delete_institution,
+         name='delete_institution'),
+
+
+
+
+
 
     # Fabrika
     path('fabrika/fabrika-dokuman-ismi-ekle/', FactoryViews.add_factory_file_name, name='add_factory_file_name'),

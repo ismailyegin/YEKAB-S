@@ -91,6 +91,11 @@
     <!-- Bootstrap 4 -->
     <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
+    #file
+    <link rel="stylesheet" href="{% static 'file/fileinput-rtl.min.css' %}">
+    <link rel="stylesheet" href="{% static 'file/fileinput.css' %}">
+    <script src="{% static 'file/fileinput.js' %}"></script>
+
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -523,7 +528,11 @@
     }
 
     $(function () {
-
+        $('.files').fileinput({
+            {#rtl: true,#}
+            {#dropZoneEnabled: false,#}
+            {#allowedFileExtensions: ["jpg", "png", "gif"]#}
+        });
 
         $.fn.datepicker.dates['tr'] =
             {
@@ -696,8 +705,7 @@
         }
     }
 
-</script>
-<script>
+
     $(document).ready(function () {
         $('.toast').fadeOut(5000);
 

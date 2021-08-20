@@ -47,7 +47,7 @@ def view_competition(request, uuid):
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
-            return render(request, 'Competition/view_competition.html',
+            return render(request, 'YekaCompetition/view_competition.html',
                           {'region': region, 'competitions': competitions, 'yeka_form': yeka_form, 'error_messages': '',
                            'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
@@ -92,7 +92,7 @@ def add_competition(request, region):
 
                     if total > region.capacity:
                         messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
-                        return render(request, 'Competition/add_competition.html',
+                        return render(request, 'YekaCompetition/add_competition.html',
                                       {'competition_form': competition_form, 'region': region,
                                        })
                     competition.save()
@@ -156,13 +156,13 @@ def add_competition(request, region):
                 else:
                     error_message_region = get_error_messages(competition_form)
 
-                    return render(request, 'Competition/add_competition.html',
+                    return render(request, 'YekaCompetition/add_competition.html',
                                   {'competition_form': competition_form, 'region': region,
                                    'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
                                    'url_name': url_name})
 
             competitions = region.yekacompetition.filter(isDeleted=False)
-            return render(request, 'Competition/add_competition.html',
+            return render(request, 'YekaCompetition/add_competition.html',
                           {'competition_form': competition_form, 'competitions': competitions, 'error_messages': '',
                            'region': region, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
@@ -246,7 +246,7 @@ def update_competition(request, region, competition):
 
                     if total > region.capacity:
                         messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
-                        return render(request, 'Competition/change_competition.html',
+                        return render(request, 'YekaCompetition/change_competition.html',
                                       {'competition_form': competition_form, 'region': region, 'urls': urls,
                                        'current_url': current_url, 'url_name': url_name, 'competition': competition,
                                        })
@@ -263,13 +263,13 @@ def update_competition(request, region, competition):
                 else:
                     error_message_region = get_error_messages(competition_form)
 
-                    return render(request, 'Competition/change_competition.html',
+                    return render(request, 'YekaCompetition/change_competition.html',
                                   {'competition_form': competition_form, 'region': region,
                                    'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
                                    'url_name': url_name, 'competition': competition, })
 
             competitions = region.yekacompetition.filter(isDeleted=False)
-            return render(request, 'Competition/change_competition.html',
+            return render(request, 'YekaCompetition/change_competition.html',
                           {'competition_form': competition_form, 'error_messages': '', 'urls': urls,
                            'current_url': current_url, 'url_name': url_name, 'competition': competition,
                            'region': region})
@@ -314,7 +314,7 @@ def view_competition_yekabusinessBlog(request, uuid):
             yekabusiness = None
             yekabusinessbloks = None
 
-        return render(request, 'Competition/timeline.html',
+        return render(request, 'YekaCompetition/timeline.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'competition': competition,
                        'ekstratimes': None, 'urls': urls, 'current_url': current_url, 'url_name': url_name
@@ -367,12 +367,12 @@ def add_yekacompetitionbusiness(request, uuid):
 
                     return redirect('ekabis:view_competitionbusinessblog', competition.uuid)
 
-        return render(request, 'Competition/competition_businessblog_Add.html', {'business': business,
+        return render(request, 'YekaCompetition/competition_businessblog_Add.html', {'business': business,
 
                                                                                  'error_messages': '', 'urls': urls,
                                                                                  'current_url': current_url,
                                                                                  'url_name': url_name
-                                                                                 })
+                                                                                     })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
@@ -461,20 +461,20 @@ def change_yekacompetitionbusiness(request, uuid, competition):
                 else:
                     error_messages = get_error_messages(business_form)
 
-                    return render(request, 'Competition/competition_businessblog_change.html',
+                    return render(request, 'YekaCompetition/competition_businessblog_change.html',
                                   {'business_form': business_form,
                                    'error_messages': error_messages,
                                    'unbusiness': unbusiness,
                                    'business': business, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                                    })
 
-        return render(request, 'Competition/competition_businessblog_change.html', {'business_form': business_form,
+        return render(request, 'YekaCompetition/competition_businessblog_change.html', {'business_form': business_form,
                                                                                     'error_messages': '',
                                                                                     'unbusiness': unbusiness,
                                                                                     'business': business, 'urls': urls,
                                                                                     'current_url': current_url,
                                                                                     'url_name': url_name
-                                                                                    })
+                                                                                        })
 
     except Exception as e:
         traceback.print_exc()
@@ -657,7 +657,7 @@ def return_sub_competition(request, uuid):
         parent_competition = YekaCompetitionGetService(request, competition_filter)
         competitions = YekaCompetition.objects.filter(parent=parent_competition, isDeleted=False)
         region=ConnectionRegion.objects.get(yekacompetition=parent_competition)
-        return render(request, 'Competition/view_sub_competition.html',
+        return render(request, 'YekaCompetition/view_sub_competition.html',
                       {'parent_competition': parent_competition, 'competitions': competitions,'region':region,
                       'urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
@@ -704,7 +704,7 @@ def add_sumcompetition(request, uuid):
 
                     if total > parent_competition.capacity:
                         messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
-                        return render(request, 'Competition/add_competition.html',
+                        return render(request, 'YekaCompetition/add_competition.html',
                                       {'competition_form': competition_form, 'parent_competition': parent_competition,
                                        })
                     competition.parent = parent_competition
@@ -757,13 +757,13 @@ def add_sumcompetition(request, uuid):
                 else:
                     error_message_region = get_error_messages(competition_form)
 
-                    return render(request, 'Competition/add_sub_competition.html',
+                    return render(request, 'YekaCompetition/add_sub_competition.html',
                                   {'competition_form': competition_form, 'parent_competition': parent_competition,
                                    'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
                                    'url_name': url_name})
 
             competitions = YekaCompetition.objects.filter(parent=parent_competition)
-            return render(request, 'Competition/add_sub_competition.html',
+            return render(request, 'YekaCompetition/add_sub_competition.html',
                           {'competition_form': competition_form, 'competitions': competitions, 'error_messages': '',
                            'parent_competition': parent_competition, 'urls': urls, 'current_url': current_url,
                            'url_name': url_name})
@@ -800,7 +800,7 @@ def change_sumcompetition(request, uuid):
 
                     if total > competition.parent.capacity:
                         messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
-                        return render(request, 'Competition/change_sumcompetition.html',
+                        return render(request, 'YekaCompetition/change_sumcompetition.html',
                                       {'competition_form': competition_form, 'competition': competition,
                                        })
                     competition.save()
@@ -812,11 +812,11 @@ def change_sumcompetition(request, uuid):
                 else:
                     error_message_region = get_error_messages(competition_form)
 
-                    return render(request, 'Competition/change_sumcompetition.html',
+                    return render(request, 'YekaCompetition/change_sumcompetition.html',
                                   {'competition_form': competition_form, 'compeititon': competition,
                                    'error_messages': error_message_region})
 
-            return render(request, 'Competition/change_sumcompetition.html',
+            return render(request, 'YekaCompetition/change_sumcompetition.html',
                           {'competition_form': competition_form, 'error_messages': '',
                            'competition': competition})
 

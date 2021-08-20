@@ -213,8 +213,43 @@
                                                 {% if yekabusinessblok.businessblog.name == 'Yarışmanın Yapılması' %}
 
                                                     <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
-                                                       href="{% url 'ekabis:view_competition' yeka.business.uuid  yekabusinessblok.uuid %}">Yarışma
-                                                        Ayarları</a>
+
+                                                       href="{% url 'ekabis:change_competition' yeka.business.uuid  yekabusinessblok.uuid %}">Yarışma Ayarları</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
+
+
+
+                                            {% if yekabusinessblok.businessblog.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması' %}
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:change_yekacontract' yeka.business.uuid  yekabusinessblok.uuid %}">Sözleşme</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
+
+{#Aday yeka #}
+
+                                            {% if yekabusinessblok.businessblog.name == 'Aday YEKA Önerilmesi' %}
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:change_yekaproposal' yeka.business.uuid  yekabusinessblok.uuid %}">Aday Yeka listesi</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
+
+                                            {#Aday yeka #}
+
+                                            {% if yekabusinessblok.businessblog.name == 'ADAY YEKA Kurum Görüşlerinin Alınması' %}
+
+                                                     <a class="dropdown-item"
+                                                       href="{% url 'ekabis:change_yekaproposal' yeka.business.uuid  yekabusinessblok.uuid %}">Aday Yeka Kurum Görüşleri</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:change_proposal_active' yeka.business.uuid  yekabusinessblok.uuid %}">Yeka Kurum Ayarları</a>
+
                                                     <div class="dropdown-divider"></div>
 
                                                 {% endif %}

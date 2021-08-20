@@ -91,7 +91,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Yarışma Ayarları - {{ name }}</h1>
+                        Firma  Ekle - {{ name }}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -114,7 +114,7 @@
                 <div class="col-md-3">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Yarışma</h3>
+                            <h3 class="card-title">Firma Ekle</h3>
 
 
                         </div>
@@ -123,7 +123,7 @@
 
 
                                 <div class="form-group">
-                                    {{ competition_form }}
+                                    {{ company_form }}
                                 </div>
 
 
@@ -137,83 +137,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9">
-                    <div class="card card-primary card-outline">
 
-                     <div class="card-header with-border">
-                             <h3 class="card-title">Yarışmaya Katılan Firmalar</h3>
-                            {% for item in perm %}
-                                {% if item == 'add_competition_company' %}
-
-                                    <a href="{% url "ekabis:add_competition_company"  competition.uuid  %}"
-                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
-                                            class="fa fa-plus" title="Firma Ekle"></i>
-                                    </a>
-
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-
-                        <div class="card-body">
-                            <table id="company" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Firma</th>
-                                    <th>Fiyat</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                {% for comp in competition.company.all %}
-                                    <tr>
-                                        <td>{{ forloop.counter }} </td>
-                                        <td>{{ comp.company }}</td>
-                                        <td>{{ comp.price }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default">İşlemler</button>
-                                                <button type="button"
-                                                        class="btn btn-default dropdown-toggle dropdown-icon"
-                                                        data-toggle="dropdown">
-                                                </button>
-                                                <div class="dropdown-menu" role="menu">
-                                                    {% for item in perm %}
-                                                        {% if item == 'change_competition_company' %}
-                                                            <a href="{% url 'ekabis:change_competition_company' competition.uuid comp.uuid %}"
-                                                               class="dropdown-item"> <i
-                                                                    class="fa fa-edit" title="Düzenle"></i> Düzenle
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    {% for item in perm %}
-                                                        {% if item == 'delete_competition_company' %}
-
-                                                            <a class="dropdown-item" href=""
-                                                               data-toggle="modal"
-                                                               onclick=deleteCampany('{{ comp.uuid }}')><i
-                                                                    class="fa fa-trash"></i>Sil</a>
-
-                                                        {% endif %}
-                                                    {% endfor %}
-
-                                                </div>
-                                            </div>
-
-
-                                        </td>
-                                    </tr>
-
-                                {% endfor %}
-
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </form>
 
@@ -280,14 +204,14 @@
 
         })
 
-        function deleteCampany(id) {
+        function deleteExtraTime(id) {
             debugger;
             console.log(id);
             var html = ''
             $("#modal-delete").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:delete_competition_company" %}",
+                        url: "{% url "ekabis:delete_extratime" %}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
