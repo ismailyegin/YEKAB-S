@@ -7,12 +7,14 @@ from django.urls import resolve
 
 from ekabis.models import ConnectionRegion, Yeka, YekaPersonHistory, YekaCompany, \
     YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType, \
-    YekaCompetition, HelpMenu
+    YekaCompetition, HelpMenu, FactoryFile
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
 from ekabis.models.Communication import Communication
 from ekabis.models.Company import Company
+from ekabis.models.Factory import Factory
+from ekabis.models.FactoryFileName import FactoryFileName
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMember import DirectoryMember
@@ -37,9 +39,9 @@ from ekabis.models.YekaApplicationFileName import YekaApplicationFileName
 from ekabis.models.YekaApplicationFile import YekaApplicationFile
 from ekabis.models.YekaApplication import YekaApplication
 
-
 from ekabis.models.Competition import Competition
 from ekabis.models.CompetitionCompany import CompetitionCompany
+
 
 def CityService(request, filter):
     try:
@@ -873,6 +875,7 @@ def CompanyUserGetService(request, filter):
         traceback.print_exc()
         pass
 
+
 def HelpMenuGetService(request, filter):
     try:
         with transaction.atomic():
@@ -884,6 +887,7 @@ def HelpMenuGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+
 
 def CompanyFilesGetService(request, filter):
     try:
@@ -1146,7 +1150,8 @@ def last_urls(request):
                 url = urlpath.split('/yekabis/')[1]
                 for urlpattern in urlpatterns:
 
-                    if str("/".join(str(urlpattern.pattern).split("/", 3)[:2])) == str("/".join(str(url).split("/", 3)[:2])):
+                    if str("/".join(str(urlpattern.pattern).split("/", 3)[:2])) == str(
+                            "/".join(str(url).split("/", 3)[:2])):
                         last_url_name = urlpattern.name
 
                 url = {
@@ -1169,6 +1174,8 @@ def last_urls(request):
     except Exception as e:
         traceback.print_exc()
         pass
+
+
 def NewspaperService(request, filter):
     try:
         if filter:
@@ -1183,6 +1190,7 @@ def NewspaperService(request, filter):
         return None
     except Exception as e:
         traceback.print_exc()
+
 
 def NewspaperGetService(request, filter):
     try:
@@ -1210,7 +1218,6 @@ def YekaApplicationFileNameGetService(request, filter):
         pass
 
 
-
 def YekaApplicationFileNameService(request, filter):
     try:
         if filter:
@@ -1221,6 +1228,7 @@ def YekaApplicationFileNameService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+
 
 def YekaApplicationGetService(request, filter):
     try:
@@ -1235,7 +1243,6 @@ def YekaApplicationGetService(request, filter):
         pass
 
 
-
 def YekaApplicationService(request, filter):
     try:
         if filter:
@@ -1246,6 +1253,8 @@ def YekaApplicationService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+
+
 def YekaBusinessService(request, filter):
     try:
         if filter:
@@ -1275,7 +1284,6 @@ def YekaApplicationFileGetService(request, filter):
         pass
 
 
-
 def YekaApplicationFileService(request, filter):
     try:
         if filter:
@@ -1288,8 +1296,7 @@ def YekaApplicationFileService(request, filter):
         pass
 
 
-
-#yarisma
+# yarisma
 
 def CompetitionGetService(request, filter):
     try:
@@ -1304,7 +1311,6 @@ def CompetitionGetService(request, filter):
         pass
 
 
-
 def CompetitionService(request, filter):
     try:
         if filter:
@@ -1315,6 +1321,7 @@ def CompetitionService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+
 
 def CompetitionCompanyGetService(request, filter):
     try:
@@ -1339,3 +1346,96 @@ def CompetitionCompanyService(request, filter):
     except Exception as e:
         traceback.print_exc()
         pass
+
+
+def FactoryFileNameService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return FactoryFileName.objects.filter(**filter)
+            else:
+                return FactoryFileName.objects.filter(filter, isDeleted=False)
+        else:
+            return FactoryFileName.objects.filter(isDeleted=False)
+    except FactoryFileName.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+def FactoryFileNameGetService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return FactoryFileName.objects.get(**filter)
+            else:
+                return FactoryFileName.objects.get(filter, isDeleted=False)
+        else:
+            return FactoryFileName.objects.get(isDeleted=False)
+    except FactoryFileName.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+def FactoryGetService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return Factory.objects.get(**filter)
+            else:
+                return Factory.objects.get(filter, isDeleted=False)
+        else:
+            return Factory.objects.get(isDeleted=False)
+    except Factory.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+def FactoryService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return Factory.objects.filter(**filter)
+            else:
+                return Factory.objects.filter(filter, isDeleted=False)
+        else:
+            return Factory.objects.filter(isDeleted=False)
+    except Factory.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+def FactoryFileService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return FactoryFile.objects.filter(**filter)
+            else:
+                return FactoryFile.objects.filter(filter, isDeleted=False)
+        else:
+            return FactoryFile.objects.filter(isDeleted=False)
+    except FactoryFile.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+def FactoryFileGetService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return FactoryFile.objects.get(**filter)
+            else:
+                return FactoryFile.objects.get(filter, isDeleted=False)
+        else:
+            return FactoryFile.objects.get(isDeleted=False)
+    except FactoryFile.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()

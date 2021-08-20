@@ -1,7 +1,10 @@
 from django.urls import path
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews,ExtraTimeViews, APIViews, CityViews, VacationDayViews,\
-    YekaCompetitionViews, HelpMenuViews,YekaBussinessBlogStaticView,AcceptViews
+    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
+    YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
+    VacationDayViews, ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
+    YekaBussinessBlogStaticView, FactoryViews
+
 app_name = 'ekabis'
 urlpatterns = [
     path('anasayfa/maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
@@ -235,36 +238,37 @@ urlpatterns = [
     path('yardim/yardim-metin-listesi/', HelpMenuViews.return_help_text, name='view_help_text'),
     path('yardim/yardim-metni-duzenle/<uuid:uuid>', HelpMenuViews.update_help_menu, name='change_help_text'),
 
-
-
-
     # Resmi Gazete
     path('yeka/resim-gazete-listesi/', YekaBussinessBlogStaticView.view_newspaper, name='view_newspaper'),
     path('yeka/resim-gazete-ekle/<uuid:business>/<uuid:businessblog>/', YekaBussinessBlogStaticView.add_newspaper,
          name='add_newspaper'),
-    path('yeka/resim-gazete-guncelle/<uuid:uuid>/', YekaBussinessBlogStaticView.change_newspaper, name='change_newspaper'),
+    path('yeka/resim-gazete-guncelle/<uuid:uuid>/', YekaBussinessBlogStaticView.change_newspaper,
+         name='change_newspaper'),
     path('yeka/resim-gazete-sil/', YekaBussinessBlogStaticView.delete_newspaper, name='delete_newspaper'),
 
-
-
-    #Basvuru Dosya İsimleri
-    path('yeka/yeka-basvuru-dosya-isim-listesi/', YekaBussinessBlogStaticView.view_yekaapplicationfilename, name='view_yekaapplicationfilename'),
+    # Basvuru Dosya İsimleri
+    path('yeka/yeka-basvuru-dosya-isim-listesi/', YekaBussinessBlogStaticView.view_yekaapplicationfilename,
+         name='view_yekaapplicationfilename'),
     path('yeka/yeka-basvuru-dosya-isim-ekle/', YekaBussinessBlogStaticView.add_yekaapplicationfilename,
          name='add_yekaapplicationfilename'),
-    path('yeka/yeka-basvuru-dosya-isim-guncelle/<uuid:uuid>/', YekaBussinessBlogStaticView.change_yekaapplicationfilename, name='change_yekaapplicationfilename'),
-    path('yeka/yeka-basvuru-dosya-isim-sil/', YekaBussinessBlogStaticView.delete_yekaapplicationfilename, name='delete_yekaapplicationfilename'),
+    path('yeka/yeka-basvuru-dosya-isim-guncelle/<uuid:uuid>/',
+         YekaBussinessBlogStaticView.change_yekaapplicationfilename, name='change_yekaapplicationfilename'),
+    path('yeka/yeka-basvuru-dosya-isim-sil/', YekaBussinessBlogStaticView.delete_yekaapplicationfilename,
+         name='delete_yekaapplicationfilename'),
 
-    #basvuru ayarları
-    path('yeka/basvuru-ayarlari-ekle/<uuid:business>/<uuid:businessblog>/', YekaBussinessBlogStaticView.add_yekaapplication,
+    # basvuru ayarları
+    path('yeka/basvuru-ayarlari-ekle/<uuid:business>/<uuid:businessblog>/',
+         YekaBussinessBlogStaticView.add_yekaapplication,
          name='add_yekaapplication'),
     path('yeka/basvuru-ayarlari-guncelle/<uuid:uuid>', YekaBussinessBlogStaticView.change_yekaapplication,
          name='change_yekaapplication'),
 
-    #basvurular
+    # basvurular
     path('yeka/yeka-basvuru-listesi/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.view_application,
          name='view_application'),
-    #basvuru dosya ekleme
-    path('yeka/yeka-basvuru-dosya-ekle/<uuid:business>/<uuid:businessblog>/<uuid:applicationfile>', YekaBussinessBlogStaticView.view_applicationfile,
+    # basvuru dosya ekleme
+    path('yeka/yeka-basvuru-dosya-ekle/<uuid:business>/<uuid:businessblog>/<uuid:applicationfile>',
+         YekaBussinessBlogStaticView.view_applicationfile,
          name='view_applicationfile'),
 
     path('log/api-log-listesi/', APIViews.GetLog.as_view(), name='view_log_api'),
@@ -284,6 +288,7 @@ urlpatterns = [
          name='change_competition'),
 
     path('yeka/yeka-yarisma-firma-ekle/<uuid:competition>',
+
          YekaBussinessBlogStaticView.add_competition_company,
          name='add_competition_company'),
     path('yeka/yeka-yarisma-firma-guncelle/<uuid:competition>/<uuid:uuid>',
@@ -340,5 +345,19 @@ urlpatterns = [
 
 
 
+    # Fabrika
+    path('fabrika/fabrika-dokuman-ismi-ekle/', FactoryViews.add_factory_file_name, name='add_factory_file_name'),
+    path('fabrika/fabrika-dokuman-isim-listesi/', FactoryViews.view_factory_file_name, name='views_factory_file_name'),
+    path('fabrika/fabrika-dokuman-isim-guncelle/<uuid:uuid>/', FactoryViews.change_factory_file_name,
+         name='change_factory_file_name'),
+    path('fabrika/fabrika-dokuman-isim-sil/', FactoryViews.delete_factory_file_name, name='delete_factory_file_name'),
+    path('yeka/fabrika-listesi/<uuid:business>/<uuid:businessblog>/', FactoryViews.view_yeka_factory,
+         name='view_yeka_factory'),
+    path('yeka/fabrika-ekle/<uuid:uuid>/', FactoryViews.add_yeka_factory, name='add_factory'),
+    path('yeka/fabrika-guncelle/<uuid:uuid>/', FactoryViews.update_yeka_factory, name='update_factory'),
+    path('yeka/fabrika-dokuman-ekle/<uuid:uuid>/', FactoryViews.add_factory_file, name='add_factory_file'),
+    path('yeka/fabrika-dokuman-guncelle/<uuid:uuid>/<uuid:factory_uuid>/', FactoryViews.update_factory_file, name='change_factory_file'),
+    path('fabrika/fabrika-sil/', FactoryViews.delete_factory, name='delete_factory'),
+    path('fabrika/dokuman-sil/', FactoryViews.delete_factory_file, name='delete_factory_file'),
 
 ]

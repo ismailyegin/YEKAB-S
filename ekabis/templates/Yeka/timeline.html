@@ -209,10 +209,11 @@
                                                 {% endif %}
 
 
-                                                                 {# Yarisma#}
+                                                {# Yarisma#}
                                                 {% if yekabusinessblok.businessblog.name == 'Yarışmanın Yapılması' %}
 
                                                     <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
+
                                                        href="{% url 'ekabis:change_competition' yeka.business.uuid  yekabusinessblok.uuid %}">Yarışma Ayarları</a>
                                                     <div class="dropdown-divider"></div>
 
@@ -248,11 +249,19 @@
 
                                                     <a class="dropdown-item"
                                                        href="{% url 'ekabis:change_proposal_active' yeka.business.uuid  yekabusinessblok.uuid %}">Yeka Kurum Ayarları</a>
+
                                                     <div class="dropdown-divider"></div>
 
                                                 {% endif %}
 
+                                                {% if yekabusinessblok.businessblog.name == 'Fabrika Kurulumu' %}
 
+                                                    <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
+                                                       href="{% url 'ekabis:view_yeka_factory' yeka.business.uuid  yekabusinessblok.uuid %}">Fabrika
+                                                        Listesi</a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
 
 
                                                 {#Kabuller#}
