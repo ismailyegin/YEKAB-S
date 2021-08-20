@@ -219,15 +219,14 @@
 
                                                 {% endif %}
 
-
+                                                {% if yekabusinessblok.businessblog.name == 'Fabrika Kurulumu' %}
 
                                                     <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
-                                                       href="{% url 'ekabis:view_yeka_factory' yeka.business.uuid  yekabusinessblok.uuid %}">Fabrika Listesi</a>
+                                                       href="{% url 'ekabis:view_yeka_factory' yeka.business.uuid  yekabusinessblok.uuid %}">Fabrika
+                                                        Listesi</a>
                                                     <div class="dropdown-divider"></div>
 
-
-
-
+                                                {% endif %}
 
 
                                                 {#Kabuller#}

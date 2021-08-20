@@ -167,13 +167,13 @@ def view_yeka_factory(request, business, businessblog):
         elif YekaCompetition.objects.filter(business=yekabusiness):
             name = YekaCompetition.objects.get(business=yekabusiness).name
 
-        if not YekaFactory.objects.filter(yekabusinessblog=yekabussinessblog):
+        if not YekaFactory.objects.filter(business=yekabusiness):
             factory = YekaFactory()
             factory.yekabusinessblog = yekabussinessblog
             factory.business = yekabusiness
             factory.save()
         else:
-            factory = YekaFactory.objects.get(yekabusinessblog=yekabussinessblog)
+            factory = YekaFactory.objects.get(business=yekabusiness)
 
         return render(request, 'Factory/view_yeka_factory.html',
                       {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
