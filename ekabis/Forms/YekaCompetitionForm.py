@@ -14,7 +14,7 @@ class YekaCompetitionForm(BaseForm):
                   'date':'Resmi Gazetede Yayın Tarihi *','capacity':'Kapasite (MWe) *'}
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
-            'capacity': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
+            'capacity': forms.NumberInput(attrs={'class': 'form-control ', 'required': 'required'}),
             'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
                        'onkeydown': 'return false', 'required': 'required'}),

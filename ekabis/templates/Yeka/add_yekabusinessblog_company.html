@@ -205,32 +205,7 @@
 
                         <div class="card-body">
 
-                            <table id="company" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Tanımı</th>
-                                    <th>Seç</th>
-                                </tr>
-                                </thead>
-
-                                {% if company_list %}
-                                    {% for item in company_list %}
-                                        <tr>
-                                            <td>{{ forloop.counter }} </td>
-                                            <td>{{ item.name }} </td>
-
-                                            <td><input value="{{ item.pk }}" name="company" class=""
-                                                       type="checkbox"/></td>
-
-
-                                        </tr>
-
-                                    {% endfor %}
-                                {% endif %}
-
-
-                            </table>
+                          {{ company_form }}
 
 
                         </div>

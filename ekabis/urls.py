@@ -320,8 +320,6 @@ urlpatterns = [
     path('yeka/aday-sil/',
          YekaBussinessBlogStaticView.delete_proposal,
          name='delete_proposal'),
-
-
 #kurum önerileri
 
     path('yeka/aday-yeka-kurum-görüsleri/<uuid:business>/<uuid:businessblog>',
@@ -359,5 +357,24 @@ urlpatterns = [
     path('yeka/fabrika-dokuman-guncelle/<uuid:uuid>/<uuid:factory_uuid>/', FactoryViews.update_factory_file, name='change_factory_file'),
     path('fabrika/fabrika-sil/', FactoryViews.delete_factory, name='delete_factory'),
     path('fabrika/dokuman-sil/', FactoryViews.delete_factory_file, name='delete_factory_file'),
+
+
+
+# aday yeka kurum önerileri
+
+    path('yeka/aday-yeka-kurum-oneri-listesi/<uuid:yekaproposal>/<uuid:uuid>',
+         YekaBussinessBlogStaticView.view_proposal_institution,
+         name='view_proposal_institution'),
+
+    path('yeka/aday-yeka-kurum-oneri-guncelle/<uuid:yekaproposal>/<uuid:proposal>/<uuid:uuid>',
+         YekaBussinessBlogStaticView.change_proposal_institution,
+         name='change_proposal_institution'),
+
+    path('yeka/aday-yeka-kurum-oneri-sil',
+         YekaBussinessBlogStaticView.delete_proposal_institution,
+         name='delete_proposal_institution'),
+
+
+
 
 ]
