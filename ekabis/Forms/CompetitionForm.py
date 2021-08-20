@@ -4,7 +4,7 @@ from ekabis.models.Competition import Competition
 
 
 
-class CompanyUserForm(BaseForm):
+class CompetitionForm(BaseForm):
 
     class Meta:
         model = Competition
