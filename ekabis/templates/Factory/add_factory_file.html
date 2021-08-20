@@ -1,0 +1,259 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <section class="content">
+        <section class="content-header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>  {{ factory.name }} - Doküman Ekle </h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+
+        <form method="post" role="form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Fabrika Bilgileri</h3>
+
+                        </div>
+
+                        <div class="card-body">
+                            <div class="col-lg-12">
+
+
+                                {% for item in factory_form %}
+                                    <div class="form-group">
+                                        <label>{{ item.label }}</label><br>
+
+                                        {{ item }}
+                                        <label for="" id="label_{{ item.name }}"></label>
+                                    </div>
+                                {% endfor %}
+
+
+                                <div class="card-footer">
+                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </section>
+
+    {% load static %}
+    <script>
+        $(function () {
+            {% if error_messages %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+
+
+
+            $('#file').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: "Ekle Çıkar",
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'İş Bloğu Parametreleri',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                }
+            });
+
+        });
+
+        function deleteParametre(id) {
+            var html = ''
+            $("#modal-danger").on("shown.bs.modal", function (e) {
+                $("#btn-conf").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:delete_businessBlogParametre" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            uuid: id
+                        },
+                        success: function (result) {
+
+                            html = 'Başarıyla Silindi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:change_businessBlog" business.uuid %}");
+
+                                });
+
+                            }).modal('show');
+
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+
+    </script>
+
+
+{% endblock %}

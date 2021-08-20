@@ -43,3 +43,4 @@ from .ConsortiumCompany import ConsortiumCompany
 from .HelpMenu import HelpMenu
 from .Accept import Accept
 from .YekaAccept import YekaAccept
+from .FactoryFile import FactoryFile
