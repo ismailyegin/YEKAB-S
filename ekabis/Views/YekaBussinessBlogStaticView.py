@@ -37,6 +37,10 @@ from ekabis.services.services import last_urls, \
     NewspaperGetService, NewspaperService, YekaApplicationFileNameService, YekaApplicationFileNameGetService, \
     YekaApplicationGetService, YekaApplicationService, YekaBusinessGetService, \
     YekaBusinessBlogGetService, YekaApplicationFileGetService
+from ekabis.models.YekaUser import YekaUser
+from ekabis.Forms.YekaUserForm import YekaUserForm
+from ekabis.models.YekaCompanyUser import YekaCompanyUser
+
 
 from ekabis.Forms.ProposalInstitutionForm import ProposalInstitutionForm
 @login_required
@@ -810,12 +814,13 @@ def change_yekacontract(request, business, businessblog):
             contract.save()
         contract_form=YekaContractForm(request.POST or None, request.FILES or None , instance=contract)
         name = general_methods.yekaname(yekabusiness)
-
         with transaction.atomic():
             if request.method == 'POST':
                 if contract_form.is_valid():
                     contract= contract_form.save(request,commit=False)
                     contract.save()
+                    yekabusiness.company=contract.company
+                    yekabusiness.save()
                     messages.success(request, 'Basarıyla Eklenmiştir.')
                     redirect('ekabis:change_yekacontract',contract.business.uuid,contract.yekabusinessblog.uuid)
                 else:
@@ -1335,3 +1340,49 @@ def delete_proposal_institution(request):
     except:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+
+@login_required
+def view_yeka_user(request,business,businessblog):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
+        yekabusiness = YekaBusiness.objects.get(uuid=business)
+
+        name=general_methods.yekaname(yekabusiness)
+        yekacompany=None
+        # eklemsini yaptık
+        if not  YekaCompanyUser.objects.filter(business=yekabusiness):
+            yekacompany=YekaCompanyUser(
+                business=yekabusiness,
+                yekabusinessblog=yekabussinessblog,
+            )
+            yekacompany.save()
+        else:
+            yekacompany=YekaCompanyUser.objects.get(business=yekabusiness)
+        if not yekabusiness.company:
+            messages.warning(request, 'Sözleşme İmzanmadan firma Kullanıcı atanamaz.')
+            test=request.META.get('HTTP_REFERER')
+            #önceki sayfaya yönlendirilecek
+        company_user=yekacompany.companyuser.filter(isDeleted=False)
+        with transaction.atomic():
+            return render(request, 'CompanyUser/view_companyuser.html',
+                          {'company_user': company_user,
+                           'yekabusiness': yekabusiness,
+                           'yekabussinessblog': yekabussinessblog,
+                           'urls': urls, 'current_url': current_url,
+                           'url_name': url_name, 'name': name,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka',)
+

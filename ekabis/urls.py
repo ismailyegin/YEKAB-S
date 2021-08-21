@@ -373,6 +373,12 @@ urlpatterns = [
     path('yeka/aday-yeka-kurum-oneri-sil',
          YekaBussinessBlogStaticView.delete_proposal_institution,
          name='delete_proposal_institution'),
+#firma kullanıcısı
+    path('yeka/yeka-firma-kullanıcı-listesi/<uuid:business>/<uuid:businessblog>',
+         YekaBussinessBlogStaticView.view_yeka_user,
+         name='view_yeka_user'),
+
+
 
 
 
