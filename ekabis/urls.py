@@ -3,7 +3,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
     VacationDayViews, ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
-    YekaBussinessBlogStaticView, FactoryViews
+    YekaBussinessBlogStaticView, FactoryViews, PermissionView
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -385,6 +385,9 @@ urlpatterns = [
     path('yeka/yeka-firma-kullanici-sil',
          YekaBussinessBlogStaticView.delete_yeka_user,
          name='delete_yeka_user'),
+
+    path('yeka/izin-listesi/',PermissionView.view_permission,name='view_permission'),
+    path('yeka/izin-guncelle/<uuid:uuid>',PermissionView.change_permission,name='change_permission'),
 
 
 

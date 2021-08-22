@@ -26,7 +26,7 @@ class Permission(BaseModel):
     parent=models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     group=models.CharField(max_length=100,blank=True,null=True,choices=Type)
     def __str__(self):
-        return '%s ' % self.codename
+        return '%s ' % self.name +'('+self.codename+')'
 
     class Meta:
         default_permissions = ()
