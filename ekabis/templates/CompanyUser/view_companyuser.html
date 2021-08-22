@@ -143,7 +143,16 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Yetkili Listesi</h3>
+                            {% for item in perm %}
+                                {% if item == 'add_yeka_user' %}
 
+                                    <a href="{% url "ekabis:add_yeka_user" yekacompany.uuid %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" title="Yetkili Ekle"></i>
+                                    </a>
+
+                                {% endif %}
+                            {% endfor %}
                         </div>
 
                         <div class="card-body">
@@ -179,14 +188,14 @@
                                                     </button>
                                                     <div class="dropdown-menu" role="menu">
                                                         {% for p in perm %}
-                                                            {% if p == 'change_proposal_institution' %}
-                                                                <a href="{% url "ekabis:change_proposal_institution" yekaproposal.uuid proposal.uuid item.uuid %}"
+                                                            {% if p == 'change_yeka_user' %}
+                                                                <a href="{% url "ekabis:change_yeka_user" yekacompany.uuid item.uuid %}"
                                                                    class="dropdown-item"> <i
                                                                         class="fa fa-edit" title="Düzenle"></i> Düzenle
                                                                 </a>
                                                             {% endif %}
 
-                                                            {% if p == 'delete_proposal_institution' %}
+                                                            {% if p == 'delete_yeka_user' %}
 
                                                                 <a class="dropdown-item" href=""
                                                                    data-toggle="modal"
@@ -297,7 +306,7 @@
         $("#modal-delete").on("shown.bs.modal", function (e) {
             $("#btn-conf1").click(function () {
                 $.ajax({
-                    url: "{% url "ekabis:delete_proposal_institution" %}",
+                    url: "{% url "ekabis:delete_yeka_user" %}",
                     type: "POST",
                     data: {
                         'csrfmiddlewaretoken': "{{  csrf_token  }}",

@@ -2,7 +2,6 @@ from django import forms
 
 from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.YekaUser import YekaUser
-from ekabis.models.Employee import Employee
 
 
 class YekaUserForm(BaseForm):
@@ -23,11 +22,11 @@ class YekaUserForm(BaseForm):
                        'onkeydown': 'return false', 'required': 'required'}),
 
             'finisDate': forms.DateInput(
-                attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
+                attrs={'class': 'form-control  pull-right', 'id': 'datepicker2', 'autocomplete': 'off',
                        'onkeydown': 'return false', 'required': 'required'}),
-
-            'file':forms.FileInput(attrs={'class': '',
-                                        'style': 'width: 100%;', 'required': 'required'}),
+            #
+            # 'file': forms.FileInput(attrs={'class': '',
+            #                                'style': 'width: 100%;', 'required': 'required'}),
         }
 
 

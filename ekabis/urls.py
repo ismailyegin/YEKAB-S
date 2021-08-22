@@ -369,14 +369,23 @@ urlpatterns = [
     path('yeka/aday-yeka-kurum-oneri-guncelle/<uuid:yekaproposal>/<uuid:proposal>/<uuid:uuid>',
          YekaBussinessBlogStaticView.change_proposal_institution,
          name='change_proposal_institution'),
-
     path('yeka/aday-yeka-kurum-oneri-sil',
          YekaBussinessBlogStaticView.delete_proposal_institution,
          name='delete_proposal_institution'),
 #firma kullanıcısı
-    path('yeka/yeka-firma-kullanıcı-listesi/<uuid:business>/<uuid:businessblog>',
+    path('yeka/yeka-firma-kullanici-listesi/<uuid:business>/<uuid:businessblog>',
          YekaBussinessBlogStaticView.view_yeka_user,
          name='view_yeka_user'),
+    path('yeka/yeka-firma-kullanici-ekle/<uuid:yekacompany>',
+         YekaBussinessBlogStaticView.add_yeka_user,
+         name='add_yeka_user'),
+    path('yeka/yeka-firma-kullanici-guncelle/<uuid:yekacompany>/<uuid:companyuser>',
+         YekaBussinessBlogStaticView.change_yeka_user,
+         name='change_yeka_user'),
+    path('yeka/yeka-firma-kullanici-sil',
+         YekaBussinessBlogStaticView.delete_yeka_user,
+         name='delete_yeka_user'),
+
 
 
 

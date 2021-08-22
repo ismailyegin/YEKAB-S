@@ -10,3 +10,4 @@ class YekaCompanyUser(BaseModel):
     business = models.OneToOneField(YekaBusiness, on_delete=models.CASCADE)
     yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.CASCADE)
     companyuser=models.ManyToManyField(YekaUser)
+
