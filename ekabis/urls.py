@@ -3,7 +3,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
     VacationDayViews, ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
-    YekaBussinessBlogStaticView, FactoryViews
+    YekaBussinessBlogStaticView, FactoryViews, PermissionView
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -320,8 +320,6 @@ urlpatterns = [
     path('yeka/aday-sil/',
          YekaBussinessBlogStaticView.delete_proposal,
          name='delete_proposal'),
-
-
 #kurum önerileri
 
     path('yeka/aday-yeka-kurum-gorusleri/<uuid:business>/<uuid:businessblog>',
@@ -361,6 +359,7 @@ urlpatterns = [
     path('fabrika/dokuman-sil/', FactoryViews.delete_factory_file, name='delete_factory_file'),
 
 
+
     #Koordinat
     path('aday-yeka/koordinat-ekle/<uuid:uuid>/<uuid:yeka_proposal_uuid>/', YekaBussinessBlogStaticView.add_coordinate,
          name='add_coordinate'),
@@ -377,5 +376,42 @@ urlpatterns = [
     path('aday-yeka/konum-guncelle/<uuid:uuid>/<uuid:yeka_proposal_uuid>/', YekaBussinessBlogStaticView.change_location,
          name='change_location'),
     path('aday-yeka/konum-sil/', YekaBussinessBlogStaticView.delete_location, name='delete_location'),
+
+
+# aday yeka kurum önerileri
+
+    path('yeka/aday-yeka-kurum-oneri-listesi/<uuid:yekaproposal>/<uuid:uuid>',
+         YekaBussinessBlogStaticView.view_proposal_institution,
+         name='view_proposal_institution'),
+
+    path('yeka/aday-yeka-kurum-oneri-guncelle/<uuid:yekaproposal>/<uuid:proposal>/<uuid:uuid>',
+         YekaBussinessBlogStaticView.change_proposal_institution,
+         name='change_proposal_institution'),
+    path('yeka/aday-yeka-kurum-oneri-sil',
+         YekaBussinessBlogStaticView.delete_proposal_institution,
+         name='delete_proposal_institution'),
+#firma kullanıcısı
+    path('yeka/yeka-firma-kullanici-listesi/<uuid:business>/<uuid:businessblog>',
+         YekaBussinessBlogStaticView.view_yeka_user,
+         name='view_yeka_user'),
+    path('yeka/yeka-firma-kullanici-ekle/<uuid:yekacompany>',
+         YekaBussinessBlogStaticView.add_yeka_user,
+         name='add_yeka_user'),
+    path('yeka/yeka-firma-kullanici-guncelle/<uuid:yekacompany>/<uuid:companyuser>',
+         YekaBussinessBlogStaticView.change_yeka_user,
+         name='change_yeka_user'),
+    path('yeka/yeka-firma-kullanici-sil',
+         YekaBussinessBlogStaticView.delete_yeka_user,
+         name='delete_yeka_user'),
+
+    path('yeka/izin-listesi/',PermissionView.view_permission,name='view_permission'),
+    path('yeka/izin-guncelle/<uuid:uuid>',PermissionView.change_permission,name='change_permission'),
+
+
+
+
+
+
+
 
 ]
