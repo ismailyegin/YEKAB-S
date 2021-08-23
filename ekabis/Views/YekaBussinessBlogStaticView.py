@@ -4,6 +4,9 @@ from datetime import timedelta
 from django.core import serializers
 
 from ekabis.Forms.CoordinateForm import CoordinateForm
+from ekabis.Forms.LocationForm import LocationForm
+from ekabis.models.Coordinate import Coordinate
+from ekabis.models.Location import Location
 from ekabis.services.general_methods import get_client_ip
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -1253,11 +1256,11 @@ def add_coordinate(request, uuid, yeka_proposal_uuid):
         proposal = Proposal.objects.get(uuid=uuid)
         yeka_proposal = YekaProposal.objects.get(uuid=yeka_proposal_uuid)
         coordinate_form = CoordinateForm()
-        name=general_methods.yekaname(yeka_proposal.business)
+        name = general_methods.yekaname(yeka_proposal.business)
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
-        coordinates=proposal.coordinate.filter(isDeleted=False)
+        coordinates = proposal.coordinate.filter(isDeleted=False)
         with transaction.atomic():
 
             if request.method == 'POST':
@@ -1268,20 +1271,64 @@ def add_coordinate(request, uuid, yeka_proposal_uuid):
                     proposal.coordinate.add(coordinate)
                     proposal.save()
                     messages.success(request, 'Koordinat  Eklenmiştir')
+                    return redirect('ekabis:add_coordinate', uuid, yeka_proposal_uuid)
+                else:
+                    error_messages = get_error_messages(coordinate_form)
+                    return render(request, 'Proposal/add_coordinate.html',
+                                  {'name': name,
+                                   'urls': urls, 'coordinates': coordinates,
+                                   'current_url': current_url,
+                                   'url_name': url_name, 'yeka_proposal': yeka_proposal,
+                                   'error_messages': error_messages,
+                                   'coordinate_form': coordinate_form
+                                   })
+            return render(request, 'Proposal/add_coordinate.html',
+                          {'urls': urls, 'name': name, 'coordinates': coordinates,
+                           'current_url': current_url, 'url_name': url_name,
+                           'coordinate_form': coordinate_form, 'yeka_proposal': yeka_proposal,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+@login_required
+def change_coordinate(request, uuid, yeka_proposal_uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        coordinate = Coordinate.objects.get(uuid=uuid)
+        yeka_proposal = YekaProposal.objects.get(uuid=yeka_proposal_uuid)
+        coordinate_form = CoordinateForm(request.POST or None, request.FILES or None, instance=coordinate)
+        name = general_methods.yekaname(yeka_proposal.business)
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                if coordinate_form.is_valid():
+                    form = coordinate_form.save(request, commit=False)
+                    form.save()
+                    messages.success(request, 'Koordinat  güncellenmiştir.')
                     return redirect('ekabis:change_yekaproposal', yeka_proposal.business.uuid,
                                     yeka_proposal.yekabusinessblog.uuid)
                 else:
                     error_messages = get_error_messages(coordinate_form)
-                    return render(request, 'Proposal/add_coordinate.html',
-                                  {'name':name,
-                                      'urls': urls,'coordinates':coordinates,
-                                      'current_url': current_url,
-                                      'url_name': url_name,
-                                      'error_messages': error_messages,
-                                      'coordinate_form': coordinate_form
-                                  })
-            return render(request, 'Proposal/add_coordinate.html',
-                          {'urls': urls,'name':name,'coordinates':coordinates,
+                    return render(request, 'Proposal/change_coordinate.html',
+                                  {'name': name,
+                                   'urls': urls, 'coordinate': coordinate,
+                                   'current_url': current_url,
+                                   'url_name': url_name,
+                                   'error_messages': error_messages,
+                                   'coordinate_form': coordinate_form
+                                   })
+            return render(request, 'Proposal/change_coordinate.html',
+                          {'urls': urls, 'name': name, 'coordinate': coordinate,
                            'current_url': current_url, 'url_name': url_name,
                            'coordinate_form': coordinate_form
                            })
@@ -1289,3 +1336,141 @@ def add_coordinate(request, uuid, yeka_proposal_uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+@login_required
+def delete_coordinate(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                obj = Coordinate.objects.get(uuid=uuid)
+                obj.isDeleted = True
+                obj.save()
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+@login_required
+def add_location(request, uuid, yeka_proposal_uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        proposal = Proposal.objects.get(uuid=uuid)
+        yeka_proposal = YekaProposal.objects.get(uuid=yeka_proposal_uuid)
+        location_form = LocationForm()
+        name = general_methods.yekaname(yeka_proposal.business)
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        locations = proposal.location.filter(isDeleted=False)
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                location_form = LocationForm(request.POST or None, request.FILES or None)
+                if location_form.is_valid():
+                    location = location_form.save(request, commit=False)
+                    location.save()
+                    proposal.location.add(location)
+                    proposal.save()
+                    messages.success(request, 'Konum Bilgisi  Eklenmiştir')
+                    return redirect('ekabis:add_location', uuid, yeka_proposal_uuid)
+                else:
+                    error_messages = get_error_messages(location_form)
+                    return render(request, 'Proposal/add_location.html',
+                                  {'name': name, 'proposal': proposal,
+                                   'urls': urls, 'locations': locations,
+                                   'current_url': current_url,
+                                   'url_name': url_name, 'yeka_proposal': yeka_proposal,
+                                   'error_messages': error_messages,
+                                   'location_form': location_form
+                                   })
+            return render(request, 'Proposal/add_location.html',
+                          {'urls': urls, 'name': name, 'locations': locations,
+                           'current_url': current_url, 'url_name': url_name, 'proposal': proposal,
+                           'location_form': location_form, 'yeka_proposal': yeka_proposal,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+@login_required
+def change_location(request, uuid, yeka_proposal_uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        location = Location.objects.get(uuid=uuid)
+        yeka_proposal = YekaProposal.objects.get(uuid=yeka_proposal_uuid)
+        name = general_methods.yekaname(yeka_proposal.business)
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        location_form = LocationForm(request.POST or None, request.FILES or None, instance=location)
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                if location_form.is_valid():
+                    location = location_form.save(request, commit=False)
+                    location.save()
+                    messages.success(request, 'Konum Bilgisi Güncellenmiştir')
+                    return redirect('ekabis:change_yekaproposal', yeka_proposal.business.uuid,
+                                    yeka_proposal.yekabusinessblog.uuid)
+                else:
+                    error_messages = get_error_messages(location_form)
+                    return render(request, 'Proposal/change_location.html',
+                                  {'name': name,
+                                   'urls': urls,
+                                   'current_url': current_url,
+                                   'url_name': url_name, 'yeka_proposal': yeka_proposal,
+                                   'error_messages': error_messages,
+                                   'location_form': location_form
+                                   })
+            return render(request, 'Proposal/change_location.html',
+                          {'urls': urls, 'name': name,
+                           'current_url': current_url, 'url_name': url_name,
+                           'location_form': location_form, 'yeka_proposal': yeka_proposal,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+@login_required
+def delete_location(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                obj = Location.objects.get(uuid=uuid)
+                obj.isDeleted = True
+                obj.save()
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})

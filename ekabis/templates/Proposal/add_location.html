@@ -91,7 +91,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        {{ name }} - Koordinat Ekle</h1>
+                        {{ name }} - Konum Ekle</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -123,7 +123,7 @@
 
 
                                 <div class="form-group">
-                                    {{ coordinate_form }}
+                                    {{ location_form }}
                                 </div>
 
 
@@ -140,31 +140,29 @@
                 <div class="col-md-9">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Koordinatlar </h3>
+                            <h3 class="card-title">Konum Listesi </h3>
 
                         </div>
 
                         <div class="card-body">
-                            <table id="company" class="table table-bordered table-hover">
+                            <table id="location" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>X Koordinatı</th>
-                                    <th>Y Koordinatı</th>
+                                    <th>İl</th>
+                                    <th>İlçe</th>
+                                    <th>Mahalle</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                {% for coordinate in coordinates %}
+                                {% for location in locations %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>
-                                            {{ coordinate.x }}
-                                        </td>
-                                        <td>
-                                            {{ coordinate.y }}
-                                        </td>
+                                        <td>{{ location.city.name }}</td>
+                                        <td> {{ location.district.name }} </td>
+                                        <td> {{ location.neighborhood.name }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-default">İşlemler</button>
@@ -174,18 +172,18 @@
                                                 </button>
                                                 <div class="dropdown-menu" role="menu">
                                                     {% for item in perm %}
-                                                        {% if item == 'change_coordinate' %}
-                                                            <a href="{% url 'ekabis:change_coordinate' coordinate.uuid yeka_proposal.uuid %}"
+                                                        {% if item == 'change_location' %}
+                                                            <a href="{% url 'ekabis:change_location'  location.uuid yeka_proposal.uuid%}"
                                                                class="dropdown-item"> <i
                                                                     class="fa fa-edit" title="Düzenle"></i> Düzenle
                                                             </a>
                                                         {% endif %}
                                                     {% endfor %}
                                                     {% for item in perm %}
-                                                        {% if item == 'delete_coordinate' %}
+                                                        {% if item == 'delete_location' %}
                                                             <a class="dropdown-item" href=""
                                                                data-toggle="modal"
-                                                               onclick="deleteCoordinate('{{ coordinate.uuid }}')"><i
+                                                               onclick="deleteLocation('{{ location.uuid }}')"><i
                                                                     class="fa fa-trash"></i>Sil</a>
 
                                                         {% endif %}
@@ -215,7 +213,7 @@
     {% load static %}
     <script>
         $(function () {
-            $('#company').DataTable({
+            $('#location').DataTable({
                 dom: 'Bfrtip',
 
                 lengthMenu: [
@@ -279,17 +277,120 @@
             {% if error_messages  %}
                 errors_messages({{ error_messages |safe }})
             {% endif %}
+
+
+
+        });
+
+        function ilceGetir() {
+            debugger;
+            var e = document.getElementById("id_city");
+            var il_id = e.options[e.selectedIndex].value;
+            $.ajax({
+                url: "{% url 'ekabis:ilce-getir' %}",
+                type: "post", // or "get"
+                async: false,
+                data: {
+                    il_id: il_id,
+
+                },
+                success: function (result) {
+debugger;
+
+                    let select = document.getElementById("ilce_id");
+
+                    select.options[select.options.length] = new Option('Text 1', 'Value1');
+
+                    $('#ilce_id').empty();
+
+                    for (let i = 0; i < result.ilceler.length; i++) {
+                        select.options[select.options.length] = new Option(result.ilceler[i].name, result.ilceler[i].id);
+                    }
+
+                    let select2 = document.getElementById("neighborhood_id");
+
+                    select2.options[select2.options.length] = new Option('Text 1', 'Value1');
+
+                    $('#neighborhood_id').empty();
+
+                    for (let i = 0; i < result.neighborhoods.length; i++) {
+                        select2.options[select2.options.length] = new Option(result.neighborhoods[i].name, result.neighborhoods[i].id);
+                    }
+                }
+            });
+        }
+
+        function mahalleGetir() {
+            debugger;
+            var e = document.getElementById("ilce_id");
+            var ilce_id = e.options[e.selectedIndex].value;
+            $.ajax({
+                url: "{% url 'ekabis:get_neighborhood' %}",
+                type: "post", // or "get"
+                async: false,
+                data: {
+                    ilce_id: ilce_id,
+
+                },
+                success: function (result) {
+
+
+                    let select = document.getElementById("neighborhood_id");
+
+                    select.options[select.options.length] = new Option('Text 1', 'Value1');
+
+                    $('#neighborhood_id').empty();
+
+                    for (let i = 0; i < result.neighborhoods.length; i++) {
+                        select.options[select.options.length] = new Option(result.neighborhoods[i].name, result.neighborhoods[i].id);
+                    }
+                }
+            });
+        }
+
+
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
         });
 
 
-        function deleteCoordinate(id) {
+        function deleteLocation(id) {
             debugger;
             console.log(id);
             var html = ''
             $("#modal-delete").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:delete_coordinate" %}",
+                        url: "{% url "ekabis:delete_location" %}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -297,7 +398,7 @@
                         },
                         success: function (result) {
 
-                            html = 'Koordinat Bilgisi Başarıyla Silindi';
+                            html = 'Konum Bilgisi Başarıyla Silindi';
                             debugger;
                             $(".successModal").html(html);
                             $('#modal-success').on("shown.bs.modal", function (e) {
@@ -319,6 +420,8 @@
             });
 
         }
+
+
     </script>
 
 {% endblock %}

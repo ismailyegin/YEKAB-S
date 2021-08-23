@@ -91,7 +91,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Aday Yeka listesi- {{ name }}  </h1>
+                        {{ name }} - Aday Yeka Listesi </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -115,7 +115,7 @@
                     <div class="card card-primary card-outline">
 
 
-                     <div class="card-header with-border">
+                        <div class="card-header with-border">
                             <h3 class="card-title">Aday Yeka Listesi</h3>
                             {% for item in perm %}
                                 {% if item == 'add_proposal' %}
@@ -130,85 +130,95 @@
                         </div>
                         <div class="card-body">
                             <div class="card-body">
- <table id="company" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Basvuru Tarihi</th>
-                                    <th>Kapasite</th>
-                                    <th>Tarım Yazısı</th>
-                                    <th>Bilgi Formu</th>
-                                    <th>Kordinatlar</th>
-                                    <th>Konumlar</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                {% for proposal in yekaproposal.proposal.all %}
+                                <table id="company" class="table table-bordered table-hover">
+                                    <thead>
                                     <tr>
-                                        <td>{{ forloop.counter }} </td>
-                                        <td>{{ proposal.date }}</td>
-                                        <td>{{ proposal.capacity }}</td>
-                                        <td>{{ proposal.farm_form }}</td>
-                                        <td>{{ proposal.information_form}}</td>
-                                    <th> {% for item in proposal.coordinate.all %}{{ item.x }}-{{ item.y }}{% endfor %}</th>
-                                    <th>{% for item in proposal.location.all %}{{ item.city }} /{{ item.district }} /{{ item.neighborhood }}{% endfor %}</th>
-                                        <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default">İşlemler</button>
-                                                <button type="button"
-                                                        class="btn btn-default dropdown-toggle dropdown-icon"
-                                                        data-toggle="dropdown">
-                                                </button>
-                                                <div class="dropdown-menu" role="menu">
-                                                    {% for item in perm %}
-                                                        {% if item == 'change_proposal' %}
-                                                            <a href="{% url 'ekabis:change_proposal' yekaproposal.uuid  proposal.uuid %}"
-                                                               class="dropdown-item"> <i
-                                                                    class="fa fa-edit" title="Düzenle"></i> Düzenle
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% for item in perm %}
-                                                        {% if item == 'add_coordinate' %}
-                                                            <a href="{% url 'ekabis:add_coordinate' proposal.uuid  yekaproposal.uuid %}"
-                                                               class="dropdown-item"> <i
-                                                                    class="fa fa-edit" title="Düzenle"></i> Koordinat Listesi
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    {% for item in perm %}
-                                                        {% if item == 'delete_proposal' %}
-
-                                                            <a class="dropdown-item" href=""
-                                                               data-toggle="modal"
-                                                               onclick=deleteExtraTime('{{ proposal.uuid }}')><i
-                                                                    class="fa fa-trash"></i>Sil</a>
-
-                                                        {% endif %}
-                                                    {% endfor %}
-
-
-                                                </div>
-                                            </div>
-
-
-                                        </td>
+                                        <th>#</th>
+                                        <th>Basvuru Tarihi</th>
+                                        <th>Kapasite</th>
+                                        <th>Tarım Yazısı</th>
+                                        <th>Bilgi Formu</th>
+                                        <th>Konumlar</th>
+                                        <th></th>
                                     </tr>
+                                    </thead>
+                                    <tbody>
 
-                                {% endfor %}
+                                    {% for proposal in yekaproposal.proposal.all %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ proposal.date }}</td>
+                                            <td>{{ proposal.capacity }}</td>
+                                            <td>{{ proposal.farm_form }}</td>
+                                            <td>{{ proposal.information_form }}</td>
+
+                                            <th>{% for item in proposal.location.all %}{{ item.city }} /
+                                                {{ item.district }} /{{ item.neighborhood }}{% endfor %}</th>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default">İşlemler</button>
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown">
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        {% for item in perm %}
+                                                            {% if item == 'change_proposal' %}
+                                                                <a href="{% url 'ekabis:change_proposal' yekaproposal.uuid  proposal.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for item in perm %}
+                                                            {% if item == 'add_coordinate' %}
+                                                                <a href="{% url 'ekabis:add_coordinate' proposal.uuid  yekaproposal.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i>
+                                                                    Koordinat Listesi
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for item in perm %}
+                                                            {% if item == 'add_location' %}
+                                                                <a href="{% url 'ekabis:add_location' proposal.uuid  yekaproposal.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit" title="Düzenle"></i>
+                                                                    Konum Listesi
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for item in perm %}
+                                                            {% if item == 'delete_proposal' %}
+
+                                                                <a class="dropdown-item" href=""
+                                                                   data-toggle="modal"
+                                                                   onclick=deleteExtraTime('{{ proposal.uuid }}')><i
+                                                                        class="fa fa-trash"></i>Sil</a>
+
+                                                            {% endif %}
+                                                        {% endfor %}
 
 
-                                </tbody>
-                            </table>
+                                                    </div>
+                                                </div>
 
 
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+
+
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
         </form>
 
 
