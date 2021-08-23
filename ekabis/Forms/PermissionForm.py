@@ -1,8 +1,8 @@
 from django import forms
 from ekabis.models.Permission import Permission
+from ekabis.Forms.BaseForm import BaseForm
 
-
-class PermissionForm(forms.ModelForm):
+class PermissionForm(BaseForm):
     class Meta:
         model = Permission
         fields = ('name', 'codename','model','codeurl','parent','group')
@@ -24,7 +24,4 @@ class PermissionForm(forms.ModelForm):
                                               'style': 'width: 100%; '}),
             'group':forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                               'style': 'width: 100%; '}),
-
-
-
         }
