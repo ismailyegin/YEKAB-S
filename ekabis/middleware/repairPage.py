@@ -1,6 +1,9 @@
 from django.shortcuts import redirect
 
 from ekabis.models.Settings import Settings
+from datetime import datetime, timedelta
+from django.conf import settings
+from django.contrib import auth
 
 
 class OnarimSayfasiMiddleware(object):
@@ -16,3 +19,7 @@ class OnarimSayfasiMiddleware(object):
 
         response = self.get_response(request)
         return response
+
+
+
+

@@ -322,7 +322,7 @@ urlpatterns = [
          name='delete_proposal'),
 #kurum önerileri
 
-    path('yeka/aday-yeka-kurum-görüsleri/<uuid:business>/<uuid:businessblog>',
+    path('yeka/aday-yeka-kurum-gorusleri/<uuid:business>/<uuid:businessblog>',
          YekaBussinessBlogStaticView.change_proposal_active,
          name='change_proposal_active'),
 
@@ -360,6 +360,24 @@ urlpatterns = [
 
 
 
+    #Koordinat
+    path('aday-yeka/koordinat-ekle/<uuid:uuid>/<uuid:yeka_proposal_uuid>/', YekaBussinessBlogStaticView.add_coordinate,
+         name='add_coordinate'),
+    path('aday-yeka/koordinat-guncelle/<uuid:uuid>/<uuid:yeka_proposal_uuid>/', YekaBussinessBlogStaticView.change_coordinate,
+         name='change_coordinate'),
+    path('aday-yeka/koordinat-sil/', YekaBussinessBlogStaticView.delete_coordinate, name='delete_coordinate'),
+
+    #Mahalle
+    path('yeka/mahalle-getir/', CityViews.get_neighborhood, name='get_neighborhood'),
+
+    #Konum
+    path('aday-yeka/konum-ekle/<uuid:uuid>/<uuid:yeka_proposal_uuid>/', YekaBussinessBlogStaticView.add_location,
+         name='add_location'),
+    path('aday-yeka/konum-guncelle/<uuid:uuid>/<uuid:yeka_proposal_uuid>/', YekaBussinessBlogStaticView.change_location,
+         name='change_location'),
+    path('aday-yeka/konum-sil/', YekaBussinessBlogStaticView.delete_location, name='delete_location'),
+
+
 # aday yeka kurum önerileri
 
     path('yeka/aday-yeka-kurum-oneri-listesi/<uuid:yekaproposal>/<uuid:uuid>',
@@ -388,6 +406,7 @@ urlpatterns = [
 
     path('yeka/izin-listesi/',PermissionView.view_permission,name='view_permission'),
     path('yeka/izin-guncelle/<uuid:uuid>',PermissionView.change_permission,name='change_permission'),
+
 
 
 
