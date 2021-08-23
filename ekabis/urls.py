@@ -407,6 +407,11 @@ urlpatterns = [
     path('yeka/izin-listesi/',PermissionView.view_permission,name='view_permission'),
     path('yeka/izin-guncelle/<uuid:uuid>',PermissionView.change_permission,name='change_permission'),
 
+    path('yeka/ufe-tufe/', YekaViews.view_ufe, name='view_ufe'),
+    path('yeka/kur/', YekaViews.view_kur, name='view_kur'),
+
+
+
 
 
 

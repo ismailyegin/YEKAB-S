@@ -23,6 +23,16 @@ from ekabis.models.Permission import Permission
 from ekabis.models.BlockEnumField import BlockEnumFields
 
 
+import xml.etree.ElementTree as ET
+from urllib.request import urlopen
+import ssl
+
+
+
+from bs4 import BeautifulSoup
+import pandas as pd
+import requests
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -363,3 +373,65 @@ def yekaname(yekabusiness):
     elif YekaCompetition.objects.filter(business=yekabusiness):
         name = YekaCompetition.objects.get(business=yekabusiness).name
     return name
+
+
+def kur():
+    # kur bilgilerinin alındıgı alan
+    url = "https://www.tcmb.gov.tr/kurlar/today.xml"
+    gcontext = ssl.SSLContext()  # Only for gangstars
+    info = urlopen(context=gcontext, url=url)
+    tree = ET.parse(info)
+    root = tree.getroot()
+    son = {}
+    data = []
+    i = 0
+    for kurlars in root.findall('Currency'):
+        Kod = kurlars.get('Kod')
+        Unit = kurlars.find('Unit').text  # <Unit>1</Unit>
+        isim = kurlars.find('Isim').text  # <Isim>ABD DOLARI</Isim>
+        CurrencyName = kurlars.find('CurrencyName').text  # <CurrencyName>US DOLLAR</CurrencyName>
+        ForexBuying = kurlars.find('ForexBuying').text  # <ForexBuying>2.9587</ForexBuying>
+        ForexSelling = kurlars.find('ForexSelling').text  # <ForexSelling>2.964</ForexSelling>
+        BanknoteBuying = kurlars.find('BanknoteBuying').text  # <BanknoteBuying>2.9566</BanknoteBuying>
+        BanknoteSelling = kurlars.find('BanknoteSelling').text  # <BanknoteSelling>2.9684</BanknoteSelling>
+        CrossRateUSD = kurlars.find('CrossRateUSD').text  # <CrossRateUSD>1</CrossRateUSD>
+        son = {
+            "Kod": Kod,
+            "isim": isim,
+            "CurrencyName": CurrencyName,
+            "Unit": Unit,
+            "ForexBuying": ForexBuying,
+            "ForexSelling": ForexSelling,
+            "BanknoteBuying": BanknoteBuying,
+            "BanknoteSelling": BanknoteSelling,
+            "CrossRateUSD": CrossRateUSD
+        }
+        data.append(son)
+    return data
+
+
+def ufe():
+    # üfe tüfe bilgilerinin alındıgı alan
+    url = "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Istatistikler/Enflasyon+Verileri/Uretici+Fiyatlari"
+    response = requests.get(url)
+    html_icerigi = response.content
+    soup = BeautifulSoup(html_icerigi, "html.parser")
+    tr = soup.find_all("tr")
+    data=[]
+    for td in tr:
+            if td.find_all("strong"):
+                print(td.text)
+                test=td.text.split('\n')
+            else:
+                print(td.text)
+                t = td.text.split('\n')
+                if len(t)==7 and t:
+                    beka = {
+                        'date': t[1],
+                        'yiufe': t[2],
+                        'ufe': t[3],
+                        'yitufe': t[4],
+                        'tufe': t[5],
+                    }
+                    data.append(beka)
+    return data
