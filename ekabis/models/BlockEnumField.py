@@ -162,7 +162,7 @@ class BlockEnumFields(enum.Enum):
             ],
         },
         {
-            'tr_name': 'Önlisans Başvurusu için EPDK’ya Uygunluk Yazısı',
+            'tr_name': 'Ön Lisans Başvurusu için EPDK’ya Uygunluk Yazısı',
             'en_name': '',
             'order': 17,
             'fixed_parameter':[
@@ -172,7 +172,7 @@ class BlockEnumFields(enum.Enum):
             ],
         },
         {
-            'tr_name': 'Önlisans Başvurusu',
+            'tr_name': 'Ön Lisans Başvurusu',
             'en_name': '',
             'order': 18,
             'fixed_parameter':[
@@ -182,7 +182,7 @@ class BlockEnumFields(enum.Enum):
             ],
         },
         {
-            'tr_name': 'Önlisans Süreci',
+            'tr_name': 'Ön Lisans Süreci',
             'en_name': '',
             'order': 19,
             'fixed_parameter':[

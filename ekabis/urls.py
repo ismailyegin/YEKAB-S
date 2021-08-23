@@ -3,7 +3,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
     VacationDayViews, ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
-    YekaBussinessBlogStaticView, FactoryViews, PermissionView
+    YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -408,10 +408,18 @@ urlpatterns = [
     path('yeka/izin-guncelle/<uuid:uuid>',PermissionView.change_permission,name='change_permission'),
 
 
-
-
-
-
-
+    #Onlisans-Süreci
+    path('onlisans/onlisans-dokuman-ismi-ekle/', AssociateDegreeViews.add_associate_file_name, name='add_associate_file_name'),
+    path('onlisans/onlisans-dokuman-isim-listesi/', AssociateDegreeViews.view_associate_file_name, name='view_associate_file_name'),
+    path('onlisans/onlisans-dokuman-isim-guncelle/<uuid:uuid>/', AssociateDegreeViews.change_factory_file_name,
+         name='change_associate_file_name'),
+    path('onlisans/onlisans-dokuman-isim-sil/', AssociateDegreeViews.delete_associate_file_name, name='delete_associate_file_name'),
+    path('onlisans/onlisans-belge-listesi/<uuid:business>/<uuid:businessblog>/', AssociateDegreeViews.view_yeka_associate_degree,
+         name='view_yeka_associate_degree_file'),
+    path('onlisans/onlisans-belge-ekle/<uuid:uuid>/', AssociateDegreeViews.add_associate_file,
+         name='add_yeka_associate_degree_file'),
+    path('onlisans/onlisans-belge-guncelle/<uuid:uuid>/<uuid:yeka_associate>/', AssociateDegreeViews.change_associate_file,
+         name='change_associate_file'),
+    path('onlisans/dokuman-sil/', AssociateDegreeViews.delete_associate_file, name='delete_associate_file'),
 
 ]
