@@ -214,14 +214,15 @@
 
                                                     <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
 
-                                                       href="{% url 'ekabis:change_competition' yeka.business.uuid  yekabusinessblok.uuid %}">Yarışma Ayarları</a>
+                                                       href="{% url 'ekabis:change_competition' yeka.business.uuid  yekabusinessblok.uuid %}">Yarışma
+                                                        Ayarları</a>
                                                     <div class="dropdown-divider"></div>
 
                                                 {% endif %}
 
 
 
-                                            {% if yekabusinessblok.businessblog.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması' %}
+                                                {% if yekabusinessblok.businessblog.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması' %}
 
                                                     <a class="dropdown-item"
                                                        href="{% url 'ekabis:change_yekacontract' yeka.business.uuid  yekabusinessblok.uuid %}">Sözleşme</a>
@@ -229,26 +230,29 @@
 
                                                 {% endif %}
 
-{#Aday yeka #}
+                                                {#Aday yeka #}
 
-                                            {% if yekabusinessblok.businessblog.name == 'Aday YEKA Önerilmesi' %}
+                                                {% if yekabusinessblok.businessblog.name == 'Aday YEKA Önerilmesi' %}
 
                                                     <a class="dropdown-item"
-                                                       href="{% url 'ekabis:change_yekaproposal' yeka.business.uuid  yekabusinessblok.uuid %}">Aday Yeka listesi</a>
+                                                       href="{% url 'ekabis:change_yekaproposal' yeka.business.uuid  yekabusinessblok.uuid %}">Aday
+                                                        Yeka listesi</a>
                                                     <div class="dropdown-divider"></div>
 
                                                 {% endif %}
 
-                                            {#Aday yeka #}
+                                                {#Aday yeka #}
 
-                                            {% if yekabusinessblok.businessblog.name == 'ADAY YEKA Kurum Görüşlerinin Alınması' %}
+                                                {% if yekabusinessblok.businessblog.name == 'ADAY YEKA Kurum Görüşlerinin Alınması' %}
 
-                                                     <a class="dropdown-item"
-                                                       href="{% url 'ekabis:change_yekaproposal' yeka.business.uuid  yekabusinessblok.uuid %}">Aday Yeka Kurum Görüşleri</a>
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:change_yekaproposal' yeka.business.uuid  yekabusinessblok.uuid %}">Aday
+                                                        Yeka Kurum Görüşleri</a>
                                                     <div class="dropdown-divider"></div>
 
                                                     <a class="dropdown-item"
-                                                       href="{% url 'ekabis:change_proposal_active' yeka.business.uuid  yekabusinessblok.uuid %}">Yeka Kurum Ayarları</a>
+                                                       href="{% url 'ekabis:change_proposal_active' yeka.business.uuid  yekabusinessblok.uuid %}">Yeka
+                                                        Kurum Ayarları</a>
 
                                                     <div class="dropdown-divider"></div>
 
@@ -273,6 +277,14 @@
                                                     <div class="dropdown-divider"></div>
 
                                                 {% endif %}
+                                                {% if yekabusinessblok.businessblog.name == 'Ön Lisans Süreci' %}
+
+                                                    <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
+                                                       href="{% url 'ekabis:view_yeka_associate_degree_file' yeka.business.uuid  yekabusinessblok.uuid %}">Ön Lisans Belge Listesi
+                                                       </a>
+                                                    <div class="dropdown-divider"></div>
+
+                                                {% endif %}
 
 
                                                 {#                                            Basvurların alınması Alanı #}
@@ -287,11 +299,12 @@
                                                     <div class="dropdown-divider"></div>
                                                 {% endif %}
 
-{#                                            Proje Yetkili Temsilcisinin Atanması#}
-                                            {% if yekabusinessblok.businessblog.name == 'Proje Yetkili Temsilcisinin Atanması' %}
+                                                {#                                            Proje Yetkili Temsilcisinin Atanması#}
+                                                {% if yekabusinessblok.businessblog.name == 'Proje Yetkili Temsilcisinin Atanması' %}
 
                                                     <a class="dropdown-item"
-                                                       href="{% url 'ekabis:view_yeka_user' yeka.business.uuid  yekabusinessblok.uuid %}">Yetkili Listesi</a>
+                                                       href="{% url 'ekabis:view_yeka_user' yeka.business.uuid  yekabusinessblok.uuid %}">Yetkili
+                                                        Listesi</a>
                                                     <div class="dropdown-divider"></div>
                                                 {% endif %}
 

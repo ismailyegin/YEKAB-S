@@ -9,6 +9,8 @@ from ekabis.models import ConnectionRegion, Yeka, YekaPersonHistory, YekaCompany
     YekaCompanyHistory, HistoryGroup, ExtraTime, Country, City, BusinessBlog, BusinessBlogParametreType, \
     YekaCompetition, HelpMenu, FactoryFile
 from ekabis.models.ActiveGroup import ActiveGroup
+from ekabis.models.AssociateDegreeFile import AssociateDegreeFile
+from ekabis.models.AssociateDegreeFileName import AssociateDegreeFileName
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Claim import Claim
 from ekabis.models.Communication import Communication
@@ -1436,6 +1438,73 @@ def FactoryFileGetService(request, filter):
         else:
             return FactoryFile.objects.get(isDeleted=False)
     except FactoryFile.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+
+def AssociateFileNameService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return AssociateDegreeFileName.objects.filter(**filter)
+            else:
+                return AssociateDegreeFileName.objects.filter(filter, isDeleted=False)
+        else:
+            return AssociateDegreeFileName.objects.filter(isDeleted=False)
+    except AssociateDegreeFileName.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+def AssociateFileNameGetService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return AssociateDegreeFileName.objects.get(**filter)
+            else:
+                return AssociateDegreeFileName.objects.get(filter, isDeleted=False)
+        else:
+            return AssociateDegreeFileName.objects.get(isDeleted=False)
+    except AssociateDegreeFileName.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+
+
+def AssociateFileService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return AssociateDegreeFile.objects.filter(**filter)
+            else:
+                return AssociateDegreeFile.objects.filter(filter, isDeleted=False)
+        else:
+            return AssociateDegreeFile.objects.filter(isDeleted=False)
+    except AssociateDegreeFile.DoesNotExist:
+        return None
+    except Exception as e:
+        traceback.print_exc()
+
+
+def AssociateFileGetService(request, filter):
+    try:
+        if filter:
+            if type(filter) != type(Q()):
+                filter['isDeleted'] = False
+                return AssociateDegreeFile.objects.get(**filter)
+            else:
+                return AssociateDegreeFile.objects.get(filter, isDeleted=False)
+        else:
+            return AssociateDegreeFile.objects.get(isDeleted=False)
+    except AssociateDegreeFile.DoesNotExist:
         return None
     except Exception as e:
         traceback.print_exc()

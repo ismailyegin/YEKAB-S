@@ -1,17 +1,15 @@
 from django import forms
 
 from ekabis.Forms.BaseForm import BaseForm
-from ekabis.models import FactoryFile
-from ekabis.models.FactoryFileName import FactoryFileName
-
-file_names = FactoryFileName.objects.filter(isDeleted=False)
+from ekabis.models import AssociateDegreeFileName
+from ekabis.models.AssociateDegreeFile import AssociateDegreeFile
 
 
-class FactoryFileForm(BaseForm):
+class AssociateFileForm(BaseForm):
     class Meta:
-        model = FactoryFile
-        fields = ('name', 'date','file')
-        labels = {'file': 'Doküman * ', 'name': 'Doküman Kategori * ','date':'Doküman Tarihi *' }
+        model = AssociateDegreeFile
+        fields = ('name', 'date', 'file')
+        labels = {'file': 'Doküman', 'name': 'Doküman Kategori', 'date': 'Doküman Tarihi'}
         widgets = {
             'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
@@ -22,6 +20,6 @@ class FactoryFileForm(BaseForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(FactoryFileForm, self).__init__(*args, **kwargs)
+        super(AssociateFileForm, self).__init__(*args, **kwargs)
         # access object through self.instance...
-        self.fields['name'].queryset = FactoryFileName.objects.filter(isDeleted=False)
+        self.fields['name'].queryset = AssociateDegreeFileName.objects.filter(isDeleted=False)

@@ -165,15 +165,15 @@
                                         <td> {{ location.neighborhood.name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-default">İşlemler</button>
                                                 <button type="button"
                                                         class="btn btn-default dropdown-toggle dropdown-icon"
-                                                        data-toggle="dropdown">
+                                                        data-toggle="dropdown">İşlemler
                                                 </button>
+
                                                 <div class="dropdown-menu" role="menu">
                                                     {% for item in perm %}
                                                         {% if item == 'change_location' %}
-                                                            <a href="{% url 'ekabis:change_location'  location.uuid yeka_proposal.uuid%}"
+                                                            <a href="{% url 'ekabis:change_location'  location.uuid yeka_proposal.uuid %}"
                                                                class="dropdown-item"> <i
                                                                     class="fa fa-edit" title="Düzenle"></i> Düzenle
                                                             </a>
@@ -295,7 +295,7 @@
 
                 },
                 success: function (result) {
-debugger;
+                    debugger;
 
                     let select = document.getElementById("ilce_id");
 
