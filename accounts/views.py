@@ -163,7 +163,9 @@ def show_urls(request):
     for group in groups:
         for item in Permission.objects.all():
             if not (PermissionGroup.objects.filter(group=group, permissions=item)):
-                perm = PermissionGroup(group=group, permissions=item)
+                perm = PermissionGroup(group=group,
+                                       permissions=item,
+                                       is_active=True)
                 perm.save()
     return redirect('accounts:login')
 

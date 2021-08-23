@@ -23,6 +23,6 @@ class YekaContractForm(BaseForm):
                 attrs={'class': 'form-control ','required': 'required'}),
             'company':forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                         'style': 'width: 100%;', 'required': 'required'}),
-            'contract':forms.FileInput(attrs={'class': 'files',
-                                        'style': 'width: 100%;', 'required': 'required'}),
+            # 'contract':forms.FileInput(attrs={'class': 'files',
+            #                             'style': 'width: 100%;', 'required': 'required'}),
         }

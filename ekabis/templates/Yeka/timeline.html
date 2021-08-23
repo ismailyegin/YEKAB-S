@@ -287,6 +287,14 @@
                                                     <div class="dropdown-divider"></div>
                                                 {% endif %}
 
+{#                                            Proje Yetkili Temsilcisinin Atanması#}
+                                            {% if yekabusinessblok.businessblog.name == 'Proje Yetkili Temsilcisinin Atanması' %}
+
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'ekabis:view_yeka_user' yeka.business.uuid  yekabusinessblok.uuid %}">Yetkili Listesi</a>
+                                                    <div class="dropdown-divider"></div>
+                                                {% endif %}
+
                                                 <a class="dropdown-item" id="yekablog-{{ yekabusinessblok.uuid }}"
                                                    href="{% url 'ekabis:add_extratime' yeka.business.uuid  yekabusinessblok.uuid %}">Ek
                                                     Süre Ekle</a>

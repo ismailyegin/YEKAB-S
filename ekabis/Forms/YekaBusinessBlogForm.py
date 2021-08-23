@@ -57,8 +57,9 @@ class YekaBusinessBlogForm(ModelForm):
 
     def __init__(self, business, yekabussiness, *args, **kwargs):
         super(YekaBusinessBlogForm, self).__init__(*args, **kwargs)
-        if yekabussiness.parent.finisDate:
-             self.fields['startDate'].label = 'Başlama Tarihi   ('+str(yekabussiness.parent.businessblog.name) +' bitiş Tarihi:'+str(yekabussiness.parent.finisDate.strftime("%d-%m-%Y"))+')'
+        if yekabussiness.parent:
+            if yekabussiness.parent.finisDate:
+                 self.fields['startDate'].label = 'Başlama Tarihi   ('+str(yekabussiness.parent.businessblog.name) +' bitiş Tarihi:'+str(yekabussiness.parent.finisDate.strftime("%d-%m-%Y"))+')'
 
         business_filter = {
             'pk': business

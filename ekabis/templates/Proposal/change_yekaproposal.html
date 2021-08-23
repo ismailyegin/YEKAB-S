@@ -162,6 +162,22 @@
                                                         data-toggle="dropdown">
                                                 </button>
                                                 <div class="dropdown-menu" role="menu">
+                                                {% for item in perm %}
+                                                        {% if item == 'view_proposal_institution' %}
+                                                            <a href="{% url 'ekabis:view_proposal_institution' yekaproposal.uuid  proposal.uuid %}"
+                                                               class="dropdown-item"> <i
+                                                                    class="fa fa-edit" title="Kurum Görüşleri"></i>Kurum Görüşleri
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% for item in perm %}
+                                                        {% if item == 'change_proposal_status' %}
+                                                            <a href="{% url 'ekabis:change_proposal_status' yekaproposal.uuid  proposal.uuid %}"
+                                                               class="dropdown-item"> <i
+                                                                    class="fa fa-edit" title="Kurum Görüşleri"></i>Kurum Görüşleri
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
                                                     {% for item in perm %}
                                                         {% if item == 'change_proposal' %}
                                                             <a href="{% url 'ekabis:change_proposal' yekaproposal.uuid  proposal.uuid %}"
@@ -170,6 +186,7 @@
                                                             </a>
                                                         {% endif %}
                                                     {% endfor %}
+
                                                     {% for item in perm %}
                                                         {% if item == 'delete_proposal' %}
 
