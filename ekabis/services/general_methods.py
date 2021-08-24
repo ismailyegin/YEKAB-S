@@ -5,7 +5,8 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.messages import get_messages
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect
-from django.urls import resolve
+from django.urls import resolve, reverse
+from django.utils.safestring import mark_safe
 
 from accounts.models import Forgot
 from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition
@@ -22,16 +23,14 @@ from django.contrib import messages
 from ekabis.models.Permission import Permission
 from ekabis.models.BlockEnumField import BlockEnumFields
 
-
 import xml.etree.ElementTree as ET
 from urllib.request import urlopen
 import ssl
 
-
-
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -367,12 +366,18 @@ def log(request, self):
 
 
 def yekaname(yekabusiness):
-    name=None
+    name = None
+    path = ''
+    html = ''
     if Yeka.objects.filter(business=yekabusiness):
-        name = Yeka.objects.get(business=yekabusiness).definition
+        yeka = Yeka.objects.get(business=yekabusiness)
+        path = redirect('ekabis:view_yekabusinessBlog', yeka.uuid).url
+        html = '<a href="' + path + '">' + yeka.definition + '</a>'
     elif YekaCompetition.objects.filter(business=yekabusiness):
-        name = YekaCompetition.objects.get(business=yekabusiness).name
-    return name
+        yeka = YekaCompetition.objects.get(business=yekabusiness)
+        path = redirect('ekabis:view_competitionbusinessblog', yeka.uuid).url
+        html = '<a href="' + path + '">' + yeka.name + '</a>'
+    return mark_safe(html)
 
 
 def kur():
@@ -417,21 +422,21 @@ def ufe():
     html_icerigi = response.content
     soup = BeautifulSoup(html_icerigi, "html.parser")
     tr = soup.find_all("tr")
-    data=[]
+    data = []
     for td in tr:
-            if td.find_all("strong"):
-                print(td.text)
-                test=td.text.split('\n')
-            else:
-                print(td.text)
-                t = td.text.split('\n')
-                if len(t)==7 and t:
-                    beka = {
-                        'date': t[1],
-                        'yiufe': t[2],
-                        'ufe': t[3],
-                        'yitufe': t[4],
-                        'tufe': t[5],
-                    }
-                    data.append(beka)
+        if td.find_all("strong"):
+            print(td.text)
+            test = td.text.split('\n')
+        else:
+            print(td.text)
+            t = td.text.split('\n')
+            if len(t) == 7 and t:
+                beka = {
+                    'date': t[1],
+                    'yiufe': t[2],
+                    'ufe': t[3],
+                    'yitufe': t[4],
+                    'tufe': t[5],
+                }
+                data.append(beka)
     return data

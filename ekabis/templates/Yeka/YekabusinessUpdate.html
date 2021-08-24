@@ -111,7 +111,8 @@
                                         <ul class="list-group mt-auto" id="right">
                                             {% for busi in business %}
                                                 <li class="list-group-item"
-                                                    value="{{ busi.pk }}">{{ busi.sorting }}**{{ busi.businessblog.name }}**{{ busi.parent.businessblog.name }}</li>
+
+                                                    value="{{ busi.businessblog.pk }}">{{ busi.businessblog.pk }}**{{ busi.businessblog.name }}**</li>
                                             {% endfor %}
 
                                         </ul>
@@ -279,7 +280,7 @@
 
             businessblog.val(liArr.join('-'));
             debugger
-        };
+        }
 
 
     </script>

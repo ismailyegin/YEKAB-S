@@ -350,16 +350,16 @@ def change_yekabusiness(request, uuid, yeka):
                     for i in range(len(blogs)):
 
                         # is blogu varsa
-                        if yekabusiness.businessblogs.filter(isDeleted=False, pk=blogs[i]):
+                        if yekabusiness.businessblogs.filter(isDeleted=False,businessblog_id=blogs[i]):
                             if i == 0:
-                                blog = yekabusiness.businessblogs.get(isDeleted=False, pk=blogs[i])
+                                blog = yekabusiness.businessblogs.get(isDeleted=False, businessblog_id=blogs[i])
                                 blog.parent = None
                                 blog.sorting = i + 1
                                 blog.save()
                                 parent = blog
 
                             else:
-                                blog = yekabusiness.businessblogs.get(isDeleted=False, pk=blogs[i])
+                                blog = yekabusiness.businessblogs.get(isDeleted=False, businessblog_id=blogs[i])
                                 blog.parent = parent
                                 blog.sorting = i + 1
                                 blog.save()
@@ -371,6 +371,7 @@ def change_yekabusiness(request, uuid, yeka):
                                                         sorting=i + 1)
                                 blog.save()
                                 parent = blog
+
 
                             else:
                                 blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),

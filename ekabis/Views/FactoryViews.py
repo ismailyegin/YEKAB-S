@@ -161,11 +161,7 @@ def view_yeka_factory(request, business, businessblog):
 
         yekabusiness = YekaBusiness.objects.get(uuid=business)
         yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
-        name = ''
-        if Yeka.objects.filter(business=yekabusiness):
-            name = Yeka.objects.get(business=yekabusiness).definition
-        elif YekaCompetition.objects.filter(business=yekabusiness):
-            name = YekaCompetition.objects.get(business=yekabusiness).name
+        name = general_methods.yekaname(yekabusiness)
 
         if not YekaFactory.objects.filter(business=yekabusiness):
             factory = YekaFactory()
@@ -197,12 +193,7 @@ def add_yeka_factory(request, uuid):
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
 
-        name = ''
-
-        if Yeka.objects.filter(business=yeka_factory.business):
-            name = Yeka.objects.get(business=yeka_factory.business).definition
-        elif YekaCompetition.objects.filter(business=yeka_factory.business):
-            name = YekaCompetition.objects.get(business=yeka_factory.business).name
+        name = general_methods.yekaname(yeka_factory.business)
 
         with transaction.atomic():
             factory_form = FactoryForm()

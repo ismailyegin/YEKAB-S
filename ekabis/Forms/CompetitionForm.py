@@ -19,5 +19,5 @@ class CompetitionForm(BaseForm):
         widgets = {
             'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datemask', 'id': 'datepicker', 'autocomplete': 'off',
-                       'readonly': 'readonly'}),
+                       }),
         }

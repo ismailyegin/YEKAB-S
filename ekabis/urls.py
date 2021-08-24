@@ -1,4 +1,6 @@
-from django.urls import path
+from django.conf.urls import url
+from django.urls import path, include
+
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
@@ -426,5 +428,9 @@ urlpatterns = [
     path('onlisans/onlisans-belge-guncelle/<uuid:uuid>/<uuid:yeka_associate>/', AssociateDegreeViews.change_associate_file,
          name='change_associate_file'),
     path('onlisans/dokuman-sil/', AssociateDegreeViews.delete_associate_file, name='delete_associate_file'),
+
+    path('yeka/firma-basvuru-guncelle/<uuid:uuid>/<uuid:business>/<uuid:yekabusinessblog>/',
+         YekaViews.change_yekabusinessblog_company,
+         name='change_yekabusinessblog_company'),
 
 ]
