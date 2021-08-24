@@ -56,23 +56,15 @@
 
 
     <script type="text/javascript">
+
         $(function () {
             $("g").hover(
                 function (e) {
-                    var id = $(this).attr("id");
-                    var position = $('#svg-turkiye-haritasi').position();
-                    var text = ''
-
-
-                    $('#il-isimleri').animate({
-                        top: e.pageY - position.top + 25 + 'px',
-                        left: e.pageX - position.left + 25 + 'px',
-                    });
-                    $('#il-isimleri').text($(this).attr("id"));
-                    {#$('#il-isimleri').toggle();#}
-
+                    var name = $(this).attr("data-iladi");
+                    console.log(name)
 
                 });
+
         });
     </script>
 
@@ -90,9 +82,6 @@
         .vis-item.red {
             background-color: red;
             border-color: darkred;
-            color: white;
-            font-family: monospace;
-            box-shadow: 0 0 10px gray;
         }
 
         .vis-item.vis-dot.red {
@@ -100,16 +89,16 @@
             border-width: 10px;
         }
 
-        .vis-item.vis-line.red {
-            border-width: 5px;
-        }
-
-        .vis-item.vis-box.red {
-            border-radius: 0;
-            border-width: 2px;
-            font-size: 24pt;
-            font-weight: bold;
-        }
+        {#.vis-item.vis-line.red {#}
+        {#    border-width: 5px;#}
+        {# }#}
+        {##}
+        {#.vis-item.vis-box.red {#}
+        {#    border-radius: 0;#}
+        {#    border-width: 2px;#}
+        {#    font-size: 24pt;#}
+        {#    font-weight: bold;#}
+        {#}#}
 
         .vis-item.orange {
             background-color: gold;
@@ -602,27 +591,26 @@
                 {% for yekabusinessblok in item.business.businessblogs.all %}
 
 
-                    {%  if   yekabusinessblok.status %}
-                        {
-                            id: "{{ yekabusinessblok.uuid}}",
-                            content: "{{ yekabusinessblok.businessblog.name }}",
-                            start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
-                            end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
-                            url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
-                            group: {{ item.pk }},
-                            className: 'green',
-                        },
-                    {% else %}
-                        {
-                            id: "{{ yekabusinessblok.uuid}}",
-                            content: "{{ yekabusinessblok.businessblog.name }}",
-                            start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
-                            url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
-                            group: {{ item.pk }},
-                            className: 'red',
-                        },
-                    {% endif %}
-
+                        {%  if   yekabusinessblok.status   %}
+                            {
+                                id: "{{ yekabusinessblok.uuid}}",
+                                content: "{{ yekabusinessblok.businessblog.name }}",
+                                start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                                end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
+                                url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
+                                group: {{ item.pk }},
+                                className: 'green',
+                            },
+                        {% else %}
+                            {
+                                id: "{{ yekabusinessblok.uuid}}",
+                                content: "{{ yekabusinessblok.businessblog.name }}",
+                                start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                                url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
+                                group: {{ item.pk }},
+                                className: 'red',
+                            },
+                        {% endif %}
                 {% endfor %}
             {% endfor %}
             {#            {% for extra in ekstratimes %}#}
@@ -656,8 +644,7 @@
                 }
             }
         });
-    </script>
-    <script>
+
 
         $(function () {
             var data = new Array();
@@ -669,12 +656,6 @@
 
         });
 
-        var page = require('visualization').create();
-        page.render('example.png');
-
-
-    </script>
-    <script>
 
         $(function () {
             /* initialize the external events
@@ -824,9 +805,6 @@
         })
 
 
-    </script>
-
-    <script>
         function increase_brightness(hex, percent) {
             // strip the leading # if it's there
             hex = hex.replace(/^\s*#|\s*$/g, '');
@@ -867,22 +845,13 @@
             {% if regions %}
                 {% for region in regions %}
                     {% for item in region.cities.all %}
-                        debugger;
                         data.push("{{ item.plateNo }}");
                         count = data.filter(x => x =={{ item.plateNo }}).length;
                         degerAta(count, '{{ item.plateNo }}');
-                        console.log(count, {{ item.plateNo }})
                     {% endfor %}
                 {% endfor %}
             {% endif %}
-            console.log(data)
-            console.log(data.filter(x => x == '07').length);
-            console.log(data.filter(x => x == '58').length);
-
-
         });
     </script>
-
-
 
 {% endblock %}

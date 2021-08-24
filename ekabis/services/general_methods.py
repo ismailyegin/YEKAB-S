@@ -30,7 +30,6 @@ import ssl
 
 
 from bs4 import BeautifulSoup
-import pandas as pd
 import requests
 
 def get_client_ip(request):
