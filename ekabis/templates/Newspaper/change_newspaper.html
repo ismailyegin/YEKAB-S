@@ -91,7 +91,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Resmi Gazete Güncelle - {{ name }}</h1>
+                       {{ name }} - Resmi Gazete Güncelle </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -111,7 +111,7 @@
         <form method="post" enctype="multipart/form-data" role="form">
             {% csrf_token %}
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">{{ yekabussinessblog.businessblog.name }}</h3>
@@ -137,79 +137,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Gazeteler </h3>
 
-                        </div>
-
-                        <div class="card-body">
-                            <table id="company" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>İlan Tarihi</th>
-                                    <th>Sayısı</th>
-                                    <th>İlan Metni</th>
-                                    <th>Dosya</th>
-                                    <th>Kayıt Tarihi</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                {% for newspaper in newspapers %}
-                                    <tr>
-                                        <td>{{ forloop.counter }} </td>
-                                        <td>{{ newspaper.listingDate }}</td>
-                                        <td>{{ newspaper.newspaperCount }}</td>
-                                        <td>{{ newspaper.newspapwerText }}</td>
-                                        <td>{{ newspaper.file }}</td>
-                                        <td>{{ newspaper.creationDate }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default">İşlemler</button>
-                                                <button type="button"
-                                                        class="btn btn-default dropdown-toggle dropdown-icon"
-                                                        data-toggle="dropdown">
-                                                </button>
-                                                <div class="dropdown-menu" role="menu">
-                                                    {% for item in perm %}
-                                                        {% if item == 'change_newspaper' %}
-                                                            <a href="{% url 'ekabis:change_newspaper' newspaper.uuid %}"
-                                                               class="dropdown-item"> <i
-                                                                    class="fa fa-edit" title="Düzenle"></i> Düzenle
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    {% for item in perm %}
-                                                        {% if item == 'delete_newspaper' %}
-
-                                                            <a class="dropdown-item" href=""
-                                                               data-toggle="modal"
-                                                               onclick=deleteNewsPaper('{{ newspaper.uuid }}')><i
-                                                                    class="fa fa-trash"></i>Sil</a>
-
-                                                        {% endif %}
-                                                    {% endfor %}
-
-                                                </div>
-                                            </div>
-
-
-                                        </td>
-                                    </tr>
-
-                                {% endfor %}
-
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </form>
 

@@ -91,7 +91,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Basvuru Ayarları - {{ name }}</h1>
+                        {{ name }} - Basvuru Ayarları </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -159,7 +159,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card card-outline card-primary">
-                         <div class="card-header with-border">
+                        <div class="card-header with-border">
                             <h3 class="card-title">Belgeleri Seç</h3>
                             {% for item in perm %}
                                 {% if item == 'view_yekaapplicationfilename' %}
@@ -191,7 +191,7 @@
 
                             {% endfor %}
 
-                            {% for perm in  application.necessary.all%}
+                            {% for perm in  application.necessary.all %}
 
 
                                 <div class="custom-control custom-switch form-control-lg">

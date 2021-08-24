@@ -139,7 +139,6 @@
                                         <th>Kapasite</th>
                                         <th>Tarım Yazısı</th>
                                         <th>Bilgi Formu</th>
-                                        <th>Konumlar</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -153,8 +152,6 @@
                                             <td>{{ proposal.farm_form }}</td>
                                             <td>{{ proposal.information_form }}</td>
 
-                                            <th>{% for item in proposal.location.all %}{{ item.city }} /
-                                                {{ item.district }} /{{ item.neighborhood }}{% endfor %}</th>
                                             <td>
                                                 <div class="btn-group">
                                                 <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">İşlemler </button>

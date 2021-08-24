@@ -162,11 +162,7 @@ def view_yeka_associate_degree(request, business, businessblog):
 
         yekabusiness = YekaBusiness.objects.get(uuid=business)
         yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
-        name = ''
-        if Yeka.objects.filter(business=yekabusiness):
-            name = Yeka.objects.get(business=yekabusiness).definition
-        elif YekaCompetition.objects.filter(business=yekabusiness):
-            name = YekaCompetition.objects.get(business=yekabusiness).name
+        name = general_methods.yekaname(yekabusiness)
 
         if not YekaAssociateDegree.objects.filter(business=yekabusiness):
             associate = YekaAssociateDegree()
@@ -202,12 +198,7 @@ def add_associate_file(request, uuid):
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
 
-        name = ''
-
-        if Yeka.objects.filter(business=yeka_associate.business):
-            name = Yeka.objects.get(business=yeka_associate.business).definition
-        elif YekaCompetition.objects.filter(business=yeka_associate.business):
-            name = YekaCompetition.objects.get(business=yeka_associate.business).name
+        name = general_methods.yekaname(yeka_associate.business)
 
         with transaction.atomic():
             associate_file_form = AssociateFileForm()

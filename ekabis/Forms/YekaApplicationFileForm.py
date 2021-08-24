@@ -8,5 +8,5 @@ class YekaApplicationFileForm(ModelForm):
     class Meta:
         model = YekaApplicationFile
         fields = ('file',)
-        labels = {'file': 'file',}
+        labels = {'file': 'Dosya',}
 

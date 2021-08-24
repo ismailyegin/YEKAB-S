@@ -1,7 +1,8 @@
-from django.contrib.admin.widgets import FilteredSelectMultiple
+from captcha.fields import CaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
-from django.contrib.auth.models import Permission
+from captcha.fields import CaptchaField
+
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Username", max_length=30, widget=forms.TextInput(
@@ -9,3 +10,6 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(label="Password", max_length=30, widget=forms.TextInput(
         attrs={'class': 'mdl-textfield__input', 'type': 'password', 'id': 'password'}))
 
+
+class CaptchaForm(forms.Form):
+    captcha = CaptchaField()

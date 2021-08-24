@@ -5,13 +5,12 @@ from ekabis.models.YekaContract import YekaContract
 class YekaContractForm(BaseForm):
     class Meta:
         model = YekaContract
-        fields = ('price', 'contract','date','unit','company')
+        fields = ('price','date','unit','company','contract',)
         labels = {
                   'price': 'Fiyat',
                   'contract': 'Kullanım Hakkı Sözleşmesi',
                   'date': 'Sözleşme İmza Tarihi',
                   'unit': 'Bİrimi',
-                  'contract': 'Kullanım Hakkı Sözleşmesi',
                   'company': 'Kazanan Firma',}
         widgets = {
             'unit': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
