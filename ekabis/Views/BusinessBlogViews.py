@@ -341,7 +341,7 @@ def change_yekabusiness(request, uuid, yeka):
                     blog = None
                     # olmayanları sil
                     if business:
-                        removeBusiness = business.filter() .exclude(isDeleted=False, businessblog__id__in=blogs)
+                        removeBusiness =business.exclude(businessblog__id__in=blogs)
                         for i in removeBusiness:
                             i.isDeleted = True
                             i.save()

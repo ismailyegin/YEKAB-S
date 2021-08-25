@@ -14,7 +14,8 @@ from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
 from ekabis.Forms.YekaCompetitionForm import YekaCompetitionForm
 from ekabis.Forms.YekaForm import YekaForm
-from ekabis.models import YekaCompetition, YekaBusiness, YekaBusinessBlog, BusinessBlog, Employee, YekaPerson, \
+from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
+from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
@@ -395,76 +396,66 @@ def change_yekacompetitionbusiness(request, uuid, competition):
         unbusiness = BusinessBlog.objects.exclude(id__in=tk).filter(isDeleted=False)
         if request.method == 'POST':
             with transaction.atomic():
-
-                if business_form.is_valid():
-                    yekabu = business_form.save(request,commit=False)
-                    yekabu.save()
-                    if request.POST.get('businessblog'):
-
-                        blogs = request.POST.get('businessblog').split("-")
-                        parent = None
-                        blog = None
-                        # olmayanları sil
-                        if business:
-                            removeBusiness = business.exclude(isDeleted=False, id__in=blogs)
-                            for i in removeBusiness:
-                                i.isDeleted = True
-                                i.save()
-
-                        # olmayanı ekle sıralması degileni kaydet
-                        for i in range(len(blogs)):
-
-                            # is blogu varsa
-                            if yekabusiness.businessblogs.filter(isDeleted=False, pk=blogs[i]):
-                                if i == 0:
-                                    blog = yekabusiness.businessblogs.get(isDeleted=False, pk=blogs[i])
-                                    blog.parent = None
-                                    blog.sorting = i + 1
-                                    blog.save()
-                                    parent = blog
-
-                                else:
-                                    blog = yekabusiness.businessblogs.get(isDeleted=False, pk=blogs[i])
-                                    blog.parent = parent
-                                    blog.sorting = i + 1
-                                    blog.save()
-                                    parent = blog
-                            # is blogu yoksa
-                            else:
-                                if i == 0:
-                                    blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
-                                                            sorting=i + 1)
-                                    blog.save()
-                                    parent = blog
-
-                                else:
-                                    blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
-                                                            parent=parent,
-                                                            sorting=i + 1
-                                                            )
-                                    blog.save()
-                                    parent = blog
-                                yekabusiness.businessblogs.add(blog)
-                                yekabusiness.save()
-
-
-                    else:
-                        removeBusiness = yekabusiness.businessblogs.all()
+                if request.POST.get('businessblog'):
+                    blogs = request.POST.get('businessblog').split("-")
+                    parent = None
+                    blog = None
+                    # olmayanları sil
+                    if business:
+                        removeBusiness =business.exclude(businessblog__id__in=blogs)
                         for i in removeBusiness:
                             i.isDeleted = True
                             i.save()
 
-                    return redirect('ekabis:view_competitionbusinessblog', competition)
+                    # olmayanı ekle sıralması degileni kaydet
+                    for i in range(len(blogs)):
+
+                        # is blogu varsa
+                        if yekabusiness.businessblogs.filter(businessblog_id=blogs[i]):
+                            if i == 0:
+                                blog = yekabusiness.businessblogs.filter(businessblog_id=blogs[i])[0]
+                                if blog.isDeleted:
+                                    blog.isDeleted = False
+                                blog.parent = None
+                                blog.sorting = i + 1
+                                blog.save()
+                                parent = blog
+
+                            else:
+
+                                blog = yekabusiness.businessblogs.filter(businessblog_id=blogs[i])[0]
+                                if blog.isDeleted:
+                                    blog.isDeleted = False
+                                blog.parent = parent
+                                blog.sorting = i + 1
+                                blog.save()
+                                parent = blog
+                        # is blogu yoksa
+                        else:
+                            if i == 0:
+                                blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
+                                                        sorting=i + 1)
+                                blog.save()
+                                parent = blog
+
+
+                            else:
+                                blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
+                                                        parent=parent,
+                                                        sorting=i + 1
+                                                        )
+                                blog.save()
+                                parent = blog
+                            yekabusiness.businessblogs.add(blog)
+                            yekabusiness.save()
+
+
                 else:
-                    error_messages = get_error_messages(business_form)
-
-                    return render(request, 'YekaCompetition/competition_businessblog_change.html',
-                                  {'business_form': business_form,
-                                   'error_messages': error_messages,
-                                   'unbusiness': unbusiness,
-                                   'business': business, 'urls': urls, 'current_url': current_url, 'url_name': url_name
-                                   })
-
+                    removeBusiness = yekabusiness.businessblogs.all()
+                    for i in removeBusiness:
+                        i.isDeleted = True
+                        i.save()
+                return redirect('ekabis:view_competitionbusinessblog', competition)
         return render(request, 'YekaCompetition/competition_businessblog_change.html', {'business_form': business_form,
                                                                                     'error_messages': '',
                                                                                     'unbusiness': unbusiness,
@@ -579,6 +570,7 @@ def yeka_person_list(request, uuid):
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
     yeka_person = YekaCompetitionPersonService(request, yekacompetition_person_filter).order_by('-creationDate')
+    name=general_methods.yekaname(competition.business)
     array = []
     for person in yeka_person:
         array.append(person.employee.uuid)
@@ -587,7 +579,7 @@ def yeka_person_list(request, uuid):
     persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array).order_by('-creationDate')
     if request.POST:
         with transaction.atomic():
-            if request.POST['yeka'] == 'add':
+            if request.POST.get('yeka') == 'add':
                 persons = request.POST.getlist('employee')
                 if persons:
                     for person_id in persons:
@@ -632,7 +624,7 @@ def yeka_person_list(request, uuid):
 
     return render(request, 'Yeka/yekaPersonList.html',
                   {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid, 'urls': urls,
-                   'current_url': current_url, 'url_name': url_name, 'competition': competition, })
+                   'current_url': current_url, 'url_name': url_name, 'competition': competition,'name':name })
 
 
 @login_required
@@ -710,9 +702,9 @@ def add_sumcompetition(request, uuid):
                     if parent_competition.business:
                         yeka_business = YekaBusiness(name=parent_competition.business.name)
                         yeka_business.save()
-                        if parent_competition.business.businessblogs.all():
+                        if parent_competition.business.businessblogs.filter(isDeleted=False):
                             parent_yeka_business_blog = YekaBusinessBlog.objects.none()
-                            for item in parent_competition.business.businessblogs.all().order_by('sorting'):
+                            for item in parent_competition.business.businessblogs.filter(isDeleted=False).order_by('sorting'):
 
                                 if item.sorting == 1:
                                     yeka_businessblog = YekaBusinessBlog(
@@ -731,6 +723,7 @@ def add_sumcompetition(request, uuid):
                                     yeka_businessblog = YekaBusinessBlog(parent=parent_yeka_business_blog,
                                                                          finisDate=item.finisDate,
                                                                          businessblog=item.businessblog,
+                                                                         startDate=item.startDate,
                                                                          sorting=item.sorting,
                                                                          businessTime=item.businessTime,
                                                                          status=item.status,
