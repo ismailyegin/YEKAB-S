@@ -1,7 +1,7 @@
-from captcha.fields import CaptchaField
+
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
-from captcha.fields import CaptchaField
+
 
 
 class LoginForm(AuthenticationForm):
@@ -11,5 +11,3 @@ class LoginForm(AuthenticationForm):
         attrs={'class': 'mdl-textfield__input', 'type': 'password', 'id': 'password'}))
 
 
-class CaptchaForm(forms.Form):
-    captcha = CaptchaField()

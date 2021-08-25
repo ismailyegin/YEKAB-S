@@ -474,74 +474,80 @@ def yeka_person_list(request, uuid):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    urls = last_urls(request)
-    current_url = resolve(request.path_info)
-    url_name = Permission.objects.get(codename=current_url.url_name)
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
 
-    yeka_filter = {
-        'uuid': uuid,
+        yeka_filter = {
+            'uuid': uuid,
 
-    }
-    yeka = YekaGetService(request, yeka_filter)
-    yeka_person_filter = {
-        'yeka': yeka,
-        'isDeleted': False,
-        'is_active': True
-    }
+        }
+        yeka = YekaGetService(request, yeka_filter)
+        yeka_person_filter = {
+            'yeka': yeka,
+            'isDeleted': False,
+            'is_active': True
+        }
 
-    yeka_person = YekaPersonService(request, yeka_person_filter).order_by('-creationDate')
-    array = []
-    for person in yeka_person:
-        array.append(person.employee.uuid)
+        yeka_person = YekaPersonService(request, yeka_person_filter).order_by('-creationDate')
+        array = []
+        for person in yeka_person:
+            array.append(person.employee.uuid)
 
-    # ekstra servis yazılacak
-    persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array).order_by('-creationDate')
-    if request.POST:
-        with transaction.atomic():
-            if request.POST['yeka'] == 'add':
-                persons = request.POST.getlist('employee')
-                if persons:
-                    for person_id in persons:
-                        person_filter = {
-                            'pk': person_id
-                        }
-                        person = EmployeeGetService(request, person_filter)
-                        person_yeka = YekaPerson(yeka=yeka, employee=person, is_active=True)
-                        person_yeka.save()
+        # ekstra servis yazılacak
+        persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array).order_by('-creationDate')
+        if request.POST:
+            with transaction.atomic():
+                if request.POST['yeka'] == 'add':
+                    persons = request.POST.getlist('employee')
+                    if persons:
+                        for person_id in persons:
+                            person_filter = {
+                                'pk': person_id
+                            }
+                            person = EmployeeGetService(request, person_filter)
+                            person_yeka = YekaPerson(yeka=yeka, employee=person, is_active=True)
+                            person_yeka.save()
 
-                        personHistory = YekaPersonHistory(yeka=yeka, person=person, is_active=True)
-                        personHistory.save()
+                            personHistory = YekaPersonHistory(yeka=yeka, person=person, is_active=True)
+                            personHistory.save()
 
-                        log = str(yeka.definition) + ' adlı yekaya - ' + str(
-                            person.user.get_full_name()) + " adlı personel atandı."
-                        log = general_methods.logwrite(request, request.user, log)
-            else:
-                persons = request.POST.getlist('sub_employee')
-                if persons:
-                    for person_id in persons:
-                        person_filter = {
-                            'pk': person_id
-                        }
-                        person = EmployeeGetService(request, person_filter)
-                        yeka_person = YekaPerson.objects.get(
-                            Q(isDeleted=False) & Q(yeka__uuid=uuid) & Q(employee__uuid=person.uuid))
+                            log = str(yeka.definition) + ' adlı yekaya - ' + str(
+                                person.user.get_full_name()) + " adlı personel atandı."
+                            log = general_methods.logwrite(request, request.user, log)
+                else:
+                    persons = request.POST.getlist('sub_employee')
+                    if persons:
+                        for person_id in persons:
+                            person_filter = {
+                                'pk': person_id
+                            }
+                            person = EmployeeGetService(request, person_filter)
+                            yeka_person = YekaPerson.objects.get(
+                                Q(isDeleted=False) & Q(yeka__uuid=uuid) & Q(employee__uuid=person.uuid))
 
-                        yeka_person.isDeleted = True
-                        yeka_person.is_active = False
-                        yeka_person.save()
+                            yeka_person.isDeleted = True
+                            yeka_person.is_active = False
+                            yeka_person.save()
 
-                        personHistory = YekaPersonHistory(yeka=yeka_person.yeka, person=person, is_active=False)
-                        personHistory.save()
+                            personHistory = YekaPersonHistory(yeka=yeka_person.yeka, person=person, is_active=False)
+                            personHistory.save()
 
-                        log = str(yeka_person.yeka.definition) + ' adlı yekadan -' + str(
-                            person.user.get_full_name()) + " personeli çıkarıldı."
-                        log = general_methods.logwrite(request, request.user, log)
+                            log = str(yeka_person.yeka.definition) + ' adlı yekadan -' + str(
+                                person.user.get_full_name()) + " personeli çıkarıldı."
+                            log = general_methods.logwrite(request, request.user, log)
 
-        return redirect('ekabis:view_yeka_personel', uuid)
+            return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
+        return render(request, 'Yeka/yekaPersonList.html',
+                      {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid, 'urls': urls,
+                       'current_url': current_url, 'url_name': url_name, 'yeka': yeka})
+    except Exception as e:
 
-    return render(request, 'Yeka/yekaPersonList.html',
-                  {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid, 'urls': urls,
-                   'current_url': current_url, 'url_name': url_name, 'yeka': yeka})
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
 
 
 # yeka firma atama

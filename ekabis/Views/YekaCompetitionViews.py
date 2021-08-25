@@ -113,7 +113,7 @@ def add_competition(request, region):
                         yeka_business.save()
                         if yeka.business.businessblogs.all():
                             parent_yeka_business_blog = YekaBusinessBlog.objects.none()
-                            for item in yeka.business.businessblogs.all().order_by('sorting'):
+                            for item in yeka.business.businessblogs.filter(isDeleted=False).order_by('sorting'):
 
                                 if item.sorting == 1:
                                     yeka_businessblog = YekaBusinessBlog(
@@ -129,8 +129,11 @@ def add_competition(request, region):
                                     yeka_businessblog.save()
 
                                 else:
-                                    yeka_businessblog = YekaBusinessBlog(parent=parent_yeka_business_blog,
+                                    yeka_businessblog = YekaBusinessBlog(
+
+                                                                         parent=parent_yeka_business_blog,
                                                                          finisDate=item.finisDate,
+                                                                         startDate=item.startDate,
                                                                          businessblog=item.businessblog,
                                                                          sorting=item.sorting,
                                                                          businessTime=item.businessTime,
@@ -138,12 +141,6 @@ def add_competition(request, region):
                                                                          )
                                     yeka_businessblog.save()
                                     parent_yeka_business_blog = yeka_businessblog
-                                if item.companys.all():
-                                    for company in item.companys.all():
-                                        yeka_businessblog.companys.add(company)
-                                        yeka_businessblog.save()
-
-                                yeka_business.save()
                                 yeka_business.businessblogs.add(yeka_businessblog)
                                 yeka_business.save()
                             competition.business = yeka_business

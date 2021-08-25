@@ -341,7 +341,7 @@ def change_yekabusiness(request, uuid, yeka):
                     blog = None
                     # olmayanları sil
                     if business:
-                        removeBusiness = business.exclude(isDeleted=False, id__in=blogs)
+                        removeBusiness = business.filter() .exclude(isDeleted=False, businessblog__id__in=blogs)
                         for i in removeBusiness:
                             i.isDeleted = True
                             i.save()
@@ -350,16 +350,21 @@ def change_yekabusiness(request, uuid, yeka):
                     for i in range(len(blogs)):
 
                         # is blogu varsa
-                        if yekabusiness.businessblogs.filter(isDeleted=False,businessblog_id=blogs[i]):
+                        if yekabusiness.businessblogs.filter(businessblog_id=blogs[i]):
                             if i == 0:
-                                blog = yekabusiness.businessblogs.get(isDeleted=False, businessblog_id=blogs[i])
+                                blog = yekabusiness.businessblogs.filter(businessblog_id=blogs[i])[0]
+                                if  blog.isDeleted:
+                                    blog.isDeleted=False
                                 blog.parent = None
                                 blog.sorting = i + 1
                                 blog.save()
                                 parent = blog
 
                             else:
-                                blog = yekabusiness.businessblogs.get(isDeleted=False, businessblog_id=blogs[i])
+
+                                blog = yekabusiness.businessblogs.filter(businessblog_id=blogs[i])[0]
+                                if  blog.isDeleted:
+                                    blog.isDeleted=False
                                 blog.parent = parent
                                 blog.sorting = i + 1
                                 blog.save()
