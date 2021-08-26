@@ -27,7 +27,7 @@ from ekabis.services.services import YekaGetService, ConnectionRegionGetService,
 import datetime
 from django.db.models import Sum
 
-
+from ekabis.models.Yeka import Yeka
 @login_required
 def view_competition(request, uuid):
     perm = general_methods.control_access(request)
@@ -65,7 +65,7 @@ def add_competition(request, region):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    competition_form = YekaCompetitionForm()
+
 
     try:
         urls = last_urls(request)
@@ -76,6 +76,12 @@ def add_competition(request, region):
             'isDeleted': False,
         }
         region = ConnectionRegionGetService(request, region_filter)
+        competition_form = YekaCompetitionForm()
+        if Yeka.objects.filter(connection_region=region):
+            yeka=Yeka.objects.filter(connection_region=region).distinct()
+            competition_form = YekaCompetitionForm(initial={'date':yeka.date })
+
+
         with transaction.atomic():
 
             if request.method == 'POST':
@@ -159,9 +165,8 @@ def add_competition(request, region):
                                    'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
                                    'url_name': url_name})
 
-            competitions = region.yekacompetition.filter(isDeleted=False)
             return render(request, 'YekaCompetition/add_competition.html',
-                          {'competition_form': competition_form, 'competitions': competitions, 'error_messages': '',
+                          {'competition_form': competition_form, 'error_messages': '',
                            'region': region, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
     except Exception as e:
@@ -604,8 +609,7 @@ def yeka_person_list(request, uuid):
                         log = str(yeka_person.competition.name) + ' adlı yekadan -' + str(
                             person.user.get_full_name()) + " personeli çıkarıldı."
                         log = general_methods.logwrite(request, request.user, log)
-
-        return redirect('ekabis:view_yekacompetition_personel', uuid)
+        return redirect('ekabis:view_competitionbusinessblog', competition.uuid)
 
     return render(request, 'Yeka/yekaPersonList.html',
                   {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid, 'urls': urls,
