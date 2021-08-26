@@ -102,19 +102,7 @@
             {#            <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>#}
             {#            <br>#}
 
-            <div class="row">
 
-
-                    {{ form.captcha.errors }}
-                    {{ form.captcha }}
-
-                    <button type="button" class='btn btn-outline-primary btn-sm  js-captcha-refresh'
-                            style="float:right;margin:3px">Yenile
-                    </button>
-
-
-
-            </div>
             <div class="row">
 
                 <!-- /.col -->
@@ -146,14 +134,6 @@
 <div style="margin-top: 20px"><p style="text-align: center"><a href=""></a></p></div>
 <!-- /.login-card-body -->
 <!-- /.login-card -->
-<script>
-    $('.js-captcha-refresh').click(function () {
-        $.getJSON("/captcha/refresh/", function (result) {
-            $('.captcha').attr('src', result['image_url']);
-            $('#id_captcha_0').val(result['key'])
-        });
-    });
-</script>
 <script src="{% static 'plugins/jqvmap/jquery.vmap.min.js' %}"></script>
 <script src="{% static 'plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
 <!-- jQuery Knob Chart -->

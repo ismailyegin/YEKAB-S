@@ -4,14 +4,14 @@
     <style>
 
         #right {
-            height: 500px;
+            height: 1500px;
             margin-top: 10px;
             padding-top: 10px;
             background-color: #037BFF;
         }
 
         #left {
-
+            height: 1500px;
             margin-top: 10px;
             padding-top: 10px;
             background-color: #037BFF;
@@ -105,7 +105,7 @@
                             <div class="card-header with-border">
                                 <h3 class="card-title"> İş Blogu Guncelle </h3>
                             </div>
-                            <div class="card-body">
+                             <div class="card-body">
 
 
                                 <div class="row">
@@ -122,18 +122,21 @@
                                         <ul class="list-group mt-auto" id="right">
                                             {% for busi in business %}
                                                 <li class="list-group-item"
-                                                    value="{{ busi.pk }}">{{ busi.sorting }}**{{ busi.businessblog.name }}**{{ busi.parent.businessblog.name }}</li>
-                                            {% endfor %}
 
+                                                    value="{{ busi.businessblog.pk }}">{{ busi.businessblog.name }}</li>
+                                            {% endfor %}
                                         </ul>
                                     </div>
 
+
                                 </div>
-                               <div class="card-footer">
+                             <div class="card-footer">
                                         <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet</button>
                                     <small style="color: red">(*)Olan Alanlar zorunludur.</small>
 
                                 </div>
+                        </div>
+
                             </div>
                         </div>
 

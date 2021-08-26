@@ -189,7 +189,9 @@
                                                                 data-toggle="dropdown"> İşlemler
                                                         </button>
                                                         <div class="dropdown-menu" role="menu">
-
+                                                            <a href="{% url "ekabis:view_competition" region.uuid %}"
+                                                               class="dropdown-item" title="Yarışma Ekle" type="button"><i
+                                                                    class="fa fa-plus"></i> Yeka Yarışma Listesi</a>
 
                                                             <a onclick="deleteRegion('{{ region.uuid }}')"
                                                                class="dropdown-item" title="Sil" type="button"><i
@@ -197,9 +199,7 @@
                                                             <a href="{% url "ekabis:update_region" region.uuid yeka.uuid %}"
                                                                class="dropdown-item" title="Düzenle" type="button"><i
                                                                     class="fa fa-edit"></i>Düzenle</a>
-                                                            <a href="{% url "ekabis:view_competition" region.uuid %}"
-                                                               class="dropdown-item" title="Yarışma Ekle" type="button"><i
-                                                                    class="fa fa-plus"></i> Yeka Yarışma Listesi</a>
+
 
 
                                                         </div>

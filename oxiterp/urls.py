@@ -32,6 +32,3 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 handler500 = 'accounts.views.handler404'
 handler404 = 'accounts.views.handler500'
 
-urlpatterns += [
-    path('captcha/', include('captcha.urls')),
-]

@@ -146,7 +146,6 @@ def return_connectionRegion(request,uuid):
                   { 'regions': regions, 'error_messages': '', 'yeka': yeka, 'urls': urls,
                    'current_url': current_url, 'url_name': url_name})
 
-
 @login_required
 def add_connectionRegion(request,uuid):
     perm = general_methods.control_access(request)

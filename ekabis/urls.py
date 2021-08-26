@@ -260,8 +260,7 @@ urlpatterns = [
 
     # basvuru ayarları
     path('yeka/basvuru-ayarlari-ekle/<uuid:business>/<uuid:businessblog>/',
-         YekaBussinessBlogStaticView.add_yekaapplication,
-         name='add_yekaapplication'),
+         YekaBussinessBlogStaticView.add_yekaapplication,name='add_yekaapplication'),
     path('yeka/basvuru-ayarlari-guncelle/<uuid:uuid>', YekaBussinessBlogStaticView.change_yekaapplication,
          name='change_yekaapplication'),
 

@@ -188,31 +188,24 @@
                                                                 data-toggle="dropdown"> İşlemler
                                                         </button>
                                                         <div class="dropdown-menu" role="menu">
-
-
-                                                            <a onclick="deleteCompetition('{{ competition.uuid }}')"
-                                                               class="dropdown-item" title="Sil" type="button"><i
-                                                                    class="fa fa-edit"></i>Sil</a>
-
-                                                            <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
-                                                               class="dropdown-item" title="İş Planı Ekle"
-                                                               type="button"><i class="fa fa-edit"></i>İş Planı Ekle</a>
                                                             <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
                                                                class="dropdown-item" title="Personel Ekle"
                                                                type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
-                                                            <a href="{% url "ekabis:change_competition" region.uuid competition.uuid %}"
-                                                               class="dropdown-item" title="Düzenle " type="button"><i
-                                                                    class="fa fa-edit"></i>Düzenle </a>
+                                                            <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
+                                                               class="dropdown-item" title="İş Planı Ekle"
+                                                               type="button"><i class="fa fa-plus"></i>İş Planı</a>
                                                             <a href="{% url "ekabis:view_sub_competition"  competition.uuid %}"
                                                                class="dropdown-item" title="Düzenle " type="button"><i
-                                                                    class="fa fa-edit"></i>Alt Yeka Listesi </a>
-
-
-
+                                                                    class="fa fa-plus"></i>Alt Yeka Listesi </a>
                                                                <a href="{% url "ekabis:view_yekacompeittion_business_gant"  competition.uuid %}"
                                                                class="dropdown-item" title="İş Planı " type="button"><i
-                                                                    class="fa fa-edit"></i>İş Planı  </a>
-
+                                                                    class="fa fa-plus"></i>Gant Şeması  </a>
+                                                             <a onclick="deleteCompetition('{{ competition.uuid }}')"
+                                                               class="dropdown-item" title="Sil" type="button"><i
+                                                                    class="fa fa-edit"></i>Sil</a>
+                                                             <a href="{% url "ekabis:change_competition" region.uuid competition.uuid %}"
+                                                               class="dropdown-item" title="Düzenle " type="button"><i
+                                                                    class="fa fa-edit"></i>Düzenle </a>
                                                         </div>
                                                     </div>
 
