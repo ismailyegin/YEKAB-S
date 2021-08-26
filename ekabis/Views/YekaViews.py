@@ -3,6 +3,7 @@ import traceback
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
@@ -15,7 +16,7 @@ from ekabis.Forms.YekaConnectionRegionForm import YekaConnectionRegionForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, YekaBusiness, ExtraTime, \
-    Permission, YekaCompetition
+    Permission, YekaCompetition, Logs
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
 from ekabis.models.Yeka import Yeka
@@ -24,7 +25,7 @@ from ekabis.models.YekaCompany import YekaCompany
 from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.YekaPersonHistory import YekaPersonHistory
 from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages
+from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import YekaService, CompanyService, YekaConnectionRegionService, YekaGetService, \
     YekaConnectionRegionGetService, YekaPersonService, \
     EmployeeGetService, YekaCompanyService, CompanyGetService, ExtraTimeService, YekaBusinessBlogGetService, \
@@ -152,10 +153,13 @@ def delete_yeka(request):
                 if parent:
                     return JsonResponse({'status': 'Fail', 'msg': 'Yeka silinemez.Alt Yekalar bulunmaktadır.'})
                 else:
+                    data_as_json_pre = serializers.serialize('json', Yeka.objects.filter(uuid=uuid))
                     obj.isDeleted = True
                     obj.save()
-                    log = str(obj.definition) + ' adlı yeka silindi.'
-                    log = general_methods.logwrite(request, request.user, log)
+                    log = str(obj.definition) + " - Yeka silindi."
+                    logs = Logs(user=request.user, subject=log, ip=get_client_ip(request),
+                                previousData=data_as_json_pre)
+                    logs.save()
                     return JsonResponse({'status': 'Success', 'msg': 'save successfully'})
 
             else:
@@ -794,7 +798,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
             if yekaBusinessBlogo_form.is_valid():
                 finish_date = ''
                 start_date = ''
-                time = yekaBusinessBlogo_form.cleaned_data['businessTime']
+                time = (yekaBusinessBlogo_form.cleaned_data['businessTime'])-1
                 if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
                     time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
                     startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
@@ -803,17 +807,15 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                         add_time = time
                         start_date = startDate.date()
                         count = 0
-                        while add_time > 0:
+                        while add_time > 1:
                             start_date = start_date + datetime.timedelta(days=1)
                             count = count + 1
                             is_vacation = is_vacation_day(start_date)
                             if not is_vacation:
                                 add_time = add_time - 1
-
-
                     else:
-                        startDate = startDate.date() + datetime.timedelta(days=time)
 
+                        start_date = startDate.date() + datetime.timedelta(days=time)
                     yekabussiness.startDate = startDate
                     yekabussiness.finisDate = start_date
                     yekabussiness.save()
@@ -945,7 +947,7 @@ def change_yekabusinessblog_company(request, uuid, business, yekabusinessblog):
                     return render(request, 'Yeka/change_businessblog_company.html',
                                   {
                                       'error_messages': error_messages,
-                                      'company_form': company_form,''
+                                      'company_form': company_form,
                                       'name': name, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                                   })
         return render(request, 'Yeka/change_businessblog_company.html',

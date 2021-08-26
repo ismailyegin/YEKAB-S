@@ -230,7 +230,7 @@ def get_help_text(request):
     help_text = ''
     texts = HelpMenu.objects.filter(isDeleted=False)
     for text in texts:
-        if text.url == current_url_name:
+        if text.url.codename == current_url_name:
             help_text = text.text
     return {'text': help_text}
 
@@ -352,13 +352,27 @@ def fixed_block_control(request, name):
         traceback.print_exc()
 
 
-def log(request, self):
+def log(request):
     try:
         log = Logs()
         log.user = request.user
         log.ip = get_client_ip(request)
         url = Permission.objects.get(codename=request.resolver_match.url_name).name
         log.subject = url
+        return log
+    except Exception as e:
+        traceback.print_exc()
+
+def log_model(request,pre,next):
+    try:
+        log = Logs()
+        log.user = request.user
+        log.ip = get_client_ip(request)
+        url = Permission.objects.get(codename=request.resolver_match.url_name).name
+        log.subject = url
+        log.previousData = pre
+        log.nextData = next
+        log.save()
         return log
     except Exception as e:
         traceback.print_exc()

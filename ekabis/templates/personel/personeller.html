@@ -55,47 +55,37 @@
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
     {% endif %}
+
 
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
          aria-hidden="true">

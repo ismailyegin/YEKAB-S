@@ -27,6 +27,7 @@ from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Lo
 from ekabis.models.Competition import Competition
 from ekabis.models.CompetitionCompany import CompetitionCompany
 from ekabis.models.Institution import Institution
+from ekabis.models.Newspaper import Newspaper
 from ekabis.models.Proposal import Proposal
 from ekabis.models.ProposalActive import ProposalActive
 from ekabis.models.Proposalnstitution import ProposalInstitution
@@ -73,7 +74,7 @@ def add_newspaper(request, business, businessblog):
             if request.method == 'POST':
                 newspaper_form = NewspaperForm(request.POST, request.FILES)
                 if newspaper_form.is_valid():
-                    newspaper = newspaper_form.save(commit=False)
+                    newspaper = newspaper_form.save(request,commit=False)
                     newspaper.yekabusinessblog = yekabussinessblog
                     newspaper.business = yekabusiness
                     newspaper.save()
@@ -180,7 +181,7 @@ def change_newspaper(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
                 if newspaper_form.is_valid():
-                    newspaper_form.save()
+                    newspaper_form.save(request)
                     messages.success(request, 'Resmi Gazete Güncellenmiştir')
                     return redirect('ekabis:view_newspaper')
                 else:
@@ -217,9 +218,14 @@ def delete_newspaper(request):
                 newspaper_filter = {
                     'uuid': uuid
                 }
+
                 obj = NewspaperGetService(request, newspaper_filter)
+                data_as_json_pre = serializers.serialize('json', Newspaper.objects.filter(uuid=uuid))
                 obj.isDeleted = True
                 obj.save()
+                log = str(obj.file) + " - gazete silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 
@@ -252,7 +258,7 @@ def add_yekaapplicationfilename(request):
             if request.method == 'POST':
                 filename_form = YekaApplicationFileNameForm(request.POST, request.FILES)
                 if filename_form.is_valid():
-                    filename = filename_form.save(commit=False)
+                    filename = filename_form.save(request,commit=False)
                     filename.save()
                     messages.success(request, 'Dosya ismi  Eklenmiştir .')
                     return redirect('ekabis:view_yekaapplicationfilename')
@@ -315,7 +321,7 @@ def change_yekaapplicationfilename(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
                 if filename_form.is_valid():
-                    filename_form.save()
+                    filename_form.save(request)
                     messages.success(request, 'Dosya İsmi  Güncellenmiştir')
                     return redirect('ekabis:view_yekaapplicationfilename')
                 else:
@@ -353,8 +359,12 @@ def delete_yekaapplicationfilename(request):
                     'uuid': uuid
                 }
                 obj = YekaApplicationFileNameGetService(request, filter)
+                data_as_json_pre = serializers.serialize('json', Newspaper.objects.filter(uuid=uuid))
                 obj.isDeleted = True
                 obj.save()
+                log = str(obj.filename) + " - doküman ismi silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 
@@ -395,7 +405,7 @@ def add_yekaapplication(request, business, businessblog):
             if request.method == 'POST':
                 application_form = YekaApplicationForm(request.POST, request.FILES)
                 if application_form.is_valid():
-                    application = application_form.save(commit=False)
+                    application = application_form.save(request,commit=False)
                     application.yekabusinessblog = yekabussinessblog
                     application.business = yekabusiness
                     application.save()
@@ -455,7 +465,7 @@ def change_yekaapplication(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
                 if application_form.is_valid():
-                    app = application_form.save(commit=False)
+                    app = application_form.save(request,commit=False)
                     app.yekabusinessblog = yekabussinessblog
                     app.business = yekabusiness
                     app.save()
@@ -564,7 +574,7 @@ def view_applicationfile(request, business, businessblog, applicationfile):
         with transaction.atomic():
             if request.method == 'POST':
                 if filename_form.is_valid():
-                    filename_form.save()
+                    filename_form.save(request)
                     messages.success(request, 'Dosya Güncellenmiştir')
                     return redirect('ekabis:view_application', yekabusiness.uuid, businessblog.uuid)
                 else:
@@ -1017,10 +1027,13 @@ def delete_proposal(request):
             if request.method == 'POST' and request.is_ajax():
                 uuid = request.POST['uuid']
                 obj = Proposal.objects.get(uuid=uuid)
+                data_as_json_pre = serializers.serialize('json', Proposal.objects.filter(uuid=uuid))
+
                 obj.isDeleted = True
                 obj.save()
-
-                # delete log yazılacak
+                log = str(obj.pk) + " - aday yeka silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
 
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 

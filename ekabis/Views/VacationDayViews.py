@@ -14,10 +14,10 @@ from django.urls import resolve
 
 from ekabis.Forms.VacationDayForm import VacationDayForm
 from ekabis.Forms.VacationDayUpdateForm import VacationDayUpdateForm
-from ekabis.models import Permission
+from ekabis.models import Permission, Logs
 from ekabis.models.VacationDay import VacationDay
 from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages
+from ekabis.services.general_methods import get_error_messages, log, log_model, get_client_ip
 from ekabis.services.services import VacationDayService, VacationDayGetService, last_urls
 
 
@@ -59,7 +59,6 @@ def add_vacation_day(request):
                 vacation_form = VacationDayForm(request.POST)
 
                 if vacation_form.is_valid():
-                    form = vacation_form.save(request, commit=False)
                     days = request.POST['reservation']
                     days = days.split('-')
                     start_date = datetime.datetime.strptime(days[0].split(' ')[0], '%d/%m/%Y')
@@ -71,9 +70,14 @@ def add_vacation_day(request):
                         current = VacationDay.objects.filter(definition=vacation_form.cleaned_data['definition'],
                                                              date=start_date)
                         if not current:
-                            day = VacationDay(definition=vacation_form.cleaned_data['definition'],
-                                              date=start_date)
+
+                            day = VacationDay()
+                            data_as_json_pre = 'Yok'
+                            day.definition = vacation_form.cleaned_data['definition']
+                            day.date = start_date
                             day.save()
+                            data_as_json_next = serializers.serialize('json', VacationDay.objects.filter(uuid=day.uuid))
+                            log = log_model(request, data_as_json_pre, data_as_json_next)
                             start_date = start_date + datetime.timedelta(days=1)
                             range = range - 1
                         else:
@@ -136,10 +140,13 @@ def delete_vacation_date(request):
                     'uuid': uuid
                 }
                 obj = VacationDayGetService(request, filter)
+                data_as_json_pre = serializers.serialize('json', VacationDay.objects.filter(uuid=uuid))
 
                 obj.isDeleted = True
                 obj.save()
-
+                log = str(obj.definition) + " - tatil günü silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 
@@ -174,10 +181,12 @@ def update_vacation_date(request, uuid):
             if request.method == 'POST':
 
                 if vacation_form.is_valid():
-                    vacation_form.save(request, commit=False)
+
                     day.definition = vacation_form.cleaned_data['definition']
                     day.date = vacation_form.cleaned_data['date']
                     day.save()
+                    data_as_json_next = serializers.serialize('json',  VacationDay.objects.filter(pk=day.pk))
+                    log = log_model(request, day_as_json_pre, data_as_json_next)
                     messages.success(request, 'Tatil Günü Güncellenmiştir')
                     return redirect('ekabis:vacation_days')
                 else:

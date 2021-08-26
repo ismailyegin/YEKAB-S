@@ -5,6 +5,7 @@ from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User, Group
+from django.core import serializers
 from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
@@ -21,12 +22,13 @@ from ekabis.Forms.EmployeeForm import EmployeeForm
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
 from ekabis.Forms.UserSearchForm import UserSearchForm
+from ekabis.models import Logs
 from ekabis.models.Permission import Permission
 from ekabis.models.Communication import Communication
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Employee import Employee
 from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages
+from ekabis.services.general_methods import get_error_messages, log_model, get_client_ip
 from ekabis.services.services import CategoryItemService, EmployeeService, EmployeeGetService, CategoryItemGetService, \
     GroupService, GroupGetService, last_urls
 
@@ -60,13 +62,15 @@ def add_employee(request):
                 employe_form = EmployeeForm(request.POST)
 
                 if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid():
-                    form = user_form.save(request, commit=False)
                     user = User()
                     user.username = user_form.cleaned_data['email']
                     user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
                     user.last_name = unicode_tr(user_form.cleaned_data['last_name']).upper()
                     user.email = user_form.cleaned_data['email']
                     user.save()
+                    data_as_json_pre = 'Yok'
+                    data_as_json_next = serializers.serialize('json', User.objects.filter(pk=user.pk))
+                    log = log_model(request, data_as_json_pre, data_as_json_next)
 
                     person = person_form.save(request, commit=False)
                     communication = communication_form.save(request, commit=False)
@@ -78,6 +82,9 @@ def add_employee(request):
 
                     )
                     personel.save()
+                    data_next=serializers.serialize('json', Employee.objects.filter(pk=personel.pk))
+                    log = log_model(request, data_as_json_pre, data_next)
+
                     if request.POST.get('group'):
                         group_filter = {
                             'pk': request.POST.get('group')
@@ -149,17 +156,13 @@ def edit_employee(request, pk):
         person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
         communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
         groups = Group.objects.exclude(name='Admin').exclude(name='Firma')
-
+        data_as_json_pre=serializers.serialize('json', Employee.objects.filter(pk=employee.pk))
         with transaction.atomic():
             if request.method == 'POST':
 
                 if user_form.is_valid() and communication_form.is_valid() and person_form.is_valid():
 
-                    form = user_form.save(request, commit=False)
-                    user.username = user_form.cleaned_data['email']
-                    user.first_name = user_form.cleaned_data['first_name']
-                    user.last_name = user_form.cleaned_data['last_name']
-                    user.email = user_form.cleaned_data['email']
+                    user = user_form.save(request, commit=False)
                     user.save()
                     person = person_form.save(request, commit=False)
                     person.save()
@@ -173,8 +176,8 @@ def edit_employee(request, pk):
                             group = GroupGetService(request, group_filter)
                             user.groups.add(group)
                             user.save()
-
-
+                    data_next = serializers.serialize('json', Employee.objects.filter(pk=employee.pk))
+                    log = log_model(request, data_as_json_pre, data_next)
                     messages.success(request, 'Personel Başarıyla Güncellenmiştir.')
 
                     return redirect('ekabis:view_employee')
@@ -225,8 +228,12 @@ def delete_employee(request):
                     'uuid': uuid
                 }
                 obj = EmployeeGetService(request, empoyefilter)
+                data_as_json_pre = serializers.serialize('json', Employee.objects.filter(uuid=uuid))
                 obj.isDeleted = True
                 obj.save()
+                log = "Personel Sil"
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 
@@ -279,7 +286,6 @@ def return_workdefinitionslist(request):
                     categoryItem.forWhichClazz = "EMPLOYEE_WORKDEFINITION"
                     categoryItem.isFirst = False
                     categoryItem.save()
-
 
                     messages.success(request, 'Unvan eklendi')
 
@@ -357,7 +363,6 @@ def edit_workdefinition(request, pk):
                     categoryItem.name = request.POST.get('name')
                     categoryItem.save()
                     messages.success(request, 'Başarıyla Güncellendi')
-
 
                     return redirect('ekabis:istanimiListesi')
                 else:
