@@ -3,63 +3,67 @@
 {% block content %}
     {% load static %}
 
-      <style type="text/css">
+    <style type="text/css">
 
 
-    /* custom styles for individual items, load this after vis-timeline-graph2d.min.css/vis-timeline-graph2d.min.css */
+        /* custom styles for individual items, load this after vis-timeline-graph2d.min.css/vis-timeline-graph2d.min.css */
 
-    .vis-item.green {
-      background-color: greenyellow;
-      border-color: green;
-    }
+        .vis-item.green {
+            background-color: greenyellow;
+            border-color: green;
+        }
 
-    /* create a custom sized dot at the bottom of the red item */
-    .vis-item.red {
-      background-color: red;
-      border-color: darkred;
-      color: white;
-      font-family: monospace;
-      box-shadow: 0 0 10px gray;
-    }
-    .vis-item.vis-dot.red {
-      border-radius: 10px;
-      border-width: 10px;
-    }
-    .vis-item.vis-line.red {
-      border-width: 5px;
-    }
-    .vis-item.vis-box.red {
-      border-radius: 0;
-      border-width: 2px;
-      font-size: 24pt;
-      font-weight: bold;
-    }
+        /* create a custom sized dot at the bottom of the red item */
+        .vis-item.red {
+            background-color: red;
+            border-color: darkred;
+            color: white;
+            font-family: monospace;
+            box-shadow: 0 0 10px gray;
+        }
 
-    .vis-item.orange {
-      background-color: gold;
-      border-color: orange;
-    }
-    .vis-item.vis-selected.orange {
-      /* custom colors for selected orange items */
-      background-color: orange;
-      border-color: orangered;
-    }
+        .vis-item.vis-dot.red {
+            border-radius: 10px;
+            border-width: 10px;
+        }
 
-    .vis-item.magenta {
-      background-color: magenta;
-      border-color: purple;
-      color: white;
-    }
+        .vis-item.vis-line.red {
+            border-width: 5px;
+        }
 
-    /* our custom classes overrule the styles for selected events,
-       so lets define a new style for the selected events */
-    .vis-item.vis-selected {
-      background-color: white;
-      border-color: black;
-      color: black;
-      box-shadow: 0 0 10px gray;
-    }
-  </style>
+        .vis-item.vis-box.red {
+            border-radius: 0;
+            border-width: 2px;
+            font-size: 24pt;
+            font-weight: bold;
+        }
+
+        .vis-item.orange {
+            background-color: gold;
+            border-color: orange;
+        }
+
+        .vis-item.vis-selected.orange {
+            /* custom colors for selected orange items */
+            background-color: orange;
+            border-color: orangered;
+        }
+
+        .vis-item.magenta {
+            background-color: magenta;
+            border-color: purple;
+            color: white;
+        }
+
+        /* our custom classes overrule the styles for selected events,
+           so lets define a new style for the selected events */
+        .vis-item.vis-selected {
+            background-color: white;
+            border-color: black;
+            color: black;
+            box-shadow: 0 0 10px gray;
+        }
+    </style>
 
 
     <link rel="stylesheet" href="{% static 'vis/css/vis-timeline-graph2d.min.css' %}">
@@ -86,25 +90,27 @@
         // Create a DataSet (allows two way data-binding)
         var items = new vis.DataSet([
             {% for yekabusinessblok in yekabusinessbloks %}
-
-                {%  if not  yekabusinessblok.indefinite %}
-                {
-                    id: "{{ yekabusinessblok.uuid}}",
-                    content: "{{ yekabusinessblok.businessblog.name }}",
-                    start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
-                    end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
-                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
-                },
-                {% else %}
-                {
-                    id: "{{ yekabusinessblok.uuid}}",
-                    content: "{{ yekabusinessblok.businessblog.name }}",
-                    start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
-                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
-                    className: 'green',
-                },
+                {%  if   yekabusinessblok.startDate %}
+                    {%  if not  yekabusinessblok.status %}
+                        {
+                            id: "{{ yekabusinessblok.uuid}}",
+                            content: "{{ yekabusinessblok.businessblog.name }}",
+                            start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                         {%  if not  yekabusinessblok.indefinite %}   end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",  {% endif %}
+                            url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
+                            className: 'red'
+                        },
+                    {% else %}
+                        {
+                            id: "{{ yekabusinessblok.uuid}}",
+                            content: "{{ yekabusinessblok.businessblog.name }}",
+                            start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                              {%  if not  yekabusinessblok.indefinite %}   end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",  {% endif %}
+                            url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
+                            className: 'green',
+                        },
+                    {% endif %}
                 {% endif %}
-
 
             {% endfor %}
             {% for extra in ekstratimes %}

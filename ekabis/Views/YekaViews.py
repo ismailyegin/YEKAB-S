@@ -770,32 +770,20 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         }
         business = BusinessBlogGetService(request, yeka_business_filter_)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
-
+        name=general_methods.yekaname(yeka.business)
         for item in yekabussiness.paremetre.all():
 
-            if item.company:
-                title = item.parametre.title + "-" + str(item.company.pk)
-                if item.parametre.type == 'file':
-                    yekaBusinessBlogo_form.fields[title].initial = item.file
-                    yekaBusinessBlogo_form.fields[
-                        title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
-                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
-                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
-                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
+            if item.parametre.type == 'file':
+                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+                yekaBusinessBlogo_form.fields[
+                    item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
+                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
+                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
+                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
 
-                else:
-                    yekaBusinessBlogo_form.fields[title].initial = item.value
             else:
-                if item.parametre.type == 'file':
-                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
-                    yekaBusinessBlogo_form.fields[
-                        item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
-                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
-                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
-                    # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
+                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
 
-                else:
-                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
 
         if request.POST:
 
@@ -837,7 +825,8 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
-                          'yeka': yeka, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                          'yeka': yeka, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                          'name':name
                       })
     except Exception as e:
 
@@ -1117,11 +1106,12 @@ def view_yekabusinessblog_gant(request, yeka, yekabusiness):
             'yekabusinessblog': yekabussiness
         }
         extratime = ExtraTimeService(request, extrafilter)
+        name=general_methods.yekaname(yeka.business)
 
         return render(request, 'Yeka/yekabussinessblog_detail.html',
                       {
                           'yeka': yeka,
-                          'yekabusinessblok': yekabussiness,
+                          'yekabusinessblok': yekabussiness,'name':name,
                           'ekstratimes': extratime, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
