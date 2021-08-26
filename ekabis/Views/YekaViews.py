@@ -475,6 +475,7 @@ def yeka_person_list(request, uuid):
         logout(request)
         return redirect('accounts:login')
     try:
+
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
@@ -494,7 +495,7 @@ def yeka_person_list(request, uuid):
         array = []
         for person in yeka_person:
             array.append(person.employee.uuid)
-
+        name=general_methods.yekaname(yeka.business)
         # ekstra servis yazılacak
         persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array).order_by('-creationDate')
         if request.POST:
@@ -541,7 +542,7 @@ def yeka_person_list(request, uuid):
             return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
         return render(request, 'Yeka/yekaPersonList.html',
                       {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid, 'urls': urls,
-                       'current_url': current_url, 'url_name': url_name, 'yeka': yeka})
+                       'current_url': current_url, 'url_name': url_name, 'yeka': yeka,'name':name})
     except Exception as e:
 
         traceback.print_exc()
@@ -987,6 +988,7 @@ def view_yekabusiness_gant(request, uuid):
         }
         ekstratimes = ExtraTimeService(request, extratime_filter)
         extratime = []
+        name=general_methods.yekaname(yeka.business)
         endDate = None
         for item in ekstratimes:
             if ExtraTime.objects.filter(yekabusinessblog=item.yekabusinessblog).count() > 1:
@@ -1032,7 +1034,9 @@ def view_yekabusiness_gant(request, uuid):
         return render(request, 'Yeka/gant.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
-                       'ekstratimes': extratime, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                       'ekstratimes': extratime, 'urls': urls,
+                       'current_url': current_url, 'url_name': url_name,
+                       'name':name
                        })
 
     except Exception as e:

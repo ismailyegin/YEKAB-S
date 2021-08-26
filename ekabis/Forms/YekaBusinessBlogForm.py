@@ -28,7 +28,7 @@ class YekaBusinessBlogForm(ModelForm):
         labels = {
                   'startDate': 'Başlama Tarihi',
                   # 'finisDate': 'Bitiş Tarihi',
-                  'businessTime': 'Süresi',
+                  'businessTime': 'Süresi(Gün)',
                   'status': 'Durumu',
                   'indefinite': 'Süre Durumu',
                   'time_type': 'Süre Türü',
@@ -59,7 +59,6 @@ class YekaBusinessBlogForm(ModelForm):
         if yekabussiness.parent:
             if yekabussiness.parent.finisDate:
                  self.fields['startDate'].label = 'Başlama Tarihi   ('+str(yekabussiness.parent.businessblog.name) +' bitiş Tarihi:'+str(yekabussiness.parent.finisDate.strftime("%d-%m-%Y"))+')'
-
         business_filter = {
             'pk': business
         }
@@ -102,10 +101,8 @@ class YekaBusinessBlogForm(ModelForm):
                     self.fields[item.title].widget.attrs = {'class': 'form-control', }
 
     def save(self, yekabusiness, business, *args, **kwargs):
-
         tbussiness = BusinessBlog.objects.get(pk=business)
         tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
-
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.type == 'file':
                 if tyekabusinessblog.paremetre.filter(parametre=item, isDeleted=False):
@@ -147,10 +144,7 @@ class YekaBusinessBlogForm(ModelForm):
 
 
         super().save(*args, **kwargs)
-
         return
-
-
 def update(self, yekabusiness, business, *args, **kwargs):
     tbussiness = BusinessBlog.objects.get(pk=business)
     tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)

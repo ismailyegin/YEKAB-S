@@ -103,14 +103,16 @@
 
         if ($("#id_indefinite option:selected").val() == 'True') {
                 $('#control-businessTime').hide();
+                 $('#control-time_type').hide();
             }
 
             $('#id_indefinite').change(function () {
             if ($("#id_indefinite option:selected").val() == 'True') {
-                console.log('benden tamam ')
                 $('#control-businessTime').hide();
+                $('#control-time_type').hide();
             } else {
                 $('#control-businessTime').show();
+                $('#control-time_type').show();
             }
 
 

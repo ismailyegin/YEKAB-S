@@ -77,8 +77,6 @@
     <link rel="stylesheet" href="{% static 'plugins/dropzone/min/dropzone.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
-
-
     {#    <!-- jQuery -->#}
     <script src="{% static 'plugins/jquery/jquery.js' %}"></script>
     <!-- jQuery UI 1.11.4 -->
@@ -90,8 +88,6 @@
     </script>
     <!-- Bootstrap 4 -->
     <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-    #file
     <link rel="stylesheet" href="{% static 'file/fileinput-rtl.min.css' %}">
     <link rel="stylesheet" href="{% static 'file/fileinput.css' %}">
     <script src="{% static 'file/fileinput.js' %}"></script>
@@ -235,8 +231,7 @@
                              src="/yekabis/media/{{ person.profileImage }}">
 
                     {% else %}
-                        <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"
-                             src="{% static 'dist/img/avatar5.png' %}">
+                        <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"src="{% static 'dist/img/avatar5.png' %}">
                     {% endif %}
                 </a>
                 <ul class="dropdown-menu">

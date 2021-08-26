@@ -215,9 +215,10 @@ def add_connectionRegion(request,uuid):
                 'isDeleted': False
 
             }
-            regions = yeka.connection_region.all()
+            name=general_methods.yekaname(yeka.business)
             return render(request, 'ConnectionRegion/add_connectionRegion.html',
-                          {'region_form': region_form, 'regions': regions, 'error_messages': '', 'yeka':yeka,'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                          {'region_form': region_form, 'error_messages': '', 'yeka':yeka,'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,'name':name})
 
     except Exception as e:
         traceback.print_exc()
@@ -287,9 +288,6 @@ def update_region(request, uuid,yeka):
         yeka=YekaGetService(request,yeka_filter)
         region = ConnectionRegionGetService(request, regionfilter)
         region_form = ConnectionRegionForm(request.POST or None, instance=region ,initial={'cities': region.cities.all()})
-        print(region_form.fields['cities'].initial)
-        for item in region.cities.all():
-            print(item)
         with transaction.atomic():
             if request.method == 'POST':
 
