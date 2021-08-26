@@ -10,7 +10,7 @@ from django.urls import resolve
 from ekabis.Forms.HelpMenuForm import HelpMenuForm
 from ekabis.models import Permission, HelpMenu
 from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages
+from ekabis.services.general_methods import get_error_messages, log_model
 from ekabis.services.services import last_urls, HelpMenuGetService
 
 
@@ -32,13 +32,9 @@ def help_text_add(request):
             if request.method == 'POST':
 
                 help_form = HelpMenuForm(request.POST)
-                help_menu = HelpMenu()
                 if help_form.is_valid():
-                    help = help_form.save(request,commit=False)
-                    help_menu.text = help_form.cleaned_data['text']
-                    help_menu.url = request.POST['url']
-                    help_menu.save()
-
+                    help = help_form.save(request, commit=False)
+                    help.save()
                     messages.success(request, 'Yardım Metni Eklendi.')
                     return redirect('ekabis:view_help_text')
                 else:

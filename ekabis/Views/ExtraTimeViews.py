@@ -5,6 +5,7 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -13,13 +14,13 @@ from django.urls import resolve
 from ekabis.Forms.ExtraTimeFileForm import ExtraTimeFileForm
 from ekabis.Forms.ExtraTimeForm import ExtraTimeForm
 from ekabis.Views.VacationDayViews import weekday_count, add_business_days, is_vacation_day
-from ekabis.models import YekaBusiness, YekaCompetition, Permission
+from ekabis.models import YekaBusiness, YekaCompetition, Permission, Logs
 from ekabis.models.ExtraTime import ExtraTime
 from ekabis.models.VacationDay import VacationDay
 from ekabis.models.Yeka import Yeka
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages
+from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import ExtraTimeService, ExtraTimeGetService, ExtraTimeFileGetService, last_urls
 
 
@@ -300,7 +301,7 @@ def add_extratimefile(request, uuid):
             if request.method == 'POST':
                 extratime_form = ExtraTimeFileForm(request.POST, request.FILES)
                 if extratime_form.is_valid():
-                    time = extratime_form.save(commit=False)
+                    time = extratime_form.save(request,commit=False)
                     time.save()
                     extratime.files.add(time)
                     extratime.save()
@@ -398,9 +399,13 @@ def delete_extratimefile(request):
                 extra_time_filter = {
                     'uuid': uuid
                 }
+                data_as_json_pre = serializers.serialize('json', ExtraTime.objects.filter(uuid=uuid))
                 obj = ExtraTimeFileGetService(request, extra_time_filter)
                 obj.isDeleted = True
                 obj.save()
+                log = "Ek süre silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})

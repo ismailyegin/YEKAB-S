@@ -1,8 +1,10 @@
 from django import forms
+
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.Newspaper import Newspaper
 
 
-class NewspaperForm(forms.ModelForm):
+class NewspaperForm(BaseForm):
     class Meta:
         model = Newspaper
         fields = ('listingDate', 'newspaperCount','newspapwerText','file')

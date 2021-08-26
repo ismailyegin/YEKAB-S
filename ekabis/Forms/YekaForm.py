@@ -5,10 +5,12 @@ from ekabis.models import Company, Person, Employee
 from ekabis.models.Yeka import Yeka
 
 STATUS_CHOICES = (
-    (("Güneş Enerji Sistemleri"), ("Güneş Enerji Sistemleri")),
-    (("Rüzgar Enerji Sistemleri"), ("Rüzgar Enerji Sistemleri")),
-    (("Biyokütle Enerji Sistemleri"), ("Biyokütle Enerji Sistemleri")),
-    (("Jeotermal Enerji Sistemleri"), ("Jeotermal Enerji Sistemleri")),
+    (("Güneş"), ("Güneş")),
+    (("Rüzgar"), ("Rüzgar")),
+    (("Biyokütle"), ("Biyokütle")),
+    (("Jeotermal"), ("Jeotermal")),
+    (("Hibrit"), ("Hibrit")),
+
 )
 
 

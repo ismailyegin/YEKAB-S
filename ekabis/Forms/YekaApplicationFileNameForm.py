@@ -1,10 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.YekaApplicationFileName import YekaApplicationFileName
 
 
-class YekaApplicationFileNameForm(ModelForm):
+class YekaApplicationFileNameForm(BaseForm):
     class Meta:
         model = YekaApplicationFileName
         fields = ('filename',)

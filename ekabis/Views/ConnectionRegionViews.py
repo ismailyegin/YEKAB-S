@@ -3,6 +3,7 @@ import traceback
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.db import transaction
 from django.db.models import Sum
 from django.http import JsonResponse
@@ -11,11 +12,11 @@ from django.urls import resolve
 
 from ekabis.Forms.ConnectionRegionForm import ConnectionRegionForm
 from ekabis.Forms.ConnectionUnitForm import ConnectionUnitForm
-from ekabis.models import YekaCompetition, Permission
+from ekabis.models import YekaCompetition, Permission, Logs
 from ekabis.models.ConnectionRegion import ConnectionRegion
 from ekabis.models.ConnectionUnit import ConnectionUnit
 from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages
+from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import UnitService, ConnectionUnitGetService, \
     ConnectionRegionGetService, YekaGetService, CityService, CityGetService, last_urls
 
@@ -40,7 +41,7 @@ def return_connectionRegionUnit(request):
 
                 if unit_form.is_valid():
 
-                    unit = ConnectionUnit(name=unit_form.cleaned_data['name'])
+                    unit = unit_form.save(request,commit=False)
                     unit.save()
 
 
@@ -174,9 +175,6 @@ def add_connectionRegion(request,uuid):
                 region_form = ConnectionRegionForm(request.POST)
 
                 if region_form.is_valid():
-
-
-
                     region = region_form.save(request,commit=False)
                     total = int(
                         ConnectionRegion.objects.filter(yeka=yeka).distinct().aggregate(Sum('capacity'))[
@@ -243,15 +241,19 @@ def delete_region(request):
                     'uuid': uuid,
                 }
                 obj = ConnectionRegionGetService(request, regionfilter)
+                data_as_json_pre = serializers.serialize('json', ConnectionRegion.objects.filter(uuid=uuid))
+
                 if obj:
                     if obj.yekacompetition.count() > 0:
                         return JsonResponse(
                             {'status': 'Fail', 'msg': 'Bölge için tanımlanmış yarışmalar  var. Bölge silinemez'})
                     else:
-                        log = str(obj.name) + "Bölge Başarıyla silindi"
-                        log = general_methods.logwrite(request, request.user, log)
+                        log = "Bölge Sil"
+                        logs = Logs(user=request.user, subject=log, ip=get_client_ip(request),
+                                    previousData=data_as_json_pre)
                         obj.isDeleted = True
                         obj.save()
+                        logs.save()
                         return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
 
@@ -295,7 +297,6 @@ def update_region(request, uuid,yeka):
             if request.method == 'POST':
 
                 if region_form.is_valid():
-                    region=region_form.save(request,commit=False)
                     region = region_form.save(request,commit=False)
                     total = int(
                         ConnectionRegion.objects.exclude(uuid=region.uuid).filter(yeka=yeka).distinct().aggregate(Sum('capacity'))[

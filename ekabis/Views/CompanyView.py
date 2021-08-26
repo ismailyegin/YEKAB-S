@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
+from django.core import serializers
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -15,13 +16,13 @@ from ekabis.Forms.CompanyFormDinamik import CompanyFormDinamik
 from ekabis.Forms.CompanyUserForm import CompanyUserForm
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
-from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Employee, Permission
+from ekabis.models import Company, YekaCompany, ConsortiumCompany, Person, Employee, Permission, Logs
 from ekabis.models.CompanyFileNames import CompanyFileNames
 from ekabis.models.CompanyFiles import CompanyFiles
 from ekabis.models.CompanyUser import CompanyUser
 from ekabis.models.Settings import Settings
 from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages
+from ekabis.services.general_methods import get_error_messages, log_model, get_client_ip
 from ekabis.services.services import CompanyService, CompanyGetService, GroupService, GroupGetService, \
     CompanyFileNamesService, CompanyFileNamesGetService, YekaCompanyService, last_urls, UserService
 
@@ -95,6 +96,7 @@ def delete_company(request):
                     'uuid': uuid
                 }
                 obj = CompanyGetService(request, companyfilter)
+                data_as_json_pre = serializers.serialize('json', Company.objects.filter(uuid=uuid))
                 yeka_company = {
                     'company': obj,
                     'isDeleted': False
@@ -103,6 +105,10 @@ def delete_company(request):
                 if not company:
                     obj.isDeleted = True
                     obj.save()
+                    log = "Firma Sil"
+                    logs = Logs(user=request.user, subject=log, ip=get_client_ip(request),
+                                previousData=data_as_json_pre)
+                    logs.save()
                 else:
                     return JsonResponse({'status': 'Fail', 'messages': 'Bu Firma Silemezsiniz'})
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
@@ -190,6 +196,9 @@ def add_company_user(request):
                         authorization_period_finish=company_user_form.cleaned_data['authorization_period_finish']
                     )
                     user.save()
+                    data_as_json_pre = 'Yok'
+                    data_as_json_next = serializers.serialize('json', CompanyUser.objects.filter(uuid=user.uuid))
+                    log = log_model(request, data_as_json_pre, data_as_json_next)
 
                     user.user.groups.add(Group.objects.get(name='Firma'))
                     user.save()
@@ -305,7 +314,6 @@ def return_update_Company(request, uuid):
         url_name = Permission.objects.get(codename=current_url.url_name)
         company = CompanyGetService(request, companyfilter)
         company_form = CompanyForm(request.POST or None, instance=company)
-        communication = company.communication
         communication_form = CommunicationForm(request.POST or None, instance=company.communication)
         companyDocumentName = CompanyFileNames.objects.all()
         with transaction.atomic():
@@ -320,14 +328,9 @@ def return_update_Company(request, uuid):
                     company.files.add(companyfile)
                     company.save()
                 if company_form.is_valid() and communication_form.is_valid():
-                    communication_ = communication_form.save(request, commit=False)
-                    communication.phoneNumber = communication_form.cleaned_data['phoneNumber']
+                    communication=communication_form.save(request, commit=False)
                     communication.save()
-                    company_ = company_form.save(request, commit=False)
-                    company.communication = communication
-                    company.name = company_form.cleaned_data['name']
-                    company.degree = company_form.cleaned_data['degree']
-                    company.taxnumber = company_form.cleaned_data['taxnumber']
+                    company = company_form.save(request, commit=False)
                     company.save()
                     messages.success(request, 'Firma Güncellenmiştir.')
                 else:
@@ -463,11 +466,12 @@ def delete_companyfilename(request, uuid):
                     'uuid': uuid
                 }
                 obj = CompanyFileNamesGetService(request, company_name_filter)
-                log = str(obj.name) + " firma doküman  silindi"
-                log = general_methods.logwrite(request, request.user, log)
-
+                data_as_json_pre = serializers.serialize('json', CompanyFileNames.objects.filter(uuid=uuid))
                 obj.isDeleted = True
                 obj.save()
+                log = "Firma Dosya İsmi Sil"
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
             else:

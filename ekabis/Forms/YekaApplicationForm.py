@@ -1,10 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.YekaApplication import YekaApplication
 
 
-class YekaApplicationForm(ModelForm):
+class YekaApplicationForm(BaseForm):
     class Meta:
         model = YekaApplication
         fields = ('startDate', 'finishDate','preRegistration',)
