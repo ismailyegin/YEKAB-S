@@ -14,6 +14,7 @@ from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
 from ekabis.Forms.YekaCompetitionForm import YekaCompetitionForm
 from ekabis.Forms.YekaForm import YekaForm
+from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion
@@ -26,6 +27,7 @@ from ekabis.services.services import YekaGetService, ConnectionRegionGetService,
     EmployeeGetService, last_urls, ExtraTimeService, YekaCompetitionService
 import datetime
 from django.db.models import Sum
+from django.core import serializers
 
 from ekabis.models.Yeka import Yeka
 @login_required
@@ -78,12 +80,9 @@ def add_competition(request, region):
         region = ConnectionRegionGetService(request, region_filter)
         competition_form = YekaCompetitionForm()
         if Yeka.objects.filter(connection_region=region):
-            yeka=Yeka.objects.filter(connection_region=region).distinct()
+            yeka=Yeka.objects.filter(connection_region=region)[0]
             competition_form = YekaCompetitionForm(initial={'date':yeka.date })
-
-
         with transaction.atomic():
-
             if request.method == 'POST':
 
                 competition_form = YekaCompetitionForm(request.POST)
@@ -93,7 +92,7 @@ def add_competition(request, region):
                     competition = competition_form.save(request,commit=False)
 
                     total = int(
-                        YekaCompetition.objects.filter(connectionregion=region).distinct().aggregate(Sum('capacity'))[
+                        YekaCompetition.objects.filter(connectionregion=region,isDeleted=False).distinct().aggregate(Sum('capacity'))[
                             'capacity__sum'] or 0)
                     total += competition.capacity
 
@@ -152,6 +151,18 @@ def add_competition(request, region):
                                 yeka_business.save()
                             competition.business = yeka_business
                             competition.save()
+
+                          # Bagıntılıkları yeka yarışmasına taşıdık
+                            for fcom in competition.business.businessblogs.filter(isDeleted=False).order_by('sorting'):
+                                if yeka.business.businessblogs.filter(businessblog=fcom.businessblog, isDeleted=False):
+                                    yeka_dependence_parent=yeka.business.businessblogs.filter(businessblog=fcom.businessblog, isDeleted=False)[0].dependence_parent
+                                    if yeka_dependence_parent:
+                                        if competition.business.businessblogs.filter( businessblog=yeka_dependence_parent.businessblog,isDeleted=False):
+                                             fcom.dependence_parent=competition.business.businessblogs.filter( businessblog=yeka_dependence_parent.businessblog,isDeleted=False)[0]
+                                             fcom.save()
+
+
+
                     log = " Yeka Yarışması  eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
@@ -499,15 +510,16 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
             'uuid': business
         }
         business = BusinessBlogGetService(request, yeka_business_filter_)
+        name=general_methods.yekaname(competition.business)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
+        yekaBusinessBlogo_form.fields['dependence_parent'].queryset = competition.business.businessblogs.exclude(
+            uuid=yekabussiness.uuid).filter(isDeleted=False)
+
         for item in yekabussiness.paremetre.all():
             if item.parametre.type == 'file':
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
                 yekaBusinessBlogo_form.fields[
                     item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
             else:
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
 
@@ -516,22 +528,42 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                                                           request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
-
+                finish_date = ''
+                start_date = ''
+                time = (yekaBusinessBlogo_form.cleaned_data['businessTime'])-1
                 if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                    time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
                     startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                    finishDate = startDate + datetime.timedelta(
-                        days=int(yekaBusinessBlogo_form.cleaned_data['businessTime']))
-                    yekabussiness.finisDate = finishDate
+                    if time_type == 'is_gunu':
+                        time = yekaBusinessBlogo_form.cleaned_data['businessTime']
+                        add_time = time
+                        start_date = startDate.date()
+                        count = 0
+                        while add_time > 1:
+                            start_date = start_date + datetime.timedelta(days=1)
+                            count = count + 1
+                            is_vacation = is_vacation_day(start_date)
+                            if not is_vacation:
+                                add_time = add_time - 1
+                    else:
+
+                        start_date = startDate.date() + datetime.timedelta(days=time)
+                    yekabussiness.startDate = startDate
+                    yekabussiness.finisDate = start_date
                     yekabussiness.save()
                 else:
                     yekabussiness.businessTime = 0
+                    yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
                     yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 return redirect('ekabis:view_competitionbusinessblog', competition.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
-                          'competition': competition, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                          'competition': competition, 'urls': urls,
+                          'current_url': current_url,
+                          'url_name': url_name,
+                          'name':name
                       })
     except Exception as e:
 
@@ -730,6 +762,18 @@ def add_sumcompetition(request, uuid):
                             competition.business = yeka_business
                             competition.save()
 
+                            # Bagıntılıkları yeka yarışmasına taşıdık
+                            for fcom in competition.business.businessblogs.filter(isDeleted=False).order_by('sorting'):
+                                if parent_competition.business.businessblogs.filter(businessblog=fcom.businessblog, isDeleted=False):
+                                    yeka_dependence_parent =parent_competition.business.businessblogs.filter(businessblog=fcom.businessblog, isDeleted=False)[
+                                        0].dependence_parent
+                                    if yeka_dependence_parent:
+                                        if competition.business.businessblogs.filter(
+                                                businessblog=yeka_dependence_parent.businessblog, isDeleted=False):
+                                            fcom.dependence_parent = competition.business.businessblogs.filter(
+                                                businessblog=yeka_dependence_parent.businessblog, isDeleted=False)[0]
+                                            fcom.save()
+
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
                     return redirect('ekabis:view_sub_competition', parent_competition.uuid)
 
@@ -803,3 +847,6 @@ def change_sumcompetition(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+

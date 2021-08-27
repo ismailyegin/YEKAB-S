@@ -61,7 +61,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Alt Yeka yı  Silmek istediğinizden emin misiniz ?</p>
+                    <p>Alt Yeka yı Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -119,8 +119,8 @@
                     {% if region %} <h1>
                         {{ region.name }} -Alt Yeka Yarışması Listesi</h1>
                     {% elif competition %}
-                    <h1>
-                        {{ competition.name }} -Alt Yeka Yarışması Listesi</h1>
+                        <h1>
+                            {{ competition.name }} -Alt Yeka Yarışması Listesi</h1>
                     {% endif %}
                 </div>
                 <div class="col-sm-6">
@@ -152,7 +152,8 @@
                             {% for item in perm %}
                                 {% if item == 'add_sumcompetition' %}
 
-                                    <a href="{% url "ekabis:add_sumcompetition" parent_competition.uuid %}" title="Alt Yeka Yarışması Ekle"
+                                    <a href="{% url "ekabis:add_sumcompetition" parent_competition.uuid %}"
+                                       title="Alt Yeka Yarışması Ekle"
                                        type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
                                             class="fa fa-plus"></i>
                                     </a>
@@ -178,43 +179,44 @@
 
                                 <tbody>
 
-                                    {% for competition in competitions %}
-                                        <tr>
-                                            <td>{{ forloop.counter }} </td>
-                                            <td>{{ competition.name }}</td>
-                                            <td>{{ competition.capacity }} MW</td>
-                                            <td>
+                                {% for competition in competitions %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ competition.name }}</td>
+                                        <td>{{ competition.capacity }} MW</td>
+                                        <td>
 
-                                                <div class="btn-group">
-                                                    <button type="button"
-                                                            class="btn btn-default dropdown-toggle dropdown-icon"
-                                                            data-toggle="dropdown"> İşlemler
-                                                    </button>
-                                                    <div class="dropdown-menu" role="menu">
-
-
-                                                        <a onclick="deleteCompetition('{{ competition.uuid }}')"
-                                                           class="dropdown-item" title="Sil" type="button"><i
-                                                                class="fa fa-edit"></i>Sil</a>
-
-                                                        <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
-                                                           class="dropdown-item" title="İş Planı Ekle"
-                                                           type="button"><i class="fa fa-edit"></i>İş Planı</a>
-                                                        <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
-                                                           class="dropdown-item" title="Personel Ekle"
-                                                           type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
-                                                        <a href="{% url "ekabis:change_competition" region.uuid competition.uuid %}"
-                                                           class="dropdown-item" title="Düzenle " type="button"><i
-                                                                class="fa fa-edit"></i>Düzenle </a>
+                                            <div class="btn-group">
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown"> İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
 
 
-                                                    </div>
+                                                    <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
+                                                       class="dropdown-item" title="Personel Ekle"
+                                                       type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
+
+                                                    <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
+                                                       class="dropdown-item" title="İş Planı Ekle"
+                                                       type="button"><i class="fa fa-edit"></i>İş Planı</a>
+
+                                                    <a onclick="deleteCompetition('{{ competition.uuid }}')"
+                                                       class="dropdown-item" title="Sil" type="button"><i
+                                                            class="fa fa-edit"></i>Sil</a>
+                                                    <a href="{% url "ekabis:change_competition" region.uuid competition.uuid %}"
+                                                       class="dropdown-item" title="Düzenle " type="button"><i
+                                                            class="fa fa-edit"></i>Düzenle </a>
+
+
                                                 </div>
+                                            </div>
 
 
-                                        </tr>
+                                    </tr>
 
-                                    {% endfor %}
+                                {% endfor %}
 
 
                                 </tbody>
@@ -306,7 +308,8 @@
             })
 
         })
-      function deleteCompetition(id) {
+
+        function deleteCompetition(id) {
             $("#modal-delete").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
                     debugger;
@@ -342,7 +345,7 @@
                                 $('#modal-success').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
 
-                                          window.location.replace("{% url "ekabis:view_sub_competition" parent_competition.uuid %}");
+                                        window.location.replace("{% url "ekabis:view_sub_competition" parent_competition.uuid %}");
 
                                     });
 

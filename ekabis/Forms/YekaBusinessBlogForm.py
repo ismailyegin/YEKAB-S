@@ -24,6 +24,9 @@ class YekaBusinessBlogForm(ModelForm):
             'businessTime',
             'startDate',
             'explanation',
+            'dependence_parent'
+
+
          )
         labels = {
                   'startDate': 'Başlama Tarihi',
@@ -32,7 +35,9 @@ class YekaBusinessBlogForm(ModelForm):
                   'status': 'Durumu',
                   'indefinite': 'Süre Durumu',
                   'time_type': 'Süre Türü',
-        'explanation':'Açıklama '}
+                  'dependence_parent':'Bağlı Olduğu İş Bloğu',
+                  'explanation':'Açıklama '
+        }
         widgets = {
             'businessTime': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
@@ -48,6 +53,8 @@ class YekaBusinessBlogForm(ModelForm):
                        'onkeydown': 'return false', 'required': 'required'}),
             'explanation': forms.TextInput(
                 attrs={'class': 'form-control', 'rows': '3'}),
+            'dependence_parent':forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                          'style': 'width: 100%; '}),
             # 'finisDate': forms.DateInput(
             #     attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
             #            'onkeydown': 'return false', 'required': 'required'}),
