@@ -1,10 +1,9 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
-    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
+from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews,CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
-    VacationDayViews, ExtraTimeViews, APIViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
+    VacationDayViews, ExtraTimeViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
     YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews
 
 app_name = 'ekabis'
@@ -162,7 +161,6 @@ urlpatterns = [
     path('baglanti/bolge-guncelle/<uuid:uuid>/<uuid:yeka>', ConnectionRegionViews.update_region, name='update_region'),
 
     # Yeka
-
     path('yeka/yeka-ekle/', YekaViews.add_yeka, name='add_yeka'),
 
     path('yeka/yeka-listesi/', YekaViews.return_yeka, name='view_yeka'),
@@ -431,5 +429,11 @@ urlpatterns = [
     path('yeka/firma-basvuru-guncelle/<uuid:uuid>/<uuid:business>/<uuid:yekabusinessblog>/',
          YekaViews.change_yekabusinessblog_company,
          name='change_yekabusinessblog_company'),
+
+    # yeka ve yarışmada kolay ulaşım sayfası
+    path('yeka/yeka-detay/<uuid:uuid>/', YekaViews.view_yeka_detail,
+         name='view_yeka_detail'),
+
+    path('yeka/yarisma-listesi/', APIViews.GetYekaCompetition.as_view(), name='view_competition_api'),
 
 ]
