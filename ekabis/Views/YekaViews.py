@@ -1292,3 +1292,50 @@ def view_yeka_detail(request,uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+
+
+@login_required()
+def test(request,uuid):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        yeka_filter={
+            'uuid':uuid
+        }
+        yeka=YekaGetService(request,yeka_filter)
+        name=general_methods.yekaname(yeka.business)
+        yekabusinessbloks=None
+        if yeka.business:
+            yekabusiness = yeka.business
+            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+
+        employe_filter={
+            'yeka':yeka
+        }
+
+        employees=YekaPersonService(request,employe_filter)
+
+
+        return render(request, 'test.html',
+                      {'urls': urls, 'current_url': current_url,
+                       'url_name': url_name,'name':name,
+                       'yeka':yeka,'yekabusinessbloks':yekabusinessbloks,
+                       'employees':employees,
+
+                       })
+
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')

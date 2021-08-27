@@ -1,9 +1,8 @@
-{% extends 'base_layout.html' %}
-{% block content %}
-
-
-
-
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="main.js"></script>
     <style>
         *, *:before, *:after {
             -webkit-box-sizing: border-box;
@@ -12,9 +11,15 @@
         }
 
         body {
-
+            min-width: 1200px;
+            margin: 0;
+            padding: 50px;
+            font: 16px Verdana, sans-serif;
             background: #FFFAE3;
-
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         #wrapper {
@@ -248,127 +253,94 @@
             margin-top: -6px;
         }
     </style>
-    <section class="content">
-
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-
-
-            <section class="col-lg-12 ">
-
-
-                <div class="card-body">
-
-
-                    <div class="card card-primary">
-                        <div id="wrapper"><span class="title">Yeka</span><span class="label toggleable"
-                                                                               id="root">Root</span>
-                            <div class="branch lv1" id="branch1">
-                                <div class="entry" id="entry"><span class="title" id="L100000">100000 Level</span><span
-                                        class="top-button"></span><span class="label ip" id="ip">IP</span><span
-                                        class="label toggleable">Entry 1</span><span class="bottom-button"></span><span
-                                        class="label mp"
-                                        id="mp">MP</span>
-                                    <div class="branch lv2">
-                                        <div class="entry"><span class="title" id="L200000">200000 Level</span><span
-                                                class="label toggleable">Entry 1-1</span>
-                                            <div class="branch lv3">
-                                                <div class="entry"><span class="title"
-                                                                         id="L300000">300000 Level</span><span
-                                                        class="label toggleable">Entry 1-1-1</span></div>
-                                                <div class="entry"><span class="label">Entry 1-1-2</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="entry"><span class="label toggleable">Entry-1-2</span>
-                                            <div class="branch lv3">
-                                                <div class="entry sole"><span
-                                                        class="label toggleable">Entry-1-2-1</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="entry"><span class="label toggleable">Entry-1-3</span>
-                                            <div class="branch lv3">
-                                                <div class="entry sole"><span class="label">Entry-1-3-1</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="entry"><span class="label" id="two">Entry-2</span></div>
-                                <div class="entry"><span class="label toggleable">Entry-3</span>
-                                    <div class="branch lv2">
-                                        <div class="entry"><span class="label">Entry-3-1</span></div>
-                                        <div class="entry"><span class="label">Entry-3-2</span></div>
-                                        <div class="entry"><span class="label toggleable">Entry-3-3</span>
-                                        </div>
-                                        <div class="entry"><span class="label">Entry-3-4</span></div>
-                                    </div>
-                                </div>
-                                <div class="entry"><span class="label">Entry-4</span></div>
-                                <div class="entry"><span class="label">Entry-5</span></div>
-                            </div>
-
+</head>
+<body onload="init()">
+<div id="wrapper"><span class="title">Catalogue Number</span><span class="label toggleable" id="root">Root</span>
+    <div class="branch lv1" id="branch1">
+        <div class="entry" id="entry"><span class="title" id="L100000">100000 Level</span><span
+                class="top-button"></span><span class="label ip" id="ip">IP</span><span
+                class="label toggleable">Entry 1</span><span class="bottom-button"></span><span class="label mp"
+                                                                                                id="mp">MP</span>
+            <div class="branch lv2">
+                <div class="entry"><span class="title" id="L200000">200000 Level</span><span class="label toggleable">Entry 1-1</span>
+                    <div class="branch lv3">
+                        <div class="entry"><span class="title" id="L300000">300000 Level</span><span
+                                class="label toggleable">Entry 1-1-1</span></div>
+                        <div class="entry"><span class="label">Entry 1-1-2</span>
                         </div>
-
                     </div>
-                    <!-- /.card -->
-
-
                 </div>
-            </section>
-
-
+                <div class="entry"><span class="label toggleable">Entry-1-2</span>
+                    <div class="branch lv3">
+                        <div class="entry sole"><span class="label toggleable">Entry-1-2-1</span></div>
+                    </div>
+                </div>
+                <div class="entry"><span class="label toggleable">Entry-1-3</span>
+                    <div class="branch lv3">
+                        <div class="entry sole"><span class="label">Entry-1-3-1</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- /.row (main row) -->
-
-    </section>
-
-
+        <div class="entry"><span class="label" id="two">Entry-2</span></div>
+        <div class="entry"><span class="label toggleable">Entry-3</span>
+            <div class="branch lv2">
+                <div class="entry"><span class="label">Entry-3-1</span></div>
+                <div class="entry"><span class="label">Entry-3-2</span></div>
+                <div class="entry"><span class="label toggleable">Entry-3-3</span>
+                </div>
+                <div class="entry"><span class="label">Entry-3-4</span></div>
+            </div>
+        </div>
+        <div class="entry"><span class="label">Entry-4</span></div>
+        <div class="entry"><span class="label">Entry-5</span></div>
     </div>
-
-    <script>
-       $(function () {
-            $(".toggleable").on("click", function () {
-                if (this.nextElementSibling) {
-                    var next_branch = $(this).nextAll(".branch");
-                    next_branch.toggle();
-                    $(this).toggleClass("hasMore");
-                    if ($(this).attr('id') == 'root') {
-                        if ($(this).css("margin-top") == "25px") {
-                            $(this).css("margin-top", "-7px");
-                        } else {
-                            $(this).css("margin-top", "25px");
-                        }
-                        ;
+</div>
+<script>
+    function init() {
+        $(".toggleable").on("click", function () {
+            if (this.nextElementSibling) {
+                var next_branch = $(this).nextAll(".branch");
+                next_branch.toggle();
+                $(this).toggleClass("hasMore");
+                if ($(this).attr('id') == 'root') {
+                    if ($(this).css("margin-top") == "25px") {
+                        $(this).css("margin-top", "-7px");
+                    } else {
+                        $(this).css("margin-top", "25px");
                     }
                     ;
                 }
-            });
-
-            $(".top-button").on("click", function () {
-                if (this.nextElementSibling) {
-                    if ($(this.nextElementSibling).css('display') == "none") {
-                        $("<div class='blank'><span></span></div>").insertBefore($(this).parent());
-                        $('.top-button').parent().removeClass('special');
-                    } else {
-                        $(this).parent().siblings('.blank').slideUp(600);
-                        $('.top-button').parent().addClass('special');
-                    }
-                    $(this.nextElementSibling).slideToggle(600);
-                }
                 ;
-            });
+            }
+        });
 
-            $(".bottom-button").on("click", function () {
+        $(".top-button").on("click", function () {
+            if (this.nextElementSibling) {
                 if ($(this.nextElementSibling).css('display') == "none") {
-                    $("<div class='blank'><span></span></div>").insertAfter($(this).parent());
+                    $("<div class='blank'><span></span></div>").insertBefore($(this).parent());
+                    $('.top-button').parent().removeClass('special');
                 } else {
-                    // remove inserted stuff
-                    $('.blank').slideUp(500);
+                    $(this).parent().siblings('.blank').slideUp(600);
+                    $('.top-button').parent().addClass('special');
                 }
                 $(this.nextElementSibling).slideToggle(600);
-            });
-        }
+            }
+            ;
+        });
 
-    </script>
-{% endblock %}
+        $(".bottom-button").on("click", function () {
+            if ($(this.nextElementSibling).css('display') == "none") {
+                $("<div class='blank'><span></span></div>").insertAfter($(this).parent());
+            } else {
+                // remove inserted stuff
+                $('.blank').slideUp(500);
+            }
+            $(this.nextElementSibling).slideToggle(600);
+        });
+    }
+
+</script>
+</body>
+
+</html>

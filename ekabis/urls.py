@@ -435,5 +435,6 @@ urlpatterns = [
          name='view_yeka_detail'),
 
     path('yeka/yarisma-listesi/', APIViews.GetYekaCompetition.as_view(), name='view_competition_api'),
+    path('yeka/yeka-test/<uuid:uuid>/', YekaViews.test, name='test'),
 
 ]
