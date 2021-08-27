@@ -760,6 +760,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         }
         business = BusinessBlogGetService(request, yeka_business_filter_)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
+        yekaBusinessBlogo_form.fields['dependence_parent'].queryset=yeka.business.businessblogs.exclude(uuid=yekabussiness.uuid).filter(isDeleted=False)
         name=general_methods.yekaname(yeka.business)
         for item in yekabussiness.paremetre.all():
 

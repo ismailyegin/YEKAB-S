@@ -92,7 +92,7 @@ def add_competition(request, region):
                     competition = competition_form.save(request,commit=False)
 
                     total = int(
-                        YekaCompetition.objects.filter(connectionregion=region).distinct().aggregate(Sum('capacity'))[
+                        YekaCompetition.objects.filter(connectionregion=region,isDeleted=False).distinct().aggregate(Sum('capacity'))[
                             'capacity__sum'] or 0)
                     total += competition.capacity
 
@@ -151,6 +151,18 @@ def add_competition(request, region):
                                 yeka_business.save()
                             competition.business = yeka_business
                             competition.save()
+
+                          # Bagıntılıkları yeka yarışmasına taşıdık
+                            for fcom in competition.business.businessblogs.filter(isDeleted=False).order_by('sorting'):
+                                if yeka.business.businessblogs.filter(businessblog=fcom.businessblog, isDeleted=False):
+                                    yeka_dependence_parent=yeka.business.businessblogs.filter(businessblog=fcom.businessblog, isDeleted=False)[0].dependence_parent
+                                    if yeka_dependence_parent:
+                                        if competition.business.businessblogs.filter( businessblog=yeka_dependence_parent.businessblog,isDeleted=False):
+                                             fcom.dependence_parent=competition.business.businessblogs.filter( businessblog=yeka_dependence_parent.businessblog,isDeleted=False)[0]
+                                             fcom.save()
+
+
+
                     log = " Yeka Yarışması  eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
@@ -500,14 +512,14 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         business = BusinessBlogGetService(request, yeka_business_filter_)
         name=general_methods.yekaname(competition.business)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
+        yekaBusinessBlogo_form.fields['dependence_parent'].queryset = competition.business.businessblogs.exclude(
+            uuid=yekabussiness.uuid).filter(isDeleted=False)
+
         for item in yekabussiness.paremetre.all():
             if item.parametre.type == 'file':
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
                 yekaBusinessBlogo_form.fields[
                     item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.clear_checkbox_label = ""
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.initial_text = ""
-                # yekaBusinessBlogo_form.fields[item.parametre.title].widget.input_text = ""
             else:
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
 
@@ -749,6 +761,18 @@ def add_sumcompetition(request, uuid):
                                 yeka_business.save()
                             competition.business = yeka_business
                             competition.save()
+
+                            # Bagıntılıkları yeka yarışmasına taşıdık
+                            for fcom in competition.business.businessblogs.filter(isDeleted=False).order_by('sorting'):
+                                if parent_competition.business.businessblogs.filter(businessblog=fcom.businessblog, isDeleted=False):
+                                    yeka_dependence_parent =parent_competition.business.businessblogs.filter(businessblog=fcom.businessblog, isDeleted=False)[
+                                        0].dependence_parent
+                                    if yeka_dependence_parent:
+                                        if competition.business.businessblogs.filter(
+                                                businessblog=yeka_dependence_parent.businessblog, isDeleted=False):
+                                            fcom.dependence_parent = competition.business.businessblogs.filter(
+                                                businessblog=yeka_dependence_parent.businessblog, isDeleted=False)[0]
+                                            fcom.save()
 
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
                     return redirect('ekabis:view_sub_competition', parent_competition.uuid)

@@ -229,7 +229,6 @@ class GetYekaCompetition(APIView):
             filter = {
                 'isDeleted': False,
                 'parent': None
-
             }
             count = YekaCompetitionService(request, filter).count()
 
@@ -245,9 +244,6 @@ class GetYekaCompetition(APIView):
             logApiObject.draw = int(request.POST['draw'])
             logApiObject.recordsTotal = int(count)
             logApiObject.recordsFiltered = int(filteredTotal)
-
-
-
         serializer_context = {
             'request': request,
         }
