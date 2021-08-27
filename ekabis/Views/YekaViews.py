@@ -1260,3 +1260,6 @@ def view_kur(request, ):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+def test(request):
+     return render(request,'Yeka/cytoscape.html')

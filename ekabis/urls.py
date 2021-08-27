@@ -432,4 +432,6 @@ urlpatterns = [
          YekaViews.change_yekabusinessblog_company,
          name='change_yekabusinessblog_company'),
 
+    path('test/test', YekaViews.test, name='test'),
+
 ]
