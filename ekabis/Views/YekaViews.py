@@ -1249,6 +1249,8 @@ def view_kur(request, ):
 
 
 
+def test(request):
+     return render(request,'Yeka/cytoscape.html')
 
 @login_required()
 def view_yeka_detail(request,uuid):
@@ -1340,3 +1342,4 @@ def test(request,uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+

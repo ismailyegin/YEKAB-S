@@ -430,11 +430,15 @@ urlpatterns = [
          YekaViews.change_yekabusinessblog_company,
          name='change_yekabusinessblog_company'),
 
+
+    path('test/test', YekaViews.test, name='test'),
+
     # yeka ve yarışmada kolay ulaşım sayfası
     path('yeka/yeka-detay/<uuid:uuid>/', YekaViews.view_yeka_detail,
          name='view_yeka_detail'),
 
     path('yeka/yarisma-listesi/', APIViews.GetYekaCompetition.as_view(), name='view_competition_api'),
     path('yeka/yeka-test/<uuid:uuid>/', YekaViews.test, name='test'),
+
 
 ]
