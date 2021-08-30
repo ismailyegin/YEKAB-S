@@ -20,11 +20,12 @@ class YekaBusinessBlogForm(ModelForm):
         fields = (
             'indefinite',
             'status',
+            'dependence_parent',
             'time_type',
             'businessTime',
             'startDate',
             'explanation',
-            'dependence_parent'
+
 
 
          )

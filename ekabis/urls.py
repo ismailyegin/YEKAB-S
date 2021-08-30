@@ -452,4 +452,7 @@ urlpatterns = [
     #
     # path('yeka/api-yeka-yarisma-listesi/', ReportViews.GetYekaCompetition.as_view(), name='get_yeka_competition'),
 
+    # dependense finish date -start date
+
+
 ]

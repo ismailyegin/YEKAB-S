@@ -3,6 +3,5 @@ dj-database-url
 pillow
 bs4
 unicode_tr
-mysqlclient
 djangorestframework
 requests

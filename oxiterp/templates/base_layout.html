@@ -328,8 +328,6 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
-
-                    {% if aktif == 'Admin' %}
                         {% for menu in menus %}
                             {% if menu.is_parent %}
                                 {% if  menu.pk == activ_url.parent.pk %}
@@ -366,9 +364,6 @@
                             </li>
                             {% endif %}
                         {% endfor %}
-                    {% endif %}
-
-
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->

@@ -1017,7 +1017,7 @@ def view_yekabusiness_gant(request, uuid):
 
         if yeka.business:
             yekabusiness = yeka.business
-            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+            yekabusinessbloks = yekabusiness.businessblogs.exclude(businessblog__name='Fiyat Eskalasyonu').filter(isDeleted=False).order_by('sorting')
         return render(request, 'Yeka/gant.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
@@ -1403,3 +1403,37 @@ def test(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+
+@login_required
+def view_dependence(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                pk = request.POST['pk']
+                business = request.POST['business']
+                blog=YekaBusinessBlog.objects.get(pk=pk)
+
+                if blog.finisDate:
+                    return JsonResponse({'status': 'Success', 'msg': 'save successfully','finishdate':blog.finisDate.strftime("%d/%m/%Y")})
+                else:
+
+                    return  JsonResponse({'status': 'Success', 'msg': 'save successfully', 'finishdate':None})
+
+
+
+
+
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
