@@ -1,0 +1,738 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    {% load static %}
+    <script src="{% static 'vis/dist/cytoscape.min.js' %}"></script>
+    <script src="{% static 'vis/dist/cytoscape-cxtmenu.js' %}"></script>
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Yeka Yarışmasını Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger fade in node" tabindex="-1" role="dialog" id="modal-detail"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">İş Bloğu Bilgileri</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body" id="">
+                    <div class="card">
+                        <div class="card-header" id="blok_header">
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" id="blok_detail">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        #cy {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 999;
+        }
+
+
+        /* you can set the disabled style how you like on the text/icon */
+        .cxtmenu-disabled {
+            opacity: 0.333;
+        }
+    </style>
+
+    <script>
+
+        window.addEventListener('DOMContentLoaded', function () {
+            debugger;
+            var demoNodes = [];
+            var demoEdges = [];
+            {% for blok in bloks %}
+                demoNodes.push({
+
+                    data: {
+                        id: '{{ blok.yekabusinessblog.id }}',
+                        name: ' {{ blok.yekabusinessblog.businessblog.name }}',
+                        yeka: '{{ blok.yeka }}',
+                        yekabusinessblog: '{{ blok.yekabusinessblog.uuid }}',
+                        businessblog: '{{ blok.businessblog }}',
+                        startDate: '{{ blok.yekabusinessblog.startDate.date }}',
+                        finishDate: '{{ blok.yekabusinessblog.finisDate.date }}',
+                        businessTime: '{{ blok.yekabusinessblog.businessTime }}',
+                        time_type: '{{ blok.yekabusinessblog.time_type }}',
+                        status: '{{ blok.yekabusinessblog.status }}',
+
+                    },
+
+                });
+            {% endfor %}
+            {% for item in yekabusinessbloks %}
+                {% if item.dependence_parent %}
+                    demoEdges.push({
+
+                        data: {
+                            source: '{{ item.id}}',
+                            target: '{{item.dependence_parent.id}}'
+                        }
+                    });
+                {% endif %}
+
+            {% endfor %}
+
+
+
+            debugger;
+
+            var cy = window.cy = cytoscape({
+
+                container: document.getElementById('cy'),
+
+                ready: function () {
+                },
+
+                style: [
+                    {
+                        selector: 'node',
+                        css: {
+                            'content': 'data(name)'
+                        }
+                    },
+
+                    {
+                        selector: 'edge',
+                        css: {
+                            'curve-style': 'bezier',
+                            'target-arrow-shape': 'triangle'
+                        }
+                    }
+                ],
+
+
+                elements: {
+                    nodes: demoNodes,
+                    edges: demoEdges
+                }
+            });
+            console.log(cy)
+
+            cy.cxtmenu({
+                selector: 'node, edge',
+
+                commands: [
+
+                    {
+                        content: '<span class="fa fa-search fa-2x"></span>',
+                        select: function (ele) {
+                            let html = '';
+                            html += '<div class="col-md-6">'
+                            html += '<div class="form-group"> <label for="exampleInputEmail1">Başlangıç Tarihi : </label>  ' + this.data('startDate') + '  </div>';
+                            html += '<div class="form-group"> <label for="exampleInputEmail1">Bitiş Tarihi : </label> ' + this.data('finishDate') + '  </div>';
+                            if (this.data('status')) {
+                                html += '<div class="form-group"> <label for="exampleInputEmail1">Durumu : </label> Devam Ediyor </div>';
+
+                            } else {
+                                html += '<div class="form-group"> <label for="exampleInputEmail1">Durumu : </label> Tamamlandı</div>';
+
+                            }
+                            if (this.data('indefinite')) {
+                                html += '<div class="form-group"> <label for="exampleInputEmail1">Süre Türü : </label> Süresiz</div></div>';
+
+                            } else {
+                                html += '<div class="form-group"> <label for="exampleInputEmail1">Süre Türü : </label> Süreli</div></div>';
+
+                            }
+                            html += '</div>';
+                            let html2 = ''
+                            html2 = '<h3 class="card-title">' + this.data('name') + '</h3>';
+                            document.getElementById('blok_header').innerHTML = html2;
+
+                            document.getElementById('blok_detail').innerHTML = html;
+                            $('#modal-detail').modal('show');
+                        },
+                    },
+
+                    {
+                        content: 'Düzenle',
+
+                        select: function (ele) {
+                            debugger;
+                            console.log(ele.position());
+                            let url_update = "{% url 'ekabis:change_yekacompetitionbusinessBlog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' '7729c6ee-739d-4a89-8ffe-1357e691ca18' %}";
+                            url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('yeka'))
+                            url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
+                            url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca18', this.data('businessblog'))
+
+                            window.location.replace(url_update);
+                        }
+                    }
+                ]
+            });
+
+            cy.cxtmenu({
+                selector: 'core',
+
+                commands: [
+                    {
+                        content: 'bg1',
+                        select: function () {
+                            console.log('bg1');
+                        }
+                    },
+
+                    {
+                        content: 'bg2',
+                        select: function () {
+                            console.log('bg2');
+                        }
+                    }
+                ]
+            });
+
+        });
+    </script>
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        {{ name }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="content">
+        {#      iş blokları#}
+        <div class="row">
+
+            <section class="col-lg-12 ">
+
+                <div class="card card-primary card-outline">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">Yarışma Detay Sayfası</h3>
+                        {#                        {% for item in perm %}#}
+                        {#                            {% if item == 'add_yeka' %}#}
+                        {#                                <a href="{% url "ekabis:add_region" yeka.uuid %}" title="Yeka  Ekle"#}
+                        {#                                   type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i#}
+                        {#                                        class="fa fa-plus"></i>#}
+                        {#                                </a>#}
+                        {#                            {% endif %}#}
+                        {#                        {% endfor %}#}
+                    </div>
+
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                {#                        alt yeka#}
+                                <div class="card card-default card-outline">
+                                    <div class="card-header with-border">
+                                        <h3 class="card-title">Alt YEKA Listesi</h3>
+                                        {% for item in perm %}
+                                            {% if item == 'add_sumcompetition' %}
+
+                                                <a href="{% url "ekabis:add_sumcompetition" yeka.uuid %}"
+                                                   title="Alt Yeka Yarışması Ekle"
+                                                   type="button" class="btn btn-outline-primary btn-sm"
+                                                   style="float: right"><i
+                                                        class="fa fa-plus"></i>
+                                                </a>
+
+
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+
+                                    <div class="card-body">
+
+                                        <table id="region" class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Yarışma Tanımı</th>
+                                                <th>Kapasite</th>
+                                                <th>İşlemler</th>
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                            {% for competition in competitions %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td>{{ competition.name }}</td>
+                                                    <td>{{ competition.capacity }} MW</td>
+                                                    <td>
+
+                                                        <div class="btn-group">
+                                                            <button type="button"
+                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                    data-toggle="dropdown"> İşlemler
+                                                            </button>
+                                                            <div class="dropdown-menu" role="menu">
+
+                                                                <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
+                                                                   class="dropdown-item" title="Personel Ekle"
+                                                                   type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
+
+                                                                <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
+                                                                   class="dropdown-item" title="İş Planı Ekle"
+                                                                   type="button"><i class="fa fa-edit"></i>İş Planı</a>
+
+                                                                <a onclick="deleteCompetition('{{ competition.uuid }}')"
+                                                                   class="dropdown-item" title="Sil" type="button"><i
+                                                                        class="fa fa-edit"></i>Sil</a>
+                                                                <a href=""
+                                                       class="dropdown-item" title="Düzenle " type="button"><i
+                                                            class="fa fa-edit"></i>Düzenle </a>
+
+
+                                                            </div>
+                                                        </div>
+
+
+                                                </tr>
+
+                                            {% endfor %}
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            {#                        personel Listesi#}
+                            <div class="col-lg-4">
+                                <div class="card card-default card-outline">
+                                    <div class="card-header with-border">
+                                        <h3 class="card-title">Görevli Personel Listesi</h3>
+                                        {% for item in perm %}
+                                            {% if item == 'ekabisview_yeka_personel' %}
+                                                <a href="{% url "ekabisview_yeka_personel:" yeka.uuid %}"
+                                                   title="Personel Ekle"
+                                                   type="button" class="btn btn-outline-primary btn-sm"
+                                                   style="float: right"><i
+                                                        class="fa fa-plus"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+
+                                    <div class="card-body">
+
+                                        <table id="region" class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Ad Soyad</th>
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                            {% if employees %}
+                                                {% for employee in employees %}
+                                                    <tr>
+                                                        <td>{{ forloop.counter }} </td>
+                                                        <td>{{ employee.employee.user.first_name }} {{ employee.employee.user.last_name }}</td>
+
+                                                    </tr>
+
+                                                {% endfor %}
+                                            {% endif %}
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-lg-12 ">
+                <div class="card card-default card-outline">
+                    <div class="card-header with-border"><h3 class="card-title">İş Blokları</h3></div>
+                    <div class="card-body" style="height: 500px">
+                        <div id="cy"></div>
+
+                    </div>
+                </div>
+            </section>
+
+
+        </div>
+    </section>
+    <script>
+
+
+        function view_competition(id) {
+            var html = 'competition_table'
+            $('#competition').css("display", "block");
+
+            table = $('#competition_table').DataTable();
+            table.destroy();
+
+
+            $('#competition_table').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "paging": true,
+                "ordering": true,
+
+
+                "ajax": {
+                    "url": "{% url 'ekabis:view_competition_api' %}",
+                    "type": "POST",
+                    "data": {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                        'isActive': 'False',
+                        'uuid': id
+                    },
+
+                },
+                dom: 'Bfrtip',
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Firmalar',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+
+
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                "columns": [
+
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.id;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.name;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            var html = '';
+                            html = row.capacity + ' MW'
+                            return html;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (full) {
+                            console.log(full.content);
+                            let html = '';
+                            let view_yekacompetition_personel = "{% url 'ekabis:view_yekacompetition_personel' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            view_yekacompetition_personel = view_yekacompetition_personel.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+                            let view_competitionbusinessblog = "{% url 'ekabis:view_competitionbusinessblog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            view_competitionbusinessblog = view_competitionbusinessblog.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
+                            let view_sub_competition = "{% url 'ekabis:view_sub_competition' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            view_sub_competition = view_sub_competition.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+
+                            let view_yekacompeittion_business_gant = "{% url 'ekabis:view_yekacompeittion_business_gant' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            view_yekacompeittion_business_gant = view_yekacompeittion_business_gant.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+                            html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';
+                            let url_delete = "deleteCompetition('" + full.uuid + "')"
+
+
+                            {% for item in perm %}
+                                {% if item == 'view_yekacompetition_personel'%}
+                                    html += '<a href="' + view_yekacompetition_personel + '" class="dropdown-item" title="Personel Yetkilendirme" type="button"><i class="fa fa-plus"></i> Personel Ekle</a>';
+
+                                {% elif item == 'view_competitionbusinessblog'%}
+                                    html += '<a href="' + view_competitionbusinessblog + '" class="dropdown-item" title="İş Planı" type="button"><i class="fa fa-plus"></i> İş Planı</a>';
+                                {% elif item == 'view_sub_competition'%}
+                                    html += '<a href="' + view_sub_competition + '" class="dropdown-item" title="Alt YEKA Listesi" type="button"><i class="fa fa-plus"></i> Alt YEKA Listesi</a>';
+                                {% elif item == 'view_yekacompeittion_business_gant'%}
+                                    html += '<a href="' + view_yekacompeittion_business_gant + '" class="dropdown-item" title="Gant Şeması" type="button"><i class="fa fa-plus"></i> Gant Şeması</a>';
+                                {% elif item == 'view_yekacompeittion_business_gant'%}
+                                    html += '<a href="' + view_yekacompeittion_business_gant + '" class="dropdown-item" title="Gant Şeması" type="button"><i class="fa fa-plus"></i> Gant Şeması</a>';
+
+                                {% elif item == 'delete_competition'%}
+                                    html += '<a onclick="' + url_delete + '" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
+
+                                {% endif %}
+                            {% endfor %}
+
+
+                            return html;
+                        }
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true
+                }
+
+
+            });
+            table.on('draw.dt', function () {
+                var info = table.page.info();
+                table.column(0, {
+                    search: 'applied',
+                    order: 'applied',
+                    page: 'applied'
+                }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1 + info.start;
+                });
+            });
+
+
+        }
+
+        function deleteRegion(id) {
+            var html = ''
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    debugger;
+
+                    $.ajax({
+                        url: "{% url "ekabis:delete_region"%}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            uuid: id
+                        },
+
+                        success: function (result) {
+                            if (result.status === 'Fail') {
+
+
+                                html = result.msg;
+                                debugger;
+                                $(".errorModal").html(html);
+                                $('#modal-error').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                        window.location.replace("{% url "ekabis:view_region" yeka.uuid %}");
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+                            } else {
+                                html = 'Bölge Başarıyla Silindi';
+                                $(".successModal").html(html);
+                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                        window.location.replace("{% url "ekabis:view_region" yeka.uuid %}");
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+
+                            }
+
+                        },
+
+
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+
+        function deleteCompetition(id) {
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    debugger;
+
+                    $.ajax({
+                        url: "{% url "ekabis:delete_competition"%}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            uuid: id.toString()
+                        },
+
+                        success: function (result) {
+                            if (result.status === 'Fail') {
+
+
+                                html = result.msg;
+                                debugger;
+                                $(".errorModal").html(html);
+                                $('#modal-error').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+                            } else {
+                                html = 'Yarışma Başarıyla Silindi';
+                                $(".successModal").html(html);
+                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+
+                            }
+
+                        },
+
+
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+
+    </script>
+
+
+{% endblock %}
