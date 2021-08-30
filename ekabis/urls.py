@@ -444,12 +444,12 @@ urlpatterns = [
 
     path('yeka/yeka-yarisma-detay/<uuid:uuid>/', YekaViews.view_yeka_competition_detail,
          name='view_yeka_competition_detail'),
-    #RAPORLAMA
-    path('yeka/yeka-rapor/', ReportViews.select_report,
-         name='select_report'),
-    path('yeka/rapor-il-yarisma-listesi/<uuid:uuid>/', ReportViews.view_city_competition,
-         name='view_city_competition'),
-
-    path('yeka/api-yeka-yarisma-listesi/', ReportViews.GetYekaCompetition.as_view(), name='get_yeka_competition'),
+    # #RAPORLAMA
+    # path('yeka/yeka-rapor/', ReportViews.select_report,
+    #      name='select_report'),
+    # path('yeka/rapor-il-yarisma-listesi/<uuid:uuid>/', ReportViews.view_city_competition,
+    #      name='view_city_competition'),
+    #
+    # path('yeka/api-yeka-yarisma-listesi/', ReportViews.GetYekaCompetition.as_view(), name='get_yeka_competition'),
 
 ]
