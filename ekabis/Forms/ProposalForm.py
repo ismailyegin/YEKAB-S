@@ -5,11 +5,12 @@ from ekabis.models.Proposal import Proposal
 class ProposalForm(BaseForm):
     class Meta:
         model = Proposal
-        fields = ('farm_form', 'information_form','date','capacity')
+        fields = ('farm_form', 'information_form','name','date','capacity')
         labels = {'farm_form': 'Tarım Yazısı',
                   'information_form': 'Bİlgi Formu',
                   'date': 'Başvuru Tarihi',
-                  'capacity': 'Kapasite'
+                  'capacity': 'Kapasite',
+                  'name':'İsim',
                   }
         widgets = {
             'farm_form': forms.FileInput(attrs={'class': '',
@@ -21,5 +22,6 @@ class ProposalForm(BaseForm):
                                         'style': 'width: 100%;', 'required': 'required'}),
             'capacity':forms.NumberInput(
                 attrs={'class': 'form-control ','required': 'required'}),
+            'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
 
         }

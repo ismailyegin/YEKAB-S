@@ -4,7 +4,9 @@ from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.Newspaper import Newspaper
 
 
-class NewspaperForm(BaseForm):
+# BaseForm Hatasına Bakılacak
+
+class NewspaperForm(forms.ModelForm):
     class Meta:
         model = Newspaper
         fields = ('listingDate', 'newspaperCount','newspapwerText','file')
@@ -12,7 +14,7 @@ class NewspaperForm(BaseForm):
             'listingDate': 'İlan Tarihi*',
             'newspaperCount': 'Sayısı*',
             'newspapwerText': 'Açıklama',
-            'file*':'İlan Metni Dosyası'
+            'file':'İlan Metni Dosyası*'
         }
         widgets = {
             'newspaperCount': forms.TextInput(

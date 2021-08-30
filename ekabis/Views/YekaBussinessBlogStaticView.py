@@ -68,13 +68,17 @@ def add_newspaper(request, business, businessblog):
         name = general_methods.yekaname(yekabusiness)
 
         newspaper_form = NewspaperForm()
+        newspaper_filter={
+            'business':yekabusiness
 
-        newspapers = NewspaperService(request, None)
+        }
+        newspapers = NewspaperService(request,newspaper_filter)
         with transaction.atomic():
             if request.method == 'POST':
                 newspaper_form = NewspaperForm(request.POST, request.FILES)
                 if newspaper_form.is_valid():
-                    newspaper = newspaper_form.save(request,commit=False)
+
+                    newspaper = newspaper_form.save(commit=False)
                     newspaper.yekabusinessblog = yekabussinessblog
                     newspaper.business = yekabusiness
                     newspaper.save()
@@ -97,7 +101,7 @@ def add_newspaper(request, business, businessblog):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_yekabusinessBlog', business.uuid)
+        return redirect('ekabis:view_yekabusinessBlog', yekabusiness.uuid)
 
 
 @login_required
@@ -177,13 +181,12 @@ def change_newspaper(request, uuid):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
-
         with transaction.atomic():
             if request.method == 'POST':
                 if newspaper_form.is_valid():
                     newspaper_form.save(request)
                     messages.success(request, 'Resmi Gazete Güncellenmiştir')
-                    return redirect('ekabis:view_newspaper')
+                    return redirect('ekabis:add_newspaper',newspaper.business.uuid,newspaper.yekabusinessblog.uuid)
                 else:
                     error_messages = get_error_messages(newspaper_form)
                     return render(request, 'Newspaper/change_newspaper.html',
@@ -396,7 +399,6 @@ def add_yekaapplication(request, business, businessblog):
         if YekaApplicationService(request, filter):
             return redirect('ekabis:change_yekaapplication', YekaApplicationGetService(request, filter).uuid)
         yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
-        YekaApplication
         name = general_methods.yekaname(yekabusiness)
 
         application_form = YekaApplicationForm()
@@ -405,7 +407,7 @@ def add_yekaapplication(request, business, businessblog):
             if request.method == 'POST':
                 application_form = YekaApplicationForm(request.POST, request.FILES)
                 if application_form.is_valid():
-                    application = application_form.save(request,commit=False)
+                    application = application_form.save(commit=False)
                     application.yekabusinessblog = yekabussinessblog
                     application.business = yekabusiness
                     application.save()

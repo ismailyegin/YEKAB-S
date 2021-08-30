@@ -5,7 +5,7 @@ from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.YekaApplication import YekaApplication
 
 
-class YekaApplicationForm(BaseForm):
+class YekaApplicationForm(forms.ModelForm):
     class Meta:
         model = YekaApplication
         fields = ('startDate', 'finishDate','preRegistration',)

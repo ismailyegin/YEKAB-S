@@ -14,6 +14,7 @@ class Proposal(BaseModel):
     location=models.ManyToManyField(Location)
     farm_form=models.FileField(null=True,blank=True)
     status=models.BooleanField(default=False)
+    name = models.TextField(blank=False, null=False, verbose_name='Aday Yeka')
     # Kurum önerileri
     institution=models.ManyToManyField(ProposalInstitution)
 

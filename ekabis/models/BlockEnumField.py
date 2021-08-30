@@ -82,9 +82,10 @@ class BlockEnumFields(enum.Enum):
                     'name':'',
                 }
             ],
+
         },
         {
-            'tr_name': 'Fiyat Eskalasyonu Başlangıcı',
+            'tr_name': 'Fiyat Eskalasyonu',
             'en_name': '',
             'order': 9,
             'fixed_parameter':[
