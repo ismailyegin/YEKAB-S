@@ -440,5 +440,7 @@ urlpatterns = [
     path('yeka/yarisma-listesi/', APIViews.GetYekaCompetition.as_view(), name='view_competition_api'),
     path('yeka/yeka-test/<uuid:uuid>/', YekaViews.test, name='test'),
 
+    # dependense finish date -start date
+    path('yeka/yeka-dependence/', YekaViews.view_dependence, name='view_dependence'),
 
 ]
