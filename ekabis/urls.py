@@ -1,10 +1,12 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews,CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
+from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
+    CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
     VacationDayViews, ExtraTimeViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
-    YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews
+    YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews, ReportViews
+from ekabis.services import general_methods
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -176,7 +178,7 @@ urlpatterns = [
     path('yeka/yeka-is-bloklari-incele-gant-detay/<uuid:yeka>/<uuid:yekabusiness>/',
          YekaViews.view_yekabusinessblog_gant, name='view_yekabusinessblog_gant'),
 
-    # yekabusinessBlog
+    # yekabusinessBlogyeka-lis
     path('yeka/yeka-is-bloklari-list/<uuid:uuid>/', YekaViews.view_yekabusinessBlog, name='view_yekabusinessBlog'),
     path('yeka/yeka-is-bloklari-ekle/<uuid:yeka>/<uuid:yekabusiness>/<uuid:business>/',
          YekaViews.change_yekabusinessBlog, name='change_yekabusinessBlog'),
@@ -431,7 +433,7 @@ urlpatterns = [
          name='change_yekabusinessblog_company'),
 
 
-    path('test/test', YekaViews.test, name='test'),
+    path('test/test', YekaViews.test_yeka, name='test'),
 
     # yeka ve yarışmada kolay ulaşım sayfası
     path('yeka/yeka-detay/<uuid:uuid>/', YekaViews.view_yeka_detail,
@@ -440,5 +442,14 @@ urlpatterns = [
     path('yeka/yarisma-listesi/', APIViews.GetYekaCompetition.as_view(), name='view_competition_api'),
     path('yeka/yeka-test/<uuid:uuid>/', YekaViews.test, name='test'),
 
+    path('yeka/yeka-yarisma-detay/<uuid:uuid>/', YekaViews.view_yeka_competition_detail,
+         name='view_yeka_competition_detail'),
+    #RAPORLAMA
+    path('yeka/yeka-rapor/', ReportViews.select_report,
+         name='select_report'),
+    path('yeka/rapor-il-yarisma-listesi/<uuid:uuid>/', ReportViews.view_city_competition,
+         name='view_city_competition'),
+
+    path('yeka/api-yeka-yarisma-listesi/', ReportViews.GetYekaCompetition.as_view(), name='get_yeka_competition'),
 
 ]

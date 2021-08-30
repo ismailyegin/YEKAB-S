@@ -192,7 +192,7 @@
     <script>
         $(function () {
 
-            table=$('#yeka').DataTable({
+            table = $('#yeka').DataTable({
 
                 "processing": true,
                 "serverSide": true,
@@ -291,8 +291,8 @@
                             let url_person = "{% url 'ekabis:view_yeka_personel' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             url_person = url_person.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
 
-                            {#let url_sub_yeka = "{% url 'ekabis:view_sub_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
-                            {#url_sub_yeka = url_sub_yeka.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                            let url_view_yeka_detail = "{% url 'ekabis:view_yeka_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            url_view_yeka_detail = url_view_yeka_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
 
                             let url_business = "{% url 'ekabis:view_yekabusinessBlog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             url_business = url_business.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
@@ -305,61 +305,31 @@
                             html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';
 
 
-                            url_delete = "deleteYeka('" + full.uuid + "')"
+                            let url_delete = "deleteYeka('" + full.uuid + "')"
+                            {#let yeka_report = "view_report('" + full.uuid + "')"#}
+
 
                             {% for item in perm %}
                                 {% if item == 'view_yeka_personel'%}
                                     html += '<a href="' + url_person + '" class="dropdown-item" title="Personel Ekle" type="button"><i class="fa fa-plus"></i> Personel Ekle</a>';
-
-                                    {#                                {% elif item == 'view_yekabusinessBlog'%}#}
-                                    {#                                    html += '<a href="' + url_company + '" class="dropdown-item" title="Firma Ekle" type="button"><i class="fa fa-plus"></i> Firma Ekle</a>';#}
-
-                                {% endif %}
-                            {% endfor %}
-
-
-
-                            {% for item in perm %} {% if item == 'view_region'%}
-                                html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Planı</a>';
-
-                            {% endif %}
-                            {% endfor %}
-
-                            {% for item in perm %}
-                                {% if item == 'view_yeka_company'%}
-
+                                {% elif item == 'view_region'%}
+                                    html += '<a href="' + url_business + '" class="dropdown-item" title="İş Bloğu Ekle" type="button"><i class="fa fa-plus"></i> İş Planı</a>';
+                                {% elif item == 'view_yeka_company'%}
                                     html += '<a href="' + url_region + '" class="dropdown-item" title="Baglantı Bölgeleri" type="button"><i class="fa fa-plus"></i> Baglantı Bölgeleri</a>';
-                                {% endif %}
-                            {% endfor %}
-
-                            {% for item in perm %}
-                                {% if item == 'view_yekabusiness_gant'%}
+                                {% elif item == 'view_yekabusiness_gant'%}
                                     html += '<a href="' + url_gant + '" class="dropdown-item" title="İş Planı" type="button"><i class="fa fa-plus"></i> Gant Şeması</a>';
-
-                                {% endif %}
-                            {% endfor %}
-
-
-
-
-
-                            {% for item in perm %}
-
-
-                                {% if item == 'delete_yeka' %}
-
+                                {% elif item == 'delete_yeka' %}
                                     html += '<a onclick="' + url_delete + '" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
-                                {% endif %}
-                            {% endfor %}
-
-
-                            {% for item in perm %}
-                                {% if item == 'change_yeka' %}
+                                {% elif item == 'change_yeka' %}
                                     html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
+                                {% elif item == 'view_yeka_detail' %}
 
+                                    html += '<a href="' + url_view_yeka_detail + '" class="dropdown-item" title="Detay" type="button"><i class="fa fa-search"></i>Detay</a>';
+                                    {#html += '<a onclick="' + yeka_report + '" class="dropdown-item" title="RAPOR" type="button"><i class="fa fa-list"></i>RAPOR</a>';#}
 
                                 {% endif %}
                             {% endfor %}
+
 
                             return html;
                         }
@@ -474,6 +444,29 @@
             });
 
         }
+
+        {#function view_report(id) {#}
+        {##}
+        {##}
+        {#    $.ajax({#}
+        {#        url: "{% url "ekabis:get_yeka_competition" %}",#}
+        {#        type: "GET",#}
+        {#        data: {#}
+        {#            'csrfmiddlewaretoken': "{{  csrf_token  }}",#}
+        {#            uuid: id,#}
+        {#        },#}
+        {#        success: function (response) {#}
+        {#            const url = window.URL.createObjectURL(new Blob([response.data]));#}
+        {#            const link = document.createElement('a');#}
+        {#            link.href = url;#}
+        {#            link.setAttribute('download', 'report.pdf');#}
+        {#            document.body.appendChild(link);#}
+        {#            link.click();#}
+        {##}
+        {#        }#}
+        {#    });#}
+        {##}
+
     </script>
 
     <script>

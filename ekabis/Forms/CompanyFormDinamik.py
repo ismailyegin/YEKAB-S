@@ -48,7 +48,7 @@ class CompanyFormDinamik(ModelForm):
 
     def save(self, request, communication):
         with transaction.atomic():
-            x = log(request, self)
+            x = log(request)
             parametre = CompanyFileNames.objects.filter(is_active=True)
             company = Company(
                 name=self.data['name'],
