@@ -698,7 +698,7 @@
                     }
 
                     function destroyInstance() {
-                        redrawing = false;
+                        redrawing = true;
 
                         removeEventListeners();
 

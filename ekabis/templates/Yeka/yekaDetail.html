@@ -164,7 +164,13 @@
                     {
                         selector: 'node',
                         css: {
-                            'content': 'data(name)'
+
+                            'content': 'data(name)',
+                            'text-valign': 'center',
+                            'color': 'white',
+                            'text-outline-width': 2,
+                            'text-outline-color': '#888',
+                            'background-color': '#888'
                         }
                     },
 
@@ -182,7 +188,9 @@
                     nodes: demoNodes,
                     edges: demoEdges
                 }
+
             });
+
             console.log(cy)
 
             cy.cxtmenu({
@@ -195,7 +203,7 @@
                         select: function (ele) {
                             let html = '';
                             html += '<div class="col-md-6">'
-                            html += '<div class="form-group"> <label for="exampleInputEmail1">Başlangıç Tarihi : </label>  ' + this.data('startDate') + '  </div>';
+                            html += '<div class="form-group"> <label for="exampleInputEmail1">Başlangıç Tarihi : </label>  ' + '{{ blok.yekabusinessblog.startDate.date }}' + '  </div>';
                             html += '<div class="form-group"> <label for="exampleInputEmail1">Bitiş Tarihi : </label> ' + this.data('finishDate') + '  </div>';
                             if (this.data('status')) {
                                 html += '<div class="form-group"> <label for="exampleInputEmail1">Durumu : </label> Devam Ediyor </div>';
@@ -238,6 +246,10 @@
                 ]
             });
 
+            var layout = cy.layout({
+                name: 'breadthfirst'
+            });
+
             cy.cxtmenu({
                 selector: 'core',
 
@@ -257,6 +269,8 @@
                     }
                 ]
             });
+
+            layout.run();
 
         });
     </script>
@@ -304,7 +318,7 @@
 
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-8">
+                            <div class="col-lg-7">
                                 {#                        baglantı bölgeleri#}
                                 <div class="card card-default card-outline">
                                     <div class="card-header with-border">
@@ -441,13 +455,38 @@
 
                             </div>
                             {#                        personel Listesi#}
-                            <div class="col-lg-4">
+                            <div class="col-lg-5">
+                                <div class="card card-default card-outline">
+                                    <div class="card-header with-border">
+                                        <h3 class="card-title">YEKA Bilgileri</h3>
+                                        {% for item in perm %}
+                                            {% if item == 'change_yeka' %}
+                                                <a href="{% url "ekabis:change_yeka" yeka.uuid %}" title="Yeka Düzenle"
+                                                   type="button" class="btn btn-outline-primary btn-sm"
+                                                   style="float: right"><i
+                                                        class="fa fa-edit"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </div>
+
+
+                                    <div class="card-body">
+                                        <p class="text-muted" style="font-size: 16px;"><b>Tanım :</b> {{ yeka.definition }}</p>
+                                        <p class="text-muted" style="font-size: 16px;"><b>Resmi Gazetede İlan Tarihi  :</b> {{ yeka.date }}</p>
+                                        <p class="text-muted" style="font-size: 16px;"><b>Kapasite :</b> {{ yeka.capacity }} MWe</p>
+                                        <p class="text-muted" style="font-size: 16px;"><b>Kaynak Türü :</b> {{ yeka.type }}</p>
+
+
+                                    </div>
+                                </div>
                                 <div class="card card-default card-outline">
                                     <div class="card-header with-border">
                                         <h3 class="card-title">Görevli Personel Listesi</h3>
                                         {% for item in perm %}
-                                            {% if item == 'ekabisview_yeka_personel' %}
-                                                <a href="{% url "ekabisview_yeka_personel:" yeka.uuid %}"
+                                            {% if item == 'view_yeka_personel' %}
+                                                <a href="{% url "ekabis:view_yeka_personel" yeka.uuid %}"
                                                    title="Personel Ekle"
                                                    type="button" class="btn btn-outline-primary btn-sm"
                                                    style="float: right"><i
@@ -489,6 +528,8 @@
 
                                     </div>
                                 </div>
+
+
                             </div>
 
                         </div>

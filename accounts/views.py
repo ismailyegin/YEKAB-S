@@ -14,6 +14,7 @@ from ekabis.models import Employee, CompanyUser
 from ekabis.models.Settings import Settings
 from ekabis.services import general_methods
 # from accounts.forms import LoginForm
+from ekabis.services.general_methods import controlGroup
 
 from ekabis.urls import urlpatterns
 from ekabis.models.Permission import Permission
@@ -47,11 +48,14 @@ def login(request):
         filter = {
             'user': login_user
         }
-        active = ActiveGroupGetService(request, filter)
         active_user = None
         user = auth.authenticate(username=username, password=password)
 
-        if active:
+        if user:
+            active = ActiveGroupGetService(request, filter)
+            if not active:
+                controlGroup(request)
+                active = ActiveGroupGetService(request, filter)
             if active.group.name == 'Firma':
                 active_user = CompanyUserGetService(request, filter)
             elif active.group.name == 'Admin':
@@ -66,7 +70,7 @@ def login(request):
             else:
                 active_user = EmployeeGetService(request, filter)
 
-            if user is not None and datetime.datetime.now() - active_user.person.failed_time >= datetime.timedelta(
+            if datetime.datetime.now() - active_user.person.failed_time >= datetime.timedelta(
                     minutes=5):
                 login_user.is_active = True
                 login_user.save()
@@ -86,7 +90,9 @@ def login(request):
                 else:
                     return redirect('accounts:view_logout')
 
-            else:
+
+        else:
+            if login_user:
                 if active_user.person.failed_login == int(Settings.objects.get(key='failed_login').value):
                     wait_time = int(Settings.objects.get(key='failed_time').value)
                     if datetime.datetime.now() - active_user.person.failed_time > datetime.timedelta(
@@ -111,6 +117,10 @@ def login(request):
                         login_user.save()
             messages.warning(request, 'Mail Adresi Ve Şifre Uyumsuzluğu')
             return render(request, 'registration/login.html')
+
+        messages.warning(request, 'Mail Adresi Ve Şifre Uyumsuzluğu')
+        return render(request, 'registration/login.html')
+
 
     return render(request, 'registration/login.html')
 

@@ -285,8 +285,8 @@ urlpatterns = [
 
 
     #yarisma
-    path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_competition,
-         name='change_competition'),
+    # path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_competition,
+    #      name='change_competition'),
 
     path('yeka/yeka-yarisma-firma-ekle/<uuid:competition>',
 
@@ -442,8 +442,10 @@ urlpatterns = [
     path('yeka/yarisma-listesi/', APIViews.GetYekaCompetition.as_view(), name='view_competition_api'),
     path('yeka/yeka-test/<uuid:uuid>/', YekaViews.test, name='test'),
 
-    path('yeka/yeka-yarisma-detay/<uuid:uuid>/', YekaViews.view_yeka_competition_detail,
+    path('yeka/yeka-yarisma-detay/<uuid:uuid>/', YekaCompetitionViews.view_yeka_competition_detail,
          name='view_yeka_competition_detail'),
+    path('yeka/alt-yeka-detay/<uuid:uuid>/', YekaCompetitionViews.view_sub_yeka_competition_detail,
+         name='view_sub_yeka_competition_detail'),
     # #RAPORLAMA
     # path('yeka/yeka-rapor/', ReportViews.select_report,
     #      name='select_report'),
@@ -454,5 +456,6 @@ urlpatterns = [
 
     # dependense finish date -start date
 
+    path('yeka/yeka-bagimlilik/', YekaViews.view_dependence, name='view_dependence'),
 
 ]

@@ -202,7 +202,7 @@ def add_connectionRegion(request,uuid):
 
 
                     messages.success(request, 'Bölge Başarıyla Kayıt Edilmiştir.')
-                    return redirect('ekabis:view_region' ,yeka.uuid)
+                    return redirect('ekabis:view_yeka_detail' ,yeka.uuid)
 
                 else:
                     error_message_region = get_error_messages(region_form)
@@ -331,7 +331,7 @@ def update_region(request, uuid,yeka):
                         region.save()
 
                     messages.success(request, 'Bölge Başarıyla Güncellendi')
-                    return redirect('ekabis:add_region' ,yeka.uuid)
+                    return redirect('ekabis:view_yeka_detail' ,yeka.uuid)
                 else:
                     error_message_unit = get_error_messages(region_form)
                     return render(request, 'ConnectionRegion/update_region.html',
