@@ -17,6 +17,7 @@ from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import YekaCompanyHistory, YekaConnectionRegion, ConnectionRegion, YekaBusiness, ExtraTime, \
     Permission, YekaCompetition, Logs
+
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
 from ekabis.models.Yeka import Yeka
@@ -26,8 +27,8 @@ from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.YekaPersonHistory import YekaPersonHistory
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages, get_client_ip
-from ekabis.services.services import YekaService, CompanyService, YekaConnectionRegionService, YekaGetService, \
-    YekaConnectionRegionGetService, YekaPersonService, \
+from ekabis.services.services import YekaService,  YekaConnectionRegionService, YekaGetService, \
+     YekaPersonService, \
     EmployeeGetService, YekaCompanyService, CompanyGetService, ExtraTimeService, YekaBusinessBlogGetService, \
     BusinessBlogGetService, ConnectionRegionService, last_urls, YekaCompetitionGetService, NewspaperService, \
     YekaBusinessGetService, YekaCompetitionPersonService
@@ -35,7 +36,6 @@ import datetime
 
 from ekabis.models.YekaApplication import YekaApplication
 from ekabis.models.YekaApplicationFile import YekaApplicationFile
-from ekabis.models.YekaApplicationFileName import YekaApplicationFileName
 
 
 @login_required
@@ -220,7 +220,7 @@ def update_yeka(request, uuid):
                     yeka.save()
 
                     messages.success(request, 'Yeka Başarıyla Güncellendi')
-                    return redirect('ekabis:view_yeka')
+                    return redirect('ekabis:view_yeka_detail', yeka.uuid)
                 else:
                     error_message_unit = get_error_messages(yeka_form)
                     return render(request, 'Yeka/change_yeka.html',
@@ -1285,7 +1285,7 @@ def view_yeka_detail(request, uuid):
             dict = {}
             bloc_dict['yekabusinessblog'] = blok
             bloc_dict['businessblog'] = blok.businessblog.uuid
-            bloc_dict['yeka'] = YekaBusiness.objects.filter(businessblogs=blok)[0].yeka.uuid
+            bloc_dict['yeka'] = yeka.uuid
             blocks.append(bloc_dict)
 
         employees = YekaPersonService(request, employe_filter)
@@ -1304,61 +1304,6 @@ def view_yeka_detail(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-
-@login_required()
-def view_yeka_competition_detail(request, uuid):
-    perm = general_methods.control_access(request)
-
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-
-    try:
-
-        urls = last_urls(request)
-        current_url = resolve(request.path_info)
-        url_name = Permission.objects.get(codename=current_url.url_name)
-        yeka_filter = {
-            'uuid': uuid
-        }
-        yeka = YekaCompetitionGetService(request, yeka_filter)
-        name = general_methods.yekaname(yeka.business)
-        competitions = YekaCompetition.objects.filter(parent=yeka, isDeleted=False)
-        region = ConnectionRegion.objects.get(yekacompetition=yeka)
-
-        yekabusinessbloks = None
-        if yeka.business:
-            yekabusiness = yeka.business
-            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
-
-        employe_filter = {
-            'competition': yeka
-        }
-        blocks = []
-        dependency = []
-
-        for blok in yekabusinessbloks:
-            bloc_dict = {}
-            dict = {}
-            bloc_dict['yekabusinessblog'] = blok
-            bloc_dict['businessblog'] = blok.businessblog.uuid
-            blocks.append(bloc_dict)
-
-        employees = YekaCompetitionPersonService(request, employe_filter)
-
-        return render(request, 'Yeka/yeka_competition_detail.html',
-                      {'urls': urls, 'current_url': current_url,
-                       'url_name': url_name, 'name': name, 'bloks': blocks,
-                       'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
-                       'employees': employees, 'competitions': competitions, 'region': region
-
-                       })
-
-    except Exception as e:
-
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_yeka')
 
 
 @login_required()

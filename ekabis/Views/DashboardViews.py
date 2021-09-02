@@ -11,7 +11,8 @@ from ekabis.models import ConnectionRegion, Permission
 from ekabis.models.VacationDay import VacationDay
 from ekabis.services import general_methods
 from ekabis.services.services import ActiveGroupService, GroupService, ActiveGroupGetService, GroupGetService, \
-    CalendarNameService, YekaService, VacationDayService, ConnectionRegionService, last_urls
+    CalendarNameService, YekaService, VacationDayService, ConnectionRegionService, last_urls, EmployeeGetService, \
+    YekaCompetitionService, YekaCompetitionPersonService
 
 from ekabis.Forms.CalendarNameForm import CalendarNameForm
 from ekabis.models.CalendarName import CalendarName
@@ -53,9 +54,20 @@ def return_personel_dashboard(request):
 
     calendarNames = CalendarNameService(request, calendar_filter)
 
+    user = request.user
+    person_filter = {
+        'user': user,
+    }
+
+    employee = EmployeeGetService(request, person_filter)
+    competition_filter = {
+        'employee': employee,
+    }
+    competitions = YekaCompetitionPersonService(request, competition_filter)
+
     return render(request, 'anasayfa/personel.html',
                   {
-                      'calendarNames': calendarNames
+                      'calendarNames': calendarNames,'person_competitions':competitions,
                   })
 
 
@@ -65,7 +77,7 @@ def return_admin_dashboard(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    yeka = YekaService(request, None)
+    yeka = YekaService(request, None).order_by('-date')
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
 

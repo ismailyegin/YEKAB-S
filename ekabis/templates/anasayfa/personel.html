@@ -52,9 +52,210 @@
         <!-- Main content -->
         <section class="content">
             <div class="row">
+                {% if person_competitions %}
+                    <script>
+                        function deleteCompetition(id) {
+                            $("#modal-delete").on("shown.bs.modal", function (e) {
+                                $("#btn-conf1").click(function () {
+                                    debugger;
+
+                                    $.ajax({
+                                        url: "{% url "ekabis:delete_competition"%}",
+                                        type: "POST",
+                                        data: {
+                                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                            isActive: 'False',
+                                            uuid: id.toString()
+                                        },
+
+                                        success: function (result) {
+                                            if (result.status === 'Fail') {
+
+
+                                                html = result.msg;
+                                                debugger;
+                                                $(".errorModal").html(html);
+                                                $('#modal-error').on("shown.bs.modal", function (e) {
+                                                    $(".btn-ok").click(function () {
+
+
+                                                    });
+
+                                                }).modal('show');
+                                                console.log(result.status)
+                                            } else {
+                                                html = 'Yarışma Başarıyla Silindi';
+                                                $(".successModal").html(html);
+                                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                                    $(".btn-ok").click(function () {
+
+
+                                                    });
+
+                                                }).modal('show');
+                                                console.log(result.status)
+
+                                            }
+
+                                        },
+
+
+                                    });
+                                });
+                            }).modal('show');
+                            $('#btn-close').click(function () {
+                                $('#modal-danger').modal('hide');
+                            });
+
+                        }</script>
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h4 class="card-title">YEKA Yarışma Listesi</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        {#                        alt yeka#}
+
+
+                                        <table id="region" class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Tanım</th>
+                                                <th>Kapasite</th>
+                                                <th>İşlemler</th>
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                            {% for person in person_competitions %}
+                                                <tr >
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td class='clickable-row'
+                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.name }}</td>
+                                                    <td class='clickable-row'
+                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.capacity }} MW</td>
+                                                    <td>
+
+                                                        <div class="btn-group">
+                                                            <button type="button"
+                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                    data-toggle="dropdown"> İşlemler
+                                                            </button>
+                                                            <div class="dropdown-menu" role="menu">
+                                                                {% for item in perm %}
+                                                                    {% if item == 'change_sumcompetition' %}
+
+                                                                        <a href="{% url "ekabis:change_sumcompetition" person.competition.uuid %}"
+                                                                           class="dropdown-item"
+                                                                           title="Düzenle "
+                                                                           type="button"><i
+                                                                                class="fa fa-edit"></i>Düzenle
+                                                                        </a>
+                                                                    {% elif item == 'view_sub_yeka_competition_detail' %}
+                                                                        <a href="{% url "ekabis:view_sub_yeka_competition_detail" person.competition.uuid %}"
+                                                                           class="dropdown-item" title="Detay"
+                                                                           type="button"><i
+                                                                                class="fa fa-search"></i>Detay
+                                                                        </a>
+                                                                    {% elif item == 'delete_competition' %}
+                                                                        <a onclick="deleteCompetition('{{ person.competition.uuid }}')"
+                                                                           class="dropdown-item" title="Sil"
+                                                                           type="button"><i
+                                                                                class="fa fa-edit"></i>Sil</a>
+
+
+                                                                    {% endif %}
+                                                                {% endfor %}
+
+
+                                                            </div>
+                                                        </div>
+
+
+                                                </tr>
+
+                                            {% endfor %}
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+
+
+                                    {#personel Listesi#}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <script>
+                        function deleteCompetition(id) {
+                            $("#modal-delete").on("shown.bs.modal", function (e) {
+                                $("#btn-conf1").click(function () {
+                                    debugger;
+
+                                    $.ajax({
+                                        url: "{% url "ekabis:delete_competition"%}",
+                                        type: "POST",
+                                        data: {
+                                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                            isActive: 'False',
+                                            uuid: id.toString()
+                                        },
+
+                                        success: function (result) {
+                                            if (result.status === 'Fail') {
+
+
+                                                html = result.msg;
+                                                debugger;
+                                                $(".errorModal").html(html);
+                                                $('#modal-error').on("shown.bs.modal", function (e) {
+                                                    $(".btn-ok").click(function () {
+
+
+                                                    });
+
+                                                }).modal('show');
+                                                console.log(result.status)
+                                            } else {
+                                                html = 'Yarışma Başarıyla Silindi';
+                                                $(".successModal").html(html);
+                                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                                    $(".btn-ok").click(function () {
+
+
+                                                    });
+
+                                                }).modal('show');
+                                                console.log(result.status)
+
+                                            }
+
+                                        },
+
+
+                                    });
+                                });
+                            }).modal('show');
+                            $('#btn-close').click(function () {
+                                $('#modal-danger').modal('hide');
+                            });
+
+                        }</script>
+                {% endif %}
                 <div class="col-md-3">
                     <div class="sticky-top mb-3">
-                        <div class="card">
+                        <div class="card card-primary card-outline">
                             <div class="card-header">
                                 <h4 class="card-title">İşaretler</h4>
                             </div>
@@ -80,7 +281,7 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-md-9">
-                    <div class="card card-primary">
+                        <div class="card card-primary card-outline">
                         <div class="card-body p-1">
                             <!-- THE CALENDAR -->
                             <div id="calendar">
@@ -102,6 +303,10 @@
     <script>
 
         $(function () {
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+
             /* initialize the external events
              -----------------------------------------------------------------*/
             function ini_events(ele) {
@@ -222,13 +427,13 @@
                     var tdates = info.dateStr;
                     console.log(tuuid);
                     console.log(tdates);
-                     $.ajax({
+                    $.ajax({
                         url: "{% url "ekabis:add_calendarfdk" %}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
                             uuid: tuuid,
-                            dates:tdates,
+                            dates: tdates,
                         },
                         success: function (result) {
                             console.log(result.status)

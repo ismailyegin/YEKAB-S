@@ -3,11 +3,7 @@
 {% block content %}
     <script src="{% static 'vis/dist/cytoscape.min.js' %}"></script>
     <script src="{% static 'vis/dist/cytoscape-cxtmenu.js' %}"></script>
-    <script src="{% static 'vis/src/assign.js' %}"></script>
-    <script src="{% static 'vis/src/cxtmenu.js' %}"></script>
-    <script src="{% static 'vis/src/defaults.js' %}"></script>
-    <script src="{% static 'vis/src/dom-util.js' %}"></script>
-    <script src="{% static 'vis/src/index.js' %}"></script>
+
 
     <style>
         body {
@@ -86,6 +82,7 @@
                 }
             });
             console.log(cy)
+
             cy.cxtmenu({
                 selector: 'node, edge',
 

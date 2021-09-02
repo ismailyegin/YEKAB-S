@@ -388,7 +388,7 @@
                                                             <div class="col-sm-6">
                                                             {% if item.file %}
                                                                 <label>{{ item.parametre.title }} ({{ item.company.name }})</label>
-                                                                <a href="/media/{{ item.file }}" target="_blank"> <input
+                                                                <a href="{{ MEDIA_URL }}{{ item.file }}" target="_blank"> <input
                                                                         type="text" class="form-control"
                                                                         placeholder="{{ item.file }}"
                                                                         disabled=""></a>
