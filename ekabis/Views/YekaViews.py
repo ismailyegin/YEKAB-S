@@ -6,9 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.db import transaction
 from django.db.models import Q
-from django.http import JsonResponse, Http404, HttpResponse
+from django.http import JsonResponse, Http404, HttpResponse, FileResponse
 from django.shortcuts import redirect, render
 from django.urls import resolve
+from rest_framework import status
 
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaCompanyForm import YekaCompanyForm
@@ -1279,25 +1280,21 @@ def view_yeka_detail(request, uuid):
         }
         blocks = []
         dependency = []
-
-        for blok in yekabusinessbloks:
-            bloc_dict = {}
-            dict = {}
-            bloc_dict['yekabusinessblog'] = blok
-            bloc_dict['businessblog'] = blok.businessblog.uuid
-            bloc_dict['yeka'] = yeka.uuid
-            blocks.append(bloc_dict)
-
+        if yekabusinessbloks:
+            for blok in yekabusinessbloks:
+                bloc_dict = {}
+                dict = {}
+                bloc_dict['yekabusinessblog'] = blok
+                bloc_dict['businessblog'] = blok.businessblog.uuid
+                bloc_dict['yeka'] = yeka.uuid
+                blocks.append(bloc_dict)
         employees = YekaPersonService(request, employe_filter)
-
         return render(request, 'Yeka/yekaDetail.html',
                       {'urls': urls, 'current_url': current_url,
                        'url_name': url_name, 'name': name, 'bloks': blocks,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
                        'employees': employees,
-
                        })
-
     except Exception as e:
 
         traceback.print_exc()
@@ -1382,3 +1379,204 @@ def view_dependence(request):
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
+
+
+@login_required
+def select_report(request):
+    from weasyprint import HTML,CSS
+    try:
+        html = HTML(string='''
+            <!DOCTYPE html>
+        <html class="no-js" lang="tr">
+        <head>
+            <style> table{border: 1px solid black;}</style>
+            <meta charset="utf-8" />
+        </head>
+        <div class="header">
+            <img class="logo"  src="'''  '''">
+        </div>    
+        <div class="section-header">Servis Bilgileri</div>
+        <div class="container">
+            <div class="row">
+                <div class="row col-6 entry"><h3 class="col-4">Müşteri:</h3><p>''' '''</p></div>
+                <div class="row col-6 entry"><h3 class="col-5">Servise Getiren:</h3><p>'''  '''</p></div>       
+            </div>
+            <div class="row">
+                <div class="row col-3 entry"><h3>Plaka:</h3><p>'''  '''</p></div>
+                <div class="row col-5 entry"><h3>Marka/Model:</h3><p>'''  '''/'''  '''</p></div>
+                <div class="row col-4 entry"><h3>Kilometre:</h3><p>'''  ''' KM</p></div>      
+            </div>
+            <div class="row">
+                <div class="row col-3 entry"><h3>Usta:</h3><p>''' '''</p></div>
+                <div class="row col-5 entry"><h3>Giriş zamanı:</h3><p>'''  '''</p></div>
+                <div class="row col-4 entry"><h3>Teslim Alan:</h3><p>'''  '''</p></div>
+
+
+            </div> 
+        <div>
+        <div class="desc-header">Şikayet:</div>
+        <div class="description">'''  '''</div>
+        <div class="desc-header">Tespit:</div> 
+        <div class="description">'''  '''</div>
+        <table>
+        <caption>Servis  Ürün Listesi</caption>
+        <tr>
+            <th>Barkod</th> 
+            <th>Ürün Adı</th>
+            <th>Marka</th> 
+            <th>Adet</th>
+            <th>Net Fiyat</th>
+            <th>KDV</th>
+            <th>Toplam Fiyat</th>    
+        </tr>'''  '''
+        <tr class="footer">
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Net: </th><td class="last-td">'''  ''' ₺</td>
+            <th>Toplam: </th><td class="last-td">''' ''' ₺</td>
+        </tr>
+        </table>
+        <div>
+            <div class="section-header" style="page-break-before: always"> Araç Fotoğrafları </div>
+            '''
+                         
+                           '''
+                       </div>
+                       </html>
+
+                       ''')
+        css = CSS(string='''
+        .bordered{border-bottom: 10000000px solid black;}
+        .last-td{
+            border:0px !important;
+        }
+        .container{
+            display: block;
+        }
+        .row{
+            display: flex;
+            float:center;
+            padding-top: 7px;
+            padding-bottom: 7px;
+        }
+        .col-6{
+            width: 50%;
+            padding: 0px;
+            margin: 0px;
+        }
+        .col-5{
+            width: 40%;
+            padding: 0px;
+            margin: 0px;
+        }
+        .col-4{
+            width: 33%;
+            margin: 0px;
+            padding: 0px;
+        }
+        .col-3{
+            width: 25%;
+            margin: 0px;
+            padding: 0px;
+        }
+        .col-2{
+            width: 16%;
+            margin: 0px;
+            padding: 0px;
+        }
+        .entry h3{
+            font-size: 12px;
+            margin-top:auto;
+            margin-bottom:auto;
+        }
+        .entry p{                    
+            font-size: 10px;
+            margin-top:auto;
+            margin-bottom:auto;
+            padding-left: 5px;
+        }
+        .logo{
+            height:70px;
+        }
+        .car-image{
+            height:225px;
+            width:300px;
+        }
+        .header{
+            padding-bottom:20px;
+        }
+        .footer{
+            align-items: right;
+            text-align: right;
+        }
+        table caption{
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+            padding-top: 3px;
+            padding-bottom: 2px;
+            background-color: #3c4b64;
+        }
+        .car-image{
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-right: 5px;
+            padding-left: 5px; 
+        }
+        .section-header{
+            padding-top: 5px;
+            padding-bottom: 4px;
+            background-color: #3c4b64;
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+        }
+        table {
+
+            width: 100%;
+            position: relative;
+        }
+        table * {
+            position: relative;
+        }
+        table thead tr {
+            height: 20px;
+            background: #36304a;
+        }
+        table tbody tr {
+            border: 1px solid black !important;
+            height: 20px;
+        }
+        table td.c,
+        table th.c {
+            text-align: center;
+        }
+        table td.r,
+        table th.r {
+            text-align: center;
+        }
+        tbody tr {
+            border: 1px solid black !important;
+            font-size: 10px;
+            color: #020203;
+            line-height: 1.2;
+            font-weight: unset;
+        }
+        .description {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-size: 12px;
+        }
+        .desc-header {
+            padding-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        ''')
+        html.write_pdf(
+            'report.pdf', stylesheets=[css])
+        return FileResponse(open('report.pdf', 'rb'), status=status.HTTP_200_OK,
+                            content_type='application/pdf')
+    except:
+        raise Exception("Error While creating service detail pdf")
