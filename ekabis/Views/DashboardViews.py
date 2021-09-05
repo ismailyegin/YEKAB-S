@@ -6,19 +6,24 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve
+from django.utils.safestring import mark_safe
 
-from ekabis.models import ConnectionRegion, Permission
+from ekabis.models import ConnectionRegion, Permission, City
 from ekabis.models.VacationDay import VacationDay
+from ekabis.serializers.YekaSerializer import YekaSerializer
 from ekabis.services import general_methods
 from ekabis.services.services import ActiveGroupService, GroupService, ActiveGroupGetService, GroupGetService, \
     CalendarNameService, YekaService, VacationDayService, ConnectionRegionService, last_urls, EmployeeGetService, \
-    YekaCompetitionService, YekaCompetitionPersonService
+    YekaCompetitionService, YekaCompetitionPersonService, YekaGetService
 
 from ekabis.Forms.CalendarNameForm import CalendarNameForm
 from ekabis.models.CalendarName import CalendarName
 from django.contrib import messages
 import datetime
 
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core import serializers
+from rest_framework.response import Response
 from ekabis.services.services import UserGetService
 
 
@@ -80,13 +85,15 @@ def return_admin_dashboard(request):
     yeka = YekaService(request, None).order_by('-date')
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
+    # region_json = serializers.serialize("json", ConnectionRegion.objects.all(), cls=DjangoJSONEncoder)
+    # yeka_json = serializers.serialize("json",yeka, cls=DjangoJSONEncoder)
+    # list_yeka=list(yeka)
 
     return render(request, 'anasayfa/admin.html', {
         'yeka': yeka,
+        # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
     })
-
-
 @login_required
 def activeGroup(request, pk):
     activefilter = {
@@ -158,5 +165,27 @@ def add_calendar(request):
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
     except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+@login_required
+def api_connection_region_cities(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                yekafilter = {
+                    'uuid': uuid
+                }
+                yeka = YekaGetService(request, yekafilter)
+                cities=City.objects.filter(connectionregion__id__in=yeka.connection_region.all().values_list('pk'))
+                cities = serializers.serialize("json", cities, cls=DjangoJSONEncoder)
+                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'cities': cities})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})

@@ -54,6 +54,7 @@ def add_yekabusiness(request, uuid):
                             else:
                                 blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
                                                         parent=parent,
+                                                        dependence_parent=parent,
                                                         sorting=i + 1
                                                         )
                                 blog.save()

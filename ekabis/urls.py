@@ -5,7 +5,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
     VacationDayViews, ExtraTimeViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
-    YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews, ReportViews
+    YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews
 from ekabis.services import general_methods
 
 app_name = 'ekabis'
@@ -447,8 +447,8 @@ urlpatterns = [
     path('yeka/alt-yeka-detay/<uuid:uuid>/', YekaCompetitionViews.view_sub_yeka_competition_detail,
          name='view_sub_yeka_competition_detail'),
     # #RAPORLAMA
-    # path('yeka/yeka-rapor/', ReportViews.select_report,
-    #      name='select_report'),
+    path('yeka/yeka-rapor/', YekaViews.select_report,
+         name='select_report'),
     # path('yeka/rapor-il-yarisma-listesi/<uuid:uuid>/', ReportViews.view_city_competition,
     #      name='view_city_competition'),
     #
@@ -457,5 +457,9 @@ urlpatterns = [
     # dependense finish date -start date
 
     path('yeka/yeka-bagimlilik/', YekaViews.view_dependence, name='view_dependence'),
+#     şehirleri renklendirme
+
+    path('yeka/yeka-baglantı-bolgesi-renkleri/', DashboardViews.api_connection_region_cities, name='api_connection_region_cities'),
+   
 
 ]
