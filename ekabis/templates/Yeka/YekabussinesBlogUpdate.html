@@ -65,11 +65,29 @@
                 <div class="col-lg-12">
                     <div class="card card-primary card-outline ">
                         <div class="card-header with-border">
-                            <h3 class="card-title"> İş Blogu Güncelle </h3>
+                            <h3 class="card-title"> İş Bloğu Güncelle </h3>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 {% for item in yekaBusinessBlogo_form %}
+                                    {% if item.label != 'Tamamlanma Tarihi' %}
+                                        <div class="col-lg-6" id="control-{{ item.name }}">
+
+                                            <div class="form-group">
+
+                                                <label>{{ item.label }}</label>
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+
+                                {% endfor %}
+                                <div class="col-lg-6" id="control-completion_date"></div>
+
+                                {% for item in contract_form %}
                                     <div class="col-lg-6" id="control-{{ item.name }}">
                                         <div class="form-group">
                                             <label>{{ item.label }}</label>
@@ -78,7 +96,6 @@
                                         </div>
                                     </div>
                                 {% endfor %}
-
 
                             </div>
                         </div>
@@ -99,6 +116,12 @@
             {% if error_messages %}
                 errors_messages({{ error_messages |safe }}
             {% endif %}
+            if ($("#id_status option:selected").val() == '1') {
+                let html = ''
+                html = ' <div class="form-group"><label>Tamamlanma Tarihi</label>{{ yekaBusinessBlogo_form.completion_date }} <label for="" id="label_completion_date"></label></div>';
+                document.getElementById('control-completion_date').innerHTML = html;
+
+            }
 
 
             if ($("#id_indefinite option:selected").val() == 'True') {
@@ -118,6 +141,28 @@
 
             });
 
+            $('#id_status').change(function () {
+                debugger;
+                console.log('tamamlandı')
+                let html = ''
+                if ($("#id_status option:selected").val() == '1') {
+
+                    $('#id_completion_date').show();
+                    let html = ''
+                    html = ' <div class="form-group"><label>Tamamlanma Tarihi</label>{{ yekaBusinessBlogo_form.completion_date }} <label for="" id="label_completion_date"></label></div>';
+                    document.getElementById('control-completion_date').innerHTML = html;
+
+
+                } else {
+
+                    $('#id_completion_date').hide();
+                    document.getElementById('control-completion_date').innerHTML = '';
+                }
+
+
+            });
+
+
         });
         $("#id_dependence_parent").change(function () {
 
@@ -127,16 +172,15 @@
                 data: {
                     'csrfmiddlewaretoken': "{{  csrf_token  }}",
                     'pk': $("#id_dependence_parent").val(),
-                    'business':"{{ competition.business.uuid }}",
+                    'business': "{{ competition.business.uuid }}",
                     isActive: 'False'
                 },
                 success: function (result) {
                     debugger;
                     if (result.status == 'Success') {
-                        if ((result.finishdate != null) && ( $("#id_startDate").val()=="")){
+                        if ((result.finishdate != null) && ($("#id_startDate").val() == "")) {
                             $("#id_startDate").val(result.finishdate);
-                        }
-                        else {
+                        } else {
                             console.log('finishdate none')
                         }
 

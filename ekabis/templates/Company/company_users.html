@@ -187,10 +187,10 @@
                                 {% for company_user in company.companyuser.all %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>{{ company_user.user.first_name }} {{ company_user.user.last_name }} </td>
+                                        <td>{{ company_user.person.user.first_name }} {{ company_user.person.user.last_name }} </td>
                                         <td>{{ company_user.communication.phoneNumber }}</td>
-                                        <td>{{ company_user.user.email }} </td>
-                                        {% if company_user.user.is_active %}
+                                        <td>{{ company_user.person.user.email }} </td>
+                                        {% if company_user.person.user.is_active %}
                                             <td>
                                                Aktif
                                             </td>
@@ -209,16 +209,16 @@
                                                         data-toggle="dropdown"> İşlemler
                                                 </button>
                                                 <div class="dropdown-menu" role="menu">
-                                                    {% if company_user.user.is_active %}
+                                                    {% if company_user.person.user.is_active %}
 
-                                                        <a onclick="activeUser({{ company_user.user.pk }})"
+                                                        <a onclick="activeUser({{ company_user.person.user.pk }})"
                                                            type="button"
                                                             class="dropdown-item"><i class="fa fa-ban"></i> Pasif Yap
                                                         </a>
 
                                                     {% else %}
 
-                                                        <a onclick="activeUser({{ company_user.user.pk }})"
+                                                        <a onclick="activeUser({{ company_user.person.user.pk }})"
                                                            type="button"
                                                            class="dropdown-item"><i class="fa fa-check"></i> Aktif Yap
                                                         </a>

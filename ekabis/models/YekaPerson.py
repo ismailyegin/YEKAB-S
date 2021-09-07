@@ -15,11 +15,9 @@ class YekaPerson(BaseModel):
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
-        return '%s ' % self.employee.user.get_full_name()
+        return '%s ' % self.employee.person.user.get_full_name()
 
     task_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
-    def __str__(self):
-        return '%s %s %s %s' % (
-            self.employee.user.first_name, self.employee.user.last_name, ' - ', self.yeka.definition)
+
 

@@ -18,6 +18,7 @@ from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import ExtraTime, \
     Permission, Logs
+
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
 from ekabis.models.Yeka import Yeka
@@ -32,7 +33,14 @@ from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import YekaService, YekaConnectionRegionService, YekaGetService, \
     YekaPersonService, \
     EmployeeGetService, ExtraTimeService, YekaBusinessBlogGetService, \
-    BusinessBlogGetService, ConnectionRegionService, last_urls, YekaCompetitionGetService, YekaBusinessGetService
+
+    BusinessBlogGetService, ConnectionRegionService, last_urls, YekaCompetitionGetService, \
+    YekaBusinessGetService
+import datetime
+
+from ekabis.models.YekaApplication import YekaApplication
+from ekabis.models.YekaApplicationFile import YekaApplicationFile
+
 
 
 @login_required
@@ -75,7 +83,7 @@ def add_yeka(request):
                     yeka.save()
 
                     messages.success(request, 'Yeka Başarıyla Kayıt Edilmiştir.')
-                    return redirect('ekabis:view_yeka')
+                    return redirect('ekabis:view_yeka_detail', yeka.uuid)
 
                 else:
                     error_message_unit = get_error_messages(yeka_form)
@@ -508,15 +516,15 @@ def yeka_person_list(request, uuid):
                             person_filter = {
                                 'pk': person_id
                             }
-                            person = EmployeeGetService(request, person_filter)
-                            person_yeka = YekaPerson(yeka=yeka, employee=person, is_active=True)
+                            employee = EmployeeGetService(request, person_filter)
+                            person_yeka = YekaPerson(yeka=yeka, employee=employee, is_active=True)
                             person_yeka.save()
 
-                            personHistory = YekaPersonHistory(yeka=yeka, person=person, is_active=True)
+                            personHistory = YekaPersonHistory(yeka=yeka, person=employee, is_active=True)
                             personHistory.save()
 
                             log = str(yeka.definition) + ' adlı yekaya - ' + str(
-                                person.user.get_full_name()) + " adlı personel atandı."
+                                employee.person.user.get_full_name()) + " adlı personel atandı."
                             log = general_methods.logwrite(request, request.user, log)
                 else:
                     persons = request.POST.getlist('sub_employee')
@@ -525,22 +533,22 @@ def yeka_person_list(request, uuid):
                             person_filter = {
                                 'pk': person_id
                             }
-                            person = EmployeeGetService(request, person_filter)
+                            employee = EmployeeGetService(request, person_filter)
                             yeka_person = YekaPerson.objects.get(
-                                Q(isDeleted=False) & Q(yeka__uuid=uuid) & Q(employee__uuid=person.uuid))
+                                Q(isDeleted=False) & Q(yeka__uuid=uuid) & Q(employee__uuid=employee.uuid))
 
                             yeka_person.isDeleted = True
                             yeka_person.is_active = False
                             yeka_person.save()
 
-                            personHistory = YekaPersonHistory(yeka=yeka_person.yeka, person=person, is_active=False)
+                            personHistory = YekaPersonHistory(yeka=yeka_person.yeka, person=employee, is_active=False)
                             personHistory.save()
 
                             log = str(yeka_person.yeka.definition) + ' adlı yekadan -' + str(
-                                person.user.get_full_name()) + " personeli çıkarıldı."
+                                employee.person.user.get_full_name()) + " personeli çıkarıldı."
                             log = general_methods.logwrite(request, request.user, log)
 
-            return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
+            return redirect('ekabis:view_yeka_detail', yeka.uuid)
         return render(request, 'Yeka/yekaPersonList.html',
                       {'persons': persons, 'yeka_persons': yeka_person, 'yeka_uuid': uuid, 'urls': urls,
                        'current_url': current_url, 'url_name': url_name, 'yeka': yeka, 'name': name})
@@ -806,7 +814,54 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                     yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
                     yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
-                return redirect('ekabis:view_yekabusinessBlog', yeka.uuid)
+                if yekabussiness.completion_date:
+                    dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
+                    i = 0
+                    while dependence_block:
+                        if i == 0:
+                            start_date = yekabussiness.completion_date.date()
+                            for block in dependence_block:
+                                block.startDate = start_date
+                                if block.time_type == 'is_gunu':
+                                    time = block.businessTime
+                                    add_time = time
+
+                                    count = 0
+                                    while add_time > 1:
+                                        start_date = start_date + datetime.timedelta(days=1)
+                                        count = count + 1
+                                        is_vacation = is_vacation_day(start_date)
+                                        if not is_vacation:
+                                            add_time = add_time - 1
+                                else:
+                                    start_date = start_date + datetime.timedelta(days=time)
+                                block.finisDate = start_date
+                                block.save()
+                                dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
+                                i = i + 1
+                                start_date = block.finisDate
+                        else:
+
+                            for block in dependence_block:
+                                block.startDate = start_date
+                                if block.time_type == 'is_gunu':
+                                    time = block.businessTime
+                                    add_time = time
+                                    count = 0
+                                    while add_time > 1:
+                                        start_date = start_date + datetime.timedelta(days=1)
+                                        count = count + 1
+                                        is_vacation = is_vacation_day(start_date)
+                                        if not is_vacation:
+                                            add_time = add_time - 1
+                                else:
+                                    start_date = start_date + datetime.timedelta(days=time)
+                                block.finisDate = start_date
+                                block.save()
+                                dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
+                                i = i + 1
+
+                return redirect('ekabis:view_yeka_detail', yeka.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
@@ -1014,7 +1069,8 @@ def view_yekabusiness_gant(request, uuid):
 
         if yeka.business:
             yekabusiness = yeka.business
-            yekabusinessbloks = yekabusiness.businessblogs.exclude(businessblog__name='Fiyat Eskalasyonu').filter(isDeleted=False).order_by('sorting')
+            yekabusinessbloks = yekabusiness.businessblogs.exclude(businessblog__name='Fiyat Eskalasyonu').filter(
+                isDeleted=False).order_by('sorting')
         return render(request, 'Yeka/gant.html',
                       {'yekabusinessbloks': yekabusinessbloks,
                        'yeka': yeka,
@@ -1265,29 +1321,30 @@ def view_yeka_detail(request, uuid):
             'uuid': uuid
         }
         yeka = YekaGetService(request, yeka_filter)
-        name = general_methods.yekaname(yeka.business)
-        yekabusinessbloks = None
-        if yeka.business:
-            yekabusiness = yeka.business
-            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
-
         employe_filter = {
             'yeka': yeka
         }
+        name = ''
         blocks = []
-        dependency = []
-        if yekabusinessbloks:
-            for blok in yekabusinessbloks:
+
+        yekabusinessbloks = None
+        if yeka.business:
+            name = general_methods.yekaname(yeka.business)  # Yeka Adı
+            yekabusiness = yeka.business
+            yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
+
+            for blok in yekabusinessbloks:  # Yekaya Ait İş planı
                 bloc_dict = {}
-                dict = {}
+
                 bloc_dict['yekabusinessblog'] = blok
                 bloc_dict['businessblog'] = blok.businessblog.uuid
                 bloc_dict['yeka'] = yeka.uuid
                 blocks.append(bloc_dict)
+
         employees = YekaPersonService(request, employe_filter)
         return render(request, 'Yeka/yekaDetail.html',
                       {'urls': urls, 'current_url': current_url,
-                       'url_name': url_name, 'name': name, 'bloks': blocks,
+                       'url_name': url_name, 'name': name, 'blocks': blocks,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
                        'employees': employees,
                        })
@@ -1296,7 +1353,6 @@ def view_yeka_detail(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
-
 
 
 @login_required()
@@ -1343,7 +1399,6 @@ def test(request, uuid):
         return redirect('ekabis:view_yeka')
 
 
-
 @login_required
 def view_dependence(request):
     perm = general_methods.control_access(request)
@@ -1355,13 +1410,14 @@ def view_dependence(request):
             if request.method == 'POST' and request.is_ajax():
                 pk = request.POST['pk']
                 business = request.POST['business']
-                blog=YekaBusinessBlog.objects.get(pk=pk)
+                blog = YekaBusinessBlog.objects.get(pk=pk)
 
                 if blog.finisDate:
-                    return JsonResponse({'status': 'Success', 'msg': 'save successfully','finishdate':blog.finisDate.strftime("%d/%m/%Y")})
+                    return JsonResponse({'status': 'Success', 'msg': 'save successfully',
+                                         'finishdate': blog.finisDate.strftime("%d/%m/%Y")})
                 else:
 
-                    return  JsonResponse({'status': 'Success', 'msg': 'save successfully', 'finishdate':None})
+                    return JsonResponse({'status': 'Success', 'msg': 'save successfully', 'finishdate': None})
 
 
 
@@ -1374,6 +1430,7 @@ def view_dependence(request):
     except:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
 
 
 

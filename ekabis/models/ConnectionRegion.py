@@ -1,4 +1,5 @@
 from django.db import models
+from unicode_tr import unicode_tr
 
 from ekabis.models.BaseModel import BaseModel
 from ekabis.models.YekaCompetition import YekaCompetition
@@ -12,5 +13,8 @@ class ConnectionRegion(BaseModel):
     def __str__(self):
         return '%s ' % self.name
 
-    class Meta:
-        default_permissions = ()
+    def save(self, force_insert=False, force_update=False):
+        if self.name:
+            self.name = unicode_tr(self.name).upper()
+
+        super(ConnectionRegion, self).save(force_insert, force_update)

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from ekabis.models.BaseModel import BaseModel
 
@@ -33,6 +34,9 @@ class Person(BaseModel):
     )
 
     tc = models.CharField(max_length=120, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, db_column='user', null=True, blank=True)
+    phoneNumber = models.CharField(max_length=11, null=False, blank=False)
+    address = models.TextField(blank=True, null=True, verbose_name='Adres')
     height = models.CharField(max_length=120, null=True, blank=True)
     weight = models.CharField(max_length=120, null=True, blank=True)
     birthplace = models.CharField(max_length=120, null=True, blank=True, verbose_name='Doğum Yeri')

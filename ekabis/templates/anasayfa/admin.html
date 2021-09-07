@@ -2,7 +2,16 @@
 {% block content %}
     {% load static %}
 
+    <style>
+        .table tr {
+            cursor: pointer;
 
+        }
+        #hover:hover {
+            background-color: #007bff;
+            color: white
+        }
+    </style>
     <style>
         .svg-turkiye-haritasi {
             max-width: 1140px;
@@ -310,6 +319,7 @@
         </div>
 
 
+
         <!-- Main content -->
         <section class="content">
             <div class="row">
@@ -335,8 +345,9 @@
 
                                             <tbody>
 
+
                                             {% for yeka in yeka %}
-                                                <tr>
+                                                <tr id="hover">
                                                     <td>{{ forloop.counter }} </td>
                                                     <td class='clickable-row'
                                                         data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.definition }}</td>
@@ -459,11 +470,71 @@
 
                         }</script>
                 {% endif %}
+
                 {#            harita#}
+
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="sticky-top mb-3">
+                                <div class="card card-primary card-outline">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Notlar</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- the events -->
+                                        <div id="external-events">
+                                            <div class="external-event bg-success ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+                                            <div class="external-event bg-warning ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+                                            <div class="external-event bg-info ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+                                            <div class="external-event bg-primary ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+                                            <div class="external-event bg-danger ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-9">
+                            <div class="card card-primary card-outline">
+                                <div class="card-body p-0">
+                                    <!-- THE CALENDAR -->
+                                    <div id="calendar" class="fc fc-media-screen fc-direction-ltr fc-theme-bootstrap">
+
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+
+
                 <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header">
 
+
+                </div>
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
 
                             <h4 class="card-title">Harita</h4>
                             <select class="form-select float-right" id="id_yeka_select" aria-label="Yeka Seçiniz">

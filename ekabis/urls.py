@@ -7,6 +7,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     VacationDayViews, ExtraTimeViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
     YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews, ReportViews
 from ekabis.services import general_methods
+from ekabis.services.general_methods import add_block
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -454,7 +455,11 @@ urlpatterns = [
     # dependense finish date -start date
 
     path('yeka/yeka-bagimlilik/', YekaViews.view_dependence, name='view_dependence'),
+
 #     şehirleri renklendirme
+
+    path('yeka/blockAdd/', add_block, name='add_block'),
+
 
     path('yeka/yeka-baglantı-bolgesi-renkleri/', DashboardViews.api_connection_region_cities, name='api_connection_region_cities'),
     path('yeka/yeka-baglantı-bolgesi-yarismalari/', DashboardViews.api_connection_region_competitions, name='api_connection_region_competitions'),

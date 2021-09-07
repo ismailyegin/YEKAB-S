@@ -148,7 +148,7 @@ def company_users(request):
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
 
-    company = CompanyUser.objects.filter(isDeleted=False, user__is_active=True)
+    company = CompanyUser.objects.filter(isDeleted=False, person__user__is_active=True)
     return render(request, 'Company/view_company_user.html',
                   {'urls': urls, 'current_url': current_url, 'url_name': url_name, 'company': company})
 
@@ -188,10 +188,12 @@ def add_company_user(request):
                     person = person_form.save(request, commit=False)
                     communication = communication_form.save(request, commit=False)
                     person.save()
+                    person.user=user
+                    person.save()
                     communication.save()
 
                     user = CompanyUser(
-                        user=user, person=person, communication=communication,
+                        person=person, communication=communication,
                         authorization_period_start=company_user_form.cleaned_data['authorization_period_start'],
                         authorization_period_finish=company_user_form.cleaned_data['authorization_period_finish']
                     )
@@ -200,7 +202,7 @@ def add_company_user(request):
                     data_as_json_next = serializers.serialize('json', CompanyUser.objects.filter(uuid=user.uuid))
                     log = log_model(request, data_as_json_pre, data_as_json_next)
 
-                    user.user.groups.add(Group.objects.get(name='Firma'))
+                    user.person.user.groups.add(Group.objects.get(name='Firma'))
                     user.save()
 
                     if Settings.objects.filter(key='mail_company_user'):
@@ -213,7 +215,7 @@ def add_company_user(request):
 
                     messages.success(request, 'Firma Kullanıcısı Başarıyla Kayıt Edilmiştir.')
 
-                    return redirect('ekabis:view_company')
+                    return redirect('ekabis:view_company' )
 
                 else:
 
@@ -262,7 +264,7 @@ def assigment_company_user(request, uuid):
     for company_user in company.companyuser.all():
         array.append(company_user.uuid)
 
-    company_users = CompanyUser.objects.filter(isDeleted=False, user__is_active=True).exclude(uuid__in=array).order_by(
+    company_users = CompanyUser.objects.filter(isDeleted=False, person__user__is_active=True).exclude(uuid__in=array).order_by(
         '-creationDate')
 
     # ekstra servis yazılacak
@@ -582,16 +584,21 @@ def return_update_consortium(request, uuid):
         company = CompanyGetService(request, companyfilter)
         filter = {
             'isDeleted': False,
+            'is_consortium':False
 
         }
-        consortium = ConsortiumCompany.objects.filter(isDeleted=False, company=company)
-        companies = CompanyService(request, filter)
+        consortium=ConsortiumCompany.objects.filter(isDeleted=False, company=company)
+        company_exc = ConsortiumCompany.objects.filter(isDeleted=False, company=company).values_list('consortium__id')
+
+        companies = CompanyService(request, filter).exclude(pk__in=company_exc)
         company_form = CompanyForm(request.POST or None, instance=company)
         communication_form = CommunicationForm(request.POST or None, instance=company.communication)
         companyDocumentName = CompanyFileNames.objects.all()
-        employess = Employee.objects.filter(user__groups__name='Firma', isDeleted=False)
+        employess = CompanyUser.objects.filter(isDeleted=False)
+
         with transaction.atomic():
             if request.method == 'POST':
+
 
                 list = request.POST['consortium_list']
                 consortium_list = list.split(',')

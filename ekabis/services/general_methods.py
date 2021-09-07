@@ -9,7 +9,7 @@ from django.urls import resolve, reverse
 from django.utils.safestring import mark_safe
 
 from accounts.models import Forgot
-from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition
+from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition, BusinessBlog
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
@@ -17,7 +17,7 @@ from ekabis.models.PermissionGroup import PermissionGroup
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.services.services import ActiveGroupService, MenuService, EmployeeService, DirectoryMemberService, \
     UserService, PermissionGroupService, ActiveGroupGetService, EmployeeGetService, DirectoryMemberGetService, \
-    YekaPersonService, YekaCompanyService, UserGetService, YekaCompetitionPersonService
+    YekaPersonService, YekaCompanyService, UserGetService, YekaCompetitionPersonService, CompanyUserGetService
 from django.contrib import messages
 
 from ekabis.models.Permission import Permission
@@ -26,6 +26,7 @@ from ekabis.models.BlockEnumField import BlockEnumFields
 import xml.etree.ElementTree as ET
 from urllib.request import urlopen
 import ssl
+
 
 # from bs4 import BeautifulSoup
 # import requests
@@ -185,18 +186,18 @@ def controlGroup(request):
 def getProfileImage(request):
     if (request.user.id):
         userfilter = {
-            'user': request.user
+            'person__user': request.user
         }
 
         if request.user.groups.filter(name='Admin').exists():
             person = dict()
             person['profileImage'] = "profile/logo.png"
         elif request.user.groups.filter(name='Personel').exists():
-            athlete = EmployeeGetService(request, userfilter)
-            person = athlete.person
-        elif request.user.groups.filter(name='Yonetim').exists():
-            athlete = DirectoryMemberGetService(request, userfilter)
-            person = athlete.person
+            employee = EmployeeGetService(request, userfilter)
+            person = employee.person.user
+        elif request.user.groups.filter(name='Firma').exists():
+            employee = CompanyUserGetService(request, userfilter)
+            person = employee.person.user
         else:
             person = None
         return {'person': person}
@@ -259,9 +260,9 @@ def yeka_control(request, yeka):
     #     messages.add_message(request, messages.WARNING, 'Firma Bilgileri Eksik.')
     #     url="view_yeka_company"
 
-    if not (YekaPersonService(request, yekafilter)):
-        messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
-        url = "view_yeka_personel"
+    # if not (YekaPersonService(request, yekafilter)):
+    #     messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
+    #     url = "view_yeka_personel"
     if url:
         return url
     else:
@@ -286,9 +287,9 @@ def competition_control(request, competiton):
     #     messages.add_message(request, messages.WARNING, 'Firma Bilgileri Eksik.')
     #     url="view_yeka_company"
 
-    if not (YekaCompetitionPersonService(request, {'competition': competiton})):
-        messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
-        url = "view_yekacompetition_personel"
+    # if not (YekaCompetitionPersonService(request, {'competition': competiton})):
+    #     messages.add_message(request, messages.WARNING, 'Personel Bilgileri Eksik.')
+    #     url = "view_yekacompetition_personel"
     if url:
         return url
     else:
@@ -363,7 +364,8 @@ def log(request):
     except Exception as e:
         traceback.print_exc()
 
-def log_model(request,pre,next):
+
+def log_model(request, pre, next):
     try:
         log = Logs()
         log.user = request.user
@@ -384,11 +386,11 @@ def yekaname(yekabusiness):
     html = ''
     if Yeka.objects.filter(business=yekabusiness):
         yeka = Yeka.objects.get(business=yekabusiness)
-        path = redirect('ekabis:view_yekabusinessBlog', yeka.uuid).url
+        path = redirect('ekabis:view_yeka_detail', yeka.uuid).url
         html = '<a href="' + path + '">' + yeka.definition + '</a>'
     elif YekaCompetition.objects.filter(business=yekabusiness):
         yeka = YekaCompetition.objects.get(business=yekabusiness)
-        path = redirect('ekabis:view_competitionbusinessblog', yeka.uuid).url
+        path = redirect('ekabis:view_yeka_competition_detail', yeka.uuid).url
         html = '<a href="' + path + '">' + yeka.name + '</a>'
     return mark_safe(html)
 
@@ -455,4 +457,21 @@ def ufe():
     #             }
     #             data.append(beka)
     return data
+
+
+
+def add_block(request):
+    try:
+        if BlockEnumFields.fixed_blocks.value:
+            for item in BlockEnumFields.fixed_blocks.value:
+                if not BusinessBlog.objects.filter(name=item['tr_name']):
+                    block = BusinessBlog()
+                    block.name = item['tr_name']
+                    block.start_notification = 2
+                    block.finish_notification = 2
+                    block.save()
+        return redirect('ekabis:view_admin')
+    except Exception as e:
+        traceback.print_exc()
+        return redirect('ekabis:view_admin')
 

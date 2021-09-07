@@ -1185,7 +1185,7 @@ def change_institution(request, business, businessblog, uuid):
 
         institutions = Institution.objects.filter(isDeleted=False)
         institution = Institution.objects.get(uuid=uuid)
-        institution_form = InstitutionForm(request.POST or None, instance=institution)
+        institution_form = InstitutionForm( request.FILES or None,request.POST or None, instance=institution)
         name = general_methods.yekaname(yekabusiness)
 
         with transaction.atomic():
