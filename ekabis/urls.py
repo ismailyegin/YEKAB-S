@@ -466,4 +466,10 @@ urlpatterns = [
     path('yeka/yeka-rapor-listesi/', ReportViews.view_report, name='view_report'),
 
     path('yeka/helpmenu/', SettingsViews.helpmenu, name='helpmenu'),
+
+    path('yeka/basvuru-firma-ekle/', YekaBussinessBlogStaticView.add_competition_company_select, name='add_competition_company_select'),
+
+    path('yeka/api-basvuru/', YekaBussinessBlogStaticView.add_competition_company_select_api,
+         name='add_competition_company_select_api'),
+
 ]
