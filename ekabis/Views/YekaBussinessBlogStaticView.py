@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -23,7 +24,8 @@ from ekabis.Forms.YekaApplicationFileForm import YekaApplicationFileForm
 from ekabis.Forms.YekaApplicationFileNameForm import YekaApplicationFileName, YekaApplicationFileNameForm
 from ekabis.Forms.YekaApplicationForm import YekaApplicationForm
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
-from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser
+from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
+    YekaCompany
 from ekabis.models.Competition import Competition
 from ekabis.models.CompetitionCompany import CompetitionCompany
 from ekabis.models.Institution import Institution
@@ -1751,5 +1753,97 @@ def delete_location(request):
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
     except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+
+
+
+@login_required
+def add_competition_company_select(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        yekas = serializers.serialize("json", Yeka.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
+        regions = serializers.serialize("json", ConnectionRegion.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
+        competitions = serializers.serialize("json", YekaCompetition.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
+
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                competition=YekaCompetition.objects.get(pk=request.POST.get('select_competition'))
+                company = Company.objects.get(pk=request.POST.get('select_company'))
+                yeka_application=YekaApplication.objects.get(business=competition.business)
+                yeka_company=YekaCompany(
+                    company=company
+                )
+                yeka_company.save()
+                yeka_application.companys.add(yeka_company)
+                yeka_application.save()
+            return render(request, 'Application/add_competitions_company_select.html',
+                          {'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'yekas':yekas,
+                           'regions':regions,
+                           'competitions':competitions
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+
+@login_required
+def add_competition_company_select_api(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                id = request.POST['id']
+                competitions=YekaCompetition.objects.filter(pk=id)
+                if competitions.filter(business__businessblogs__businessblog__name="Başvurunun Alınması"):
+                    competition=YekaCompetition.objects.get(pk=id)
+                    if YekaApplication.objects.filter(business=competition.business):
+                        yeka_application=YekaApplication.objects.get(business=competition.business)
+                    else:
+                        yeka_business_blog=competition.business.businessblogs.filter(businessblog__name="Başvurunun Alınması")
+                        yeka_application=YekaApplication(
+                            business=competition.business,
+                            yekabusinessblog=yeka_business_blog[0],
+                        )
+                        yeka_application.save()
+
+                    ex_company=yeka_application.companys.all().values_list('id')
+                    comp=Company.objects.exclude(pk__in=ex_company)
+
+                    company = serializers.serialize("json", comp, cls=DjangoJSONEncoder)
+
+                    return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'company': company})
+
+                else:
+                    return JsonResponse({'status': 'Fail', 'msg': 'Başvuruların alınması iş Blogu yok'})
+
+
+
+
+
+                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı'})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})

@@ -1,4 +1,5 @@
 import traceback
+from idlelib.help import HelpText
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -8,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.urls import resolve
 from django.utils.safestring import mark_safe
 
-from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition
+from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition, HelpMenu
 from ekabis.models.VacationDay import VacationDay
 from ekabis.serializers.YekaSerializer import YekaSerializer
 from ekabis.services import general_methods
@@ -82,7 +83,14 @@ def return_admin_dashboard(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
+
+
     yeka = YekaService(request, None).order_by('-date')
+    res_count=yeka.filter(type='Güneş').count()
+    ges_count=yeka.filter(type='Rüzgar').count()
+    biyo_count=yeka.filter(type='Biyokütle').count()
+    jeo_count = yeka.filter(type='Jeotermal').count()
+
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
     # region_json = serializers.serialize("json", ConnectionRegion.objects.all(), cls=DjangoJSONEncoder)
@@ -93,6 +101,10 @@ def return_admin_dashboard(request):
         'yeka': yeka,
         # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
+        'res_count':res_count,
+        'ges_count':ges_count,
+        'jeo_count':jeo_count,
+        'biyo_count':biyo_count
     })
 @login_required
 def activeGroup(request, pk):
@@ -199,6 +211,8 @@ def api_connection_region_competitions(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
+
+
     try:
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():

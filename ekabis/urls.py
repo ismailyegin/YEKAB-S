@@ -465,8 +465,17 @@ urlpatterns = [
     path('yeka/yeka-baglantı-bolgesi-yarismalari/', DashboardViews.api_connection_region_competitions, name='api_connection_region_competitions'),
     path('yeka/yeka-rapor-listesi/', ReportViews.view_report, name='view_report'),
 
+
+    path('yeka/helpmenu/', SettingsViews.helpmenu, name='helpmenu'),
+
+    path('yeka/basvuru-firma-ekle/', YekaBussinessBlogStaticView.add_competition_company_select, name='add_competition_company_select'),
+
+    path('yeka/api-basvuru/', YekaBussinessBlogStaticView.add_competition_company_select_api,
+         name='add_competition_company_select_api'),
+
     path('bildirim/bildirim-getir/', NotificationViews.get_notification, name='bildirim-getir'),
     path('bildirim/bildirimler/', NotificationViews.view_notification, name='bildirimler'),
     path('bildirim/bildirim-okundu/<int:id>', NotificationViews.is_read, name='bildirim-okundu-yap'),
+
 
 ]
