@@ -459,6 +459,7 @@ def ufe():
     return data
 
 
+
 def add_block(request):
     try:
         if BlockEnumFields.fixed_blocks.value:
@@ -473,3 +474,4 @@ def add_block(request):
     except Exception as e:
         traceback.print_exc()
         return redirect('ekabis:view_admin')
+

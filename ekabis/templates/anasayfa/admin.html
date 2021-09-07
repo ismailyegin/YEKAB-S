@@ -57,7 +57,7 @@
             font-size: 30px;
             text-align: center;
             margin-top: 25px;
-            color: #666;
+            color: #0000C0;
         }
     </style>
 
@@ -65,13 +65,58 @@
 
 
     <script type="text/javascript">
+       var name;
+       var city;
 
         $(function () {
-            $("g").hover(
-                function (e) {
-                    var name = $(this).attr("data-iladi");
-                    console.log(name)
+            $("g").click(function (e) {
 
+                     $("#competition_list a").remove();
+                    var name = $(this).attr("data-iladi");
+                    var city=$(this).attr("data-plakakodu");
+                     $("#modal_city").text("");
+                    var yeka=null
+                     if ($("#id_yeka_select").val() != ""){
+                         yeka=$("#id_yeka_select").val();
+                     }
+
+                     if (e.handled !== true) { // This will prevent event triggering more then once
+                            e.handled = true;
+
+                     $.ajax({
+                                        url: "{% url "ekabis:api_connection_region_competitions"%}",
+                                        type: "POST",
+                                        data: {
+                                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                            isActive: 'False',
+                                            uuid:yeka,
+                                            plateNo:city,
+                                        },
+
+                                        success: function (result) {
+
+
+                                            if (result.status === 'Success') {
+                                                  var  competitions = JSON.parse(result.competitions);
+                                                  $("#modal_city").text(name);
+
+                                                for(var comp in competitions){
+
+                                                      var url_detail = "{% url 'ekabis:view_yeka_competition_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                                                      url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].fields.uuid);
+                                                    html="<a href='"+url_detail+"' class='list-group-item list-group-item-action'>"+competitions[comp].fields.name+"</a>"
+                                                    $("#competition_list").prepend(html)
+                                                }
+
+
+                                            }
+
+                                        },
+
+
+                                    });
+                     }
+                     $("#modal-competition").modal('show');
                 });
 
         });
@@ -228,6 +273,53 @@
         </div>
 
 
+<div class="modal modal-default modal-success-food fade in" id="modal-error" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">İşlem Başarılı</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body errorModal">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal modal-success modal-success-food fade in" id="modal-competition" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"> <span id="modal_city"></span> Yarışma Listesi</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body successModal">
+
+                        <div class="list-group" id="competition_list">
+
+
+</div>
+
+
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+
         <!-- Main content -->
         <section class="content">
             <div class="row">
@@ -235,14 +327,11 @@
                     <div class="col-lg-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h4 class="card-title">YEKA Yarışma Listesi</h4>
+                                <h4 class="card-title">YEKA Listesi</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        {#                        alt yeka#}
-
-
                                         <table id="region" class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
@@ -381,6 +470,9 @@
 
                         }</script>
                 {% endif %}
+
+                {#            harita#}
+
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-3">
@@ -433,21 +525,26 @@
                     <!-- /.row -->
                 </div>
 
+
                 <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header">
-                            <h4 class="card-title">İş Planı Listesi</h4>
-                        </div>
-                        <div class="card-body">
-                            <div id="visualization"></div>
-                        </div>
-                    </div>
+
 
                 </div>
                 <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header">
+
                             <h4 class="card-title">Harita</h4>
+                            <select class="form-select float-right" id="id_yeka_select" aria-label="Yeka Seçiniz">
+                                <option value="" selected>Bütün Baglantı Bölgeleri</option>
+
+                                {% for item in yeka %}
+                                    <option value="{{ item.uuid }}">{{ item.definition }}</option>
+                                {% endfor %}
+
+                            </select>
                         </div>
                         <div class="card-body">
 
@@ -747,6 +844,71 @@
                     </div>
 
                 </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="sticky-top mb-3">
+                                <div class="card card-primary card-outline">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Notlar</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- the events -->
+                                        <div id="external-events">
+                                            <div class="external-event bg-success ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+                                            <div class="external-event bg-warning ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+                                            <div class="external-event bg-info ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+                                            <div class="external-event bg-primary ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+                                            <div class="external-event bg-danger ui-draggable ui-draggable-handle"
+                                                 style="position: relative;">Test
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-9">
+                            <div class="card card-primary card-outline">
+                                <div class="card-body p-0">
+                                    <!-- THE CALENDAR -->
+                                    <div id="calendar" class="fc fc-media-screen fc-direction-ltr fc-theme-bootstrap">
+
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+
+                {#            gant şeması#}
+                {#                <div class="col-lg-12">#}
+                {#                        <div class="card card-primary card-outline">#}
+                {#                        <div class="card-header">#}
+                {#                            <h4 class="card-title">İş Planı Listesi</h4>#}
+                {#                        </div>#}
+                {#                        <div class="card-body">#}
+                {#                            <div id="visualization"></div>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {##}
+                {#                </div>#}
+
             </div>
         </section>
 
@@ -799,94 +961,148 @@
 
         }
 
-
-        // DOM element where the Timeline will be attached
-        var container = document.getElementById("visualization");
-        var groups = new vis.DataSet([
-            {% for item in yeka %}
-                {id: {{ item.pk }}, content: '{{ item.definition }}'},
-            {% endfor %}
-
-        ]);
-
-        // Create a DataSet (allows two way data-binding)
-        var items = new vis.DataSet([
-            {% for item in yeka %}
-                {% for yekabusinessblok in item.business.businessblogs.all %}
-
-                    {%  if   yekabusinessblok.startDate   %}
-                        {%  if   yekabusinessblok.status   %}
-                            {
-                                id: "{{ yekabusinessblok.uuid}}",
-                                content: "{{ yekabusinessblok.businessblog.name }}",
-                                start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
-                                end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
-                                url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
-                                group: {{ item.pk }},
-                                className: 'green',
-                            },
-                        {% else %}
-                            {
-                                id: "{{ yekabusinessblok.uuid}}",
-                                content: "{{ yekabusinessblok.businessblog.name }}",
-                                start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
-                                url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
-                                group: {{ item.pk }},
-                                className: 'red',
-                            },
-                        {% endif %}
-                    {% endif %}
+        function all_region() {
+            var data = new Array();
+            {% if regions %}
+                {% for region in regions %}
+                    {% for item in region.cities.all %}
+                        data.push("{{ item.plateNo }}");
+                        count = data.filter(x => x =={{ item.plateNo }}).length;
+                        degerAta(count, '{{ item.plateNo }}');
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-            {#            {% for extra in ekstratimes %}#}
-            {##}
-            {##}
-            {#                {#}
-            {#                    id: "{{ extra.uuid}}",#}
-            {#                    content: "{{ extra.content }}",#}
-            {#                    start: "{{ extra.start | date:"Y-m-d" }}",#}
-            {#                    end: "{{ extra.finish | date:"Y-m-d" }}",#}
-            {#                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid  extra.bloguuid %}",#}
-            {#                    className: 'red',#}
-            {#                },#}
-            {##}
-            {#            {% endfor %}#}
-        ]);
-        var options = {
-            editable: true,
-            height: '500px',
-            width: '100%',
-            locale: 'tr',
+            {% endif %}
         };
-        var timeline = new vis.Timeline(container, items, groups, options);
-        timeline.on('click', function (properties) {
-            if (properties.item != null) {
-                var clickedNodes = items.get(properties.nodes);
-                for (let i = 0; i < clickedNodes.length; i++) {
-                    if (clickedNodes[i].id == properties.item) {
-                        window.open(clickedNodes[i].url, '_blank');
-                    }
-                }
-            }
-        });
+
+
+        {#// DOM element where the Timeline will be attached#}
+        {#var container = document.getElementById("visualization");#}
+        {#var groups = new vis.DataSet([#}
+        {#    {% for item in yeka %}#}
+        {#        {id: {{ item.pk }}, content: '{{ item.definition }}'},#}
+        {#    {% endfor %}#}
+        {##}
+        {#]);#}
+        {##}
+        {#// Create a DataSet (allows two way data-binding)#}
+        {#var items = new vis.DataSet([#}
+        {#    {% for item in yeka %}#}
+        {#        {% for yekabusinessblok in item.business.businessblogs.all %}#}
+        {##}
+        {#            {%  if   yekabusinessblok.startDate   %}#}
+        {#                {%  if   yekabusinessblok.status   %}#}
+        {#                    {#}
+        {#                        id: "{{ yekabusinessblok.uuid}}",#}
+        {#                        content: "{{ yekabusinessblok.businessblog.name }}",#}
+        {#                        start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",#}
+        {#                        end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",#}
+        {#                        url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",#}
+        {#                        group: {{ item.pk }},#}
+        {#                        className: 'green',#}
+        {#                    },#}
+        {#                {% else %}#}
+        {#                    {#}
+        {#                        id: "{{ yekabusinessblok.uuid}}",#}
+        {#                        content: "{{ yekabusinessblok.businessblog.name }}",#}
+        {#                        start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",#}
+        {#                        url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",#}
+        {#                        group: {{ item.pk }},#}
+        {#                        className: 'red',#}
+        {#                    },#}
+        {#                {% endif %}#}
+        {#            {% endif %}#}
+        {#        {% endfor %}#}
+        {#    {% endfor %}#}
+        {#            {% for extra in ekstratimes %}#}
+        {##}
+        {##}
+        {#                {#}
+        {#                    id: "{{ extra.uuid}}",#}
+        {#                    content: "{{ extra.content }}",#}
+        {#                    start: "{{ extra.start | date:"Y-m-d" }}",#}
+        {#                    end: "{{ extra.finish | date:"Y-m-d" }}",#}
+        {#                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid  extra.bloguuid %}",#}
+        {#                    className: 'red',#}
+        {#                },#}
+        {##}
+        {#            {% endfor %}#}
+        {#]);#}
+        {#var options = {#}
+        {#    editable: true,#}
+        {#    height: '500px',#}
+        {#    width: '100%',#}
+        {#    locale: 'tr',#}
+        {# }; #}
+        {#var timeline = new vis.Timeline(container, items, groups, options);#}
+        {#timeline.on('click', function (properties) {#}
+        {#    if (properties.item != null) {#}
+        {#        var clickedNodes = items.get(properties.nodes);#}
+        {#        for (let i = 0; i < clickedNodes.length; i++) {#}
+        {#            if (clickedNodes[i].id == properties.item) {#}
+        {#                window.open(clickedNodes[i].url, '_blank');#}
+        {#            }#}
+        {#        }#}
+        {#    }#}
+        {# });#}
 
 
         $(function () {
+
+
+            all_region();
+
             $(".clickable-row").click(function () {
                 window.location = $(this).data("href");
             });
+            $("#id_yeka_select").change(function (e) {
 
+
+                if ($("#id_yeka_select").val() != "" ) {
+                    if (e.handled !== true) { // This will prevent event triggering more then once
+                        e.handled = true;
+
+                        $.ajax({
+                            url: "{% url "ekabis:api_connection_region_cities" %}",
+                            type: "POST",
+                            data: {
+                                'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                uuid: $("#id_yeka_select").val(),
+                            },
+                            success: function (result) {
+
+                                console.log(result)
+
+                                if (result.status === 'Success') {
+                                     $("g path").css({fill:'#222'});
+                                    var  cities = JSON.parse(result.cities);
+                                    debugger
+                                    for ( var k in cities){
+                                              $("g[data-plakakodu=" + cities[k].fields.plateNo+ "] path").css({fill: '#E7721C'});
+                                        console.log(cities[k].fields.plateNo);
+                                    }
+                                }
+
+                            }
+                        });
+
+                    }
+
+
+                }
+                else {
+                    all_region();
+                }
+            });
             var data = new Array();
-            {% for item in cities %}
-                data.push("{{ item.city.plateNo }}");
-                count = data.filter(x => x =={{ item.city.plateNo }}).length;
-                degerAta(count, {{ item.city.plateNo }});
-            {% endfor %}
-
-        });
 
 
-        $(function () {
+            {#            {% for item in cities %}#}
+            {#                data.push("{{ item.city.plateNo }}");#}
+            {#                count = data.filter(x => x =={{ item.city.plateNo }}).length;#}
+            {#                degerAta(count, {{ item.city.plateNo }});#}
+            {#            {% endfor %}#}
+
+
             /* initialize the external events
              -----------------------------------------------------------------*/
             function ini_events(ele) {
@@ -1055,7 +1271,6 @@
 
 
         function degerAta(count, city) {
-            debugger;
             if (city.length < 2) {
                 city = '0' + city;
             }
@@ -1069,18 +1284,7 @@
 
         }
 
-        $(function () {
-            var data = new Array();
-            {% if regions %}
-                {% for region in regions %}
-                    {% for item in region.cities.all %}
-                        data.push("{{ item.plateNo }}");
-                        count = data.filter(x => x =={{ item.plateNo }}).length;
-                        degerAta(count, '{{ item.plateNo }}');
-                    {% endfor %}
-                {% endfor %}
-            {% endif %}
-        });
+
     </script>
 
 {% endblock %}

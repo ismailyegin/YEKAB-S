@@ -228,19 +228,16 @@ urlpatterns = [
     path('yeka/ek-sure-dosya-guncelle/<uuid:uuid>/<uuid:time>', ExtraTimeViews.change_extratimefile,
          name='change_extratimefile'),
     path('yeka/ek-sure-sil/', ExtraTimeViews.delete_extratimefile, name='delete_extratimefile'),
-
     path('ilce/ilce-getir/', CityViews.get_districts, name='ilce-getir'),
     path('firma/firma-kullanicilari/<uuid:uuid>/', CompanyView.return_user_company, name='view_company_user'),
     path('firma/firma-kullanicisi-ekle/', CompanyView.add_company_user, name='add_company_user'),
     path('firma/firma-kullanici-listesi/', CompanyView.company_users, name='company_users'),
-
     path('firma/firma-kullanicisi-gorevlendir/<uuid:uuid>/', CompanyView.assigment_company_user,
          name='assigment_company_user'),
     # Yardım Menusu
     path('yardim/yardim-metni-ekle/', HelpMenuViews.help_text_add, name='add_help_text'),
     path('yardim/yardim-metin-listesi/', HelpMenuViews.return_help_text, name='view_help_text'),
     path('yardim/yardim-metni-duzenle/<uuid:uuid>', HelpMenuViews.update_help_menu, name='change_help_text'),
-
     # Resmi Gazete
     path('yeka/resim-gazete-listesi/', YekaBussinessBlogStaticView.view_newspaper, name='view_newspaper'),
     path('yeka/resim-gazete-ekle/<uuid:business>/<uuid:businessblog>/', YekaBussinessBlogStaticView.add_newspaper,
@@ -448,8 +445,8 @@ urlpatterns = [
     path('yeka/alt-yeka-detay/<uuid:uuid>/', YekaCompetitionViews.view_sub_yeka_competition_detail,
          name='view_sub_yeka_competition_detail'),
     # #RAPORLAMA
-    # path('yeka/yeka-rapor/', ReportViews.select_report,
-    #      name='select_report'),
+    path('yeka/yeka-rapor/', YekaViews.select_report,
+         name='select_report'),
     # path('yeka/rapor-il-yarisma-listesi/<uuid:uuid>/', ReportViews.view_city_competition,
     #      name='view_city_competition'),
     #
@@ -458,6 +455,13 @@ urlpatterns = [
     # dependense finish date -start date
 
     path('yeka/yeka-bagimlilik/', YekaViews.view_dependence, name='view_dependence'),
+
+#     şehirleri renklendirme
+
     path('yeka/blockAdd/', add_block, name='add_block'),
 
+
+    path('yeka/yeka-baglantı-bolgesi-renkleri/', DashboardViews.api_connection_region_cities, name='api_connection_region_cities'),
+    path('yeka/yeka-baglantı-bolgesi-yarismalari/', DashboardViews.api_connection_region_competitions, name='api_connection_region_competitions'),
+    path('yeka/yeka-rapor-listesi/', ReportViews.view_report, name='view_report'),
 ]

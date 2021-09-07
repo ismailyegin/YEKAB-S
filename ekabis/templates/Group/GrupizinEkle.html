@@ -158,6 +158,9 @@
                                             <h3 class="card-title">Yeka İzinleri</h3>
 
                                             <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_yeka">
+
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
@@ -165,7 +168,7 @@
                                             <!-- /.card-tools -->
                                         </div>
                                         <!-- /.card-header -->
-                                        <div class="card-body">
+                                        <div class="card-body" id="yeka">
 
                                             {% for perm in  permGroup %}
 
@@ -198,6 +201,9 @@
                                             <h3 class="card-title">Personel İzinleri</h3>
 
                                             <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_employee">
+
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
@@ -205,7 +211,7 @@
                                             <!-- /.card-tools -->
                                         </div>
                                         <!-- /.card-header -->
-                                        <div class="card-body">
+                                        <div class="card-body" id="employee">
 
                                             {% for perm in  permGroup %}
 
@@ -238,6 +244,9 @@
                                             <h3 class="card-title">Firma İzinleri</h3>
 
                                             <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_company">
+
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
@@ -245,7 +254,7 @@
                                             <!-- /.card-tools -->
                                         </div>
                                         <!-- /.card-header -->
-                                        <div class="card-body">
+                                        <div class="card-body" id="company">
 
                                             {% for perm in  permGroup %}
 
@@ -279,6 +288,9 @@
                                             <h3 class="card-title">Ayarlar</h3>
 
                                             <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_settings">
+
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
@@ -286,7 +298,7 @@
                                             <!-- /.card-tools -->
                                         </div>
                                         <!-- /.card-header -->
-                                        <div class="card-body">
+                                        <div class="card-body" id="settings">
 
                                             {% for perm in  permGroup %}
 
@@ -318,7 +330,11 @@
                                         <div class="card-header">
                                             <h3 class="card-title">Digerleri</h3>
 
+
                                             <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_other">
+
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
@@ -326,7 +342,7 @@
                                             <!-- /.card-tools -->
                                         </div>
                                         <!-- /.card-header -->
-                                        <div class="card-body">
+                                        <div class="card-body" id="other">
 
                                             {% for perm in  permGroup %}
 
@@ -359,6 +375,9 @@
                                             <h3 class="card-title">Anasayfa</h3>
 
                                             <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_mainpage">
+
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
@@ -366,7 +385,7 @@
                                             <!-- /.card-tools -->
                                         </div>
                                         <!-- /.card-header -->
-                                        <div class="card-body">
+                                        <div class="card-body" id="mainpage">
 
                                             {% for perm in  permGroup %}
 
@@ -399,6 +418,9 @@
                                             <h3 class="card-title">Developer Area</h3>
 
                                             <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_developer">
+
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
@@ -406,7 +428,7 @@
                                             <!-- /.card-tools -->
                                         </div>
                                         <!-- /.card-header -->
-                                        <div class="card-body">
+                                        <div class="card-body" id="developer">
 
                                             {% for perm in  permGroup %}
 
@@ -446,14 +468,6 @@
                     <!-- /.card-body -->
                 </div>
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-                <!-- /.card-tools -->
-
-
     </section>
 
 
@@ -464,94 +478,79 @@
 
     <script>
         $(function () {
-            $('#company').DataTable({
-                dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
-                },
+             $('#checkbox_yeka').change(function (){
 
-                lengthMenu: [
-                    [10, 25, 50, 100, -1],
-                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
-                ],
-
-                buttons: [
-
-                    {#'copy',#}
-                    {#'csv',#}
-
-                    {
-                        extend: "pageLength",
-                    },
+                 if(this.checked) {
+                     $('#yeka input').prop('checked', true);
+                 }else{
+                     $('#yeka input').prop('checked', false);
+                 }
 
 
-                    {
-                        extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
-                        titleAttr: 'Ekle Çıkar'
+             })
+             $('#checkbox_settings').change(function (){
+
+                 if(this.checked) {
+                     $('#settings input').prop('checked', true);
+                 }else{
+                     $('#settings input').prop('checked', false);
+                 }
 
 
-                    },
-                    {
-                        extend: 'print',
-                        title: 'Gruplar  ',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Yazdır'
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-                        titleAttr: 'Pfd Kaydet'
-                    },
+             })
+             $('#checkbox_mainpage').change(function (){
 
-                    {
-                        extend: 'excelHtml5',
-                        title: 'Ekabis',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Gruplar',
-                        {#footer: true,#}
-                        exportOptions: {
-                            {#     yer degisimi de yapilabilir.#}
-                            columns: [0, 1, ':visible']
-
-                        },
-                        titleAttr: 'Excel Kaydet'
-                    },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'grup.json'
-                            );
-                        }
-                    }
+                 if(this.checked) {
+                     $('#mainpage input').prop('checked', true);
+                 }else{
+                     $('#mainpage input').prop('checked', false);
+                 }
 
 
-                ],
-                'paging': true,
-                'lengthChange': true,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': true,
-                'responsive': true,
-            })
+             })
+             $('#checkbox_employee').change(function (){
+
+                 if(this.checked) {
+                     $('#employee input').prop('checked', true);
+                 }else{
+                     $('#employee input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_company').change(function (){
+
+                 if(this.checked) {
+                     $('#company input').prop('checked', true);
+                 }else{
+                     $('#company input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_other').change(function (){
+
+                 if(this.checked) {
+                     $('#other input').prop('checked', true);
+                 }else{
+                     $('#other input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_developer').change(function (){
+
+                 if(this.checked) {
+                     $('#developer input').prop('checked', true);
+                 }else{
+                     $('#developer input').prop('checked', false);
+                 }
+
+
+             })
+
+
         })
     </script>
 {% endblock %}

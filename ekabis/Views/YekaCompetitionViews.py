@@ -380,7 +380,10 @@ def add_yekacompetitionbusiness(request, uuid):
 
                         else:
                             blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
-                                                    parent=parent,dependence_parent=parent,
+
+                                                    parent=parent,
+                                                    dependence_parent=parent,
+
                                                     sorting=i + 1
                                                     )
                             blog.save()
