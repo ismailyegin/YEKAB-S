@@ -46,3 +46,4 @@ from .YekaAccept import YekaAccept
 from .FactoryFile import FactoryFile
 from .Neighborhood import Neighborhood
 from .AssociateDegreeFileName import AssociateDegreeFileName
+from .NotificationUser import NotificationUser

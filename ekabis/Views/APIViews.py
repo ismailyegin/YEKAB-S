@@ -219,9 +219,9 @@ class GetYekaCompetition(APIView):
         if request.data['uuid']:
             region = ConnectionRegion.objects.get(uuid=uuid.UUID(request.data['uuid']).hex)
 
-            count = region.yekacompetition.all().count()
+            count = region.yekacompetition.filter(isDeleted=False).count()
             logApiObject = LogAPIObject()
-            logApiObject.data = region.yekacompetition.all()
+            logApiObject.data = region.yekacompetition.filter(isDeleted=False)
             logApiObject.draw = int(request.POST['draw'])
             logApiObject.recordsTotal = int(count)
             logApiObject.recordsFiltered = 0

@@ -29,6 +29,7 @@ from ekabis.models.YekaCompany import YekaCompany
 from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.YekaPersonHistory import YekaPersonHistory
 from ekabis.services import general_methods
+from ekabis.services.NotificationServices import yeka_added
 from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import YekaService, YekaConnectionRegionService, YekaGetService, \
     YekaPersonService, \
@@ -80,6 +81,7 @@ def add_yeka(request):
                 if yeka_form.is_valid():
                     yeka = yeka_form.save(request, commit=False)
                     yeka.save()
+                    yeka_added(request,yeka.pk)
 
                     messages.success(request, 'Yeka Başarıyla Kayıt Edilmiştir.')
                     return redirect('ekabis:view_yeka_detail', yeka.uuid)

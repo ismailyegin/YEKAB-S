@@ -9,7 +9,7 @@ from django.urls import resolve, reverse
 from django.utils.safestring import mark_safe
 
 from accounts.models import Forgot
-from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition, BusinessBlog
+from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition, BusinessBlog, NotificationUser
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
@@ -205,12 +205,11 @@ def getProfileImage(request):
 
 
 def get_notification(request):
-    # if (request.user.id):
-    #     current_user = request.user
-    #     if current_user.groups.filter(name='Admin').exists():
-    #         print('Admin bildirimleri')
-    #         return {}
-    return {}
+    notifications = None
+    if (request.user.id):
+        user = request.user
+        notifications = NotificationUser.objects.filter(is_read=False,user=user).order_by('-creationDate')[:10]
+    return {'notifications': notifications}
 
 
 def get_error_messages(form):
@@ -463,7 +462,6 @@ def ufe():
     return data
 
 
-
 def add_block(request):
     try:
         if BlockEnumFields.fixed_blocks.value:
@@ -478,4 +476,3 @@ def add_block(request):
     except Exception as e:
         traceback.print_exc()
         return redirect('ekabis:view_admin')
-

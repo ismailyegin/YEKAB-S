@@ -3,6 +3,7 @@ import traceback
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
@@ -65,7 +66,12 @@ def add_yekabusiness(request, uuid):
                             yekabusiness.businessblogs.add(blog)
                             yekabusiness.save()
                             log = str(blog.businessblog.name) + " İş bloğu " + yeka.definition + " eklendi. "
-                            log = general_methods.logwrite(request, request.user, log)
+                            log = general_methods.log(request)
+                            data_as_json_next = serializers.serialize('json', YekaBusinessBlog.objects.filter(
+                                pk=yekabusiness.pk))
+
+                            log.nextData = data_as_json_next
+                            log.save()
 
                         return redirect('ekabis:view_yeka_detail', uuid)
                 else:
@@ -345,7 +351,7 @@ def change_yekabusiness(request, uuid, yeka):
                     blog = None
                     # olmayanları sil
                     if business:
-                        removeBusiness =business.exclude(businessblog__id__in=blogs)
+                        removeBusiness = business.exclude(businessblog__id__in=blogs)
                         for i in removeBusiness:
                             i.isDeleted = True
                             i.save()
@@ -357,8 +363,8 @@ def change_yekabusiness(request, uuid, yeka):
                         if yekabusiness.businessblogs.filter(businessblog_id=blogs[i]):
                             if i == 0:
                                 blog = yekabusiness.businessblogs.filter(businessblog_id=blogs[i])[0]
-                                if  blog.isDeleted:
-                                    blog.isDeleted=False
+                                if blog.isDeleted:
+                                    blog.isDeleted = False
                                 blog.parent = None
                                 blog.sorting = i + 1
                                 blog.save()
@@ -367,8 +373,8 @@ def change_yekabusiness(request, uuid, yeka):
                             else:
 
                                 blog = yekabusiness.businessblogs.filter(businessblog_id=blogs[i])[0]
-                                if  blog.isDeleted:
-                                    blog.isDeleted=False
+                                if blog.isDeleted:
+                                    blog.isDeleted = False
                                 blog.parent = parent
                                 blog.sorting = i + 1
                                 blog.save()
