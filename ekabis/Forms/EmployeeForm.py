@@ -9,8 +9,7 @@ class EmployeeForm(BaseForm):
     class Meta:
         model = Employee
 
-        fields = (
-            'workDefinition',)
-        labels = {'workDefinition': 'İş Tanımı'}
+        fields = ()
+        labels = {}
 
 

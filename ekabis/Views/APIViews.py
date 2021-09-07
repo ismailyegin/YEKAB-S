@@ -70,11 +70,11 @@ class GetEmployee(APIView):
         employees = EmployeeService(request, employeefilter).count()
 
         employeess = Employee.objects.filter(isDeleted=False).filter(
-            user__first_name__icontains=request.data['search[value]']).order_by('-id')[
+            person__user__first_name__icontains=request.data['search[value]']).order_by('-id')[
                      int(start):end]
 
         filteredTotal = Employee.objects.filter(isDeleted=False).filter(
-            user__first_name__icontains=request.data['search[value]']).count()
+            person__user__first_name__icontains=request.data['search[value]']).count()
 
         logApiObject = LogAPIObject()
         logApiObject.data = employeess

@@ -3,26 +3,16 @@ from django.contrib import auth, messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group, User
 from django.core.mail import EmailMultiAlternatives
-from django.db import transaction
-from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.utils import timezone
-
-from accounts.forms import LoginForm
 from accounts.models import Forgot
-from ekabis.models import Employee, CompanyUser
+from ekabis.models import ActiveGroup, Person
 from ekabis.models.Settings import Settings
 from ekabis.services import general_methods
-# from accounts.forms import LoginForm
-from ekabis.services.general_methods import controlGroup
-
 from ekabis.urls import urlpatterns
 from ekabis.models.Permission import Permission
 from ekabis.models.PermissionGroup import PermissionGroup
-
-from ekabis.services.services import UserService, UserGetService, EmployeeGetService, PersonGetService, \
-    CompanyUserGetService, ActiveGroupService, ActiveGroupGetService
-from oxiterp import settings
+from ekabis.services.services import UserService, UserGetService, EmployeeGetService, CompanyUserGetService, \
+    ActiveGroupGetService
 
 
 def index(request):
@@ -42,65 +32,52 @@ def login(request):
         return redirect('ekabis:view_admin')
 
     if request.method == 'POST':
+        login_user=None
         username = request.POST.get('username')
         password = request.POST.get('password')
-        login_user = User.objects.get(username=username)
+        if User.objects.filter(username=username):
+            login_user = User.objects.get(username=username)
         filter = {
             'user': login_user
         }
         active_user = None
         user = auth.authenticate(username=username, password=password)
 
-        if user:
+        if user:  # Şifrenin doğru girilmesi
+            person = Person.objects.get(user=login_user)
+
+            if datetime.datetime.now() - person.failed_time < datetime.timedelta(
+                        minutes=int(Settings.objects.get(key='failed_time').value)):
+                    messages.warning(request, 'Çok Fazla Hatalı Girişten Dolayı ' + str(
+                        datetime.datetime.now() - person.failed_time) + ' dk beklemelisiniz.')
+
+                    return render(request, 'registration/login.html')
+            else:
+                    person.failed_login = 0
+                    person.save()
             active = ActiveGroupGetService(request, filter)
             if not active:
-                controlGroup(request)
-                active = ActiveGroupGetService(request, filter)
+                active = ActiveGroup(user=login_user, group=login_user.groups.all()[0])
+                active.save()
             if active.group.name == 'Firma':
-                active_user = CompanyUserGetService(request, filter)
-            elif active.group.name == 'Admin':
-                if user is not None:
-                    user.is_active = True
-                    user.save()
-                    auth.login(request, user)
-                    log = general_methods.logwrite(request, request.user, " Giris yapti")
-                    return redirect('ekabis:view_admin')
-                messages.warning(request, 'Mail Adresi Ve Şifre Uyumsuzluğu')
-                return render(request, 'registration/login.html')
-            else:
-                active_user = EmployeeGetService(request, filter)
-
-            if datetime.datetime.now() - active_user.person.failed_time >= datetime.timedelta(
-                    minutes=5):
-                login_user.is_active = True
-                login_user.save()
-                active_user.person.failed_login = 0
-                active_user.person.save()
-                # correct username and password login the user
                 auth.login(request, user)
-                active = general_methods.controlGroup(request)
-                log = general_methods.logwrite(request, request.user, " Giris yapti")
-                # eger user.groups birden fazla ise klup üyesine gönder yoksa devam et
+                return redirect('ekabis:view_federasyon')
+            elif active.group.name == 'Admin' or person.user.is_superuser:
+                auth.login(request, user)
+                return redirect('ekabis:view_admin')
+            else:
+                auth.login(request, user)
+                return redirect('ekabis:view_personel')
 
-                # sms entegrasyonu yapılacak servis 2 tane yazılacak control //Berktug
-                if active == 'Personel':
-                    return redirect('ekabis:view_personel')
-                if active == 'Firma':
-                    return redirect('ekabis:view_federasyon')
-                else:
-                    return redirect('accounts:view_logout')
-
-
-        else:
+        else: #Şifrenin yanlış girilme durumu
             if login_user:
-                if active_user.person.failed_login == int(Settings.objects.get(key='failed_login').value):
+                person = Person.objects.get(user=login_user)
+                if person.failed_login == int(Settings.objects.get(key='failed_login').value):
                     wait_time = int(Settings.objects.get(key='failed_time').value)
-                    if datetime.datetime.now() - active_user.person.failed_time > datetime.timedelta(
+                    if datetime.datetime.now() - person.failed_time > datetime.timedelta(
                             minutes=wait_time):
-                        login_user.is_active = True
-                        login_user.save()
-                        active_user.person.failed_login = 1
-                        active_user.person.save()
+                        person.failed_login = 1
+                        person.save()
 
                     else:
                         messages.warning(request, 'Çok Fazla Hatalı Girişten Dolayı Hesabınız ' + str(
@@ -108,21 +85,18 @@ def login(request):
                         return render(request, 'registration/login.html')
 
                 else:
-                    active_user.person.failed_login = active_user.person.failed_login + 1
-                    active_user.person.save()
-                    if active_user.person.failed_login == int(Settings.objects.get(key='failed_login').value):
-                        active_user.person.failed_time = datetime.datetime.now()
-                        active_user.person.save()
-                        login_user.is_active = False
-                        login_user.save()
-            messages.warning(request, 'Mail Adresi Ve Şifre Uyumsuzluğu')
-            return render(request, 'registration/login.html')
+                    person.failed_login =person.failed_login + 1
+                    person.save()
+                    if person.failed_login == int(Settings.objects.get(key='failed_login').value):
+                        person.failed_time = datetime.datetime.now()
+                        person.save()
+
 
         messages.warning(request, 'Mail Adresi Ve Şifre Uyumsuzluğu')
-        return render(request, 'registration/login.html')
-
 
     return render(request, 'registration/login.html')
+
+
 
 
 def forgot(request):

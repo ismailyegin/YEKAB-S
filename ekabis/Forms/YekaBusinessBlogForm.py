@@ -12,6 +12,12 @@ from django.utils import formats
 import datetime
 
 CHOICES = (('is_gunu', 'İş Günü'), ('takvim_gunu', 'Takvim Günü'),)
+TRUE_FALSE_CHOICES = (
+    ('2', 'Tamamlanmadı'),
+    ('1', 'Tamamlandı'),
+    ('3', 'Devam Ediyor'),
+
+)
 
 
 class YekaBusinessBlogForm(ModelForm):
@@ -19,25 +25,26 @@ class YekaBusinessBlogForm(ModelForm):
         model = YekaBusinessBlog
         fields = (
             'indefinite',
-            'status',
+
             'dependence_parent',
             'time_type',
             'businessTime',
             'startDate',
             'explanation',
+            'status',
+            'completion_date',
 
 
-
-         )
+        )
         labels = {
-                  'startDate': 'Başlama Tarihi',
-                  # 'finisDate': 'Bitiş Tarihi',
-                  'businessTime': 'Süresi(Gün)',
-                  'status': 'Durumu',
-                  'indefinite': 'Süre Durumu',
-                  'time_type': 'Süre Türü',
-                  'dependence_parent':'Bağlı Olduğu İş Bloğu',
-                  'explanation':'Açıklama '
+            'startDate': 'Başlama Tarihi',
+            # 'finisDate': 'Bitiş Tarihi',
+            'businessTime': 'Süresi(Gün)',
+            'status': 'Durumu',
+            'indefinite': 'Süre Durumu',
+            'time_type': 'Süre Türü',
+            'dependence_parent': 'Bağlı Olduğu İş Bloğu',
+            'explanation': 'Açıklama ',
         }
         widgets = {
             'businessTime': forms.TextInput(
@@ -45,17 +52,20 @@ class YekaBusinessBlogForm(ModelForm):
             'time_type': forms.Select(choices=CHOICES, attrs={'class': 'form-control select2 select2-hidden-accessible',
                                                               'style': 'width: 100%; ', }),
 
-            'status': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                          'style': 'width: 100%; '}),
+            'status': forms.Select(choices=TRUE_FALSE_CHOICES,attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                          'style': 'width: 100%;', 'value':''}),
             'indefinite': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                               'style': 'width: 100%; '}),
             'startDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
                        'onkeydown': 'return false', 'required': 'required'}),
+            'completion_date': forms.DateInput(
+                attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
+                       'onkeydown': 'return true','placeholder':'Örn. 01/01/2022'}),
             'explanation': forms.TextInput(
                 attrs={'class': 'form-control', 'rows': '3'}),
-            'dependence_parent':forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                          'style': 'width: 100%; '}),
+            'dependence_parent': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                                     'style': 'width: 100%; '}),
             # 'finisDate': forms.DateInput(
             #     attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
             #            'onkeydown': 'return false', 'required': 'required'}),
@@ -66,7 +76,9 @@ class YekaBusinessBlogForm(ModelForm):
         super(YekaBusinessBlogForm, self).__init__(*args, **kwargs)
         if yekabussiness.parent:
             if yekabussiness.parent.finisDate:
-                 self.fields['startDate'].label = 'Başlama Tarihi   ('+str(yekabussiness.parent.businessblog.name) +' bitiş Tarihi:'+str(yekabussiness.parent.finisDate.strftime("%d-%m-%Y"))+')'
+                self.fields['startDate'].label = 'Başlama Tarihi   (' + str(
+                    yekabussiness.parent.businessblog.name) + ' bitiş Tarihi:' + str(
+                    yekabussiness.parent.finisDate.strftime("%d-%m-%Y")) + ')'
         business_filter = {
             'pk': business
         }
@@ -150,9 +162,10 @@ class YekaBusinessBlogForm(ModelForm):
                     tyekabusinessblog.paremetre.add(parametre)
                     tyekabusinessblog.save()
 
-
         super().save(*args, **kwargs)
         return
+
+
 def update(self, yekabusiness, business, *args, **kwargs):
     tbussiness = BusinessBlog.objects.get(pk=business)
     tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)

@@ -51,9 +51,10 @@ def add_yekabusiness(request, uuid):
                                 blog.save()
                                 parent = blog
 
+
                             else:
                                 blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
-                                                        parent=parent,
+                                                        parent=parent,dependence_parent=parent,
                                                         sorting=i + 1
                                                         )
                                 blog.save()
@@ -63,7 +64,7 @@ def add_yekabusiness(request, uuid):
                             log = str(blog.businessblog.name) + " İş bloğu " + yeka.definition + " eklendi. "
                             log = general_methods.logwrite(request, request.user, log)
 
-                        return redirect('ekabis:view_yekabusinessBlog', uuid)
+                        return redirect('ekabis:view_yeka_detail', uuid)
                 else:
                     error_messages = get_error_messages(form)
                     return render(request, 'Yeka/yekabusinessAdd.html', {'business_form': form,
@@ -248,8 +249,8 @@ def change_businessBlog(request, uuid):
                         return redirect('ekabis:view_businessBlog')
                     else:
                         business = business_form.save(request, commit=False)
-                        if BusinessBlog.objects.get(uuid=uuid).name != business.name:
-                            messages.warning(request, 'İş  bloğu  sabit oldugu icin güncellenemez.')
+                        if BusinessBlog.objects.get(uuid=uuid).name != business_form.data['name']:
+                            messages.warning(request, 'İş  bloğu  sabit olduğu için tanımı güncellenemez.')
                             business.name = BusinessBlog.objects.get(uuid=uuid).name
                             business.save()
                         else:
@@ -394,7 +395,7 @@ def change_yekabusiness(request, uuid, yeka):
                     for i in removeBusiness:
                         i.isDeleted = True
                         i.save()
-                return redirect('ekabis:view_yekabusinessBlog', yeka)
+                return redirect('ekabis:view_yeka_detail', yeka)
 
         return render(request, 'Yeka/YekabusinessUpdate.html', {'business_form': business_form,
                                                                 'error_messages': '',

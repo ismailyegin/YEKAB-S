@@ -21,10 +21,8 @@ from ekabis.Forms.DisabledUserForm import DisabledUserForm
 from ekabis.Forms.EmployeeForm import EmployeeForm
 from ekabis.Forms.PersonForm import PersonForm
 from ekabis.Forms.UserForm import UserForm
-from ekabis.Forms.UserSearchForm import UserSearchForm
 from ekabis.models import Logs
 from ekabis.models.Permission import Permission
-from ekabis.models.Communication import Communication
 from ekabis.models.CategoryItem import CategoryItem
 from ekabis.models.Employee import Employee
 from ekabis.services import general_methods
@@ -75,10 +73,13 @@ def add_employee(request):
                     person = person_form.save(request, commit=False)
                     communication = communication_form.save(request, commit=False)
                     person.save()
+                    person.user=user
+                    person.save()
+
                     communication.save()
 
                     personel = Employee(
-                        user=user, person=person, communication=communication,
+                       person=person, communication=communication,
 
                     )
                     personel.save()
@@ -91,12 +92,12 @@ def add_employee(request):
                         }
                         if GroupService(request, group_filter):
                             group = GroupGetService(request, group_filter)
-                            personel.user.groups.add(group)
+                            person.user.groups.add(group)
                             personel.save()
 
                     if Settings.objects.filter(key='mail_person'):
                         if Settings.objects.get(key='mail_person').value == 'True':
-                            general_methods.sendmail(request, personel.user)
+                            general_methods.sendmail(request, person.user)
                     else:
                         set = Settings(key='mail_person')
                         set.value = 'False'
@@ -150,9 +151,9 @@ def edit_employee(request, pk):
         }
 
         employee = EmployeeGetService(request, employefilter)
-        user = employee.user
+        user = employee.person.user
         active_group=user.groups.last()
-        user_form = UserForm(request.POST or None, instance=employee.user)
+        user_form = UserForm(request.POST or None, instance=employee.person.user)
         person_form = PersonForm(request.POST or None, request.FILES or None, instance=employee.person)
         communication_form = CommunicationForm(request.POST or None, instance=employee.communication)
         groups = Group.objects.exclude(name='Admin').exclude(name='Firma')
@@ -163,6 +164,10 @@ def edit_employee(request, pk):
                 if user_form.is_valid() and communication_form.is_valid() and person_form.is_valid():
 
                     user = user_form.save(request, commit=False)
+                    user.username = user_form.cleaned_data['email']
+                    user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
+                    user.last_name = unicode_tr(user_form.cleaned_data['last_name']).upper()
+                    user.email = user_form.cleaned_data['email']
                     user.save()
                     person = person_form.save(request, commit=False)
                     person.save()

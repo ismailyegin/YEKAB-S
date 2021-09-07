@@ -14,8 +14,7 @@ class ProposalInstitutionForm(BaseForm):
 
                   }
         widgets = {
-            'file': forms.FileInput(attrs={'class': '',
-                                        'style': 'width: 100%;', 'required': 'required'}),
+
             'status': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                            'style': 'width: 100%;', 'required': 'required'}),
             'date': forms.DateInput(
