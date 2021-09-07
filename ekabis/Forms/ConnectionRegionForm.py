@@ -20,6 +20,6 @@ class ConnectionRegionForm(BaseForm):
         super().__init__(*args, **kwargs)
         self.fields['cities'].queryset = City.objects.filter(isDeleted=False)
         self.fields['cities'].label = 'Şehirler *'
-        self.fields['cities'].widget.attrs = {'class': 'select2 select2-hidden-accessible',
+        self.fields['cities'].widget.attrs = {'class': 'form-control select2 select2-hidden-accessible',
                                                         'style': 'width: 100%;', 'data-select2-id': '7',
                                                         'data-placeholder': 'Bağlanti Bölgesi Seçiniz', }

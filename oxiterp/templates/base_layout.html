@@ -207,11 +207,35 @@
                     <i class="fas fa-expand-arrows-alt"></i>
                 </a>
             </li>
+            <li class="nav-item dropdown show">
+                <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
+                    <i class="far fa-bell"></i>
+                    <span class="badge badge-warning navbar-badge">{{ notifications | length }}</span>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right " style="left: inherit; right: 0px;">
+
+                    <span class="dropdown-item dropdown-header">{{ notifications | length }}</span>
+                    <div class="dropdown-divider"></div>
+                    {% for notification in notifications %}
+
+                        <a href="{% url 'ekabis:bildirim-okundu-yap' notification.pk %}" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> {{ notification.notification.title }}
+                            <span class="float-right text-muted text-sm">{{ notification.notification.creationDate.date | date:"d/m/y" }}</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    {% endfor %}
+                    <a href="{% url 'ekabis:bildirimler' %}" class="dropdown-item dropdown-footer">Tüm Bildirimleri
+                        Gör</a>
+                </div>
+
+            </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="help_text('deneme')" role="button">
                     <i class="fas fa-question"></i>
                 </a>
             </li>
+
 
             {##}
             {#            <li class="nav-item">#}
@@ -231,7 +255,8 @@
                              src="/yekabis/media/{{ person.profileImage }}">
 
                     {% else %}
-                        <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle" src="{% static 'dist/img/user_logo.png' %}">
+                        <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"
+                             src="{% static 'dist/img/user_logo.png' %}">
                     {% endif %}
                 </a>
                 <ul class="dropdown-menu">
@@ -305,6 +330,7 @@
                     </li>
                 </ul>
             </li>
+
         </ul>
 
     </nav>
@@ -328,42 +354,42 @@
             <nav class="mt-2" style="font-size: 16px;">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
-                        {% for menu in menus %}
-                            {% if menu.is_parent %}
-                                {% if  menu.pk == activ_url.parent.pk %}
-                                    <li class="nav-item  menu-is-opening menu-open">
-                                        {% else %}
-                                    <li class="nav-item">
-                                {% endif %}
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas {{ menu.fa_icon }}"></i>
-                                <p>
-                                    {{ menu.name }}
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                {% for menusub in menus %}
-                                    {% if menusub.parent.id is menu.id %}
-                                        <li class="nav-item">
-                                            {% if  menusub.pk == activ_url.pk %}
-                                                <a href="{% url menusub.url %}" class="nav-link active">
-                                                    <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                    <p>{{ menusub.name }}</p>
-                                                </a>
-                                            {% else %}
-                                                <a href="{% url menusub.url %}" class="nav-link">
-                                                    <i class="far {{ menusub.fa_icon }} nav-icon"></i>
-                                                    <p>{{ menusub.name }}</p>
-                                                </a>
-                                            {% endif %}
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                            </li>
+                    {% for menu in menus %}
+                        {% if menu.is_parent %}
+                            {% if  menu.pk == activ_url.parent.pk %}
+                                <li class="nav-item  menu-is-opening menu-open">
+                                    {% else %}
+                                <li class="nav-item">
                             {% endif %}
-                        {% endfor %}
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas {{ menu.fa_icon }}"></i>
+                            <p>
+                                {{ menu.name }}
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            {% for menusub in menus %}
+                                {% if menusub.parent.id is menu.id %}
+                                    <li class="nav-item">
+                                        {% if  menusub.pk == activ_url.pk %}
+                                            <a href="{% url menusub.url %}" class="nav-link active">
+                                                <i class="far {{ menusub.fa_icon }} nav-icon"></i>
+                                                <p>{{ menusub.name }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url menusub.url %}" class="nav-link">
+                                                <i class="far {{ menusub.fa_icon }} nav-icon"></i>
+                                                <p>{{ menusub.name }}</p>
+                                            </a>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
@@ -394,7 +420,9 @@
 
 
         <script src="{% static 'alert/sweetalert.min.js' %}"></script>
+        <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
         {% block content %}
+
 
 
 
@@ -508,12 +536,6 @@
 <script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
 <script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
 
-
-
-
-
-
-
 <script>
 
     function help_text(text) {
@@ -524,6 +546,7 @@
     }
 
     $(function () {
+        interval();
         $('.files').fileinput({
             {#rtl: true,#}
             {#dropZoneEnabled: false,#}
@@ -703,9 +726,36 @@
 
 
     $(document).ready(function () {
+        debugger;
         $('.toast').fadeOut(5000);
 
+
     });
+
+    const interval = setInterval(function () {
+
+        $.ajax({
+            url: "{% url "ekabis:bildirim-getir" %}",
+            type: "GET",
+            success: function (result) {
+                debugger;
+                for (let i = 0; i < result.notifications.length; i++) {
+
+                    $(document).Toasts('create', {
+                        body:  result.notifications[i].notification.description,
+                        title: result.notifications[i].notification.title,
+                        subtitle:  result.notifications[i].notification.creationDate.date,
+                        icon: 'fas fa-bell fa-lg',
+                        class: 'bg-success',
+
+                    })
+
+                }
+
+
+            }
+        });
+    }, 50000);
 
 
 </script>
