@@ -5,7 +5,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     CompanyView, EmployeeViews, GroupView, SettingsViews, ConnectionRegionViews, YekaViews, BusinessBlogViews, \
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
     VacationDayViews, ExtraTimeViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
-    YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews
+    YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews, ReportViews
 from ekabis.services import general_methods
 
 app_name = 'ekabis'
@@ -460,6 +460,10 @@ urlpatterns = [
 #     şehirleri renklendirme
 
     path('yeka/yeka-baglantı-bolgesi-renkleri/', DashboardViews.api_connection_region_cities, name='api_connection_region_cities'),
-   
+    path('yeka/yeka-baglantı-bolgesi-yarismalari/', DashboardViews.api_connection_region_competitions, name='api_connection_region_competitions'),
+
+
+    path('yeka/yeka-rapor-listesi/', ReportViews.view_report, name='view_report'),
+
 
 ]

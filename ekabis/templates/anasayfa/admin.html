@@ -56,13 +56,58 @@
 
 
     <script type="text/javascript">
+       var name;
+       var city;
 
         $(function () {
-            $("g").hover(
-                function (e) {
+            $("g").click(function (e) {
+
+                     $("#competition_list a").remove();
                     var name = $(this).attr("data-iladi");
+                    var city=$(this).attr("data-plakakodu");
+                     $("#modal_city").text("");
+                    var yeka=null
+                     if ($("#id_yeka_select").val() != ""){
+                         yeka=$("#id_yeka_select").val();
+                     }
+
+                     if (e.handled !== true) { // This will prevent event triggering more then once
+                            e.handled = true;
+
+                     $.ajax({
+                                        url: "{% url "ekabis:api_connection_region_competitions"%}",
+                                        type: "POST",
+                                        data: {
+                                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                            isActive: 'False',
+                                            uuid:yeka,
+                                            plateNo:city,
+                                        },
+
+                                        success: function (result) {
 
 
+                                            if (result.status === 'Success') {
+                                                  var  competitions = JSON.parse(result.competitions);
+                                                  $("#modal_city").text(name);
+
+                                                for(var comp in competitions){
+
+                                                      var url_detail = "{% url 'ekabis:view_yeka_competition_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                                                      url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].fields.uuid);
+                                                    html="<a href='"+url_detail+"' class='list-group-item list-group-item-action'>"+competitions[comp].fields.name+"</a>"
+                                                    $("#competition_list").prepend(html)
+                                                }
+
+
+                                            }
+
+                                        },
+
+
+                                    });
+                     }
+                     $("#modal-competition").modal('show');
                 });
 
         });
@@ -217,6 +262,53 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
+
+
+<div class="modal modal-default modal-success-food fade in" id="modal-error" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">İşlem Başarılı</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body errorModal">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal modal-success modal-success-food fade in" id="modal-competition" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"> <span id="modal_city"></span> Yarışma Listesi</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body successModal">
+
+                        <div class="list-group" id="competition_list">
+
+
+</div>
+
+
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
 
         <!-- Main content -->
         <section class="content">

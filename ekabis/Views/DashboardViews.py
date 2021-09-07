@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.urls import resolve
 from django.utils.safestring import mark_safe
 
-from ekabis.models import ConnectionRegion, Permission, City
+from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition
 from ekabis.models.VacationDay import VacationDay
 from ekabis.serializers.YekaSerializer import YekaSerializer
 from ekabis.services import general_methods
@@ -184,6 +184,44 @@ def api_connection_region_cities(request):
                 cities=City.objects.filter(connectionregion__id__in=yeka.connection_region.all().values_list('pk'))
                 cities = serializers.serialize("json", cities, cls=DjangoJSONEncoder)
                 return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'cities': cities})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+
+
+@login_required
+def api_connection_region_competitions(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                yeka=None
+                competitions= {}
+
+                if request.POST['uuid']:
+                    uuid = request.POST['uuid']
+                    yekafilter = {
+                    'uuid': uuid
+                    }
+                    yeka = YekaGetService(request, yekafilter)
+                if request.POST['plateNo']:
+                    if City.objects.filter(plateNo=request.POST['plateNo']):
+                        city=City.objects.get(plateNo=request.POST['plateNo'])
+                        if yeka:
+                            regions=yeka.connection_region.filter(cities=city,isDeleted=False).distinct().values_list('id', flat=True)
+                        else:
+                            regions=ConnectionRegion.objects.filter(cities=city,isDeleted=False).distinct().values_list('id', flat=True)
+                        competitions=YekaCompetition.objects.filter(connectionregion__id__in=regions,isDeleted=False).distinct()
+
+                competitions = serializers.serialize("json", competitions, cls=DjangoJSONEncoder)
+                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'competitions': competitions})
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
     except Exception as e:
