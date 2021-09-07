@@ -14,5 +14,5 @@ class YekaCompetitionPerson(BaseModel):
     task_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
-        return '%s %s %s %s' % (
-            self.employee.user.first_name, self.employee.user.last_name, ' - ', self.competition.definition)
+        return '%s %s %s ' % (
+            self.employee.person.user.first_name, self.employee.person.user.last_name, ' - ')

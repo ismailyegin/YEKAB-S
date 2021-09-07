@@ -325,10 +325,10 @@
                                                 {% for employe in employess %}
                                                     {% if employe.person == company_user.person %}
                                                         <option selected data-select2-id="{{ employe.uuid }}"
-                                                                value="{{ employe.uuid }}">{{ employe.user.first_name }} {{ employe.user.last_name }}</option>
+                                                                value="{{ employe.uuid }}">{{ employe.person.user.first_name }} {{ employe.person.user.last_name }}</option>
                                                     {% else %}
                                                         <option data-select2-id="{{ employe.uuid }}"
-                                                                value="{{ employe.uuid }}">{{ employe.user.first_name }} {{ employe.user.last_name }}</option>
+                                                                value="{{ employe.uuid }}">{{ employe.person.user.first_name }} {{ employe.person.user.last_name }}</option>
                                                     {% endif %}
                                                 {% endfor %}
                                             </select>

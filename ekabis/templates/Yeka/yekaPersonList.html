@@ -165,7 +165,7 @@
 
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+                                            <td>{{ employee.person.user.first_name }} {{ employee.person.user.last_name }}</td>
 
                                             <td>
                                                 {% for item in perm %}
@@ -189,7 +189,7 @@
 
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Ekle
                                 </button>
 
                             </div>
@@ -223,7 +223,7 @@
 
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ yeka.employee.user.first_name }} {{ yeka.employee.user.last_name }}</td>
+                                            <td>{{ yeka.employee.person.user.first_name }} {{ yeka.employee.person.user.last_name }}</td>
 
                                             <td>
                                                 {% for item in perm %}
@@ -251,7 +251,7 @@
 
                         </div>
                      <div class="card-footer">
-                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Çıkar
                                 </button>
 
                             </div>

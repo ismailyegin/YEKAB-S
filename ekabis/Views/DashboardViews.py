@@ -56,7 +56,7 @@ def return_personel_dashboard(request):
 
     user = request.user
     person_filter = {
-        'user': user,
+        'person__user': user,
     }
 
     employee = EmployeeGetService(request, person_filter)

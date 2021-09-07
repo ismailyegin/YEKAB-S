@@ -45,27 +45,25 @@
 
                 </div>
                 <div class="modal-body">
-                <div class="row">
-                      <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6">
 
-                    <select required class="select2 select2-hidden-accessible"
-                            data-placeholder="Firma Seçin"
-                            data-dropdown-css-class="select2-purple"
-                            style="width: 100%;" id="region_capacity" name="region_capacity"
-                            data-select2-id="15" tabindex="-1" aria-hidden="true">
-                        {% for company in companies %}
+                            <select required class="select2 select2-hidden-accessible"
+                                    data-placeholder="Firma Seçin"
+                                    data-dropdown-css-class="select2-purple"
+                                    style="width: 100%;" id="region_capacity" name="region_capacity"
+                                    data-select2-id="15" tabindex="-1" aria-hidden="true">
+                                {% for company in companies %}
 
-                            <option data-select2-id="{{ company.uuid }}"
-                                    value="{{ company.uuid }}">{{ company.name }}</option>
+                                    <option data-select2-id="{{ company.uuid }}"
+                                            value="{{ company.uuid }}">{{ company.name }}</option>
 
-                        {% endfor %}
-                    </select></div>
-                    <div class="col-lg-6">
-                        <input type="text" class="form-control" id="percent" placeholder="Katılım Yüzdesi %">
+                                {% endfor %}
+                            </select></div>
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control" id="percent" placeholder="Katılım Yüzdesi %">
+                        </div>
                     </div>
-                </div>
-
-
 
 
                 </div>
@@ -106,100 +104,72 @@
         <form method="post" enctype="multipart/form-data" role="form">
             {% csrf_token %}
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Konsorsiyum Bilgileri</h3>
                         </div>
                         <div class="card-body">
-
-                            {% for item in company_form %}
+                            <div class="row">
+                                 <div class="col-lg-6">
                                 <div class="form-group">
-                                    {% if item.is_active %}
-                                        <small style="color: red">*</small>
-                                    {% endif %}
-                                    <label>{{ item.label }}</label><br>
-
-                                    {{ item }}
-                                    <label for="" id="label_{{ item.name }}"></label>
+                                    <label> {{ company_form.name.label }}</label>
+                                    {{ company_form.name }}
+                                    <label for="" id="label_namer"></label>
                                 </div>
-                            {% endfor %}
+                                <div class="form-group">
+                                    <label> {{ company_form.degree.label }}</label>
+                                    {{ company_form.degree }}
+                                    <label for="" id="label_degree"></label>
+                                </div>
+                                <div class="form-group">
+                                    <label> {{ company_form.taxnumber.label }}</label>
+                                    {{ company_form.taxnumber }}
+                                    <label for="" id="label_taxnumber"></label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label> {{ company_form.taxOffice.label }}</label>
+                                    {{ company_form.taxOffice }}
+                                    <label for="" id="label_taxOffice"></label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label> {{ company_form.mail.label }}</label>
+                                    {{ company_form.mail }}
+                                    <label for="" id="label_mail"></label>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label> {{ communication_form.phoneNumber.label }}</label>
+                                    {{ communication_form.phoneNumber }}
+                                    <label for="" id="label_phoneNumber"></label>
+
+                                </div>
+                                <div class="form-group">
+                                    <label> {{ communication_form.city.label }}</label>
+                                    {{ communication_form.city }}
+                                    <label for="" id="label_city"></label>
+
+
+                                </div>
+                            </div>
+                            </div>
+
 
                         </div>
 
-
+ <div class="card-footer">
+                                    <button type="submit" class="btn btn-outline-primary" style="float:right;">Kaydet</button>
+                                </div>
                     </div>
 
 
                 </div>
-                <div class="col-lg-6">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">İletişim Bilgileri</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6">
-
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber.label }}</label>
-                                        {{ communication_form.phoneNumber }}
-                                        <label for="" id="label_phoneNumber"></label>
-
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber2.label }}</label>
-                                        {{ communication_form.phoneNumber2 }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.country.label }}</label>
-                                        {{ communication_form.country }}
-                                        <label for="" id="label_country"></label>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.city.label }}</label>
-                                        {{ communication_form.city }}
-                                        <label for="" id="label_city"></label>
-
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.postalCode.label }}</label>
-                                        {{ communication_form.postalCode }}
-                                        <label for="" id="label_postalCode"></label>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.address.label }}</label>
-                                        {{ communication_form.address }}
-                                        <label for="" id="label_address"></label>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-footer">
-
-                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
-                            </button>
-
-                        </div>
-
-
-                    </div>
-                </div>
-
-
-            </div>
 
 
         </form>

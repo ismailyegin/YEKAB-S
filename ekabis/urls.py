@@ -7,6 +7,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     VacationDayViews, ExtraTimeViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
     YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews, ReportViews
 from ekabis.services import general_methods
+from ekabis.services.general_methods import add_block
 
 app_name = 'ekabis'
 urlpatterns = [
@@ -457,5 +458,6 @@ urlpatterns = [
     # dependense finish date -start date
 
     path('yeka/yeka-bagimlilik/', YekaViews.view_dependence, name='view_dependence'),
+    path('yeka/blockAdd/', add_block, name='add_block'),
 
 ]

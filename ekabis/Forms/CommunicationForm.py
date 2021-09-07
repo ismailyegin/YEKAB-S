@@ -26,6 +26,9 @@ class CommunicationForm(BaseForm):
 
             'phoneNumber': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
+            'city': forms.Select(
+                attrs={'class': 'form-control select2 select2-hidden-accessible',
+                       'style': 'width: 100%; ', 'name': "city", 'id': "id_city"}),
 
 
         }

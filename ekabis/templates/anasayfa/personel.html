@@ -1,5 +1,15 @@
 {% extends 'base_layout.html' %}
 {% block content %}
+     <style>
+        .table tr {
+            cursor: pointer;
+
+        }
+        #hover:hover {
+            background-color: #007bff;
+            color: white
+        }
+    </style>
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -133,7 +143,7 @@
                                             <tbody>
 
                                             {% for person in person_competitions %}
-                                                <tr >
+                                                <tr id="hover" >
                                                     <td>{{ forloop.counter }} </td>
                                                     <td class='clickable-row'
                                                     data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.name }}</td>
@@ -157,7 +167,7 @@
                                                                                 class="fa fa-edit"></i>Düzenle
                                                                         </a>
                                                                     {% elif item == 'view_sub_yeka_competition_detail' %}
-                                                                        <a href="{% url "ekabis:view_sub_yeka_competition_detail" person.competition.uuid %}"
+                                                                        <a href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}"
                                                                            class="dropdown-item" title="Detay"
                                                                            type="button"><i
                                                                                 class="fa fa-search"></i>Detay
