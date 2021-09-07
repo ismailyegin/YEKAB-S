@@ -51,8 +51,8 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-{#                    <h1>#}
-{#                        Rapor oluşur</h1>#}
+                    {#                    <h1>#}
+                    {#                        Rapor oluşur</h1>#}
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -89,8 +89,13 @@
                                     <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
                                          aria-orientation="vertical">
 
+                                        <a class="nav-link active " id="vert" data-toggle="pill" href="#tab"
+                                           role="tab"
+                                           aria-controls="tab" aria-selected="true">İş Bloklarına Göre Yarışmalar</a>
 
-                                        <a class="nav-link active " id="vert-1" data-toggle="pill" href="#tab-1" role="tab"
+
+                                        <a class="nav-link " id="vert-1" data-toggle="pill" href="#tab-1"
+                                           role="tab"
                                            aria-controls="tab-1" aria-selected="true">Ön Lisans Sürecindeki
                                             Firmalar</a>
                                         <a class="nav-link" id="vert-2" data-toggle="pill" href="#tab-2" role="tab"
@@ -126,14 +131,230 @@
                                 </div>
                                 <div class="col-7 col-sm-9">
                                     <div class="tab-content" id="vert-tabs-tabContent">
-                                        <div class="tab-pane text-left fade show active" id="tab-1" role="tabpanel"
+
+                                        <div class="tab-pane text-left fade show active" id="tab" role="tabpanel"
+                                             aria-labelledby="vert">
+
+                                            <div class="card card-primary card-outline">
+                                                <div class="card-body">
+
+
+                                                    <form methot="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name='business' value="">
+
+                                                        <div class="form-group">
+                                                            <label> İş Blokları</label>
+                                                            <select name="business_type"
+                                                                    class="form-control select2 select2-hidden-accessible"
+                                                                    style="width: 100%;"
+                                                                    maxlength="100" id="business">
+                                                                {% for b in businessblogs %}
+                                                                    <option value="{{ b.pk }}">{{ b.name }}</option>
+                                                                {% endfor %}
+
+                                                            </select>
+
+
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <button type="submit" class="btn btn-outline-primary"
+                                                                    style="float: right">Ara
+                                                            </button>
+
+                                                        </div>
+
+                                                    </form>
+
+                                                {% if selectblog %}
+
+                                                      <table id="selectblog" class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Tanım</th>
+                                                            <th>Başlangıç Tarihi</th>
+                                                            <th>Bitiş Tarihi</th>
+                                                            <th>Blok İsmi</th>
+                                                            <th>Kapasite</th>
+                                                            <th>Kaynak Türü</th>
+                                                            <th>Firma</th>
+                                                            <th>İşlemler</th>
+
+
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <tr>
+                                                            {% for item in selectblog %}
+
+                                                                <td>{{ item.forloop }}</td>
+                                                                <td>{{ item.name }}</td>
+                                                                <td>{{ item.startdate| date }}</td>
+                                                                <td>{{ item.finishdate | date }}</td>
+                                                                <td>{{ item.blogname }}</td>
+                                                                <td>{{ item.capacity }}</td>
+                                                                <td>{{ item.type }}</td>
+                                                                <td>{{ item.company.name }}</td>
+                                                                <td>
+                                                                    <div class="btn-group">
+                                                                        <button type="button"
+                                                                                class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                                data-toggle="dropdown"> İşlemler
+                                                                        </button>
+                                                                        <div class="dropdown-menu" role="menu">
+                                                                            {% if item.yeka %}
+                                                                                <a href="{% url 'ekabis:view_yeka_detail' item.uuid %}">Detay</a>
+                                                                            {% else %}
+                                                                                <a href="{% url 'ekabis:view_yeka_competition_detail' item.uuid %}">Detay</a>
+                                                                            {% endif %}
+
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
+
+
+                                                            {% endfor %}
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                {% endif %}
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="tab-pane fade" id="tab-1" role="tabpanel"
                                              aria-labelledby="vert-1">
-                                            Ön Lisans Sürecindeki Firmalar
-                                            <div class="col-lg-12">test</div>
+
+
+                                            <div class=" card card-primary card-outline">
+
+                                                <div class="card-body">
+
+                                                    <table id="prelicense" class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Tanım</th>
+                                                            <th>Başlangıç Tarihi</th>
+                                                            <th>Bitiş Tarihi</th>
+                                                            <th>Blok İsmi</th>
+                                                            <th>Kapasite</th>
+                                                            <th>Kaynak Türü</th>
+                                                            <th>Firma</th>
+                                                            <th>İşlemler</th>
+
+
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <tr>
+                                                            {% for item in prelicense %}
+
+                                                                <td>{{ item.forloop }}</td>
+                                                                <td>{{ item.name }}</td>
+                                                                <td>{{ item.startdate| date }}</td>
+                                                                <td>{{ item.finishdate | date }}</td>
+                                                                <td>{{ item.blogname }}</td>
+                                                                <td>{{ item.capacity }}</td>
+                                                                <td>{{ item.type }}</td>
+                                                                <td>{{ item.company.name }}</td>
+                                                                <td>
+                                                                    <div class="btn-group">
+                                                                        <button type="button"
+                                                                                class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                                data-toggle="dropdown"> İşlemler
+                                                                        </button>
+                                                                        <div class="dropdown-menu" role="menu">
+                                                                            {% if item.yeka %}
+                                                                                <a href="{% url 'ekabis:view_yeka_detail' item.uuid %}">Detay</a>
+                                                                            {% else %}
+                                                                                <a href="{% url 'ekabis:view_yeka_competition_detail' item.uuid %}">Detay</a>
+                                                                            {% endif %}
+
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
+
+
+                                                            {% endfor %}
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="tab-2" role="tabpanel"
                                              aria-labelledby="vert-2">
-                                            Lisans Sürecindeki Firmalar
+
+                                            <div class=" card card-primary card-outline">
+
+                                                <div class="card-body">
+
+                                                    <table id="license" class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Tanım</th>
+                                                            <th>Başlangıç Tarihi</th>
+                                                            <th>Bitiş Tarihi</th>
+                                                            <th>Blok İsmi</th>
+                                                            <th>Kapasite</th>
+                                                            <th>Kaynak Türü</th>
+                                                            <th>Firma</th>
+                                                            <th>İşlemler</th>
+
+
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <tr>
+                                                            {% for item in license %}
+
+                                                                <td>{{ item.forloop }}</td>
+                                                                <td>{{ item.name }}</td>
+                                                                <td>{{ item.startdate| date }}</td>
+                                                                <td>{{ item.finishdate | date }}</td>
+                                                                <td>{{ item.blogname }}</td>
+                                                                <td>{{ item.capacity }}</td>
+                                                                <td>{{ item.type }}</td>
+                                                                <td>{{ item.company.name }}</td>
+                                                                <td>
+                                                                    <div class="btn-group">
+                                                                        <button type="button"
+                                                                                class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                                data-toggle="dropdown"> İşlemler
+                                                                        </button>
+                                                                        <div class="dropdown-menu" role="menu">
+                                                                            {% if item.yeka %}
+                                                                                <a href="{% url 'ekabis:view_yeka_detail' item.uuid %}">Detay</a>
+                                                                            {% else %}
+                                                                                <a href="{% url 'ekabis:view_yeka_competition_detail' item.uuid %}">Detay</a>
+                                                                            {% endif %}
+
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
+
+
+                                                            {% endfor %}
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="tab-3" role="tabpanel"
                                              aria-labelledby="vert-3">
@@ -266,12 +487,201 @@
 
     </section>
     <script>
-
+        {% load static %}
 
         $(function () {
+
+            $('#prelicense').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Yeka',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
+            $('#license').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Yeka',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
+            $('#selectblog').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Yeka',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
+
+
             $("#vert-tabs-tab a").click(function () {
-                alert($(this)[0].id);
-                debugger;
+                {#alert($(this)[0].id);#}
+                {#debugger;#}
             })
         });
 
