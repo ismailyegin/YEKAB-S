@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import resolve
 
@@ -36,6 +37,8 @@ def help_text_add(request):
                     help = help_form.save(request, commit=False)
                     help.save()
                     messages.success(request, 'Yardım Metni Eklendi.')
+
+
                     return redirect('ekabis:view_help_text')
                 else:
                     error_messages = get_error_messages(help_form)
@@ -82,24 +85,30 @@ def update_help_menu(request, uuid):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
+        hiden_url=str(request.META.get('HTTP_REFERER'))
+
         with transaction.atomic():
             if request.method == 'POST':
                 if help_form.is_valid():
                     help = help_form.save(request, commit=False)
                     help.save()
                     messages.success(request, 'Yardım Metni Güncellenmiştir')
+                    url=request.POST.get('hiden_url','')
+                    if len(str(url))>5:
+                        if str(request.META.get('HTTP_REFERER')) != request.POST.get('hiden_url',''):
+                            return HttpResponseRedirect(request.POST.get('hiden_url'))
                     return redirect('ekabis:view_help_text')
                 else:
                     error_messages = get_error_messages(help_form)
                     return render(request, 'helpMenu/add_help_text.html',
                                   {'help_form': help_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name,'hiden_url':hiden_url
                                    })
 
             return render(request, 'helpMenu/add_help_text.html',
                           {'help_form': help_form, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name, 'error_messages': ''})
+                           'url_name': url_name, 'error_messages': '','hiden_url':hiden_url})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

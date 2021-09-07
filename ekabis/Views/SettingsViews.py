@@ -9,6 +9,10 @@ from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import SettingsService, SettingsGetService
 from ekabis.Forms.SettingsForm import SettingsForm
 
+
+from ekabis.models.Permission import Permission
+from ekabis.models.HelpMenu import HelpMenu
+
 # Sistem ayarlarının listelendigi sayfa
 @login_required
 def view_settinsList(request):
@@ -55,3 +59,29 @@ def change_serttings(request, pk):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
+
+
+
+@login_required
+def helpmenu(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+
+        for item in Permission.objects.all():
+            if not HelpMenu.objects.filter(url=item):
+                help = HelpMenu(
+                    text=" ",
+                    url=item
+                )
+                help.save()
+        return redirect('ekabis:view_admin')
+
+
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

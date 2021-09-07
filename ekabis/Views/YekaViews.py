@@ -33,7 +33,6 @@ from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import YekaService, YekaConnectionRegionService, YekaGetService, \
     YekaPersonService, \
     EmployeeGetService, ExtraTimeService, YekaBusinessBlogGetService, \
-
     BusinessBlogGetService, ConnectionRegionService, last_urls, YekaCompetitionGetService, \
     YekaBusinessGetService
 import datetime

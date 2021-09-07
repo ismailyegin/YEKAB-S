@@ -131,18 +131,14 @@
                             <form method="post" role="form">
                                 {% csrf_token %}
                                 <div class="card-body">
+                                    <input type="hidden" name="hiden_url" value="{{ hiden_url }}">
                                     <div class="form-group">
                                         <label> {{ help_form.url.label}}</label> <label id="label_url"></label>
-
                                         {{ help_form.url }}
-
-
                                     </div>
                                     <div class="form-group">
                                         <label> {{ help_form.text.label }}</label> <label id="label_text"></label>
                                         {{ help_form.text }}
-
-
                                     </div>
 
 

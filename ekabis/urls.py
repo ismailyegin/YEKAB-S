@@ -464,4 +464,6 @@ urlpatterns = [
     path('yeka/yeka-baglantı-bolgesi-renkleri/', DashboardViews.api_connection_region_cities, name='api_connection_region_cities'),
     path('yeka/yeka-baglantı-bolgesi-yarismalari/', DashboardViews.api_connection_region_competitions, name='api_connection_region_competitions'),
     path('yeka/yeka-rapor-listesi/', ReportViews.view_report, name='view_report'),
+
+    path('yeka/helpmenu/', SettingsViews.helpmenu, name='helpmenu'),
 ]
