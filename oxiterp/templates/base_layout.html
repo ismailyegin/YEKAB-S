@@ -414,6 +414,14 @@
                         {{ text | safe }}
                     </div>
 
+
+                    {% if aktif == 'Admin' %}
+                        <div class="modal-footer">
+                        <a class="btn  btn-outline-primary" href="{% url "ekabis:change_help_text" help_url %}" style="float: right"> Düzenle</a>
+                        </div>
+
+
+                  {% endif %}
                 </div>
             </div>
         </div>
@@ -546,7 +554,7 @@
     }
 
     $(function () {
-        interval();
+
         $('.files').fileinput({
             {#rtl: true,#}
             {#dropZoneEnabled: false,#}
@@ -756,6 +764,10 @@
             }
         });
     }, 50000);
+
+    $(function () {
+        setInterval()
+    })
 
 
 </script>

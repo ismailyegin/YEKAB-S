@@ -789,8 +789,10 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
             if yekaBusinessBlogo_form.is_valid():
                 finish_date = ''
                 start_date = ''
-                time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
+
+                time=0
                 if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                    time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
                     time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
                     startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
                     if time_type == 'is_gunu':

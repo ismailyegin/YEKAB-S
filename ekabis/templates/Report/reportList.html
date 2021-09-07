@@ -166,63 +166,63 @@
 
                                                     </form>
 
-                                                {% if selectblog %}
+                                                    {% if selectblog %}
 
-                                                      <table id="selectblog" class="table table-bordered table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Tanım</th>
-                                                            <th>Başlangıç Tarihi</th>
-                                                            <th>Bitiş Tarihi</th>
-                                                            <th>Blok İsmi</th>
-                                                            <th>Kapasite</th>
-                                                            <th>Kaynak Türü</th>
-                                                            <th>Firma</th>
-                                                            <th>İşlemler</th>
+                                                        <table id="selectblog" class="table table-bordered table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Tanım</th>
+                                                                <th>Başlangıç Tarihi</th>
+                                                                <th>Bitiş Tarihi</th>
+                                                                <th>Blok İsmi</th>
+                                                                <th>Kapasite</th>
+                                                                <th>Kaynak Türü</th>
+                                                                <th>Firma</th>
+                                                                <th>İşlemler</th>
 
 
-                                                        </tr>
-                                                        </thead>
+                                                            </tr>
+                                                            </thead>
 
-                                                        <tbody>
-                                                        <tr>
+                                                            <tbody>
+
                                                             {% for item in selectblog %}
+                                                                <tr>
+                                                                    <td>{{ item.forloop }}</td>
+                                                                    <td>{{ item.name }}</td>
+                                                                    <td>{{ item.startdate| date }}</td>
+                                                                    <td>{{ item.finishdate | date }}</td>
+                                                                    <td>{{ item.blogname }}</td>
+                                                                    <td>{{ item.capacity }}</td>
+                                                                    <td>{{ item.type }}</td>
+                                                                    <td>{{ item.company.name }}</td>
+                                                                    <td>
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                                    data-toggle="dropdown"> İşlemler
+                                                                            </button>
+                                                                            <div class="dropdown-menu" role="menu">
+                                                                                {% if item.yeka %}
+                                                                                    <a href="{% url 'ekabis:view_yeka_detail' item.uuid %}">Detay</a>
+                                                                                {% else %}
+                                                                                    <a href="{% url 'ekabis:view_yeka_competition_detail' item.uuid %}">Detay</a>
+                                                                                {% endif %}
 
-                                                                <td>{{ item.forloop }}</td>
-                                                                <td>{{ item.name }}</td>
-                                                                <td>{{ item.startdate| date }}</td>
-                                                                <td>{{ item.finishdate | date }}</td>
-                                                                <td>{{ item.blogname }}</td>
-                                                                <td>{{ item.capacity }}</td>
-                                                                <td>{{ item.type }}</td>
-                                                                <td>{{ item.company.name }}</td>
-                                                                <td>
-                                                                    <div class="btn-group">
-                                                                        <button type="button"
-                                                                                class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                                data-toggle="dropdown"> İşlemler
-                                                                        </button>
-                                                                        <div class="dropdown-menu" role="menu">
-                                                                            {% if item.yeka %}
-                                                                                <a href="{% url 'ekabis:view_yeka_detail' item.uuid %}">Detay</a>
-                                                                            {% else %}
-                                                                                <a href="{% url 'ekabis:view_yeka_competition_detail' item.uuid %}">Detay</a>
-                                                                            {% endif %}
-
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </td>
+                                                                    </td>
 
 
-
+                                                                </tr>
                                                             {% endfor %}
-                                                        </tr>
 
-                                                        </tbody>
-                                                    </table>
 
-                                                {% endif %}
+                                                            </tbody>
+                                                        </table>
+
+                                                    {% endif %}
 
                                                 </div>
                                             </div>
@@ -255,9 +255,9 @@
                                                         </thead>
 
                                                         <tbody>
-                                                        <tr>
-                                                            {% for item in prelicense %}
 
+                                                        {% for item in prelicense %}
+                                                            <tr>
                                                                 <td>{{ item.forloop }}</td>
                                                                 <td>{{ item.name }}</td>
                                                                 <td>{{ item.startdate| date }}</td>
@@ -284,9 +284,9 @@
                                                                 </td>
 
 
+                                                            </tr>
+                                                        {% endfor %}
 
-                                                            {% endfor %}
-                                                        </tr>
 
                                                         </tbody>
                                                     </table>
@@ -318,8 +318,9 @@
                                                         </thead>
 
                                                         <tbody>
-                                                        <tr>
-                                                            {% for item in license %}
+
+                                                        {% for item in license %}
+                                                            <tr>
 
                                                                 <td>{{ item.forloop }}</td>
                                                                 <td>{{ item.name }}</td>
@@ -346,16 +347,17 @@
                                                                     </div>
                                                                 </td>
 
+                                                            </tr>
 
+                                                        {% endfor %}
 
-                                                            {% endfor %}
-                                                        </tr>
 
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="tab-pane fade" id="tab-3" role="tabpanel"
                                              aria-labelledby="vert-3">
                                             afsdf Morbi turpis dolor, vulputate vitae felis non, tincidunt
