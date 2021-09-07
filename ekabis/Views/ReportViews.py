@@ -56,15 +56,15 @@ def view_report(request):
                 }
                 prelicense.append(beka)
 
-            elif YekaCompetition.objects.filter(business=item.business):
-                yeka=YekaCompetition.objects.get(business=item.business)
+            elif YekaCompetition.objects.filter(business=business):
+                yeka=YekaCompetition.objects.get(business=business)
                 beka = {
                     'name': yeka.name,
                     'startdate': item.startDate,
-                    'finishdate': item.finishDate,
+                    'finishdate': item.finisDate,
                     'blogname': item.businessblog.name,
                     'capacicty': yeka.capacity,
-                    'type': yeka.type,
+                    'type': "",
                     'firma':yeka.business.company,
                     'yeka':False,
                     'uuid':yeka.uuid
@@ -95,10 +95,10 @@ def view_report(request):
                 beka = {
                     'name': yeka.name,
                     'startdate': item.startDate,
-                    'finishdate': item.finishDate,
+                    'finishdate': item.finisDate,
                     'blogname': item.businessblog.name,
                     'capacicty': yeka.capacity,
-                    'type': yeka.type,
+                    'type': "",
                     'firma':yeka.business.company,
                     'yeka':False,
                     'uuid':yeka.uuid
