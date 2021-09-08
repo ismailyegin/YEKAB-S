@@ -469,7 +469,7 @@ def change_yekaapplication(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
                 if application_form.is_valid():
-                    app = application_form.save(request,commit=False)
+                    app = application_form.save(commit=False)
                     app.yekabusinessblog = yekabussinessblog
                     app.business = yekabusiness
                     app.save()
