@@ -293,7 +293,6 @@ def update_competition(request, region, competition):
                                    'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
                                    'url_name': url_name, 'competition': competition, })
 
-            competitions = region.yekacompetition.filter(isDeleted=False)
             return render(request, 'YekaCompetition/change_competition.html',
                           {'competition_form': competition_form, 'error_messages': '', 'urls': urls,
                            'current_url': current_url, 'url_name': url_name, 'competition': competition,
