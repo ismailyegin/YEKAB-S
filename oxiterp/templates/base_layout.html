@@ -95,6 +95,17 @@
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
+<style>
+    .table tr {
+        cursor: pointer;
+
+    }
+
+    #hover:hover {
+        background-color: #007bff;
+        color: black;
+    }
+</style>
 <div class="wrapper">
 
     <!-- Preloader -->
@@ -417,11 +428,12 @@
 
                     {% if aktif == 'Admin' %}
                         <div class="modal-footer">
-                        <a class="btn  btn-outline-primary" href="{% url "ekabis:change_help_text" help_url %}" style="float: right"> Düzenle</a>
+                            <a class="btn  btn-outline-primary" href="{% url "ekabis:change_help_text" help_url %}"
+                               style="float: right"> Düzenle</a>
                         </div>
 
 
-                  {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -505,12 +517,15 @@
 <!-- Bootstrap4 Duallistbox -->
 <script src="{% static 'plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js' %}"></script>
 <!-- InputMask -->
+<script src="{% static 'plugins/inputmask/jquery.inputmask.min.js' %}"></script>
+<script src="{% static 'plugins/inputmask/inputmask.js' %}"></script>
 <script src="{% static 'plugins/moment/moment.min.js' %}"></script>
 {#pickermask#}
+
+
 <script src="{% static 'plugins/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'plugins/timepicker/bootstrap-timepicker.min.js' %}"></script>
-
 <!-- date-range-picker -->
 <script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
 
@@ -587,13 +602,13 @@
 
 
         {#//Datemask dd/mm/yyyy#}
-        {#$('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'});#}
+        $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'});
         {#//Datemask2 mm/dd/yyyy#}
         {#$('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'});#}
         {##}
-        {#$('.datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'});#}
+
         {#//Money Euro#}
-        {#$('[data-mask]').inputmask();#}
+        $('[data-mask]').inputmask();
 
         //Date range picker
         $('#reservation').daterangepicker({
@@ -750,9 +765,9 @@
                 for (let i = 0; i < result.notifications.length; i++) {
 
                     $(document).Toasts('create', {
-                        body:  result.notifications[i].notification.description,
+                        body: result.notifications[i].notification.description,
                         title: result.notifications[i].notification.title,
-                        subtitle:  result.notifications[i].notification.creationDate.date,
+                        subtitle: result.notifications[i].notification.creationDate.date,
                         icon: 'fas fa-bell fa-lg',
                         class: 'bg-success',
 

@@ -11,7 +11,7 @@ class YekaCompetitionForm(BaseForm):
         model = YekaCompetition
         fields = ('name', 'capacity',)
         labels = {'name': 'Tanımı *',
-                  'date':'Resmi Gazetede Yayın Tarihi *','capacity':'Kapasite (MWe) *'}
+                  'capacity':'Kapasite (MWe) *'}
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
             'capacity': forms.NumberInput(attrs={'class': 'form-control ', 'required': 'required'}),

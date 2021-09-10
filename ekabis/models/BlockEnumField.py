@@ -183,7 +183,7 @@ class BlockEnumFields(enum.Enum):
             ],
         },
         {
-            'tr_name': 'Ön Lisans Süreci',
+            'tr_name': 'Ön Lisans Dönemi',
             'en_name': '',
             'order': 19,
             'fixed_parameter': [
@@ -201,7 +201,7 @@ class BlockEnumFields(enum.Enum):
                 }
             ],
         },
-        {'tr_name': 'Lisans',
+        {'tr_name': 'Lisans Dönemi',
          'en_name': '',
          'order': 21,
          'fixed_parameter': [
@@ -225,6 +225,26 @@ class BlockEnumFields(enum.Enum):
             'tr_name': 'Kabuller',
             'en_name': '',
             'order': 23,
+            'fixed_parameter': [
+                {
+                    'name': '',
+                }
+            ],
+        },
+        {
+            'tr_name': 'Alım Garantisi',
+            'en_name': '',
+            'order': 24,
+            'fixed_parameter': [
+                {
+                    'name': '',
+                }
+            ],
+        },
+        {
+            'tr_name': 'Üretim Miktarı',
+            'en_name': '',
+            'order': 25,
             'fixed_parameter': [
                 {
                     'name': '',

@@ -1,5 +1,6 @@
 import traceback
 
+from django import forms
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -10,6 +11,7 @@ from django.db.models import Q
 from django.urls import resolve
 
 from ekabis.Forms.ConnectionRegionForm import ConnectionRegionForm
+from ekabis.Forms.PurchaseGuaranteeForm import PurchaseGuaranteeForm
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
 from ekabis.Forms.YekaCompetitionForm import YekaCompetitionForm
@@ -18,7 +20,7 @@ from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
-    YekaPersonHistory, Permission, ConnectionRegion
+    YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -527,9 +529,12 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
             'uuid': business
         }
         form_contract = None
+        purchase_guarantee_form = None
 
         business = BusinessBlogGetService(request, yeka_business_filter_)
-        if business.name=='YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
+
+        if business.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
             contract = None
             if YekaContract.objects.filter(business=competition.business):
                 contract = YekaContract.objects.get(business=competition.business)
@@ -540,11 +545,25 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                 )
                 contract.save()
             form_contract = YekaContractForm(request.POST or None, request.FILES or None, instance=contract)
-            form_contract.fields['unit'].required=True
+            form_contract.fields['unit'].required = True
+        elif business.name == 'Alım Garantisi':
+            purchase_guarantee = None
+
+            if YekaPurchaseGuarantee.objects.filter(business=competition.business):
+                purchase_guarantee = YekaPurchaseGuarantee.objects.get(business=competition.business)
+            else:
+                purchase_guarantee =  YekaPurchaseGuarantee(
+                    yekabusinessblog=yekabussiness,
+                    business=competition.business
+                )
+                purchase_guarantee.save()
+            purchase_guarantee_form = PurchaseGuaranteeForm(request.POST or None, request.FILES or None,
+                                                            instance=purchase_guarantee)
+
+
 
         name = general_methods.yekaname(competition.business)
 
-        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
         yekaBusinessBlogo_form.fields['dependence_parent'].queryset = competition.business.businessblogs.exclude(
             uuid=yekabussiness.uuid).filter(isDeleted=False)
 
@@ -566,46 +585,61 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     contract.save()
                     competition.business.company = contract.company
                     competition.save()
-            if yekaBusinessBlogo_form.is_valid():
-                finish_date = ''
-                start_date = ''
+            if not yekaBusinessBlogo_form.cleaned_data['businessTime']:
+                if purchase_guarantee_form.is_valid():
+                    purchase_guarantee = purchase_guarantee_form.save(request, commit=False)
+                    purchase_guarantee.save()
+                    if purchase_guarantee_form.cleaned_data['time']:
+                        time = purchase_guarantee_form.cleaned_data['time']
+                        time =purchase_guarantee_form.cleaned_data['time'] * 365. / 12
+                        purchase_guarantee.time = int(time)
+                        purchase_guarantee.finisDate=purchase_guarantee.startDate + datetime.timedelta(days=time)
+                        purchase_guarantee.save()
 
+            else:
+                if yekaBusinessBlogo_form.is_valid():
+                    finish_date = ''
+                    start_date = ''
 
+                    time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
+                    if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                        time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
+                        startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
+                        if time_type == 'is_gunu':
+                            time = yekaBusinessBlogo_form.cleaned_data['businessTime']
+                            add_time = time
+                            start_date = startDate.date()
+                            count = 0
+                            while add_time > 1:
+                                start_date = start_date + datetime.timedelta(days=1)
+                                count = count + 1
+                                is_vacation = is_vacation_day(start_date)
+                                if not is_vacation:
+                                    add_time = add_time - 1
+                        else:
 
-                time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
-                if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
-                    time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
-                    startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                    if time_type == 'is_gunu':
-                        time = yekaBusinessBlogo_form.cleaned_data['businessTime']
-                        add_time = time
-                        start_date = startDate.date()
-                        count = 0
-                        while add_time > 1:
-                            start_date = start_date + datetime.timedelta(days=1)
-                            count = count + 1
-                            is_vacation = is_vacation_day(start_date)
-                            if not is_vacation:
-                                add_time = add_time - 1
+                            start_date = startDate.date() + datetime.timedelta(days=time)
+                        yekabussiness.startDate = startDate
+                        yekabussiness.finisDate = start_date
+                        yekabussiness.save()
                     else:
+                        yekabussiness.businessTime = 0
+                        yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
+                        yekabussiness.save()
+                    yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
 
-                        start_date = startDate.date() + datetime.timedelta(days=time)
-                    yekabussiness.startDate = startDate
-                    yekabussiness.finisDate = start_date
-                    yekabussiness.save()
-                else:
-                    yekabussiness.businessTime = 0
-                    yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                    yekabussiness.save()
-                yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
+                    messages.success(request, 'Basarıyla Kayıt Edilmiştir.')
+                    if purchase_guarantee_form.cleaned_data['type']== 'Miktar':
+                        return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
 
-                messages.success(request, 'Basarıyla Kayıt Edilmiştir.')
-                return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+
+                    return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
                           'competition': competition, 'urls': urls,
-                          'current_url': current_url,'contract_form':form_contract,
+                          'current_url': current_url, 'contract_form': form_contract,
+                          'purchase_guarantee_form': purchase_guarantee_form,
                           'url_name': url_name,
                           'name': name
                       })
@@ -922,7 +956,11 @@ def view_yeka_competition_detail(request, uuid):
         yeka = YekaCompetitionGetService(request, yeka_filter)
         name = general_methods.yekaname(yeka.business)
         competitions = YekaCompetition.objects.filter(parent=yeka, isDeleted=False)
-        region = ConnectionRegion.objects.get(yekacompetition=yeka)
+        if yeka.parent:
+            region = ConnectionRegion.objects.get(yekacompetition=yeka.parent)
+
+        else:
+            region = ConnectionRegion.objects.get(yekacompetition=yeka)
         filter = {
             'connection_region': region
         }
@@ -939,19 +977,19 @@ def view_yeka_competition_detail(request, uuid):
         blocks = []
         dependency = []
 
-        for blok in yekabusinessbloks:
+        for block in yekabusinessbloks:
             bloc_dict = {}
             dict = {}
-            bloc_dict['yekabusinessblog'] = blok
-            bloc_dict['businessblog'] = blok.businessblog.uuid
+            bloc_dict['yekabusinessblog'] = block
+            bloc_dict['businessblog'] = block.businessblog.uuid
             bloc_dict['yeka'] = yeka.uuid
 
             html = ''
-            for param in blok.paremetre.all():
+            for param in block.paremetre.all():
                 if param.parametre.type == 'file':
-                    html += '<div class="form-group"> <label>' + param.parametre.title + ' :</label> <a href="' + MEDIA_URL + param.file.name + '" target="_blank">' + param.file.name + '</div>'
+                    html += '<div class="form-group"> <label>' + param.parametre.title + ' : </label> <a href="' + MEDIA_URL + param.file.name + '" target="_blank">' + param.file.name + '</div>'
                 else:
-                    html += '<div class="form-group"> <label>' + param.parametre.title + ' :</label>' + str(
+                    html += '<div class="form-group"> <label>' + param.parametre.title + ' : </label>' + str(
                         param.value) + '</div>'
             bloc_dict['html'] = html
             blocks.append(bloc_dict)
@@ -960,7 +998,7 @@ def view_yeka_competition_detail(request, uuid):
 
         return render(request, 'Yeka/yeka_competition_detail.html',
                       {'urls': urls, 'current_url': current_url,
-                       'url_name': url_name, 'name': name, 'bloks': blocks, 'definition': definiton_yeka,
+                       'url_name': url_name, 'name': name, 'blocks': blocks, 'definition': definiton_yeka,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
                        'employees': employees, 'competitions': competitions, 'region': region
 
@@ -991,6 +1029,8 @@ def view_sub_yeka_competition_detail(request, uuid):
         yeka = YekaCompetitionGetService(request, yeka_filter)
         name = general_methods.yekaname(yeka.business)
 
+
+
         yekabusinessbloks = None
         if yeka.business:
             yekabusiness = yeka.business
@@ -1006,6 +1046,7 @@ def view_sub_yeka_competition_detail(request, uuid):
             bloc_dict['yekabusinessblog'] = blok
             bloc_dict['businessblog'] = blok.businessblog.uuid
             bloc_dict['yeka'] = yeka.uuid
+
 
             blocks.append(bloc_dict)
 

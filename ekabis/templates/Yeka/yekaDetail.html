@@ -4,7 +4,7 @@
     {% load static %}
     <script src="{% static 'vis/dist/cytoscape.min.js' %}"></script>
     <script src="{% static 'vis/dist/cytoscape-cxtmenu.js' %}"></script>
-  <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -25,7 +25,7 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
- <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
+    <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -148,6 +148,8 @@
         .cxtmenu-disabled {
             opacity: 0.333;
         }
+
+
     </style>
 
     <script>
@@ -199,6 +201,9 @@
 
                 ready: function () {
                 },
+                minZoom: 0.1,
+                maxZoom: 3,
+                zoom: 0.5,
 
                 style: [
                     {
@@ -212,10 +217,12 @@
                             "text-max-width": 80,
                         }
                     },
+
                     {
                         selector: 'node[status = "2"]',
                         css: {
                             'background-color': '#ff0000',
+
 
                         }
                     },
@@ -304,7 +311,7 @@
                         },
                     },
                     {
-                        content: 'İptal',
+                        content: 'Kapat',
 
                     },
 
@@ -326,7 +333,8 @@
                 ]
             });
             var layout = cy.layout({
-                name: 'breadthfirst'
+                name: 'grid',
+                rows: 2
             });
 
             cy.cxtmenu({
@@ -393,11 +401,6 @@
                         {#                        {% endfor %}#}
                     </div>
 
-                    <style>
-                        .table tr {
-                            cursor: pointer;
-                        }
-                    </style>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-7">
@@ -436,10 +439,12 @@
 
                                             {% if yeka.connection_region.all %}
                                                 {% for region in yeka.connection_region.all %}
-                                                    <tr>
+                                                    <tr id="hover">
                                                         <td>{{ forloop.counter }} </td>
-                                                        <td>{{ region.name }}</td>
-                                                        <td>{{ region.capacity }} MW</td>
+                                                        <td onclick="view_competition('{{ region.uuid }}')">{{ region.name }}</td>
+                                                        <td onclick="view_competition('{{ region.uuid }}')">{{ region.capacity }}
+                                                            MW
+                                                        </td>
                                                         <td>
 
                                                             <div class="btn-group">
@@ -707,6 +712,7 @@
                 "serverSide": true,
                 "paging": true,
                 "ordering": true,
+                "select": true,
 
 
                 "ajax": {
@@ -763,10 +769,14 @@
                 'language': {
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
+                "fnCreatedRow": function (nRow, aData, iDataIndex) {
+                    $(nRow).attr('id', "hover");
+                },
                 "columns": [
 
                     {
                         "data": null,
+
                         render: function (data, type, row) {
 
                             return row.id;
@@ -779,7 +789,7 @@
                             let detail = "{% url 'ekabis:view_yeka_competition_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             detail = detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
                             let html = ''
-                            html = '<a href="' + detail + '">' + full.name + '</a>'
+                            html = '<a style="color: black" href="' + detail + '">' + full.name + '</a>'
                             return html;
 
                         }
@@ -853,6 +863,9 @@
 
 
         }
+
+        $('#competition_table', 'tr').id = 'hover'
+
 
         function deleteRegion(id) {
             var html = ''
@@ -928,7 +941,7 @@
                         success: function (result) {
                             if (result.status === 'Fail') {
 
-debugger;
+                                debugger;
                                 html = result.msg;
                                 debugger;
                                 $(".errorModal").html(html);
@@ -965,6 +978,7 @@ debugger;
             });
 
         }
+
 
     </script>
 

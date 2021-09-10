@@ -15,6 +15,7 @@ class VacationDayUpdateForm(BaseForm):
                 attrs={'class': 'form-control', 'required': 'required'}),
               'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
-                       'onkeydown': 'return false', 'required': 'required'}),
+                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
 
         }

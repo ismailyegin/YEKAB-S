@@ -621,7 +621,6 @@ def change_competition(request, business, businessblog):
         }
         yekabusinessblog = YekaBusinessBlogGetService(request, filter)
 
-        competition = Competition.objects.none()
         if not Competition.objects.filter(business=yekabusiness):
             competition = Competition(
                 business=yekabusiness,
