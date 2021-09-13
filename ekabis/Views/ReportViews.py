@@ -90,8 +90,8 @@ def view_report(request):
                 }
                 license.append(beka)
 
-            elif YekaCompetition.objects.filter(business=item.business):
-                yeka=YekaCompetition.objects.get(business=item.business)
+            elif YekaCompetition.objects.filter(business=business):
+                yeka=YekaCompetition.objects.get(business=business)
                 beka = {
                     'name': yeka.name,
                     'startdate': item.startDate,
