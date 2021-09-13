@@ -1776,20 +1776,20 @@ def add_competition_company_select(request):
         yekas = serializers.serialize("json", Yeka.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
         regions = serializers.serialize("json", ConnectionRegion.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
         competitions = serializers.serialize("json", YekaCompetition.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
-
-
         with transaction.atomic():
-
             if request.method == 'POST':
-                competition=YekaCompetition.objects.get(pk=request.POST.get('select_competition'))
-                company = Company.objects.get(pk=request.POST.get('select_company'))
-                yeka_application=YekaApplication.objects.get(business=competition.business)
-                yeka_company=YekaCompany(
-                    company=company
-                )
-                yeka_company.save()
-                yeka_application.companys.add(yeka_company)
-                yeka_application.save()
+                if YekaCompetition.objects.filter(pk=request.POST.get('select_competition')) and YekaApplication.objects.filter(business=competition.business):
+
+                    competition = YekaCompetition.objects.get(pk=request.POST.get('select_competition'))
+                    company = Company.objects.get(pk=request.POST.get('select_company'))
+                    yeka_application = YekaApplication.objects.get(business=competition.business)
+                    yeka_company = YekaCompany(
+                        company=company
+                    )
+                    yeka_company.save()
+                    yeka_application.companys.add(yeka_company)
+                    yeka_application.save()
+
             return render(request, 'Application/add_competitions_company_select.html',
                           {'urls': urls,
                            'current_url': current_url, 'url_name': url_name,
