@@ -8,8 +8,8 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews, ReportViews, NotificationViews
 from ekabis.services import general_methods, NotificationServices
 from ekabis.services.general_methods import add_block
-
 app_name = 'ekabis'
+
 urlpatterns = [
     path('anasayfa/maintenance-page/', AdminViews.viewRepairPage, name='view_repair_page'),
     # Dashboard

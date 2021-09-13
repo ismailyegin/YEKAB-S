@@ -200,7 +200,7 @@
 
 
                         <div class="card-body">
-                            <table id="kullanicilar" class="table table-bordered table-hover">
+                            <table id="blocks" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -250,18 +250,6 @@
 
                                             </td>
 
-                                            {#                                            <td>#}
-                                            {#                                                <div class="btn-group">#}
-                                            {##}
-                                            {#                                                    <a class="btn btn-success"#}
-                                            {#                                                       data-toggle="modal" onclick=sendInform({{ user.pk }})><i#}
-                                            {#                                                            class="fa  fa-arrow-circle-right"></i>Şifre Gönder</a>#}
-                                            {##}
-                                            {#                                                    <a class="btn btn-danger"#}
-                                            {#                                                       data-toggle="modal" onclick=activeUser({{ user.pk }})><i#}
-                                            {#                                                            class="fa fa-lock"></i>Aktif/Pasifleştir</a>#}
-                                            {#                                                </div>#}
-                                            {#                                            </td>#}
 
                                         </tr>
 
@@ -287,9 +275,17 @@
 {% load  static %}
     <script>
         $(function () {
-            $('#kullanicilar').DataTable({
+            $('#blocks').DataTable({
                 dom: 'Bfrtip',
 
+                language: {
+                    buttons: {
+                        pageLength: {
+                            _: " %d  Tane Seçili",
+                            '-1': "Hepsi Seçili"
+                        }
+                    }
+                },
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
@@ -313,7 +309,7 @@
                     },
                     {
                         extend: 'print',
-                        title: 'İş Bloğu Parametreleri',
+                        title: 'Gruplar',
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
@@ -337,23 +333,15 @@
                 "search": {
                     "caseInsensitive": true,
                 },
-                'bubble': true,
-                'paging': true,
+                'paging': false,
                 'lengthChange': true,
                 'searching': true,
                 'ordering': true,
                 'info': true,
                 'autoWidth': true,
                 'responsive': true,
-                'select': true,
-                'language': {
-                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
-                }
             })
-
         })
-
-
         function deleteBusinessBlog(id) {
             $("#modal-danger").on("shown.bs.modal", function (e) {
                 $("#btn-conf").click(function () {
