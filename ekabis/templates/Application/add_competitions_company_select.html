@@ -120,53 +120,55 @@
                             <div class="card-body">
 
 
-                                <div class="form-group">
-
-                                    <div class="form-group">
-
-
-
-
-
-
+                                <div class="row">
+                                    <div class="col-md-3">
                                         <label for="select_yeka"> Yeka</label>
                                         <select class="form-control select2 select2-hidden-accessible"
                                                 style="width: 100%;" required="required" maxlength="100"
                                                 aria-label="Default select example"
                                                 name="select_yeka" id="select_yeka"></select>
-
+                                    </div>
+                                    <div class="col-md-3">
                                         <label for="select_yeka"> Baglantı Bölgesi</label>
                                         <select class="form-control select2 select2-hidden-accessible"
                                                 style="width: 100%;" required="required" maxlength="100"
                                                 aria-label="Default select example"
                                                 name="select_region" id="select_region"></select>
-
+                                    </div>
+                                    <div class="col-md-3">
                                         <label for="select_yeka form-control select2 select2-hidden-accessible">
                                             Yarışma</label>
                                         <select class="form-control select2 select2-hidden-accessible"
-                                                style="width: 100%;" required="required" maxlength="100" aria-label="Default select example"
+                                                style="width: 100%;" required="required" maxlength="100"
+                                                aria-label="Default select example"
                                                 name="select_competition" id="select_competition"></select>
+
+                                    </div>
+                                    <div class="col-md-3">
 
                                         <label for="select_yeka form-control select2 select2-hidden-accessible">
                                             Firma</label>
                                         <select class="form-control select2 select2-hidden-accessible"
-                                                style="width: 100%;" required="required" maxlength="100" aria-label="multiple select example"
+                                                style="width: 100%;" required="required" maxlength="100"
+                                                aria-label="multiple select example"
                                                 name="select_company" id="select_company"></select>
+
+                                    </div>
+
+
                                 </div>
 
 
-                            </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                    </button>
 
-                            <div class="card-footer">
-                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
-                                </button>
-
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
         </form>
 
 
@@ -204,102 +206,101 @@
             }));
 
             competition = JSON.parse(myJSONList);
-             $('#select_yeka').empty()
-            for (var item in yeka){
-                $('#select_yeka').prepend("<option value='"+yeka[item].pk+"'>"+yeka[item].fields.definition+"</option>");
+            $('#select_yeka').empty()
+            for (var item in yeka) {
+                $('#select_yeka').prepend("<option value='" + yeka[item].pk + "'>" + yeka[item].fields.definition + "</option>");
 
             }
 
-              $('#select_yeka').change(function (e){
+            $('#select_yeka').change(function (e) {
 
-                  $('#select_region').empty()
-                   yeka_id=$(this).find('option:selected').val();
-                  for ( var item in yeka){
-                      if (yeka_id==yeka[item].pk){
-
-                          for(var i in yeka[item].fields.connection_region ){
-                              for (var e in region){
-                                  if(yeka[item].fields.connection_region[i] == region[e].pk){
-                                      debugger;
-                                      $('#select_region').prepend("<option value='"+region[e].pk+"'>"+region[e].fields.name+"</option>");
-                                  }
-                              }
-
-                          }
+                $('#select_region').empty();
+                 $('#select_competition').empty();
+                  $('#select_company').empty();
 
 
-                      }
+                yeka_id = $(this).find('option:selected').val();
+                $('#select_region').prepend("<option value='0' selected>  -------------- </option>");
+                for (var item in yeka) {
+                    if (yeka_id == yeka[item].pk) {
 
-                  }
-              });
-
-
-
-
-             $('#select_region').change(function (e){
-
-                  $('#select_competition').empty()
-                   region_id=$(this).find('option:selected').val();
-
-                  for(var item in region){
-                      if (region_id==region[item].pk){
-                          for(var i in region[item].fields.yekacompetition ){
-                              debugger;
-                              for (var e in competition){
-                                  if(region[item].fields.yekacompetition[i] == competition[e].pk){
-                                      $('#select_competition').prepend("<option value='"+competition[e].pk+"'>"+competition[e].fields.name+"</option>");
-                                  }
-                              }
-
-                          }
-
-
-                      }
-                  }
-
-             });
-
-
-
-              $('#select_competition').change(function (e){
-               comp=$('#select_competition').find('option:selected').val();
-
-               $('#select_company').empty()
-                if (e.handled !== true) { // This will prevent event triggering more then once
-                        e.handled = true;
-
-                        $.ajax({
-                            url: "{% url "ekabis:add_competition_company_select_api" %}",
-                            type: "POST",
-                            data: {
-                                'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                                id: comp,
-                            },
-                            success: function (result) {
-
-                                console.log(result)
-
-                                if (result.status === 'Success') {
-
-                                    var  company = JSON.parse(result.company);
-                                    for ( var k in company){
-                                        debugger;
-                                           $('#select_company').prepend("<option value='"+company[k].pk+"'>"+company[k].fields.name+"</option>");
-                                    }
+                        for (var i in yeka[item].fields.connection_region) {
+                            for (var e in region) {
+                                if (yeka[item].fields.connection_region[i] == region[e].pk) {
+                                    debugger;
+                                    $('#select_region').prepend("<option value='" + region[e].pk + "'>" + region[e].fields.name + "</option>");
                                 }
-
                             }
-                        });
+
+                        }
+
 
                     }
 
+                }
+            });
 
 
-             });
+            $('#select_region').change(function (e) {
+
+                $('#select_competition').empty()
+                region_id = $(this).find('option:selected').val();
+                 $('#select_competition').prepend("<option value='0' selected>  -------------- </option>");
+                for (var item in region) {
+                    if (region_id == region[item].pk) {
+                        for (var i in region[item].fields.yekacompetition) {
+                            debugger;
+                            for (var e in competition) {
+                                if (region[item].fields.yekacompetition[i] == competition[e].pk) {
+                                    $('#select_competition').prepend("<option value='" + competition[e].pk + "'>" + competition[e].fields.name + "</option>");
+                                }
+                            }
+
+                        }
 
 
+                    }
+                }
+
+            });
 
 
+            $('#select_competition').change(function (e) {
+                comp = $('#select_competition').find('option:selected').val();
+
+
+                $('#select_company').empty()
+                $('#select_company').prepend("<option value='0' selected>  -------------- </option>");
+                if (e.handled !== true) { // This will prevent event triggering more then once
+                    e.handled = true;
+
+                    $.ajax({
+                        url: "{% url "ekabis:add_competition_company_select_api" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            id: comp,
+                        },
+                        success: function (result) {
+
+                            console.log(result)
+
+                            if (result.status === 'Success') {
+
+                                var company = JSON.parse(result.company);
+                                for (var k in company) {
+                                    debugger;
+                                    $('#select_company').prepend("<option value='" + company[k].pk + "'>" + company[k].fields.name + "</option>");
+                                }
+                            }
+
+                        }
+                    });
+
+                }
+
+
+            });
 
 
         });
