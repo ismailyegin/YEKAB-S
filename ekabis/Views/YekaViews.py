@@ -1309,7 +1309,22 @@ def view_kur(request, ):
 
 
 def test_yeka(request):
-    return render(request, 'Yeka/cytoscape.html')
+    table_th=[]
+    from collections import namedtuple
+    def namedtuplefetchall(cursor):
+        "Return all rows from a cursor as a namedtuple"
+        desc = cursor.description
+        for col in desc:
+            table_th.append(col[0])
+        nt_result = namedtuple('Result', [col[0] for col in desc])
+        return [nt_result(*row) for row in cursor.fetchall()]
+    from django.db import connection
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT  yeka.capacity  ,yeka.name,app.finishDate,app.preRegistration FROM ekabis_yekacompetition as yeka left JOIN ekabis_yekaapplication as app ON yeka.business_id=app.business_id")
+        row = namedtuplefetchall(cursor)
+    return render(request, 'Yeka/cytoscape.html',{'row':row,
+                                                  'table_th':table_th})
 
 
 @login_required()

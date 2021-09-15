@@ -1768,12 +1768,13 @@ def add_competition_company_select(request):
 
         yekas = serializers.serialize("json", Yeka.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
         regions = serializers.serialize("json", ConnectionRegion.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
-        competitions = serializers.serialize("json", YekaCompetition.objects.filter(isDeleted=False),
-                                             cls=DjangoJSONEncoder)
+        competitions = serializers.serialize("json", YekaCompetition.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
+
+
 
         with transaction.atomic():
-
             if request.method == 'POST':
+
                 competition = YekaCompetition.objects.get(pk=request.POST.get('select_competition'))
                 company = Company.objects.get(pk=request.POST.get('select_company'))
                 yeka_application = CompetitionApplication.objects.get(business=competition.business)
