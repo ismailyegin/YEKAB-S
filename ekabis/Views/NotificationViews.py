@@ -46,7 +46,8 @@ def view_notification(request):
 
 def is_read(request,id):
     notification = NotificationUser.objects.get(pk=id)
-    notification.is_read = True
-    notification.read_date=datetime.date.today()
-    notification.save()
+    if not notification.is_read:
+        notification.is_read = True
+        notification.read_date=datetime.date.today()
+        notification.save()
     return redirect('ekabis:bildirimler')

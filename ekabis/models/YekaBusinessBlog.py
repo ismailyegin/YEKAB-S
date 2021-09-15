@@ -11,7 +11,7 @@ class YekaBusinessBlog(BaseModel):
         (True, 'Süresiz '),
         (False, 'Süreli')
     )
-    businessblog = models.ForeignKey(BusinessBlog, on_delete=models.CASCADE, null=True, blank=True)
+    businessblog = models.ForeignKey(BusinessBlog, on_delete=models.CASCADE, null=True, blank=True) #iş planında bulunan bir bloğun sabit bilgileri
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='business_parent', null=True, blank=True)
     startDate = models.DateTimeField(null=True, blank=True)
     finisDate = models.DateTimeField(null=True, blank=True)
@@ -20,7 +20,7 @@ class YekaBusinessBlog(BaseModel):
     status = models.CharField(max_length=100, null=True, blank=True, default='Başlanmadı')
     sorting = models.IntegerField(default=0)
     companys = models.ManyToManyField(Company)
-    paremetre = models.ManyToManyField(YekaBusinessBlogParemetre, null=True, blank=True)
+    paremetre = models.ManyToManyField(YekaBusinessBlogParemetre, null=True, blank=True) #dinamik parametre bilgileri
     indefinite = models.BooleanField(default=False, choices=INDEFINETE_CHOICES)
     explanation = models.TextField(null=True, blank=True)
     dependence_parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='depence_parent', null=True,

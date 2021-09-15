@@ -1,0 +1,385 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    <div id="toast-container" class="toasts-top-right">
+
+        <div class="toast toast-error error" aria-live="polite" style="display: none" id="error_toast">
+            <div class="toast-message" id="error_message">
+
+            </div>
+        </div>
+
+
+    </div>
+    <div id="toast-container" class="toasts-top-right">
+
+        <div class="toast toast-success success " aria-live="polite" style="display: none" id="success_toast">
+            <div class="toast-message" id="success_message">
+
+            </div>
+        </div>
+
+
+    </div>
+    <!-- success modal -->
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+
+    {% if messages %}
+        <div id="toast-container" class="toasts-top-right">
+            {% for message in messages %}
+
+
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+    {% endif %}
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        {{ competition.name }} Üretim Miktarları</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="content">
+
+        <div class="row">
+
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Üretim Miktarları</h3>
+                            {% for item in perm %}
+                                {% if item == 'add_produce_amount' %}
+                                    <a href="{% url "ekabis:add_produce_amount" yeka_business_uuid yeka_business_block_uuid %}"
+                                       class="btn btn-outline-primary" style="float: right"> <i
+                                            class="fa fa-plus" title="Üretim Mikratı Ekle"></i>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="card-body">
+                            <table id="produce" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Miktar</th>
+                                    <th>Tarih</th>
+                                    <td>İşlemler</td>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for yeka_amount in produce_amounts.all %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ yeka_amount.quantity }}</td>
+                                        <td>{{ yeka_amount.date }}</td>
+                                        <td>
+
+                                            <div class="btn-group">
+
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown"> İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% for item in perm %}
+                                                        {% if item == 'change_produce_amount' %}
+                                                            <a href="{% url 'ekabis:change_produce_amount'  yeka_amount.uuid yeka_business_uuid %}"
+                                                               class="dropdown-item"> <i
+                                                                    class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% for item in perm %}
+                                                        {% if item == 'delete_produce_amount' %}
+                                                            <a class="dropdown-item" href=""
+                                                               data-toggle="modal"
+                                                               onclick="deleteProduceAmount('{{ yeka_amount.uuid }}')"><i
+                                                                    class="fa fa-trash"></i>Sil</a>
+
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+    {% load static %}
+    <script>
+        $(function () {
+            $('#produce').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Gruplar',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+
+
+        })
+
+
+        function deleteProduceAmount(id) {
+            debugger;
+            console.log(id);
+            var html = ''
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:delete_produce_amount" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid: id,
+                        },
+                        success: function (result) {
+                            if (result.status === 'Success') {
+                                html = 'Üretim miktarı başarıyla silindi';
+
+                                let toast = document.getElementById('success_message');
+                                toast.innerHTML = html;
+                                document.getElementById('success_toast').style.display = 'block';
+                                $('.success').toast('show');
+                                $('.toast').fadeOut(5000);
+
+                                window.location.replace("{% url "ekabis:view_produce_amount" yeka_business_uuid yeka_business_block_uuid%}");
+
+
+                            } else {
+                                debugger;
+                                let toast = document.getElementById('error_message');
+                                html = 'Üretim miktarı silinemez';
+                                toast.innerHTML = html;
+                                document.getElementById('error_toast').style.display = 'block';
+                                $('.error').toast('show');
+                                $('.toast').fadeOut(5000);
+
+
+                            }
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-delete').modal('hide');
+            });
+
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+
+    </script>
+{% endblock %}
+
+
+

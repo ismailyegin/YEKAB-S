@@ -1,17 +1,49 @@
 {% extends 'base_layout.html' %}
 {% block content %}
     {% load static %}
-
-    <style>
-        .table tr {
-            cursor: pointer;
-
+    <style type="text/css">/* Chart.js */
+    @keyframes chartjs-render-animation {
+        from {
+            opacity: .99
         }
-        #hover:hover {
-            background-color: #007bff;
-            color: white
+        to {
+            opacity: 1
         }
-    </style>
+    }
+
+    .chartjs-render-monitor {
+        animation: chartjs-render-animation 1ms
+    }
+
+    .chartjs-size-monitor, .chartjs-size-monitor-expand, .chartjs-size-monitor-shrink {
+        position: absolute;
+        direction: ltr;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        pointer-events: none;
+        visibility: hidden;
+        z-index: -1
+    }
+
+    .chartjs-size-monitor-expand > div {
+        position: absolute;
+        width: 1000000px;
+        height: 1000000px;
+        left: 0;
+        top: 0
+    }
+
+    .chartjs-size-monitor-shrink > div {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        left: 0;
+        top: 0
+    }</style>
+
     <style>
         .svg-turkiye-haritasi {
             max-width: 1140px;
@@ -65,59 +97,59 @@
 
 
     <script type="text/javascript">
-       var name;
-       var city;
+        var name;
+        var city;
 
         $(function () {
             $("g").click(function (e) {
 
-                     $("#competition_list a").remove();
-                    var name = $(this).attr("data-iladi");
-                    var city=$(this).attr("data-plakakodu");
-                     $("#modal_city").text("");
-                    var yeka=null
-                     if ($("#id_yeka_select").val() != ""){
-                         yeka=$("#id_yeka_select").val();
-                     }
+                $("#competition_list a").remove();
+                var name = $(this).attr("data-iladi");
+                var city = $(this).attr("data-plakakodu");
+                $("#modal_city").text("");
+                var yeka = null
+                if ($("#id_yeka_select").val() != "") {
+                    yeka = $("#id_yeka_select").val();
+                }
 
-                     if (e.handled !== true) { // This will prevent event triggering more then once
-                            e.handled = true;
+                if (e.handled !== true) { // This will prevent event triggering more then once
+                    e.handled = true;
 
-                     $.ajax({
-                                        url: "{% url "ekabis:api_connection_region_competitions"%}",
-                                        type: "POST",
-                                        data: {
-                                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                                            isActive: 'False',
-                                            uuid:yeka,
-                                            plateNo:city,
-                                        },
+                    $.ajax({
+                        url: "{% url "ekabis:api_connection_region_competitions"%}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            uuid: yeka,
+                            plateNo: city,
+                        },
 
-                                        success: function (result) {
-
-
-                                            if (result.status === 'Success') {
-                                                  var  competitions = JSON.parse(result.competitions);
-                                                  $("#modal_city").text(name);
-
-                                                for(var comp in competitions){
-
-                                                      var url_detail = "{% url 'ekabis:view_yeka_competition_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                                                      url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].fields.uuid);
-                                                    html="<a href='"+url_detail+"' class='list-group-item list-group-item-action'>"+competitions[comp].fields.name+"</a>"
-                                                    $("#competition_list").prepend(html)
-                                                }
+                        success: function (result) {
 
 
-                                            }
+                            if (result.status === 'Success') {
+                                var competitions = JSON.parse(result.competitions);
+                                $("#modal_city").text(name);
 
-                                        },
+                                for (var comp in competitions) {
+
+                                    var url_detail = "{% url 'ekabis:view_yeka_competition_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                                    url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].fields.uuid);
+                                    html = "<a href='" + url_detail + "' class='list-group-item list-group-item-action'>" + competitions[comp].fields.name + "</a>"
+                                    $("#competition_list").prepend(html)
+                                }
 
 
-                                    });
-                     }
-                     $("#modal-competition").modal('show');
-                });
+                            }
+
+                        },
+
+
+                    });
+                }
+                $("#modal-competition").modal('show');
+            });
 
         });
     </script>
@@ -186,29 +218,29 @@
     <script src="{% static 'vis/js/moment-with-locales.js' %}"></script>
     <script src="{% static 'vis/js/vis-timeline-graph2d.min.js' %}"></script>
 
-
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Anasayfa</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
     <section class="content">
 
         <!-- Content Header (Page header) -->
-        <section class="content-header">
 
 
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>{{ aktif }}-
-                            Ana Sayfa</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Ana Sayfa</a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                        </ol>
-                    </div>
-                </div>
-            </div>
-
-        </section>
         <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -273,7 +305,7 @@
         </div>
 
 
-<div class="modal modal-default modal-success-food fade in" id="modal-error" style="display: none;">
+        <div class="modal modal-default modal-success-food fade in" id="modal-error" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -298,7 +330,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title"> <span id="modal_city"></span> Yarışma Listesi</h4>
+                        <h4 class="modal-title"><span id="modal_city"></span> Yarışma Listesi</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span></button>
                     </div>
@@ -307,7 +339,7 @@
                         <div class="list-group" id="competition_list">
 
 
-</div>
+                        </div>
 
 
                     </div>
@@ -319,75 +351,76 @@
         </div>
 
 
-
         <!-- Main content -->
         <section class="content">
-        <div class="row">
-            <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-{#              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>#}
+            <div class="container-fluid">
+                <h5 class="mb-2">Toplam YEKA Sayıları</h5>
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>  {{ res_count }}</h3>
+                                <p>Rüzgar Enerjisi</p>
+                            </div>
+                            <div class="icon">
 
-              <div class="info-box-content">
-                <span class="info-box-text">Rüzgar</span>
-                <span class="info-box-number">
-                  {{ res_count }}
+                                <i class="fa fa-wind"></i>
+                            </div>
+                            <a href="{% url 'ekabis:view_yeka_by_type' 'Rüzgar' %}" class="small-box-footer">
+                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-gradient-yellow">
+                            <div class="inner">
+                                <h3>  {{ ges_count }}</h3>
+                                <p>Güneş Enerjisi</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-sun"></i>
+                            </div>
+                            <a href="{% url 'ekabis:view_yeka_by_type' 'Güneş' %}" class="small-box-footer">
+                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>  {{ biyo_count }}</h3>
+                                <p>Biyokütle Enerjisi</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-globe"></i>
+                            </div>
+                            <a href="{% url 'ekabis:view_yeka_by_type' 'Biyokütle' %}" class="small-box-footer">
+                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3>  {{ jeo_count }}</h3>
+                                <p>Jeotermal Enerjisi</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-fire"></i>
+                            </div>
+                            <a href="{% url 'ekabis:view_yeka_by_type' 'Jeotermal' %}" class="small-box-footer">
+                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                            </a>
+                        </div>
+                    </div>
 
-                </span>
-              </div>
-              <!-- /.info-box-content -->
+
+                </div>
             </div>
-            <!-- /.info-box -->
-          </div>
-             <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-{#              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>#}
-
-              <div class="info-box-content">
-                <span class="info-box-text">Güneş</span>
-                <span class="info-box-number">
-                  {{ ges_count }}
-
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-             <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-{#              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>#}
-
-              <div class="info-box-content">
-                <span class="info-box-text">Biyokütle</span>
-                <span class="info-box-number">
-                  {{ biyo_count }}
-
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-             <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-{#              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-code"></i></span>#}
-
-              <div class="info-box-content">
-                <span class="info-box-text">Jeotermal</span>
-                <span class="info-box-number">
-                  {{ jeo_count }}
-
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-
-
-
-
-        </div>
             <div class="row">
                 {% if yeka %}
                     <div class="col-lg-12">
@@ -478,6 +511,101 @@
                         </div>
 
                     </div>
+
+                    <div class="col-lg-12">
+
+                        <div class="card card-danger card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">YEKA Yarışmaları Toplam Kurulu Güç</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor">
+                                    <div class="chartjs-size-monitor-expand">
+                                        <div class=""></div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink">
+                                        <div class=""></div>
+                                    </div>
+                                </div>
+                                <canvas id="pieChart2"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 572px;"
+                                        width="715" height="312" class="chartjs-render-monitor"></canvas>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+
+
+                    </div>
+
+                    <script>
+                        $(document).ready(function () {
+
+
+                            //-------------
+                            //- DONUT CHART -
+                            //-------------
+                            // Get context with jQuery - using jQuery's .get() method.
+                            debugger;
+                            var x = [];
+
+                            x ={{ accepts|safe }};
+                            // LINE CHART
+
+                            let graphArray = [];
+                            let label = []
+
+
+                            for (var i = 0; i < x.length; i++) {
+                                label.push(x[i].label.toString())
+                                graphArray.push(x[i].power)
+
+                            }
+
+                            var donutData = {
+                                labels: label,
+                                datasets: [
+                                    {
+                                        data: graphArray,
+                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                                    }
+                                ]
+                            }
+
+
+                            //-------------
+                            //- PIE CHART -
+                            //-------------
+                            // Get context with jQuery - using jQuery's .get() method.
+                            var pieChartCanvas = $('#pieChart2').get(0).getContext('2d')
+                            var pieData = donutData;
+                            var pieOptions = {
+                                maintainAspectRatio: false,
+                                responsive: true,
+                            }
+                            //Create pie or douhnut chart
+                            // You can switch between pie and douhnut using the method below.
+                            new Chart(pieChartCanvas, {
+                                type: 'pie',
+                                data: pieData,
+                                options: pieOptions
+                            })
+
+
+
+
+
+
+                        })
+
+                    </script>
+
                     <script>
                         function deleteYeka(id) {
                             $("#modal-delete").on("shown.bs.modal", function (e) {
@@ -845,76 +973,76 @@
                             </div>
 
 
-
+                        </div>
 
                     </div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="sticky-top mb-3">
+                                    <div class="card card-primary card-outline">
+                                        <div class="card-header">
+                                            <h4 class="card-title">Notlar</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- the events -->
+                                            <div id="external-events">
+                                                <div class="external-event bg-success ui-draggable ui-draggable-handle"
+                                                     style="position: relative;">Test
+                                                </div>
+                                                <div class="external-event bg-warning ui-draggable ui-draggable-handle"
+                                                     style="position: relative;">Test
+                                                </div>
+                                                <div class="external-event bg-info ui-draggable ui-draggable-handle"
+                                                     style="position: relative;">Test
+                                                </div>
+                                                <div class="external-event bg-primary ui-draggable ui-draggable-handle"
+                                                     style="position: relative;">Test
+                                                </div>
+                                                <div class="external-event bg-danger ui-draggable ui-draggable-handle"
+                                                     style="position: relative;">Test
+                                                </div>
 
-                </div>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="sticky-top mb-3">
-                                <div class="card card-primary card-outline">
-                                    <div class="card-header">
-                                        <h4 class="card-title">Notlar</h4>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
                                     </div>
-                                    <div class="card-body">
-                                        <!-- the events -->
-                                        <div id="external-events">
-                                            <div class="external-event bg-success ui-draggable ui-draggable-handle"
-                                                 style="position: relative;">Test
-                                            </div>
-                                            <div class="external-event bg-warning ui-draggable ui-draggable-handle"
-                                                 style="position: relative;">Test
-                                            </div>
-                                            <div class="external-event bg-info ui-draggable ui-draggable-handle"
-                                                 style="position: relative;">Test
-                                            </div>
-                                            <div class="external-event bg-primary ui-draggable ui-draggable-handle"
-                                                 style="position: relative;">Test
-                                            </div>
-                                            <div class="external-event bg-danger ui-draggable ui-draggable-handle"
-                                                 style="position: relative;">Test
-                                            </div>
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-9">
+                                <div class="card card-primary card-outline">
+                                    <div class="card-body p-0">
+                                        <!-- THE CALENDAR -->
+                                        <div id="calendar"
+                                             class="fc fc-media-screen fc-direction-ltr fc-theme-bootstrap">
 
                                         </div>
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
-
+                                <!-- /.card -->
                             </div>
+                            <!-- /.col -->
                         </div>
-                        <!-- /.col -->
-                        <div class="col-md-9">
-                            <div class="card card-primary card-outline">
-                                <div class="card-body p-0">
-                                    <!-- THE CALENDAR -->
-                                    <div id="calendar" class="fc fc-media-screen fc-direction-ltr fc-theme-bootstrap">
-
-                                    </div>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
+                        <!-- /.row -->
                     </div>
-                    <!-- /.row -->
+
+
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h4 class="card-title">İş Planı Listesi</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="visualization"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
-
-                {#            gant şeması#}
-                {#                <div class="col-lg-12">#}
-                {#                        <div class="card card-primary card-outline">#}
-                {#                        <div class="card-header">#}
-                {#                            <h4 class="card-title">İş Planı Listesi</h4>#}
-                {#                        </div>#}
-                {#                        <div class="card-body">#}
-                {#                            <div id="visualization"></div>#}
-                {#                        </div>#}
-                {#                    </div>#}
-                {##}
-                {#                </div>#}
-
             </div>
         </section>
 
@@ -981,75 +1109,75 @@
         };
 
 
-        {#// DOM element where the Timeline will be attached#}
-        {#var container = document.getElementById("visualization");#}
-        {#var groups = new vis.DataSet([#}
-        {#    {% for item in yeka %}#}
-        {#        {id: {{ item.pk }}, content: '{{ item.definition }}'},#}
-        {#    {% endfor %}#}
-        {##}
-        {#]);#}
-        {##}
-        {#// Create a DataSet (allows two way data-binding)#}
-        {#var items = new vis.DataSet([#}
-        {#    {% for item in yeka %}#}
-        {#        {% for yekabusinessblok in item.business.businessblogs.all %}#}
-        {##}
-        {#            {%  if   yekabusinessblok.startDate   %}#}
-        {#                {%  if   yekabusinessblok.status   %}#}
-        {#                    {#}
-        {#                        id: "{{ yekabusinessblok.uuid}}",#}
-        {#                        content: "{{ yekabusinessblok.businessblog.name }}",#}
-        {#                        start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",#}
-        {#                        end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",#}
-        {#                        url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",#}
-        {#                        group: {{ item.pk }},#}
-        {#                        className: 'green',#}
-        {#                    },#}
-        {#                {% else %}#}
-        {#                    {#}
-        {#                        id: "{{ yekabusinessblok.uuid}}",#}
-        {#                        content: "{{ yekabusinessblok.businessblog.name }}",#}
-        {#                        start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",#}
-        {#                        url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",#}
-        {#                        group: {{ item.pk }},#}
-        {#                        className: 'red',#}
-        {#                    },#}
-        {#                {% endif %}#}
-        {#            {% endif %}#}
-        {#        {% endfor %}#}
-        {#    {% endfor %}#}
-        {#            {% for extra in ekstratimes %}#}
-        {##}
-        {##}
-        {#                {#}
-        {#                    id: "{{ extra.uuid}}",#}
-        {#                    content: "{{ extra.content }}",#}
-        {#                    start: "{{ extra.start | date:"Y-m-d" }}",#}
-        {#                    end: "{{ extra.finish | date:"Y-m-d" }}",#}
-        {#                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid  extra.bloguuid %}",#}
-        {#                    className: 'red',#}
-        {#                },#}
-        {##}
-        {#            {% endfor %}#}
-        {#]);#}
-        {#var options = {#}
-        {#    editable: true,#}
-        {#    height: '500px',#}
-        {#    width: '100%',#}
-        {#    locale: 'tr',#}
-        {# }; #}
-        {#var timeline = new vis.Timeline(container, items, groups, options);#}
-        {#timeline.on('click', function (properties) {#}
-        {#    if (properties.item != null) {#}
-        {#        var clickedNodes = items.get(properties.nodes);#}
-        {#        for (let i = 0; i < clickedNodes.length; i++) {#}
-        {#            if (clickedNodes[i].id == properties.item) {#}
-        {#                window.open(clickedNodes[i].url, '_blank');#}
-        {#            }#}
-        {#        }#}
-        {#    }#}
-        {# });#}
+        // DOM element where the Timeline will be attached
+        var container = document.getElementById("visualization");
+        var groups = new vis.DataSet([
+            {% for item in yeka %}
+                {id: {{ item.pk }}, content: '{{ item.definition }}'},
+            {% endfor %}
+
+        ]);
+
+        // Create a DataSet (allows two way data-binding)
+        var items = new vis.DataSet([
+            {% for item in yeka %}
+                {% for yekabusinessblok in item.business.businessblogs.all %}
+
+                    {%  if   yekabusinessblok.startDate   %}
+                        {%  if   yekabusinessblok.status   %}
+                            {
+                                id: "{{ yekabusinessblok.uuid}}",
+                                content: "{{ yekabusinessblok.businessblog.name }}",
+                                start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                                end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",
+                                url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
+                                group: {{ item.pk }},
+                                className: 'green',
+                            },
+                        {% else %}
+                            {
+                                id: "{{ yekabusinessblok.uuid}}",
+                                content: "{{ yekabusinessblok.businessblog.name }}",
+                                start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
+                                url: "{% url "ekabis:view_yekabusinessblog_gant" item.uuid yekabusinessblok.uuid %}",
+                                group: {{ item.pk }},
+                                className: 'red',
+                            },
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            {% for extra in ekstratimes %}
+
+
+                {
+                    id: "{{ extra.uuid}}",
+                    content: "{{ extra.content }}",
+                    start: "{{ extra.start | date:"Y-m-d" }}",
+                    end: "{{ extra.finish | date:"Y-m-d" }}",
+                    url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid  extra.bloguuid %}",
+                    className: 'red',
+                },
+
+            {% endfor %}
+        ]);
+        var options = {
+            editable: true,
+            height: '500px',
+            width: '100%',
+            locale: 'tr',
+        };
+        var timeline = new vis.Timeline(container, items, groups, options);
+        timeline.on('click', function (properties) {
+            if (properties.item != null) {
+                var clickedNodes = items.get(properties.nodes);
+                for (let i = 0; i < clickedNodes.length; i++) {
+                    if (clickedNodes[i].id == properties.item) {
+                        window.open(clickedNodes[i].url, '_blank');
+                    }
+                }
+            }
+        });
 
 
         $(function () {
@@ -1063,7 +1191,7 @@
             $("#id_yeka_select").change(function (e) {
 
 
-                if ($("#id_yeka_select").val() != "" ) {
+                if ($("#id_yeka_select").val() != "") {
                     if (e.handled !== true) { // This will prevent event triggering more then once
                         e.handled = true;
 
@@ -1079,11 +1207,11 @@
                                 console.log(result)
 
                                 if (result.status === 'Success') {
-                                     $("g path").css({fill:'#222'});
-                                    var  cities = JSON.parse(result.cities);
+                                    $("g path").css({fill: '#222'});
+                                    var cities = JSON.parse(result.cities);
                                     debugger
-                                    for ( var k in cities){
-                                              $("g[data-plakakodu=" + cities[k].fields.plateNo+ "] path").css({fill: '#E7721C'});
+                                    for (var k in cities) {
+                                        $("g[data-plakakodu=" + cities[k].fields.plateNo + "] path").css({fill: '#E7721C'});
                                         console.log(cities[k].fields.plateNo);
                                     }
                                 }
@@ -1094,8 +1222,7 @@
                     }
 
 
-                }
-                else {
+                } else {
                     all_region();
                 }
             });

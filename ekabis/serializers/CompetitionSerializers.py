@@ -10,7 +10,9 @@ class YekaCompetitionSerializer(serializers.ModelSerializer):
         depth = 4
 
 
-class YekaCompetitionSerializer(serializers.Serializer):
+
+
+class YekaCompetitionResponseSerializer(serializers.Serializer):
     data = YekaCompetitionSerializer(many=True)
     draw = serializers.IntegerField()
     recordsTotal = serializers.IntegerField()

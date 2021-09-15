@@ -19,7 +19,8 @@ class YekaContractForm(BaseForm):
                                         'style': 'width: 100%;', 'required': 'required'}),
             'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
-                       'onkeydown': 'return false', 'required': 'required'}),
+                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
             'price': forms.NumberInput(
                 attrs={'class': 'form-control ', 'required': 'required'}),
             'company': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',

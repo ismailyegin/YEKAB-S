@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group, User
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, redirect
 from accounts.models import Forgot
-from ekabis.models import ActiveGroup, Person
+from ekabis.models import ActiveGroup, Person, HelpMenu
 from ekabis.models.Settings import Settings
 from ekabis.services import general_methods
 from ekabis.urls import urlpatterns
@@ -153,6 +153,14 @@ def show_urls(request):
                                        permissions=item,
                                        is_active=True)
                 perm.save()
+    #Bütün url ler için yardım metni oluşturuldu.
+    for item in Permission.objects.all():
+            if not HelpMenu.objects.filter(url=item):
+                help = HelpMenu(
+                    text=" ",
+                    url=item
+                )
+                help.save()
     return redirect('accounts:login')
 
 

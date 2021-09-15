@@ -1,6 +1,6 @@
 from django.db import models
 from ekabis.models.BaseModel import BaseModel
-class  BusinessBlogParametreType(BaseModel):
+class  BusinessBlogParametreType(BaseModel): #dinamik oluşturulan parametrelerin sabit bilgileri
     aDate = 'date'
     aString = 'string'
     aNumber = 'number'

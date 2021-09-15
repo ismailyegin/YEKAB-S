@@ -62,26 +62,3 @@ def change_serttings(request, pk):
 
 
 
-@login_required
-def helpmenu(request):
-    perm = general_methods.control_access(request)
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-
-    try:
-
-        for item in Permission.objects.all():
-            if not HelpMenu.objects.filter(url=item):
-                help = HelpMenu(
-                    text=" ",
-                    url=item
-                )
-                help.save()
-        return redirect('ekabis:view_admin')
-
-
-
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
