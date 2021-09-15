@@ -151,7 +151,7 @@ urlpatterns = [
          name='view_yekacompetition_personel'),
 
     # alt yeka
-    path('yarisma/alt-yeka-ekle/<uuid:uuid>', YekaCompetitionViews.add_sumcompetition, name='add_sumcompetition'),
+    path('yarisma/alt-yeka-ekle/<uuid:uuid>/<uuid:proposal_uuid>', YekaCompetitionViews.add_sumcompetition, name='add_sumcompetition'),
     path('yarisma/alt-yeka-listesi/<uuid:uuid>', YekaCompetitionViews.return_sub_competition,
          name='view_sub_competition'),
 
@@ -484,5 +484,17 @@ urlpatterns = [
          name='view_produce_amount'),
 
     path('yeka/uretim-miktari-sil/', ProduceAmountViews.delete_produce_amount, name='delete_produce_amount'),
+
+    path('yeka/alt-yekaya-aday-yeka-belirle/<uuid:yeka_business>/<uuid:yeka_business_block>/',
+         YekaBussinessBlogStaticView.proposal_add_sub_yeka,
+         name='proposal_add_sub_yeka'),
+
+    path('yeka/kaynak-turu-yeka/<str:type>', YekaViews.view_yeka_by_type, name='view_yeka_by_type'),
+
+    path('yeka/yeka-baglanti-bolge-getir/', YekaViews.get_region, name='get_region'),
+    path('yeka/yeka-yarisma-getir/', YekaViews.get_yeka_competition, name='get_yeka_competition'),
+    path('yeka/yeka-firma-basvuru/', YekaViews.company_aplication, name='company_aplication'),
+    path('yeka/yeka-firma-basvuru-yap/', YekaViews.make_application, name='yeka_make_aplication_company'),
+    path('yeka/basvuru-listesi/', APIViews.GetApplicationCompany.as_view(), name='view_application_company'),
 
 ]

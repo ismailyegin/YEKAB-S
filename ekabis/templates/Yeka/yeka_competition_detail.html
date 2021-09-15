@@ -179,7 +179,7 @@
                         businessTime: '{{ block.yekabusinessblog.businessTime }}',
                         time_type: '{{ block.yekabusinessblog.time_type }}',
                         status: '{{ block.yekabusinessblog.status }}',
-                        html: '{{ block.html |safe }}',
+                        html: '{{ block.html | safe }}',
                         classes: 'autorotate',
                         label: '{{ block.yekabusinessblog.startDate.businessTime }}',
 
@@ -196,7 +196,7 @@
 
                             source: '{{item.dependence_parent.id}}',
                             target: '{{ item.id}}',
-                            label: ('{{ item.startDate.date | date:"d/m/Y" }}') + '→' + '{{ item.finisDate.date | date:"d/m/Y"  }}',
+                            label: ('{{ item.businessTime  }}')
                         }
                     });
                 {% endif %}
@@ -216,7 +216,6 @@
                 minZoom: 0.1,
                 maxZoom: 3,
                 zoom: 0.5,
-
 
                 style: [
                     {
@@ -341,31 +340,31 @@
                             add_extratime = add_extratime.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                             html2 += '<a class="btn btn-secondary" href="' + add_extratime + '" type="button" style="float:right;margin-right: 5px;">Ek Süre Ekle</a>';
 
-                            if (this.data('name') === 'Kabuller'+' '+this.data('startDate')) {
+                            if (this.data('name') === 'Kabuller' + ' ' + this.data('startDate')) {
                                 let view_yeka_accept = "{% url 'ekabis:view_yeka_accept' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 view_yeka_accept = view_yeka_accept.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 view_yeka_accept = view_yeka_accept.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + view_yeka_accept + '" type="button" style="float:right">Kabuller</a>';
 
-                            } else if (this.data('name') === 'Resmi Gazete İlanı'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'Resmi Gazete İlanı' + ' ' + this.data('startDate')) {
                                 let add_newspaper = "{% url 'ekabis:add_newspaper' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 add_newspaper = add_newspaper.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 add_newspaper = add_newspaper.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + add_newspaper + '" type="button" style="float:right">Gazete Ekle</a>';
 
-                            } else if (this.data('name') === 'Yarışmanın Yapılması'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'Yarışmanın Yapılması' + ' ' + this.data('startDate')) {
                                 let change_competition = "{% url 'ekabis:change_competition' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 change_competition = change_competition.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 change_competition = change_competition.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + change_competition + '" type="button" style="float:right">Yarışma Ayarları</a>';
 
-                            } else if (this.data('name') === 'Aday YEKA Önerilmesi'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'Aday YEKA Önerilmesi' + ' ' + this.data('startDate')) {
                                 let change_yekaproposal = "{% url 'ekabis:change_yekaproposal' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 change_yekaproposal = change_yekaproposal.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 change_yekaproposal = change_yekaproposal.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + change_yekaproposal + '" type="button" style="float:right">Aday YEKALAR</a>';
 
-                            } else if (this.data('name') === 'ADAY YEKA Kurum Görüşlerinin Alınması'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'ADAY YEKA Kurum Görüşlerinin Alınması' + ' ' + this.data('startDate')) {
                                 let change_yekaproposal = "{% url 'ekabis:change_yekaproposal' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 change_yekaproposal = change_yekaproposal.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 change_yekaproposal = change_yekaproposal.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
@@ -376,19 +375,19 @@
                                 html2 += '<a class="btn btn-secondary" href="' + change_proposal_active + '" type="button" style="float:right;">YEKA Kurum Ayarları</a>';
 
 
-                            } else if (this.data('name') === 'Fabrika Kurulumu'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'Fabrika Kurulumu' + ' ' + this.data('startDate')) {
                                 let view_yeka_factory = "{% url 'ekabis:view_yeka_factory' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 view_yeka_factory = view_yeka_factory.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 view_yeka_factory = view_yeka_factory.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + view_yeka_factory + '" type="button" style="float:right">Fabrikalar</a>';
 
-                            } else if (this.data('name') === 'Ön Lisans Süreci'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'Ön Lisans Süreci' + ' ' + this.data('startDate')) {
                                 let view_yeka_associate_degree_file = "{% url 'ekabis:view_yeka_associate_degree_file' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 view_yeka_associate_degree_file = view_yeka_associate_degree_file.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 view_yeka_associate_degree_file = view_yeka_associate_degree_file.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + view_yeka_associate_degree_file + '" type="button" style="float:right">Ön Lisans Belgeleri</a>';
 
-                            } else if (this.data('name') === 'Başvurunun Alınması'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'Başvurunun Alınması' + ' ' + this.data('startDate')) {
                                 let view_application = "{% url 'ekabis:view_application' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 view_application = view_application.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 view_application = view_application.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
@@ -399,17 +398,23 @@
                                 html2 += '<a class="btn btn-secondary" href="' + add_yekaapplication + '" type="button" style="float:right;margin-left: 5px;">Başvuru Ayarları</a>';
 
 
-                            } else if (this.data('name') === 'Proje Yetkili Temsilcisinin Atanması'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'Proje Yetkili Temsilcisinin Atanması' + ' ' + this.data('startDate')) {
                                 let view_yeka_user = "{% url 'ekabis:view_yeka_user' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 view_yeka_user = view_yeka_user.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 view_yeka_user = view_yeka_user.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + view_yeka_user + '" type="button" style="float:right">Yetkili Listesi</a>';
 
-                            } else if (this.data('name') === 'Alım Garantisi'+' '+this.data('startDate')) {
+                            } else if (this.data('name') === 'Alım Garantisi' + ' ' + this.data('startDate')) {
                                 let add_produce_amount = "{% url 'ekabis:view_produce_amount' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 add_produce_amount = add_produce_amount.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 add_produce_amount = add_produce_amount.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + add_produce_amount + '" type="button" style="float:right">Üretim Miktarları</a>';
+
+                            } else if (this.data('name') === 'YEKA İlan Edilmesi' + ' ' + this.data('startDate')) {
+                                let proposal_add_sub_yeka = "{% url 'ekabis:proposal_add_sub_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
+                                proposal_add_sub_yeka = proposal_add_sub_yeka.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
+                                proposal_add_sub_yeka = proposal_add_sub_yeka.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
+                                html2 += '<a class="btn btn-secondary" href="' + proposal_add_sub_yeka + '" type="button" style="float:right">Aday Yeka Belirle</a>';
 
                             }
 
@@ -523,19 +528,6 @@
                                 <div class="card card-default card-outline">
                                     <div class="card-header with-border">
                                         <h3 class="card-title">Alt YEKA Listesi</h3>
-                                        {% for item in perm %}
-                                            {% if item == 'add_sumcompetition' %}
-
-                                                <a href="{% url "ekabis:add_sumcompetition" yeka.uuid %}"
-                                                   title="Alt Yeka Yarışması Ekle"
-                                                   type="button" class="btn btn-outline-primary btn-sm"
-                                                   style="float: right"><i
-                                                        class="fa fa-plus"></i>
-                                                </a>
-
-
-                                            {% endif %}
-                                        {% endfor %}
                                     </div>
 
 
@@ -556,19 +548,20 @@
 
                                             <tbody>
 
-                                            {% for competition in competitions %}
+                                            {% for proposal_sub in proposal_sub_yeka %}
                                                 <tr id="hover">
                                                     <td>{{ forloop.counter }} </td>
                                                     <td class='clickable-row'
-                                                        data-href="{% url "ekabis:view_sub_yeka_competition_detail" competition.uuid %}">{{ definition.definition }}</td>
+                                                        data-href="{% url "ekabis:view_sub_yeka_competition_detail" proposal_sub.sub_yeka.uuid %}">{{ definition.definition }}</td>
                                                     <td class='clickable-row'
-                                                        data-href="{% url "ekabis:view_sub_yeka_competition_detail" competition.uuid %}">{{ region.name }}</td>
+                                                        data-href="{% url "ekabis:view_sub_yeka_competition_detail" proposal_sub.sub_yeka.uuid %}">{{ region.name }}</td>
                                                     <td class='clickable-row'
-                                                        data-href="{% url "ekabis:view_sub_yeka_competition_detail" competition.uuid %}">{{ competition.name }}</td>
+                                                        data-href="{% url "ekabis:view_sub_yeka_competition_detail" proposal_sub.sub_yeka.uuid %}">{{ proposal_sub.sub_yeka.name }}</td>
                                                     <td class='clickable-row'
-                                                        data-href="{% url "ekabis:view_sub_yeka_competition_detail" competition.uuid %}">{{ competition.capacity }}
+                                                        data-href="{% url "ekabis:view_sub_yeka_competition_detail" proposal_sub.sub_yeka.uuid %}">{{ proposal_sub.sub_yeka.capacity }}
                                                         MWe
                                                     </td>
+
                                                     <td>
 
                                                         <div class="btn-group">
@@ -579,16 +572,16 @@
                                                             <div class="dropdown-menu" role="menu">
 
 
-                                                                <a onclick="deleteCompetition('{{ competition.uuid }}')"
+                                                                <a onclick="deleteCompetition('{{ proposal_sub.sub_yeka.uuid }}')"
                                                                    class="dropdown-item" title="Sil"
                                                                    type="button"><i
                                                                         class="fa fa-edit"></i>Sil</a>
-                                                                <a href="{% url "ekabis:change_sumcompetition" competition.uuid %}"
+                                                                <a href="{% url "ekabis:change_sumcompetition" proposal_sub.sub_yeka.uuid %}"
                                                                    class="dropdown-item" title="Düzenle "
                                                                    type="button"><i
                                                                         class="fa fa-edit"></i>Düzenle </a>
 
-                                                                <a href="{% url "ekabis:view_sub_yeka_competition_detail" competition.uuid %}"
+                                                                <a href="{% url "ekabis:view_sub_yeka_competition_detail" proposal_sub.sub_yeka.uuid %}"
                                                                    class="dropdown-item" title="Detay"
                                                                    type="button"><i
                                                                         class="fa fa-search"></i>Detay </a>
@@ -693,6 +686,7 @@
                         </div>
 
                     </div>
+
 
                 </div>
             </section>

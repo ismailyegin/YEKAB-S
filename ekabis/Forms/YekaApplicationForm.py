@@ -2,12 +2,12 @@ from django import forms
 from django.forms import ModelForm
 
 from ekabis.Forms.BaseForm import BaseForm
-from ekabis.models.YekaApplication import YekaApplication
+from ekabis.models.CompetitionApplication import CompetitionApplication
 
 
 class YekaApplicationForm(forms.ModelForm):
     class Meta:
-        model = YekaApplication
+        model = CompetitionApplication
         fields = ('startDate', 'finishDate','preRegistration',)
         labels = {'startDate': 'Basvuru Başlangıç Tarihi',
                   'finishDate': 'Basvuru Bitiş Tarihi',

@@ -6,13 +6,14 @@ from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from ekabis.models import Company, Employee, Yeka, Logs, YekaCompetition, ConnectionRegion
+from ekabis.models import Company, Employee, Yeka, Logs, YekaCompetition, ConnectionRegion, YekaCompany
 from ekabis.models.LogAPIObject import LogAPIObject
-from ekabis.serializers.CompanySerializers import CompanyResponseSerializer
-from ekabis.serializers.CompetitionSerializers import YekaCompetitionSerializer
+from ekabis.serializers.CompanySerializers import CompanyResponseSerializer, CompanySerializer
+from ekabis.serializers.CompetitionSerializers import YekaCompetitionSerializer, YekaCompetitionResponseSerializer
 from ekabis.serializers.EmployeeSerializers import EmployeeResponseSerializer
 from ekabis.serializers.LogSerializers import LogResponseSerializer
-from ekabis.serializers.YekaSerializer import YekaResponseSerializer
+from ekabis.serializers.YekaCompanySeralizers import YekaCompanyResponseSerializer
+from ekabis.serializers.YekaSerializer import YekaResponseSerializer, YekaSerializer
 from ekabis.services import general_methods
 from ekabis.services.services import EmployeeService, YekaService, LogsService, YekaCompetitionService
 
@@ -247,5 +248,44 @@ class GetYekaCompetition(APIView):
         serializer_context = {
             'request': request,
         }
-        serializer = YekaCompetitionSerializer(logApiObject, context=serializer_context)
+        serializer = YekaCompetitionResponseSerializer(logApiObject, context=serializer_context)
+        return Response(serializer.data)
+
+
+class GetApplicationCompany(APIView):
+
+    def post(self, request, format=None):
+        perm = general_methods.control_access(request)
+        if not perm:
+            logout(request)
+            return redirect('accounts:login')
+
+        draw = request.data['draw']
+        start = request.data['start']
+        length = request.data['length']
+        end = int(start) + int(length)
+
+        count = YekaCompany.objects.filter(isDeleted=False).count()
+
+        all_objects =YekaCompany.objects.filter(isDeleted=False).filter(
+            yeka__definition__icontains=request.data['search[value]']).filter(
+            yeka__definition__icontains=request.data['search[value]']).order_by('-id')[
+                      int(start):end]
+
+        filteredTotal = YekaCompany.objects.filter(isDeleted=False).filter(
+            yeka__definition__icontains=request.data['search[value]']).filter(
+            yeka__definition__icontains=request.data['search[value]']).count()
+
+        logApiObject = LogAPIObject()
+        logApiObject.data = all_objects
+        logApiObject.draw = int(request.POST['draw'])
+        logApiObject.recordsTotal = int(count)
+        logApiObject.recordsFiltered = int(filteredTotal)
+
+
+        serializer_context = {
+            'request': request,
+
+        }
+        serializer = YekaCompanyResponseSerializer(logApiObject, context=serializer_context)
         return Response(serializer.data)

@@ -18,12 +18,14 @@ from ekabis.Forms.YekaCompetitionForm import YekaCompetitionForm
 from ekabis.Forms.YekaContractForm import YekaContractForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
+from ekabis.models.Proposal import Proposal
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
-    YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee
+    YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
+from ekabis.models.YekaProposal import YekaProposal
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaGetService, ConnectionRegionGetService, YekaCompetitionGetService, \
@@ -552,15 +554,13 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
             if YekaPurchaseGuarantee.objects.filter(business=competition.business):
                 purchase_guarantee = YekaPurchaseGuarantee.objects.get(business=competition.business)
             else:
-                purchase_guarantee =  YekaPurchaseGuarantee(
+                purchase_guarantee = YekaPurchaseGuarantee(
                     yekabusinessblog=yekabussiness,
                     business=competition.business
                 )
                 purchase_guarantee.save()
             purchase_guarantee_form = PurchaseGuaranteeForm(request.POST or None, request.FILES or None,
                                                             instance=purchase_guarantee)
-
-
 
         name = general_methods.yekaname(competition.business)
 
@@ -591,9 +591,9 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     purchase_guarantee.save()
                     if purchase_guarantee_form.cleaned_data['time']:
                         time = purchase_guarantee_form.cleaned_data['time']
-                        time =purchase_guarantee_form.cleaned_data['time'] * 365. / 12
+                        time = purchase_guarantee_form.cleaned_data['time'] * 365. / 12
                         purchase_guarantee.time = int(time)
-                        purchase_guarantee.finisDate=purchase_guarantee.startDate + datetime.timedelta(days=time)
+                        purchase_guarantee.finisDate = purchase_guarantee.startDate + datetime.timedelta(days=time)
                         purchase_guarantee.save()
 
             else:
@@ -629,9 +629,8 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
 
                     messages.success(request, 'Basarıyla Kayıt Edilmiştir.')
-                    if purchase_guarantee_form.cleaned_data['type']== 'Miktar':
+                    if purchase_guarantee_form.cleaned_data['type'] == 'Miktar':
                         return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
-
 
                     return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
@@ -758,7 +757,7 @@ def return_sub_competition(request, uuid):
 
 
 @login_required
-def add_sumcompetition(request, uuid):
+def add_sumcompetition(request, uuid, proposal_uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -776,6 +775,9 @@ def add_sumcompetition(request, uuid):
             'isDeleted': False,
         }
         parent_competition = YekaCompetitionGetService(request, competition_filter)
+        proposal = None
+        if Proposal.objects.filter(uuid=proposal_uuid):
+            proposal = Proposal.objects.get(uuid=proposal_uuid)
 
         with transaction.atomic():
 
@@ -789,9 +791,10 @@ def add_sumcompetition(request, uuid):
 
                     # baglı oldugu yarışmanın kapsitesinden fazla olamaz
                     total = int(
-                        YekaCompetition.objects.filter(parent=parent_competition).distinct().aggregate(Sum('capacity'))[
+                        YekaCompetition.objects.filter(parent=parent_competition, isDeleted=False).distinct().aggregate(
+                            Sum('capacity'))[
                             'capacity__sum'] or 0)
-                    total += competition.capacity
+                    total += proposal.capacity
 
                     if total > parent_competition.capacity:
                         messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
@@ -800,9 +803,16 @@ def add_sumcompetition(request, uuid):
                                        'error_messages': '', 'urls': urls, 'current_url': current_url,
                                        'url_name': url_name
                                        })
-                    competition.parent = parent_competition
-                    competition.save()
+                    else:
+                        competition.parent = parent_competition
+                        competition.save()
+                        competition.capacity = proposal.capacity
+                        competition.save()
 
+                    proposal_sub_yeka = ProposalSubYeka(proposal=proposal, sub_yeka=competition)
+                    proposal_sub_yeka.save()
+                    proposal.status = True
+                    proposal.save()
                     if parent_competition.business:
                         yeka_business = YekaBusiness(name=parent_competition.business.name)
                         yeka_business.save()
@@ -956,6 +966,7 @@ def view_yeka_competition_detail(request, uuid):
         yeka = YekaCompetitionGetService(request, yeka_filter)
         name = general_methods.yekaname(yeka.business)
         competitions = YekaCompetition.objects.filter(parent=yeka, isDeleted=False)
+        proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka__parent=yeka, isDeleted=False)
         if yeka.parent:
             region = ConnectionRegion.objects.get(yekacompetition=yeka.parent)
 
@@ -997,7 +1008,7 @@ def view_yeka_competition_detail(request, uuid):
         employees = YekaCompetitionPersonService(request, employe_filter)
 
         return render(request, 'Yeka/yeka_competition_detail.html',
-                      {'urls': urls, 'current_url': current_url,
+                      {'urls': urls, 'current_url': current_url, 'proposal_sub_yeka': proposal_sub_yeka,
                        'url_name': url_name, 'name': name, 'blocks': blocks, 'definition': definiton_yeka,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
                        'employees': employees, 'competitions': competitions, 'region': region
@@ -1027,9 +1038,12 @@ def view_sub_yeka_competition_detail(request, uuid):
             'uuid': uuid
         }
         yeka = YekaCompetitionGetService(request, yeka_filter)
+        proposal_sub_yeka = None
+        yeka_proposal=None
+        if ProposalSubYeka.objects.filter(sub_yeka=yeka, isDeleted=False):
+            proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka=yeka, isDeleted=False).first()
+            yeka_proposal=YekaProposal.objects.filter(proposal=proposal_sub_yeka.proposal).first()
         name = general_methods.yekaname(yeka.business)
-
-
 
         yekabusinessbloks = None
         if yeka.business:
@@ -1047,14 +1061,13 @@ def view_sub_yeka_competition_detail(request, uuid):
             bloc_dict['businessblog'] = blok.businessblog.uuid
             bloc_dict['yeka'] = yeka.uuid
 
-
             blocks.append(bloc_dict)
 
         employees = YekaCompetitionPersonService(request, employe_filter)
 
         return render(request, 'YekaCompetition/sub_yeka_detail.html',
-                      {'urls': urls, 'current_url': current_url,
-                       'url_name': url_name, 'name': name, 'bloks': blocks,
+                      {'urls': urls, 'current_url': current_url, 'proposal_sub_yeka': proposal_sub_yeka,
+                       'url_name': url_name, 'name': name, 'bloks': blocks,'yeka_proposal':yeka_proposal,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
                        'employees': employees,
 

@@ -1,0 +1,543 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    {% load static %}
+    <div id="toast-container" class="toasts-top-right">
+
+        <div class="toast toast-error error" aria-live="polite" style="display: none" id="error_toast">
+            <div class="toast-message" id="error_message">
+
+            </div>
+        </div>
+
+        <div class="toast toast-success success" aria-live="polite" style="display: none" id="success_toast">
+            <div class="toast-message" id="success_message">
+
+            </div>
+        </div>
+
+
+    </div>
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message" id="success_toast"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <style>
+        #loading {
+            position: fixed;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+        }
+
+        #loading-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 100;
+        }
+    </style>
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Basvuru Firma Ekle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content" id="page">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Firma Ekle</h3>
+
+                        </div>
+                        <div class="card-body">
+
+
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label for="select_yeka"> Yeka</label>
+                                    <select class="form-control select2 select2-hidden-accessible"
+                                            style="width: 100%;" required="required" maxlength="100"
+                                            aria-label="Default select example" onchange="get_region()"
+                                            name="select_yeka" id="select_yeka">
+
+                                        {% for yeka in yekas %}
+                                            <option value="{{ yeka.pk }}">{{ yeka.definition }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="select_yeka"> Baglantı Bölgesi</label>
+                                    <select class="form-control select2 select2-hidden-accessible"
+                                            style="width: 100%;" required="required" maxlength="100"
+                                            aria-label="Default select example" onchange="get_yeka_competition()"
+                                            name="select_region" id="select_region">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="select_yeka form-control select2 select2-hidden-accessible">
+                                        Yarışma</label>
+                                    <select class="form-control select2 select2-hidden-accessible"
+                                            style="width: 100%;" required="required" maxlength="100"
+                                            aria-label="Default select example"
+                                            name="select_competition" id="select_competition">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="select_yeka form-control select2 select2-hidden-accessible">
+                                        Firma</label>
+                                    <select class="form-control select2 select2-hidden-accessible"
+                                            style="width: 100%;" required="required" maxlength="100"
+                                            aria-label="multiple select example"
+                                            name="select_company" id="select_company">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="loading">
+
+                                <img id="loading-image" src="{% static 'loader/indir.gif' %}" alt="Loading..."/>
+                            </div>
+
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="button" onclick="make_application()"
+                                        style="float:right">Kaydet
+                                </button>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="card card-default card-outline" id="competition">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Başvurular</h3>
+                        </div>
+
+
+                        <div class="card-body">
+
+
+                            <table id="app_table" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>YEKA</th>
+                                    <th>Bağlantı Bölgesi</th>
+                                    <th>Yarışma</th>
+                                    <th>Firma</th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+        </form>
+
+
+    </section>
+
+    <script>
+        var array = []
+        $(document).ready(function () {
+
+            get_region();
+            get_yeka_competition();
+
+            table = $('#app_table').DataTable({
+
+                "processing": true,
+                "serverSide": true,
+                "paging": true,
+                "ordering": true,
+
+
+                "ajax": {
+                    "url": "{% url 'ekabis:view_application_company' %}",
+                    "type": "POST"
+
+                },
+
+                dom: 'Bfrtip',
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Firmalar',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+
+
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                "columns": [
+                    {"data": "id"},
+
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.connection_region.name;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.connection_region.name;
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.competition.name;
+
+
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return row.company.name;
+
+
+                        }
+                    },
+
+
+                ],
+
+                "search": {
+                    "caseInsensitive": true
+                }
+
+
+            });
+            table.on('draw.dt', function () {
+                var info = table.page.info();
+                table.column(0, {
+                    search: 'applied',
+                    order: 'applied',
+                    page: 'applied'
+                }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1 + info.start;
+                });
+
+                for (var i = 0; i < array.length; i++) {
+                    json(array[i])
+
+                }
+
+            });
+
+        });
+
+
+        function make_application() {
+
+            var company = document.getElementById("select_company").value;
+            var competition = document.getElementById("select_competition").value;
+            var yeka = document.getElementById("select_yeka").value;
+            var region = document.getElementById("select_region").value;
+
+            $("#loading").show();
+
+
+            $.ajax({
+                url: "{% url 'ekabis:yeka_make_aplication_company' %}",
+                type: "post", // or "get"
+                async: false,
+                data: {
+                    yeka_id: yeka,
+                    company_id: company,
+                    region_id: region,
+                    competition_id: competition
+                },
+
+                success: function (result) {
+                    debugger;
+                    $("#loading").hide();
+                    table.ajax.reload();
+                    if (result.status === 'Success') {
+                        debugger;
+                        let toast = document.getElementById('success_message');
+                        let html = ''
+                        html = 'Başvuru Kaydedildi';
+                        toast.innerHTML = html;
+                        document.getElementById('success_toast').style.display = 'block';
+                        $('.success').toast('show');
+                        $('.toast').fadeOut(5000);
+
+
+                    } else {
+                        debugger;
+                        let toast = document.getElementById('error_message');
+                        let html = ''
+                        html = result.msg;
+                        toast.innerHTML = html;
+                        document.getElementById('error_toast').style.display = 'block';
+                        $('.error').toast('show');
+                        $('.toast').fadeOut(5000);
+
+
+                    }
+
+
+                }
+            });
+        }
+
+        function get_region() {
+            debugger;
+
+            var e = document.getElementById("select_yeka");
+            var yeka_id = e.options[e.selectedIndex].value;
+            $("#loading").show();
+            $.ajax({
+                url: "{% url 'ekabis:get_region' %}",
+                type: "post", // or "get"
+                async: false,
+                data: {
+                    yeka_id: yeka_id,
+                },
+
+                success: function (result) {
+                    debugger;
+
+                    let select = document.getElementById("select_region");
+
+                    select.options[select.options.length] = new Option('Text 1', 'Value1');
+
+                    $('#select_region').empty();
+
+                    for (let i = 0; i < result.region.length; i++) {
+                        select.options[select.options.length] = new Option(result.region[i].name, result.region[i].id);
+                    }
+                    $("#loading").hide();
+
+                }
+            });
+        }
+
+        function get_yeka_competition() {
+            debugger;
+            var e = document.getElementById("select_region");
+            var region_id = e.options[e.selectedIndex].value;
+            $("#loading").show();
+
+            $.ajax({
+                url: "{% url 'ekabis:get_yeka_competition' %}",
+                type: "post", // or "get"
+                async: true,
+                data: {
+                    region_id: region_id,
+
+                },
+                success: function (result) {
+                    debugger;
+
+                    let select = document.getElementById("select_competition");
+
+                    select.options[select.options.length] = new Option('Text 1', 'Value1');
+
+                    $('#select_competition').empty();
+
+                    for (let i = 0; i < result.competition.length; i++) {
+                        select.options[select.options.length] = new Option(result.competition[i].name, result.competition[i].id);
+                    }
+
+                    let select2 = document.getElementById("select_company");
+                    $('#select_company').empty();
+
+                    select2.options[select2.options.length] = new Option('Text 1', 'Value1');
+
+                    for (let i = 0; i < result.company.length; i++) {
+                        select2.options[select2.options.length] = new Option(result.company[i].name, result.company[i].id);
+                    }
+                    $("#loading").hide();
+
+                }
+            });
+        }
+
+
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+    </script>
+
+{% endblock %}

@@ -50,3 +50,4 @@ from .NotificationUser import NotificationUser
 from .YekaPurchaseGuarantee import YekaPurchaseGuarantee
 from .YekaProduceAmount import YekaProduceAmount
 from .ProduceAmount import ProduceAmount
+from .ProposalSubYeka import ProposalSubYeka
