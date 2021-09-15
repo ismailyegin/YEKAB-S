@@ -19,6 +19,7 @@ class ProposalInstitutionForm(BaseForm):
                                            'style': 'width: 100%;', 'required': 'required'}),
             'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
-                       'onkeydown': 'return false',}),
+                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
 
         }

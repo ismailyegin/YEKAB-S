@@ -57,11 +57,13 @@ class YekaBusinessBlogForm(ModelForm):
             'indefinite': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                               'style': 'width: 100%; '}),
             'startDate': forms.DateInput(
-                attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
-                       'onkeydown': 'return false', 'required': 'required'}),
-            'completion_date': forms.DateInput(
-                attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
-                       'onkeydown': 'return true','placeholder':'Örn. 01/01/2022'}),
+                attrs={'class': 'form-control  pull-right datepicker6','id':'datepicker4', 'autocomplete': 'off',
+                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
+            'completion_date':forms.DateInput(
+                attrs={'class': 'form-control  pull-right datepicker6','id':'datepicker', 'autocomplete': 'off',
+                       'onkeydown': 'return true', "data-inputmask-alias": "datetime",
+                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
             'explanation': forms.TextInput(
                 attrs={'class': 'form-control', 'rows': '3'}),
             'dependence_parent': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',

@@ -18,12 +18,14 @@ class YekaUserForm(BaseForm):
             'user': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                         'style': 'width: 100%;', 'required': 'required'}),
             'startDate': forms.DateInput(
-                attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
-                       'onkeydown': 'return false', 'required': 'required'}),
+                attrs={'class': 'form-control  pull-right datepicker6', 'id': 'datepicker', 'autocomplete': 'off',
+                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
 
             'finisDate': forms.DateInput(
-                attrs={'class': 'form-control  pull-right', 'id': 'datepicker2', 'autocomplete': 'off',
-                       'onkeydown': 'return false', 'required': 'required'}),
+                attrs={'class': 'form-control  pull-right datepicker6', 'id': 'datepicker2', 'autocomplete': 'off',
+                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
             #
             # 'file': forms.FileInput(attrs={'class': '',
             #                                'style': 'width: 100%;', 'required': 'required'}),

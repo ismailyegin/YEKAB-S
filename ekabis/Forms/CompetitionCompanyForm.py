@@ -1,7 +1,7 @@
 from django import forms
 from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.CompetitionCompany import CompetitionCompany
-from ekabis.models.YekaApplication import YekaApplication
+from ekabis.models.CompetitionApplication import CompetitionApplication
 class CompetitionCompanyForm(BaseForm):
 
     class Meta:

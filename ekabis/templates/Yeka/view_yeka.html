@@ -126,7 +126,11 @@
     </section>
 
 
-
+    <style>
+        .table tr {
+            cursor: pointer;
+        }
+    </style>
 
     <section class="content">
 
@@ -252,8 +256,12 @@
                     {"data": "id"},
                     {
                         "data": null,
-                        render: function (data, type, row) {
-                            return row.definition;
+                        render: function (full, data, type, row) {
+                            let detail = "{% url 'ekabis:view_yeka_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
+                            detail = detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
+                            let html = ''
+                            html = '<a href="' + detail + '">' + full.definition + '</a>'
+                            return html;
 
                         }
                     },

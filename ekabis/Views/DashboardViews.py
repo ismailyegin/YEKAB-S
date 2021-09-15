@@ -4,12 +4,13 @@ from idlelib.help import HelpText
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve
 from django.utils.safestring import mark_safe
 
-from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition, HelpMenu
+from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition, HelpMenu, YekaAccept, Yeka
 from ekabis.models.VacationDay import VacationDay
 from ekabis.serializers.YekaSerializer import YekaSerializer
 from ekabis.services import general_methods
@@ -84,10 +85,13 @@ def return_admin_dashboard(request):
         logout(request)
         return redirect('accounts:login')
 
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
 
     yeka = YekaService(request, None).order_by('-date')
-    res_count=yeka.filter(type='Güneş').count()
-    ges_count=yeka.filter(type='Rüzgar').count()
+    res_count=yeka.filter(type='Rüzgar').count()
+    ges_count=yeka.filter(type='Güneş').count()
     biyo_count=yeka.filter(type='Biyokütle').count()
     jeo_count = yeka.filter(type='Jeotermal').count()
 
@@ -97,14 +101,36 @@ def return_admin_dashboard(request):
     # yeka_json = serializers.serialize("json",yeka, cls=DjangoJSONEncoder)
     # list_yeka=list(yeka)
 
+    yeka_acccepts=YekaAccept.objects.filter(isDeleted=False)
+
+    installedPower_array=[]
+    currentPower_array=[]
+
+
+    for yeka_accept in yeka_acccepts:
+        accept_dict=dict()
+        currentPower_dict=dict()
+        accept_dict['label']=YekaCompetition.objects.get(business=yeka_accept.business).name
+        total=yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
+        currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
+        if total['installedPower__sum'] is None:
+            total['installedPower__sum']=0
+        if currentPower['currentPower__sum'] is None:
+            currentPower['currentPower__sum']=0
+        accept_dict['power']=total['installedPower__sum']
+        currentPower_dict['currentPower']= currentPower['currentPower__sum']
+        currentPower_dict['label']=YekaCompetition.objects.get(business=yeka_accept.business).name
+        currentPower_array.append(currentPower_dict)
+        installedPower_array.append(accept_dict)
+
     return render(request, 'anasayfa/admin.html', {
         'yeka': yeka,
         # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
-        'res_count':res_count,
-        'ges_count':ges_count,
+        'res_count':res_count,'accepts':installedPower_array,
+        'ges_count':ges_count,'current_power':currentPower_array,
         'jeo_count':jeo_count,
-        'biyo_count':biyo_count
+        'biyo_count':biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
 @login_required
 def activeGroup(request, pk):

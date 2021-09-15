@@ -39,7 +39,7 @@ from ekabis.models.Newspaper import Newspaper
 
 from ekabis.models.YekaApplicationFileName import YekaApplicationFileName
 from ekabis.models.YekaApplicationFile import YekaApplicationFile
-from ekabis.models.YekaApplication import YekaApplication
+from ekabis.models.CompetitionApplication import CompetitionApplication
 
 from ekabis.models.Competition import Competition
 from ekabis.models.CompetitionCompany import CompetitionCompany
@@ -1237,7 +1237,7 @@ def YekaApplicationGetService(request, filter):
         with transaction.atomic():
             if filter:
                 filter['isDeleted'] = False
-                return YekaApplication.objects.get(**filter)
+                return CompetitionApplication.objects.get(**filter)
             else:
                 return None
     except Exception as e:
@@ -1249,9 +1249,9 @@ def YekaApplicationService(request, filter):
     try:
         if filter:
             filter['isDeleted'] = False
-            return YekaApplication.objects.filter(**filter)
+            return CompetitionApplication.objects.filter(**filter)
         else:
-            return YekaApplication.objects.filter(isDeleted=False)
+            return CompetitionApplication.objects.filter(isDeleted=False)
     except Exception as e:
         traceback.print_exc()
         pass

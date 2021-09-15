@@ -70,34 +70,50 @@
                         <div class="card-body">
                             <div class="row">
                                 {% for item in yekaBusinessBlogo_form %}
-                                    {% if item.label != 'Tamamlanma Tarihi' %}
-                                        <div class="col-lg-6" id="control-{{ item.name }}">
 
-                                            <div class="form-group">
-
-                                                <label>{{ item.label }}</label>
-                                                {{ item }}
-                                                <label for="" id="label_{{ item.name }}"></label>
-
-                                            </div>
-                                        </div>
-                                    {% endif %}
-
-
-                                {% endfor %}
-                                <div class="col-lg-6" id="control-completion_date"></div>
-
-                                {% for item in contract_form %}
                                     <div class="col-lg-6" id="control-{{ item.name }}">
+
                                         <div class="form-group">
+
                                             <label>{{ item.label }}</label>
                                             {{ item }}
                                             <label for="" id="label_{{ item.name }}"></label>
+
                                         </div>
                                     </div>
+
+
                                 {% endfor %}
 
+                                {% if contract_form %}
+                                    {% for item in contract_form %}
+                                        <div class="col-lg-6" id="control-{{ item.name }}">
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label>
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+
+
+                                {% elif purchase_guarantee_form %}
+
+                                    {% for item in purchase_guarantee_form %}
+                                        <div class="col-lg-6" id="control-{{ item.name }}">
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label>
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <div class="col-lg-6" id="control-completion_date"></div>
+
                             </div>
+
                         </div>
                         <div class="card-body">
                             <button class="btn btn-outline-primary  pull-right" type="submit" style="float:right;">
@@ -116,12 +132,7 @@
             {% if error_messages %}
                 errors_messages({{ error_messages |safe }}
             {% endif %}
-            if ($("#id_status option:selected").val() == '1') {
-                let html = ''
-                html = ' <div class="form-group"><label>Tamamlanma Tarihi</label>{{ yekaBusinessBlogo_form.completion_date }} <label for="" id="label_completion_date"></label></div>';
-                document.getElementById('control-completion_date').innerHTML = html;
 
-            }
 
 
             if ($("#id_indefinite option:selected").val() == 'True') {
@@ -140,27 +151,42 @@
 
 
             });
+            $('#id_type').change(function () {
+                if ($("#id_type option:selected").val() == 'Süre') {
+                    $('#control-businessTime').hide();
+                    $('#control-time_type').hide();
 
-            $('#id_status').change(function () {
-                debugger;
-                console.log('tamamlandı')
-                let html = ''
-                if ($("#id_status option:selected").val() == '1') {
-
-                    $('#id_completion_date').show();
-                    let html = ''
-                    html = ' <div class="form-group"><label>Tamamlanma Tarihi</label>{{ yekaBusinessBlogo_form.completion_date }} <label for="" id="label_completion_date"></label></div>';
-                    document.getElementById('control-completion_date').innerHTML = html;
-
+                } else if ($("#id_type option:selected").val() == 'Miktar') {
+                    $('#control-time').hide();
 
                 } else {
+                    $('#control-time').show();
+                    $('#control-businessTime').show();
+                    $('#control-time_type').show();
 
-                    $('#id_completion_date').hide();
-                    document.getElementById('control-completion_date').innerHTML = '';
                 }
 
 
             });
+
+            function completion_date() {
+                if ($("#id_status option:selected").val() == '1') {
+
+                    $('#control-completion_date').show();
+
+                } else {
+                    $('#control-completion_date').hide();
+                }
+            }
+
+
+            $('#id_status').change(function () {
+                debugger;
+                completion_date()
+
+
+            });
+            completion_date()
 
 
         });
