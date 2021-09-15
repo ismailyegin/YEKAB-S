@@ -101,7 +101,10 @@
         var city;
 
         $(function () {
+
             $("g").click(function (e) {
+
+  $("#loading").show();
 
                 $("#competition_list a").remove();
                 var name = $(this).attr("data-iladi");
@@ -138,7 +141,7 @@
                                     url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].fields.uuid);
                                     html = "<a href='" + url_detail + "' class='list-group-item list-group-item-action'>" + competitions[comp].fields.name + "</a>"
                                     $("#competition_list").prepend(html)
-                                }
+                                }$("#loading").hide();
 
 
                             }
@@ -596,10 +599,6 @@
                                 data: pieData,
                                 options: pieOptions
                             })
-
-
-
-
 
 
                         })

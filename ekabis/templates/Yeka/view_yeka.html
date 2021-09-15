@@ -341,7 +341,9 @@
 
 
             });
+             $("#loading").show();
             table.on('draw.dt', function () {
+
                 var info = table.page.info();
                 table.column(0, {
                     search: 'applied',
@@ -350,6 +352,7 @@
                 }).nodes().each(function (cell, i) {
                     cell.innerHTML = i + 1 + info.start;
                 });
+                $("#loading").hide();
             });
 
 

@@ -707,6 +707,7 @@
             table.destroy();
 
 
+            $("#loading").show();
             $('#competition_table').DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -859,6 +860,7 @@
                 }).nodes().each(function (cell, i) {
                     cell.innerHTML = i + 1 + info.start;
                 });
+                $("#loading").hide();
             });
 
 

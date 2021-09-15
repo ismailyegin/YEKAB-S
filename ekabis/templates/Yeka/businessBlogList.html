@@ -278,13 +278,9 @@
             $('#blocks').DataTable({
                 dom: 'Bfrtip',
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Seçili",
-                            '-1': "Hepsi Seçili"
-                        }
-                    }
+
+                 'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
 
                 lengthMenu: [
