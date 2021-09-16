@@ -1,0 +1,136 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Sistem Ayar Güncelle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Sistem Ayar Güncelle</a></li>
+
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+
+            <div class="card card-secondary">
+                <div class="card-header">
+
+                    <h3 class="card-title">Sistem Ayar Güncelle</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+
+                            <div class="form-group">
+                                <label> {{ settings_form.value.label }}</label>
+                                {{ settings_form.value }}
+                                <label id="label_value"></label>
+
+                            </div>
+                             <div class="form-group">
+                                <label> {{ settings_form.label.label }}</label>
+                                {{ settings_form.label }}
+                                <label id="label_is_active"></label>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label> {{ settings_form.explanation.label }}</label>
+                                {{ settings_form.explanation }}
+                                <label id="label_is_active"></label>
+
+                            </div>
+
+
+                             <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </section>
+
+    <script>
+        $(document).ready(function () {
+            {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
+    </script>
+
+{% endblock %}
+
+

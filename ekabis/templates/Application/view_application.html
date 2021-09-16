@@ -1,0 +1,257 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                       {{ name }} - Başvurular</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <section class="col-lg-12 ">
+                <div class="card-body">
+                    <div class="card card-primary card-outline">
+                         <div class="card-header with-border">
+                            <h3 class="card-title">Başvuru Yapan Firmalar </h3>
+                            {% for item in perm %}
+                                {% if item == 'add_yekabusinessblog_company' %}
+
+
+                                    <a href="{% url "ekabis:add_yekabusinessblog_company" application.business.uuid  application.yekabusinessblog.uuid%}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" title="Yeni Firma Ekle"></i>
+                                    </a>
+
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="card-body">
+                            <table id="kullanicilar" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Firma</th>
+                                    <th>Teklif Fiyatı</th>
+                                    <th>Evraklar</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if application %}
+                                    {% for item in application.companys.all %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ item.company.name}} </td>
+                                        <td>{{ item.price }}</td>
+                                            <td>
+                                                {% for file in item.files.all %}
+
+                                                    {% if file.file %}
+                                                    <a class="btn btn-success" href="{% url 'ekabis:view_applicationfile'  application.business.uuid  application.yekabusinessblog.uuid  file.uuid %}" >
+
+                                                    {{ file.filename.filename }}
+                                                    </a>
+                                                        {% else %}
+                                                        <a class="btn btn-danger" href="{% url 'ekabis:view_applicationfile'  application.business.uuid  application.yekabusinessblog.uuid  file.uuid%}" >
+
+                                                    {{ file.filename.filename }}
+                                                    </a>
+                                                    {% endif %}
+
+
+
+                                            {% endfor %} </td>
+                                        <td> <div class="btn-group">
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown"> İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% for x in perm %}
+                                                        {% if x == 'change_yekabusinessblog_company' %}
+                                                            <a href="{% url 'ekabis:change_yekabusinessblog_company'  item.uuid application.business.uuid application.yekabusinessblog.uuid %}"
+                                                               class="dropdown-item"> <i
+                                                                    class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+
+
+
+                                                </div></td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
+
+
+        </div>
+        <!-- /.row (main row) -->
+
+    </section>
+    {% load  static %}
+    <script>
+        $(function () {
+            $('#kullanicilar').DataTable({
+                dom: 'Bfrtip',
+
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Yeka Firmaları',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
+
+        })
+    </script>
+
+{% endblock %}
+

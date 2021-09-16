@@ -1,0 +1,176 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ aktif }}-
+                        Takvim Ekle</h1>
+                </div>
+                 <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Not Başlıgı Ekle</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+
+                                <label>{{ calender_form.name.label }}</label>
+                                {{ calender_form.name }}
+
+                            </div>
+
+
+
+
+
+                            <div class="form-group">
+                  <label>Renk Seçiniz:</label>
+
+                  <div class="input-group my-colorpicker2 colorpicker-element" data-colorpicker-id="2">
+                    <input type="text" name="color"  required maxlength="100" id="id_color" class="form-control" data-original-title="" title="">
+
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="fas fa-square"></i></span>
+                    </div>
+                  </div>
+                  <!-- /.input group -->
+                </div>
+                        </div>
+
+
+                        <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Not Başlıkları</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <table id="kullanicilar" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tanımı</th>
+                                    <th>Renk</th>
+                                    <th>işlemler</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if calanders.all %}
+                                    {% for calander in calanders %}
+                                        <tr>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ calander.name }} </td>
+                                            <td style="background-color: {{ calander.color }}"> </td>
+                                            <td>incele sil eklenecek</td>
+
+
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+    <script>
+        $(document).ready(function () {
+
+            {% if error_messages %}
+                errors_messages({{ error_messages |safe }}
+            {% endif %}
+        });
+    </script>
+
+{% endblock %}
+
+
+
+
+

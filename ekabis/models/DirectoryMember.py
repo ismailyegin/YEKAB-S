@@ -5,9 +5,10 @@ from ekabis.models.DirectoryCommission import DirectoryCommission
 from ekabis.models.DirectoryMemberRole import DirectoryMemberRole
 from ekabis.models.Person import Person
 from ekabis.models.Communication import Communication
+from ekabis.models.BaseModel import BaseModel
 
 
-class DirectoryMember(models.Model):
+class DirectoryMember(BaseModel):
     person = models.OneToOneField(Person, on_delete=models.CASCADE)
     communication = models.OneToOneField(Communication, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -16,7 +17,6 @@ class DirectoryMember(models.Model):
     role = models.ForeignKey(DirectoryMemberRole, on_delete=models.CASCADE, verbose_name='Üye Rolü')
     commission = models.ForeignKey(DirectoryCommission, on_delete=models.DO_NOTHING, verbose_name='Kurulu')
 
-    oldpk = models.IntegerField(null=True, blank=True)
 
     class Meta:
         default_permissions = ()

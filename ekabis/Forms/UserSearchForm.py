@@ -2,8 +2,10 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 
-class UserSearchForm(ModelForm):
+
+class UserSearchForm(BaseForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'is_active',)
@@ -14,7 +16,7 @@ class UserSearchForm(ModelForm):
                        "style": "text-transform:uppercase"}),
             'last_name': forms.TextInput(
                 attrs={'class': 'form-control ', 'placeholder': ' Soyad', "style": "text-transform:uppercase"}),
-            'email': forms.TextInput(attrs={'class': 'form-control ', 'placeholder': 'Email'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control ', 'placeholder': 'Email'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'iCheck-helper'}),
             # 'password': forms.PasswordInput(attrs={'class': 'form-control ', 'placeholder': 'Şifre',}),
 

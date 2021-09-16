@@ -1,7 +1,9 @@
+from django.contrib.auth.models import User
 from django.db import models
+from ekabis.models.BaseModel import BaseModel
 
 
-class Person(models.Model):
+class Person(BaseModel):
     MALE = 0
     FEMALE = 1
 
@@ -32,6 +34,9 @@ class Person(models.Model):
     )
 
     tc = models.CharField(max_length=120, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, db_column='user', null=True, blank=True)
+    phoneNumber = models.CharField(max_length=11, null=False, blank=False)
+    address = models.TextField(blank=True, null=True, verbose_name='Adres')
     height = models.CharField(max_length=120, null=True, blank=True)
     weight = models.CharField(max_length=120, null=True, blank=True)
     birthplace = models.CharField(max_length=120, null=True, blank=True, verbose_name='Doğum Yeri')
@@ -40,15 +45,11 @@ class Person(models.Model):
     profileImage = models.ImageField(upload_to='profile/', null=True, blank=True, default='profile/user.png',
                                      verbose_name='Profil Resmi')
     birthDate = models.DateField(null=True, blank=True, verbose_name='Doğum Tarihi')
-    bloodType = models.CharField(max_length=128, verbose_name='Kan Grubu', choices=BLOODTYPE, default=AB1)
+    bloodType = models.CharField(max_length=128, verbose_name='Kan Grubu', choices=BLOODTYPE, default=AB1, null=True,
+                                 blank=True)
     gender = models.IntegerField(blank=True, null=True, choices=GENDER_CHOICES)
-    kobilid = models.IntegerField(null=True, blank=True, default=1)
+    failed_login = models.IntegerField(null=True, blank=True, default=0)
+    failed_time = models.DateTimeField(null=True, blank=True,auto_now=True)
 
     class Meta:
         default_permissions = ()
-
-    def save(self, force_insert=False, force_update=False):
-        self.birthplace = self.birthplace.upper()
-        self.motherName = self.motherName.upper()
-        self.fatherName = self.fatherName.upper()
-        super(Person, self).save(force_insert, force_update)

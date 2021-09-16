@@ -1,0 +1,397 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+    {% load static %}
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body errorModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Bölgeyi Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                       Alt Yeka  Ekle({{ parent_competition.name }})</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Alt Yeka  Ekle({{ parent_competition.name }})</a></li>
+
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+
+            <section class="col-lg-12 ">
+
+
+                <div class="card-body">
+
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Alt Yeka</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <form method="post" role="form">
+                                <div class="card-body">
+                                    {% csrf_token %}
+
+                                    <div class="form-group">
+                                        <label> {{ competition_form.name.label }}</label><small
+                                            style="color: red">*</small>
+                                        {{ competition_form.name }}
+                                        <label id="label_name"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label> {{ competition_form.date.label }}</label><small
+                                                    style="color: red">*</small>
+                                                {{ competition_form.date }}
+                                                <label id="label_date"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label> {{ competition_form.capacity.label }}</label><small
+                                                    style="color: red">*</small>
+                                                {{ competition_form.capacity }}
+                                                <label id="label_value"></label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <!-- /.card-body -->
+
+                                <div class="card-footer">
+                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                    </button>
+                                    <small style="color: red">(*) Olan Alanlar zorunludur.</small>
+
+                                </div>
+                            </form>
+                        </div>
+                        {% if competitions %}
+                            <div class="card-body">
+
+                                <table id="region" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Yeka Tanımı</th>
+                                        <th>Kapasite</th>
+                                        <th>İşlemler</th>
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                    {% if competitions.all %}
+                                        {% for competition in competitions %}
+                                            <tr>
+                                                <td>{{ forloop.counter }} </td>
+                                                <td>{{ competition.name }}</td>
+                                                <td>{{ competition.capacity }}</td>
+                                                <td>
+
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-default">İşlemler</button>
+                                                        <button type="button"
+                                                                class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                data-toggle="dropdown">
+                                                        </button>
+                                                        <div class="dropdown-menu" role="menu">
+
+
+                                                            <a onclick="deleteRegion({{ competition.uuid }})"
+                                                               class="dropdown-item" title="Sil" type="button"><i
+                                                                    class="fa fa-edit"></i>Sil</a>
+
+                                                            <a href="{% url "ekabis:view_competitionbusinessblog" competition.uuid %}"
+                                                               class="dropdown-item" title="İş Planı Ekle"
+                                                               type="button"><i class="fa fa-edit"></i>İş Planı</a>
+                                                            <a href="{% url "ekabis:view_yekacompetition_personel" competition.uuid %}"
+                                                               class="dropdown-item" title="Personel Ekle"
+                                                               type="button"><i class="fa fa-plus"></i>Personel Ekle</a>
+                                                            <a href="{% url "ekabis:change_sumcompetition" competition.uuid %}"
+                                                               class="dropdown-item" title="Düzenle " type="button"><i
+                                                                    class="fa fa-edit"></i>Düzenle </a>
+
+                                                        </div>
+                                                    </div>
+
+
+                                            </tr>
+
+                                        {% endfor %}
+                                    {% endif %}
+
+
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        {% endif %}
+                    </div>
+
+
+                </div>
+            </section>
+
+
+        </div>
+
+    </section>
+
+    <script>
+        $(function () {
+
+            {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+
+            $('#region').DataTable({
+                dom: 'Bfrtip',
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+
+                    },
+
+
+                    {
+                        extend: 'colvis',
+
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Bağlantı Bölgeleri',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'language': {
+                    "url": "{% static 'datatable_tr.json' %}"
+                }
+
+            })
+
+        })
+
+        function deleteRegion(id) {
+            var html = ''
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    debugger;
+
+                    $.ajax({
+                        url: "{% url "ekabis:delete_region"%}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            uuid: id
+                        },
+
+                        success: function (result) {
+                            if (result.status === 'Fail') {
+
+
+                                html = result.msg;
+                                debugger;
+                                $(".errorModal").html(html);
+                                $('#modal-error').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                        window.location.replace("{% url "ekabis:add_sumcompetition" parent_competition.uuid %}");
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+                            } else {
+                                html = 'Alt Yeka  Başarıyla Silindi';
+                                $(".successModal").html(html);
+                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+                                        window.location.replace("{% url "ekabis:add_competition" parent_competition.uuid %}");
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+
+                            }
+
+                        },
+
+
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }
+
+
+    </script>
+
+{% endblock %}
+

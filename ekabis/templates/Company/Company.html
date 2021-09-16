@@ -4,184 +4,99 @@
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
     {% endif %}
 
-
-
     <section class="content-header">
 
-
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>{{ aktif }}-
-                            Firma Ekle</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Firma Ekle</a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                        </ol>
-                    </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ aktif }}-
+                        Firma Ekle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
+        </div>
 
-        </section>
+    </section>
     <section class="content">
 
         <form method="post" enctype="multipart/form-data" role="form">
             {% csrf_token %}
             <div class="row">
 
-                <div class="col-lg-6">
-                    <div class="card card-primary">
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Genel Bilgiler</h3>
+                            <h3 class="card-title">Firma Bilgileri</h3>
                         </div>
                         <div class="card-body">
+
+                            {% for item in company_form %}
+                                <div class="form-group">
+                                    {% if item.is_active %}
+                                        <small style="color: red">*</small>
+                                    {% endif %}
+                                    <label>{{ item.label }}</label><br>
+
+                                    {{ item }}
+                                    <label for="" id="label_{{ item.name }}"></label>
+                                </div>
+                            {% endfor %}
                             <div class="form-group">
-                                <label> {{ company_form.isFormal.label }}</label>
-                                {{ company_form.isFormal }}
+                                <label> {{ communication_form.phoneNumber.label }}</label>
+                                {{ communication_form.phoneNumber }}
+                                <label for="" id="label_phoneNumber"></label>
+
+
                             </div>
-
-                            <div class="form-group">
-                                <label> {{ company_form.name.label }}</label>
-                                {{ company_form.name }}
-                            </div>
-                            <div class="form-group">
-                                <label> {{ company_form.degree.label }}</label>
-                                {{ company_form.degree }}
-                            </div>
-
-
-                            <div class="form-group">
-                                <label> {{ company_form.taxOffice.label }}</label>
-                                {{ company_form.taxOffice }}
-                            </div>
-                            <div class="form-group">
-                                <label id="labelTaxNumber"> {{ company_form.taxnumber.label }}</label>
-                                {{ company_form.taxnumber }}
-                            </div>
-                            <div class="form-group">
-                                <label>{{ company_form.sorumlu.label }}</label>
-
-                                {{ company_form.sorumlu }}
-                            </div>
-
-
-{#                            <div class="form-group">#}
-{#                                <label>İş Tanımları</label>#}
-{#                                <select class="form-control select2" name="jobDesription" multiple="multiple "#}
-{#                                        id="multipleSelect"#}
-{#                                        data-placeholder="İş Tanımlarini  Seçiniz">#}
-{#                                    {% for item in  jobDescription %}#}
-{#                                        <option value="{{ item.pk }}">{{ item.name }}</option>#}
-{#                                    {% endfor %}#}
-{##}
-{#                                </select>#}
-{#                            </div>#}
-
 
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Kaydet</button>
-                        </div>
+                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                            </button>
 
+                        </div>
 
                     </div>
 
-                </div>
-                <div class="col-lg-6">
-                    <div class="card card-primary">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">İletişim Bilgileri</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ company_form.mail.label }}</label>
-                                        {{ company_form.mail }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber.label }}</label>
-                                        {{ communication_form.phoneNumber }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber2.label }}</label>
-                                        {{ communication_form.phoneNumber2 }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.country.label }}</label>
-                                        {{ communication_form.country }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.city.label }}</label>
-                                        {{ communication_form.city }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.postalCode.label }}</label>
-                                        {{ communication_form.postalCode }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.address.label }}</label>
-                                        {{ communication_form.address }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Kaydet</button>
-                        </div>
-
-
-                    </div>
 
                 </div>
 
@@ -193,7 +108,7 @@
     </section>
 
 
-    <script>
+    <script type="text/javascript">
 
         $(document).ready(function () {
 
@@ -207,10 +122,19 @@
 
 
             });
+
+            {% if error_messages %}
+
+                let messages ={{ error_messages | safe }}
+                if (messages !== '') {
+                    errors_messages({{ error_messages |safe }})
+                }
+            {% endif %}
         });
 
 
     </script>
+
 
 {% endblock %}
 

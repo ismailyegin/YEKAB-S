@@ -23,11 +23,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     # Admin yönetimi sistem den engelendi
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('yekabis/', include('ekabis.urls')),
 ]
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# handler404 = 'education.Views.ErrorViews.page_not_found'
-# handler500 = 'education.Views.ErrorViews.page_not_found'
+handler500 = 'accounts.views.handler404'
+handler404 = 'accounts.views.handler500'
+

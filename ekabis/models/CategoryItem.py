@@ -1,19 +1,16 @@
-from urllib import request
 
-from random import choices
 from django.db import models
 from ekabis.models.EnumFields import EnumFields
+from ekabis.models.BaseModel import BaseModel
 
 
-class CategoryItem(models.Model):
+class CategoryItem(BaseModel):
     name = models.CharField(blank=False, null=False, max_length=255)
     forWhichClazz = models.CharField(blank=False, null=False, max_length=255)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     branch = models.CharField(max_length=128, choices=EnumFields.BRANCH.value, null=True, blank=True,
                               verbose_name='Seçiniz')
     isFirst = models.BooleanField(null=True, blank=True)
-    creationDate = models.DateTimeField(auto_now_add=True)
-    operationDate = models.DateTimeField(auto_now=True)
 
     def locationSet(self, location, deger):
         deger =  str(location.name)+"/"+deger

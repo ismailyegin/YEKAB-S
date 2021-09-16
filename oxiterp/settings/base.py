@@ -29,7 +29,7 @@ SECRET_KEY = 'j-hgr1ce(!9xi#aaffs%hm@(*(9sfv0shfi!*=md20woa3a23d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.20.10.3', 'localhost', '127.0.0.1','192.168.1.57','0.0.0.0']
+ALLOWED_HOSTS = ['172.20.10.3', 'localhost', '127.0.0.1', '192.168.1.57', '0.0.0.0']
 
 # Application definition
 
@@ -40,11 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # fdk token
-    'rest_framework.authtoken',
-    # own
-
-    'rest_framework',
     'accounts',
     'ekabis',
 
@@ -58,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'ekabis.middleware.repairPage.OnarimSayfasiMiddleware'
 ]
 
 ROOT_URLCONF = 'oxiterp.urls'
@@ -79,9 +74,6 @@ TEMPLATES = [
                 'ekabis.services.general_methods.aktif',
 
                 'ekabis.services.general_methods.getMenu',
-                'ekabis.services.general_methods.getAdminMenu',
-                'ekabis.services.general_methods.getDirectoryMenu',
-                'ekabis.services.general_methods.getPersonelMenu',
                 'ekabis.services.general_methods.getProfileImage',
                 'ekabis.services.general_methods.get_notification',
 
@@ -162,7 +154,6 @@ EMAIL_HOST_PASSWORD = 'kobil2013'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = False
 
-
 STATIC_ROOT = ''
 
 STATIC_URL = '/static/'
@@ -172,7 +163,6 @@ STATICFILES_DIRS = (os.path.join('oxiterp/static'),)
 LOGIN_URL = '/'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
-
 
 DATABASES = {
     'default': {

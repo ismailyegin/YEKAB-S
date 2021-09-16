@@ -1,22 +1,14 @@
 from django import forms
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.Communication import Communication
 from ekabis.models.Country import Country
 
 
-class CommunicationForm(ModelForm):
-    # country = forms.ModelChoiceField(queryset=Country.objects.all(),
-    #                                  to_field_name='name',
-    #                                  empty_label="Seçiniz",
-    #                                  label="Ülke",
-    #                                  initial=Country.objects.filter(name="TÜRKİYE")[0],
-    #                                  # required=True,
-    #                                  widget=forms.Select(
-    #                                      attrs={'class': 'form-control select2 select2-hidden-accessible',
-    #                                             'style': 'width: 100%; '}))
-    class Meta:
+class CommunicationForm(BaseForm):
 
+    class Meta:
         model = Communication
 
         fields = (
@@ -32,28 +24,11 @@ class CommunicationForm(ModelForm):
                   'city': 'İl', }
         widgets = {
 
-            'address': forms.Textarea(
-                attrs={'class': 'form-control ', 'rows': '2', "style": "text-transform:uppercase"}),
-            'addressHome': forms.Textarea(
-                attrs={'class': 'form-control ', 'rows': '2', "style": "text-transform:uppercase"}),
-            'addressJop': forms.Textarea(
-                attrs={'class': 'form-control ', 'rows': '2', "style": "text-transform:uppercase"}),
-
             'phoneNumber': forms.TextInput(
                 attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
+            'city': forms.Select(
+                attrs={'class': 'form-control select2 select2-hidden-accessible',
+                       'style': 'width: 100%; ', 'name': "city", 'id': "id_city"}),
 
-            'phoneNumber2': forms.TextInput(attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
-
-            'postalCode': forms.TextInput(attrs={'class': 'form-control '}),
-
-            'city': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                        'style': 'width: 100%;'}),
-
-            'country': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                           'style': 'width: 100%;'}),
-
-            'phoneHome': forms.TextInput(attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
-
-            'phoneJop': forms.TextInput(attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
 
         }

@@ -47,15 +47,26 @@
     {% endif %}
 
 
-    <section class="content-header">
-        <h1>
-            Yönetim Kurul Üyesi Düzenle
+      <section class="content-header">
 
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i>Yönetim Kurul Üyesi Düzenle</a></li>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Yönetim Kurul Üye Güncelle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
 
-        </ol>
     </section>
     <section class="content">
 
@@ -74,11 +85,16 @@
                                     <div class="form-group">
                                         <label> {{ person_form.profileImage.label }}</label>
                                         {{ person_form.profileImage }}
+                                        <label id="label_profileImage"></label>
+
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> </label>
                                         {{ password_form }}
+                                        <label id="label_password_form"></label>
+
                                     </div>
                                 </div>
 
@@ -103,28 +119,40 @@
                                     <div class="form-group">
                                         <label> {{ user_form.email.label }}</label>
                                         {{ user_form.email }}
+                                        <label id="label_email"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber.label }}</label>
                                         {{ communication_form.phoneNumber }}
+                                        <label id="label_phoneNumber"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.phoneNumber2.label }}</label>
                                         {{ communication_form.phoneNumber2 }}
+                                        <label id="label_phoneNumber2"></label>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label> {{ communication_form.country.label }}</label>
                                         {{ communication_form.country }}
+                                        <label id="label_country"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.city.label }}</label>
                                         {{ communication_form.city }}
+                                        <label id="label_city"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ communication_form.postalCode.label }}</label>
                                         {{ communication_form.postalCode }}
+                                        <label id="label_postalCode"></label>
+
                                     </div>
                                 </div>
                             </div>
@@ -133,6 +161,8 @@
                                     <div class="form-group">
                                         <label> {{ communication_form.address.label }}</label>
                                         {{ communication_form.address }}
+                                        <label id="label_address"></label>
+
                                     </div>
                                 </div>
                             </div>
@@ -154,32 +184,44 @@
                                     <div class="form-group">
                                         <label> {{ user_form.first_name.label }}</label>
                                         {{ user_form.first_name }}
+                                        <label id="label_first_name"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.motherName.label }}</label>
                                         {{ person_form.motherName }}
+                                        <label id="label_motherName"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthplace.label }}</label>
                                         {{ person_form.birthplace }}
+                                        <label id="label_birthplace"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label style="padding-top: 16px"> {{ person_form.bloodType.label }}</label>
                                         {{ person_form.bloodType }}
+                                        <label id="label_bloodType"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ member_form.role.label }}</label>
                                         {{ member_form.role }}
+                                        <label id="label_role"></label>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label> {{ member_form.commission.label }}</label>
                                         {{ member_form.commission }}
+                                        <label id="label_commission"></label>
+
                                     </div>
 
                                 </div>
@@ -190,28 +232,38 @@
                                     <div class="form-group">
                                         <label> {{ person_form.tc.label }}</label>
                                         {{ person_form.tc }}
+                                        <label id="label_tc"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ user_form.last_name.label }}</label>
                                         {{ user_form.last_name }}
+                                        <label id="label_last_name"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.fatherName.label }}</label>
                                         {{ person_form.fatherName }}
+                                        <label id="label_fatherName"></label>
+
                                     </div>
 
 
                                     <div class="form-group">
                                         <label> {{ person_form.birthDate.label }}</label>
                                         {{ person_form.birthDate }}
+                                        <label id="label_birthDate"></label>
+
                                     </div>
                                     <div class="form-group">
                                         <label> {{ person_form.gender.label }}</label>
                                         {{ person_form.gender }}
+                                        <label id="label_gender"></label>
+
                                     </div>
 
                                 </div>

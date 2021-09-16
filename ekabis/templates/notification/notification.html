@@ -47,100 +47,76 @@
     {% endif %}
 
     <section class="content">
-
-        <!-- /.row -->
-        <!-- Main row --><div class="container">
-        <div class="row justify-content-md-center">
-
-
-            <div class=" col col-md-auto ">
+        <div class="row">
+            <section class="col-lg-12 ">
+                <div class="card-body">
 
 
-                {% if notification.all %}
-                    {% for notification in notification %}
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title"> Bildirimler </h3>
+                        </div>
+
+                        <div class="card-body">
+                            <table id="company" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Başlık</th>
+                                    <th>İçerik</th>
+                                    <th>Oluşturulma Tarihi</th>
+                                    <th>Okunma Tarihi</th>
 
 
+                                </tr>
+                                </thead>
+                                <tbody>
 
+                                {% for item in notifications %}
+                                    {% if  item.is_read %}
+                                        <tr style="color: #a3a3a3">
 
-                            {% if notification.tableName == "personel" %}
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ item.notification.title }}</td>
 
-                                <a class="metin"
-                                   href="{% url "sbs:personel-duzenle" pk=notification.entityId %}?notification={{ notification.pk }}">
-                                    <div class="box box-default">
-                                            <div class="box-header with-border">
-                                                <p class="box-title pull-right">{{notification.creationDate }}</p>
-                                            </div>
-                                            <div class="box-body">
-                                               <i class="fa fa-book text-yellow"></i> {{ notification.notification }}
-
-                                                {% if notification.is_show == False %}
-                                            <small class="  pull-right"><i
-                                                    class="fa fa-circle text-primary"></i></small>
-                                        {% endif %}
-                                            </div>
-
-                                        </div>
-
-                                </a>
-                            {% elif notification.tableName == "proje" %}
-
-                                {% if user.groups.all.0.name == "Personel" %}
-                                    <a href="{% url "sbs:proje-incele-personel" pk=notification.entityId %}?notification={{ notification.pk }}">
-                                        <div class="box box-default">
-                                            <div class="box-header with-border">
-                                                <p class="box-title pull-right">{{notification.creationDate }}</p>
-                                            </div>
-                                            <div class="box-body">
-                                               <i class="fa fa-book text-yellow"></i> {{ notification.notification }}
-
-                                                {% if notification.is_show == False %}
-                                            <small class="  pull-right"><i
-                                                    class="fa fa-circle text-primary"></i></small>
-                                        {% endif %}
-                                            </div>
-
-                                        </div>
-                                    </a>
-
-                                {% else %}
-                                    <a href="{% url "sbs:proje-duzenle" pk=notification.entityId %}?notification={{ notification.pk }}">
-
-                                        <div class="box box-default">
-                                            <div class="box-header with-border">
-                                                <p class="box-title pull-right">{{notification.creationDate }}</p>
-                                            </div>
-                                            <div class="box-body">
-                                               <i class="fa fa-book text-yellow"></i> {{ notification.notification }}
-
-                                                {% if notification.is_show == False %}
-                                            <small class="  pull-right"><i
-                                                    class="fa fa-circle text-primary"></i></small>
-                                        {% endif %}
-                                            </div>
-
-                                        </div>
+                                            <td>{{ item.notification.description | safe }}</td>
+                                            <td>{{ item.notification.creationDate.date }}</td>
+                                            <td>{{ item.read_date }}</td>
 
 
 
+                                        </tr>
+                                    {% else %}
+                                        <tr>
 
-                                    </a>
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ item.notification.title }}</td>
 
-                                {% endif %}
+                                            <td>{{ item.notification.description | safe }}</td>
+                                            <td>{{ item.notification.creationDate }}</td>
+                                            <td>-----</td>
 
-                            {% else %}
 
-                                {{ break }}
+                                        </tr>
+                                    {% endif %}
 
-                            {% endif %}
+                                {% endfor %}
 
-                    {% endfor %}
-                {% endif %}
 
-            </div>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+            </section>
 
 
         </div>
-    </div>
+        <!-- /.row (main row) -->
 
     </section>
 

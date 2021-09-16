@@ -1,0 +1,257 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-warning"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Firma Kullanıcısı Ekle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form" name="personForm" id="personForm">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Firma Kullanıcı Bilgileri</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <div class="form-group">
+                                        <label> {{ person_form.profileImage.label }}</label>
+                                        {{ person_form.profileImage }}
+                                        <label for="" id="label_profileImage"></label>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6">
+
+                                    <div class="form-group">
+                                        <label> {{ person_form.tc.label }}</label>
+                                        {{ person_form.tc }}
+                                        <label for="" id="label_tc"></label>
+
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label> {{ user_form.first_name.label }}</label>
+                                        {{ user_form.first_name }}
+                                        <label for="" id="label_first_name"></label>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label> {{ user_form.last_name.label }}</label>
+                                        {{ user_form.last_name }}
+                                        <label id="label_last_name"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ user_form.email.label }}</label>
+                                        {{ user_form.email }}
+                                        <label for="" id="label_email"></label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-6">
+
+
+                                    <div class="form-group">
+                                        <label> {{ communication_form.phoneNumber.label }}</label>
+                                        {{ communication_form.phoneNumber }}
+                                        <label for="" id="label_phoneNumber"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ company_user_form.authorization_period_start.label }}</label>
+                                        {{ company_user_form.authorization_period_start }}
+                                        <label for="" id="label_phoneNumber"></label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label> {{ company_user_form.authorization_period_finish.label }}</label>
+                                        {{ company_user_form.authorization_period_finish }}
+                                        <label for="" id="label_phoneNumber"></label>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-outline-primary" type="button" onclick="tckimlikkontorolu()"
+                                    style="float: right">Kaydet
+                            </button>
+                            <small style="color: red">(*)Olan Alanlar zorunludur.</small>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+
+    </section>
+
+    <script>
+        function tckimlikkontorolu() {
+            debugger;
+            // geleni her zaman String'e çevirelim!
+            tcno = String($('#tc').val());
+
+            // tcno '0' karakteri ile başlayamaz!
+            if (tcno.substring(0, 1) === '0') {
+                alert('T.C Degerinin ilk degeri 0 olamaz ');
+                document.getElementById("tc").style.color = "red";
+                return false;
+
+
+            }
+            // Tcno 11 karakter uzunluğunda olmalı!
+            if (tcno.length !== 11) {
+                debugger;
+                alert('Tc 11 degerden  küçük olamaz');
+                document.getElementById("tc").style.borderStyle = "red";
+
+                return false;
+
+            }
+
+            /**
+             Aşağıdaki iki kontrol için toplamları hazır ediyoruz
+             - o anki karakteri sayıya dönüştür
+             - tek haneleri ayrıca topla (1,3,5,7,9)
+             - çift haneleri ayrıca topla (2,4,6,8)
+             - bütün haneleri ayrıca topla
+             **/
+            var ilkon_array = tcno.substr(0, 10).split('');
+            var ilkon_total = hane_tek = hane_cift = 0;
+
+            for (var i = j = 0; i < 9; ++i) {
+                j = parseInt(ilkon_array[i], 10);
+                if (i & 1) { // tek ise, tcnin çift haneleri toplanmalı!
+                    hane_cift += j;
+                } else {
+                    hane_tek += j;
+                }
+                ilkon_total += j;
+            }
+
+            /**
+             KONTROL 1:
+             1. 3. 5. 7. ve 9. hanelerin toplamının 7 katından,
+             2. 4. 6. ve 8. hanelerin toplamı çıkartıldığında,
+             elde edilen sonucun Mod10'u bize 10. haneyi verir
+             **/
+            if ((hane_tek * 7 - hane_cift) % 10 !== parseInt(tcno.substr(-2, 1), 10)) {
+                alert('Lütfen geçerli bir T.c numarasi giriniz.')
+                return false;
+            }
+
+            /**
+             KONTROL 2:
+             1. 2. 3. 4. 5. 6. 7. 8. 9. ve 10. hanelerin toplamından
+             elde edilen sonucun Mod10'u bize 11. haneyi vermelidir.
+             NOT: ilk 9 haneyi üstteki FOR döndüsünde zaten topladık!
+             **/
+            ilkon_total += parseInt(ilkon_array[9], 10);
+            if (ilkon_total % 10 !== parseInt(tcno.substr(-1), 10)) {
+                alert('Lütfen geçerli bir T.c numarasi giriniz.')
+                return false;
+            }
+
+            debugger;
+            document.getElementById("personForm").submit();
+
+
+        }
+
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
+    </script>
+{% endblock %}
+
+
+

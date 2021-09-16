@@ -1,14 +1,15 @@
 from django import forms
 from django.forms import ModelForm
 
+from ekabis.Forms.BaseForm import BaseForm
 from ekabis.models.CategoryItem import CategoryItem
 
 
-class CategoryItemForm(ModelForm):
+class CategoryItemForm(BaseForm):
     class Meta:
         model = CategoryItem
         fields = ('name', 'parent', 'branch', 'isFirst')
-        labels = {'name': 'Tanımı', 'branch': 'Branş', 'isFirst': 'İlk Kuşak mı ?', 'parent': 'Üst Kuşak'}
+        labels = {'name': 'Tanımı *', 'branch': 'Branş', 'isFirst': 'İlk Kuşak mı ?', 'parent': 'Üst Kuşak'}
         widgets = {
             'name': forms.TextInput(
                 attrs={'class': 'form-control ', 'required': 'required'}),

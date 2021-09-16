@@ -1,8 +1,6 @@
-import enum
-
 from django.db import models
-
-class Claim(models.Model):
+from ekabis.models.BaseModel import BaseModel
+class Claim(BaseModel):
     WAITED = 'Beklemede'
     APPROVED = 'Onaylandı'
     PROPOUND = 'İşlem Devam Ediliyor'
@@ -37,8 +35,6 @@ class Claim(models.Model):
         (AZONEMLİ, 'AZ ÖNEMLİ'),
     )
 
-    creationDate = models.DateTimeField(auto_now_add=True)
-    modificationDate = models.DateTimeField(auto_now=True)
     # baslık
     title = models.CharField(blank=False, null=False, max_length=1000)
     # proje durumu

@@ -13,7 +13,7 @@ class DisabledUserForm(ModelForm):
                 attrs={'class': 'form-control ', 'value': '', 'readonly': 'readonly', 'required': 'required'}),
             'last_name': forms.TextInput(
                 attrs={'class': 'form-control ', 'required': 'required', 'readonly': 'readonly'}),
-            'email': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required', 'readonly': 'readonly'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control ', 'required': 'required', 'readonly': 'readonly'}),
 
             'is_active': forms.CheckboxInput(attrs={'class': 'iCheck-helper', 'readonly': 'readonly'}),
 

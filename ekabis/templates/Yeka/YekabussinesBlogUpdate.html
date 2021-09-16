@@ -1,0 +1,227 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        {{ name }} ({{ yekaBusinessBlogo_form.instance.businessblog.name }}) Güncelle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+        <form method="post" enctype="multipart/form-data" role="form">
+
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline ">
+                        <div class="card-header with-border">
+                            <h3 class="card-title"> İş Bloğu Güncelle </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for item in yekaBusinessBlogo_form %}
+
+                                    <div class="col-lg-6" id="control-{{ item.name }}">
+
+                                        <div class="form-group">
+
+                                            <label>{{ item.label }}</label>
+                                            {{ item }}
+                                            <label for="" id="label_{{ item.name }}"></label>
+
+                                        </div>
+                                    </div>
+
+
+                                {% endfor %}
+
+                                {% if contract_form %}
+                                    {% for item in contract_form %}
+                                        <div class="col-lg-6" id="control-{{ item.name }}">
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label>
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+
+
+                                {% elif purchase_guarantee_form %}
+
+                                    {% for item in purchase_guarantee_form %}
+                                        <div class="col-lg-6" id="control-{{ item.name }}">
+                                            <div class="form-group">
+                                                {% if item.name == 'time' %}
+                                                    <label>{{ item.label }}</label>
+
+                                                    {{ item }} <small>Var Olan Süre Gün Olarak Gösterilmektedir.</small>
+                                                {% else %}
+                                                    <label>{{ item.label }}</label>
+
+                                                    {{ item }}
+                                                {% endif %}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <div class="col-lg-6" id="control-completion_date"></div>
+
+                            </div>
+
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-outline-primary  pull-right" type="submit" style="float:right;">
+                                Kaydet
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </section>
+    <script>
+        $(document).ready(function () {
+
+            {% if error_messages %}
+                errors_messages({{ error_messages |safe }}
+            {% endif %}
+
+            if ($("#id_type option:selected").val() == 'Miktar') {
+                $('#control-time').hide();
+
+            }
+
+            if ($("#id_indefinite option:selected").val() == 'True') {
+                $('#control-businessTime').hide();
+                $('#control-time_type').hide();
+            }
+
+            $('#id_indefinite').change(function () {
+                if ($("#id_indefinite option:selected").val() == 'True') {
+                    $('#control-businessTime').hide();
+                    $('#control-time_type').hide();
+                } else {
+                    $('#control-businessTime').show();
+                    $('#control-time_type').show();
+                }
+
+
+            });
+            $('#id_type').change(function () {
+                if ($("#id_type option:selected").val() == 'Miktar') {
+                    $('#control-time').hide();
+
+                } else {
+                    $('#control-time').show();
+
+                }
+
+
+            });
+
+            function completion_date() {
+                if ($("#id_status option:selected").val() == '1') {
+
+                    $('#control-completion_date').show();
+
+                } else {
+                    $('#control-completion_date').hide();
+                }
+            }
+
+
+            $('#id_status').change(function () {
+                debugger;
+                completion_date()
+
+
+            });
+            completion_date()
+
+
+        });
+        $("#id_dependence_parent").change(function () {
+
+            $.ajax({
+                url: "{% url "ekabis:view_dependence"  %}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    'pk': $("#id_dependence_parent").val(),
+                    'business': "{{ competition.business.uuid }}",
+                    isActive: 'False'
+                },
+                success: function (result) {
+                    debugger;
+                    if (result.status == 'Success') {
+                        if ((result.finishdate != null) && ($("#id_startDate").val() == "")) {
+                            $("#id_startDate").val(result.finishdate);
+                        } else {
+                            console.log('finishdate none')
+                        }
+
+                    } else {
+                        console.log('error');
+                    }
+                }
+            });
+
+
+        });
+    </script>
+
+{% endblock %}

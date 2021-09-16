@@ -10,9 +10,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">İşlem Başarılı</h4>
+
                 </div>
                 <div class="modal-body successModal">
                     ...
@@ -28,62 +29,18 @@
     </div>
 
 
-    <div class="modal modal-danger modal-danger-food fade in" id="modal-success-danger" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">İşlem Başarısız</h4>
-                </div>
-                <div class="modal-body successModalD">
-                    ...
-                </div>
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Uyarı</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
-                            data-dismiss="modal">Evet
-                    </button>
-                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
 
-    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-active"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Uyarı</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
+                    <p>Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -96,32 +53,6 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
-
-    <div class="modal modal-warning fade in deneme223" tabindex="-1" role="dialog" id="modal-mail"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Uyarı</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Kullanıcı giriş bilgilerini göndermek istediğinizden emin misiniz ?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf12"
-                            data-dismiss="modal">Evet
-                    </button>
-                    <button type="button" class="btn btn-outline" id="btn-close2">Hayır</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
 
 
     {% if messages %}
@@ -151,7 +82,7 @@
 
                 <div class="alert alert-success alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Başarılı!</h4>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
 
 
                     <ul class="messages">
@@ -169,33 +100,27 @@
 
     {% endif %}
 
+ <section class="content-header">
 
-
-
-
-
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-
-
-            <div class="modal-content" style="height:fit-content">
-
-                <div class="modal-header" style="background-color:#3c8dbc ">
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                       </h1>
                 </div>
-                <div class="modal-body bodys">
-                    ...
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
         </div>
-    </div>
 
-
-
+    </section>
     <section class="content">
 
 
@@ -275,18 +200,22 @@
                         <div class="card-header with-border">
                             <h3 class="card-title">Destek ve Talep</h3>
                         </div>
+                        {% for item in perm %}
+                            {% if item == 'add_claim' %}
+                                <div class="card-header with-border">
 
-                        <div class="card-header with-border">
-                            <div class="btn-group">
-                                {% if aktif == "Admin" or aktif == "Arsiv" %}
-                                    <a href="{% url "ekabis:add_claim" %}"
-                                       type="button" class="btn btn-success"><i
-                                            class="fa fa-edit"></i> Destek Talep Ekle
-                                    </a>
-                                {% endif %}
-                            </div>
+                                    <div class="btn-group">
 
-                        </div>
+                                        <a href="{% url "ekabis:add_claim" %}"
+                                           type="button" class="btn btn-success"><i
+                                                class="fa fa-edit"></i> Destek Talep Ekle
+                                        </a>
+
+                                    </div>
+
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                         <div class="card-body">
                             <table id="kullanicilar" class="table table-bordered table-hover">
                                 <thead>
@@ -317,28 +246,32 @@
                                             <td>{{ log.creationDate }}</td>
                                             <td>{{ log.modificationDate }}</td>
                                             <td>{{ log.title }} </td>
-
                                             <td>{{ log.definition }}  </td>
                                             <td>{{ log.status }} </td>
-
                                             <td>{{ log.user.first_name }} {{ log.user.last_name }}</td>
-
                                             <td>{{ log.importanceSort }}</td>
-                                            {% if aktif == 'Admin' %}
-                                                <td>
-                                                    <div class="btn-group">
 
-                                                        <a href="{% url "ekabis:change_claim" log.pk %}"
-                                                           type="button" class="btn btn-warning"><i
-                                                                class="fa fa-edit"></i>İncele
-                                                        </a>
-                                                        <a href="{% url "ekabis:delete_claim" log.pk %}"
-                                                           type="button" class="btn btn-danger"><i
-                                                                class="fa fa-edit"></i>Sil
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            {% endif %}
+                                            <td>
+                                                <div class="btn-group">
+                                                    {% for item in perm %}
+                                                        {% if item == 'change_claim' %}
+                                                            <a href="{% url "ekabis:change_claim" log.uuid %}"
+                                                               type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-edit"></i>İncele
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% for item in perm %}
+                                                        {% if item == 'delete_claim' %}
+                                                            <a class="btn btn-danger"
+                                                               data-toggle="modal"
+                                                               onclick=deleteClaim('{{ log.uuid }}')><i
+                                                                    class="fa fa-trash"></i>Sil</a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+
 
                                         </tr>
 
@@ -393,7 +326,7 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
 
 
                     },
@@ -407,7 +340,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -415,7 +348,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                     },
                     {
                         text: 'Json',
@@ -444,6 +377,45 @@
 
         })
 
+    </script>
+        <script>
+        function deleteClaim(id) {
+            debugger;
+            console.log(id);
+            var html = ''
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:delete_claim" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid: id,
+                        },
+                        success: function (result) {
+
+                            html = 'Destek Talebi Başarıyla Silindi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:view_claim" %}");
+
+                                });
+
+                            }).modal('show');
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-active').modal('hide');
+            });
+
+        }
     </script>
 {% endblock %}
 

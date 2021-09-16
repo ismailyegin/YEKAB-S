@@ -2,14 +2,14 @@
 {% block content %}
 
 
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">İşlem Başarılı</h4>
+
                 </div>
                 <div class="modal-body successModal">
                     ...
@@ -24,23 +24,24 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Uyarı</h4>
+
                 </div>
                 <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz?</p>
+                    <p>Kurulu silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
                             data-dismiss="modal">Evet
                     </button>
-                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -95,6 +96,27 @@
 
     {% endif %}
 
+  <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Kurul Listesi</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
     <section class="content">
 
         <!-- /.row -->
@@ -110,7 +132,7 @@
 
                     <div class="card card-primary">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Kurullar</h3>
+                            <h3 class="card-title">Kurul Listesi</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -153,16 +175,26 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ commission.name }}</td>
                                         <td>
-                                            <div class="btn-group">
-                                                <a href="{% url "ekabis:change_directorycommission" commission.pk %}"
-                                                   type="button" class="btn btn-warning"><i
-                                                        class="fa fa-edit"></i>Güncelle
-                                                </a>
+                                            {% for item in perm %}
+                                                {% if item == 'change_directorycommission' %}
+                                                    <div class="btn-group">
+                                                        <a href="{% url "ekabis:change_directorycommission" commission.uuid %}"
+                                                           type="button" class="btn btn-warning"><i
+                                                                class="fa fa-edit"></i>Güncelle
+                                                        </a>
 
-                                                <a class="btn btn-danger"
-                                                   data-toggle="modal" onclick=deleteClubRole({{ commission.pk }})><i
-                                                        class="fa fa-trash"></i>Sil</a>
-                                            </div>
+                                                    </div>
+
+                                                {% elif item == 'delete_directorycommission' %}
+                                                    <div class="btn-group">
+                                                        <a class="btn btn-danger"
+                                                           data-toggle="modal"
+                                                           onclick=deleteClubRole('{{ commission.uuid }}')><i
+                                                                class="fa fa-trash"></i>Sil</a>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+
                                         </td>
 
                                     </tr>
@@ -221,7 +253,7 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
 
 
                     },
@@ -235,7 +267,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -243,7 +275,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                     },
                     {
                         text: 'Json',
@@ -276,17 +308,20 @@
 
     <script>
         function deleteClubRole(id) {
-
+            debugger;
             console.log(id);
             var html = ''
-            $("#modal-danger").on("shown.bs.modal", function (e) {
-                $("#btn-conf").click(function () {
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    debugger;
+
                     $.ajax({
-                        url: "{% url "ekabis:delete_directorycommission" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:delete_directorycommission"%}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            isActive: 'False'
+                            isActive: 'False',
+                            uuid: id
                         },
                         success: function (result) {
 
@@ -315,7 +350,16 @@
         }
     </script>
 
+    <script>
+        $(document).ready(function () {
 
+            debugger;
+            let messages = {{ error_messages | safe }}
+            if (messages !== '') {
+                errors_messages({{ error_messages |safe }})
+            }
+        });
+    </script>
 
 
 

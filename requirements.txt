@@ -1,6 +1,7 @@
-django
+Django
 dj-database-url
-djangorestframework
-django-rest-framework
 pillow
-psycopg2
+bs4
+unicode_tr
+djangorestframework
+requests

@@ -1,0 +1,559 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Uyarı</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+
+            <div class="modal-content" style="height:fit-content">
+
+                <div class="modal-header" style="background-color:#3c8dbc ">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body bodys">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Grup İzin</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+    <section class="content">
+
+        <div class="row">
+
+            <section class="col-lg-12 ">
+
+                <div class="card">
+
+                    <div class="card-body">
+                        <form method="post" role="form">
+
+                            {% csrf_token %}
+                            <div class="row">
+                            {#                            yeka#}
+                                <div class="col-md-6">
+                                    <div class="card card-outline card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Yeka İzinleri</h3>
+
+                                            <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_yeka">
+
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body" id="yeka">
+
+                                            {% for perm in  permGroup %}
+
+                                                {% if perm.permissions.group == "Yeka" %}
+                                                    <div class="custom-control custom-switch form-control-lg">
+                                                        {% if perm.is_active %}
+
+                                                            <input type="checkbox" checked class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label"
+                                                               for="item-{{ perm.pk }}">{{ perm.permissions.name }}</label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                                {#                            personel#}
+                                <div class="col-md-6">
+                                    <div class="card card-outline card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Personel İzinleri</h3>
+
+                                            <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_employee">
+
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body" id="employee">
+
+                                            {% for perm in  permGroup %}
+
+                                                {% if perm.permissions.group == "Personel" %}
+                                                    <div class="custom-control custom-switch form-control-lg">
+                                                        {% if perm.is_active %}
+
+                                                            <input type="checkbox" checked class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label"
+                                                               for="item-{{ perm.pk }}">{{ perm.permissions.name }}</label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                                {#                            firma#}
+                                <div class="col-md-6">
+                                    <div class="card card-outline card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Firma İzinleri</h3>
+
+                                            <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_company">
+
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body" id="company">
+
+                                            {% for perm in  permGroup %}
+
+                                                {% if perm.permissions.group == "Firma" %}
+                                                    <div class="custom-control custom-switch form-control-lg">
+                                                        {% if perm.is_active %}
+
+                                                            <input type="checkbox" checked class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label"
+                                                               for="item-{{ perm.pk }}">{{ perm.permissions.name }}</label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+
+                                {#                            Ayarlar#}
+                                <div class="col-md-6">
+                                    <div class="card card-outline card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Ayarlar</h3>
+
+                                            <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_settings">
+
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body" id="settings">
+
+                                            {% for perm in  permGroup %}
+
+                                                {% if perm.permissions.group == "Ayarlar" %}
+                                                    <div class="custom-control custom-switch form-control-lg">
+                                                        {% if perm.is_active %}
+
+                                                            <input type="checkbox" checked class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label"
+                                                               for="item-{{ perm.pk }}">{{ perm.permissions.name }}</label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                                {#                            Digeleri#}
+                                <div class="col-md-6">
+                                    <div class="card card-outline card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Digerleri</h3>
+
+
+                                            <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_other">
+
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body" id="other">
+
+                                            {% for perm in  permGroup %}
+
+                                                {% if perm.permissions.group == "Digerleri" %}
+                                                    <div class="custom-control custom-switch form-control-lg">
+                                                        {% if perm.is_active %}
+
+                                                            <input type="checkbox" checked class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label"
+                                                               for="item-{{ perm.pk }}">{{ perm.permissions.name }}</label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                                {#                            Anasayfa#}
+                                <div class="col-md-6">
+                                    <div class="card card-outline card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Anasayfa</h3>
+
+                                            <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_mainpage">
+
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body" id="mainpage">
+
+                                            {% for perm in  permGroup %}
+
+                                                {% if perm.permissions.group == "Anasayfa" %}
+                                                    <div class="custom-control custom-switch form-control-lg">
+                                                        {% if perm.is_active %}
+
+                                                            <input type="checkbox" checked class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label"
+                                                               for="item-{{ perm.pk }}">{{ perm.permissions.name }}</label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                                {#                            test #}
+                                <div class="col-md-6"  style="display: none;">
+                                    <div class="card card-outline card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Developer Area</h3>
+
+                                            <div class="card-tools">
+                                                <label>Hepsini Seç</label>
+                                                 <input type="checkbox"  id="checkbox_developer">
+
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body" id="developer">
+
+                                            {% for perm in  permGroup %}
+
+                                                {% if not  perm.permissions.group %}
+                                                    <div class="custom-control custom-switch form-control-lg">
+                                                        {% if perm.is_active %}
+
+                                                            <input type="checkbox" checked class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   id="item-{{ perm.pk }}"
+                                                                   name="{{ perm.pk }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label"
+                                                               for="item-{{ perm.pk }}">{{ perm.permissions.name }}</label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                            </div>
+
+
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+    </section>
+
+
+    </div>
+    <!-- /.row (main row) -->
+
+    </section>
+
+    <script>
+        $(function () {
+
+             $('#checkbox_yeka').change(function (){
+
+                 if(this.checked) {
+                     $('#yeka input').prop('checked', true);
+                 }else{
+                     $('#yeka input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_settings').change(function (){
+
+                 if(this.checked) {
+                     $('#settings input').prop('checked', true);
+                 }else{
+                     $('#settings input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_mainpage').change(function (){
+
+                 if(this.checked) {
+                     $('#mainpage input').prop('checked', true);
+                 }else{
+                     $('#mainpage input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_employee').change(function (){
+
+                 if(this.checked) {
+                     $('#employee input').prop('checked', true);
+                 }else{
+                     $('#employee input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_company').change(function (){
+
+                 if(this.checked) {
+                     $('#company input').prop('checked', true);
+                 }else{
+                     $('#company input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_other').change(function (){
+
+                 if(this.checked) {
+                     $('#other input').prop('checked', true);
+                 }else{
+                     $('#other input').prop('checked', false);
+                 }
+
+
+             })
+             $('#checkbox_developer').change(function (){
+
+                 if(this.checked) {
+                     $('#developer input').prop('checked', true);
+                 }else{
+                     $('#developer input').prop('checked', false);
+                 }
+
+
+             })
+
+
+        })
+    </script>
+{% endblock %}
+
+
+</html>

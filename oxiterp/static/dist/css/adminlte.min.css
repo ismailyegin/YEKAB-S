@@ -15707,7 +15707,7 @@ body.text-sm .control-sidebar {
 }
 
 .dropdown-icon::after {
-    margin-left: 0
+    margin-left: 3px
 }
 
 .dropdown-menu-lg {

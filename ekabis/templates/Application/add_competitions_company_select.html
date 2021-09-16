@@ -1,0 +1,352 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <section class="content-header">
+
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Basvuru Firma Ekle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Firma Ekle</h3>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-3">
+
+
+                                        <label for="select_yeka"> Yeka</label>
+                                        <select class="form-control select2 select2-hidden-accessible"
+                                                style="width: 100%;" required="required" maxlength="100"
+                                                aria-label="Default select example"
+                                                name="select_yeka" id="select_yeka"></select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="select_yeka"> Baglantı Bölgesi</label>
+                                        <select class="form-control select2 select2-hidden-accessible"
+                                                style="width: 100%;" required="required" maxlength="100"
+                                                aria-label="Default select example"
+                                                name="select_region" id="select_region"></select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="select_yeka form-control select2 select2-hidden-accessible">
+                                            Yarışma</label>
+                                        <select class="form-control select2 select2-hidden-accessible"
+                                                style="width: 100%;" required="required" maxlength="100"
+                                                aria-label="Default select example"
+                                                name="select_competition" id="select_competition"></select>
+
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <label for="select_yeka form-control select2 select2-hidden-accessible">
+                                            Firma</label>
+                                        <select class="form-control select2 select2-hidden-accessible"
+                                                style="width: 100%;" required="required" maxlength="100"
+                                                aria-label="multiple select example"
+                                                name="select_company" id="select_company"></select>
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="card-footer">
+                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+        </form>
+
+
+    </section>
+    {% load static %}
+
+    <script>
+        var yeka, competition, region;
+        $(document).ready(function () {
+            myJSONList = (("{{yekas}}").replace(/&(l|g|quo)t;/g, function (a, b) {
+                return {
+                    l: '<',
+                    g: '>',
+                    quo: '"'
+                }[b];
+            }));
+
+            yeka = JSON.parse(myJSONList);
+
+            myJSONList = (("{{regions}}").replace(/&(l|g|quo)t;/g, function (a, b) {
+                return {
+                    l: '<',
+                    g: '>',
+                    quo: '"'
+                }[b];
+            }));
+
+            region = JSON.parse(myJSONList);
+            myJSONList = (("{{competitions}}").replace(/&(l|g|quo)t;/g, function (a, b) {
+                return {
+                    l: '<',
+                    g: '>',
+                    quo: '"'
+                }[b];
+            }));
+
+            competition = JSON.parse(myJSONList);
+            $('#select_yeka').empty()
+            for (var item in yeka) {
+                $('#select_yeka').prepend("<option value='" + yeka[item].pk + "'>" + yeka[item].fields.definition + "</option>");
+
+            }
+
+            $('#select_yeka').change(function (e) {
+
+                $('#select_region').empty();
+                 $('#select_competition').empty();
+                  $('#select_company').empty();
+
+
+                yeka_id = $(this).find('option:selected').val();
+                $('#select_region').prepend("<option value='0' selected>  -------------- </option>");
+                for (var item in yeka) {
+                    if (yeka_id == yeka[item].pk) {
+
+                        for (var i in yeka[item].fields.connection_region) {
+                            for (var e in region) {
+                                if (yeka[item].fields.connection_region[i] == region[e].pk) {
+                                    debugger;
+                                    $('#select_region').prepend("<option value='" + region[e].pk + "'>" + region[e].fields.name + "</option>");
+                                }
+                            }
+
+                        }
+
+
+                    }
+
+                }
+            });
+
+
+            $('#select_region').change(function (e) {
+
+                $('#select_competition').empty()
+                region_id = $(this).find('option:selected').val();
+                 $('#select_competition').prepend("<option value='0' selected>  -------------- </option>");
+                for (var item in region) {
+                    if (region_id == region[item].pk) {
+                        for (var i in region[item].fields.yekacompetition) {
+                            debugger;
+                            for (var e in competition) {
+                                if (region[item].fields.yekacompetition[i] == competition[e].pk) {
+                                    $('#select_competition').prepend("<option value='" + competition[e].pk + "'>" + competition[e].fields.name + "</option>");
+                                }
+                            }
+
+                        }
+
+
+                    }
+                }
+
+            });
+
+
+            $('#select_competition').change(function (e) {
+                comp = $('#select_competition').find('option:selected').val();
+
+
+                $('#select_company').empty()
+                $('#select_company').prepend("<option value='0' selected>  -------------- </option>");
+                if (e.handled !== true) { // This will prevent event triggering more then once
+                    e.handled = true;
+
+                    $.ajax({
+                        url: "{% url "ekabis:add_competition_company_select_api" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            id: comp,
+                        },
+                        success: function (result) {
+
+                            console.log(result)
+
+                            if (result.status === 'Success') {
+
+                                var company = JSON.parse(result.company);
+                                for (var k in company) {
+                                    debugger;
+                                    $('#select_company').prepend("<option value='" + company[k].pk + "'>" + company[k].fields.name + "</option>");
+                                }
+                            }
+
+                        }
+                    });
+
+                }
+
+
+            });
+
+
+        });
+
+        {#function ilceGetir() {#}
+        {#    debugger;#}
+        {#    var e = document.getElementById("id_city");#}
+        {#    var il_id = e.options[e.selectedIndex].value;#}
+        {#    $.ajax({#}
+        {#        url: "{% url 'ekabis:ilce-getir' %}",#}
+        {#        type: "post", // or "get"#}
+        {#        async: false,#}
+        {#        data: {#}
+        {#            il_id: il_id,#}
+        {##}
+        {#        },#}
+        {#        success: function (result) {#}
+        {#            debugger;#}
+        {##}
+        {#            let select = document.getElementById("ilce_id");#}
+        {##}
+        {#            select.options[select.options.length] = new Option('Text 1', 'Value1');#}
+        {##}
+        {#            $('#ilce_id').empty();#}
+        {##}
+        {#            for (let i = 0; i < result.ilceler.length; i++) {#}
+        {#                select.options[select.options.length] = new Option(result.ilceler[i].name, result.ilceler[i].id);#}
+        {#            }#}
+        {##}
+        {#            let select2 = document.getElementById("neighborhood_id");#}
+        {##}
+        {#            select2.options[select2.options.length] = new Option('Text 1', 'Value1');#}
+        {##}
+        {#            $('#neighborhood_id').empty();#}
+        {##}
+        {#            for (let i = 0; i < result.neighborhoods.length; i++) {#}
+        {#                select2.options[select2.options.length] = new Option(result.neighborhoods[i].name, result.neighborhoods[i].id);#}
+        {#            }#}
+        {#        }#}
+        {#    });#}
+        {# }#}
+
+
+    </script>
+
+{% endblock %}
+
+

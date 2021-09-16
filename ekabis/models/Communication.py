@@ -1,11 +1,13 @@
 from django.db import models
 from ekabis.models.City import City
 from ekabis.models.Country import Country
+from ekabis.models.BaseModel import BaseModel
 
-class Communication(models.Model):
+
+class Communication(BaseModel):
     postalCode = models.CharField(max_length=120, null=True, blank=True)
-    phoneNumber = models.CharField(max_length=120, null=True, blank=True)
-    phoneNumber2 = models.CharField(max_length=120, null=True, blank=True)
+    phoneNumber = models.CharField(max_length=11, null=False, blank=False)
+    phoneNumber2 = models.CharField(max_length=11, null=True, blank=True)
     phoneHome = models.CharField(max_length=120, null=True, blank=True)
     phoneJop = models.CharField(max_length=120, null=True, blank=True)
     address = models.TextField(blank=True, null=True, verbose_name='Adres')
@@ -18,7 +20,4 @@ class Communication(models.Model):
     town = models.CharField(max_length=120, null=True, blank=True)
     neighborhood = models.CharField(max_length=120, null=True, blank=True)
 
-    # class Meta:
-    #     default_permissions = ()
-    #     db_table = 'communication'
-    #     managed = False
+

@@ -1,332 +1,570 @@
 {% extends 'base_layout.html' %}
 {% block content %}
+<div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-active"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
 
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     {% if messages %}
         {% for message in messages %}
 
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            {% if message.tags == 'warning' %}
-
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Hata!</h4>
 
 
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
                         {% endfor %}
-                    </ul>
+                        </div>
+                    </div>
 
 
-                </div>
 
-            {% endif %}
-
-
-            {% if message.tags == 'success' %}
-
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
-
-
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-
-
-                </div>
-
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
 
 
     {% endif %}
+    <form method="post" enctype="multipart/form-data" role="form">
+        <div class="modal modal-warning fade in deneme23" tabindex="-1" role="dialog" id="addDocument"
+             aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">Bilgileri Giriniz</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <label for="documanname">Döküman İsmi </label>
+                        <select id="documanname" name="documanname" class="form-control">
+                            <option value="" selected>Seçiniz...</option>
+                            {% for item  in companyDocumentName %}
+                                <option value="{{ item.pk }}">{{ item.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="id_file1">Döküman İsmi </label><br>
+                        <input type="file" name="documanfile" id="id_file">
+
+                    </div>
 
 
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline pull-left">Kaydet
+                        </button>
+                        <button type="button" class="btn btn-outline" id="edit-btn-closereddet">Geri Dön</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
 
-     <section class="content-header">
+
+        <section class="content-header">
 
 
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Firma Güncelle</h1>
+                        <h1>{{ company.name }} - Firma Güncelle</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Firma Güncelle</a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
+                            {% for url in urls %}
+                                <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                                </li>
+                                <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                            {% endfor %}
                         </ol>
                     </div>
                 </div>
             </div>
 
         </section>
-    <section class="content">
+        <section class="content">
 
-        <form method="post" enctype="multipart/form-data" role="form">
+
             {% csrf_token %}
             <div class="row">
 
-                <div class="col-lg-6">
-                    <div class="card card-primary">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Genel Bilgiler</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label> {{ company_form.isFormal.label }}</label>
-                                {{ company_form.isFormal }}
+                <div class="col-lg-5">
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Genel Bilgiler</h3>
                             </div>
+                            <div class="card-body">
 
-                            <div class="form-group">
-                                <label> {{ company_form.name.label }}</label>
-                                {{ company_form.name }}
-                            </div>
-                            <div class="form-group">
-                                <label> {{ company_form.degree.label }}</label>
-                                {{ company_form.degree }}
-                            </div>
-
-
-                            <div class="form-group">
-                                <label> {{ company_form.taxOffice.label }}</label>
-                                {{ company_form.taxOffice }}
-                            </div>
-                            <div class="form-group">
-                                <label id="labelTaxNumber"> {{ company_form.taxnumber.label }}</label>
-                                {{ company_form.taxnumber }}
-                            </div>
-                            <div class="form-group">
-                                <label>{{ company_form.sorumlu.label }}</label>
-
-                                {{ company_form.sorumlu }}
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Kaydet</button>
-                        </div>
-
-
-
-                    </div>
-
-                </div>
-                <div class="col-lg-6">
-                    <div class="card card-primary">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">İletişim Bilgileri</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6">
+                                {% for item in company_form %}
                                     <div class="form-group">
-                                        <label> {{ company_form.mail.label }}</label>
-                                        {{ company_form.mail }}
+                                        <label>{{ item.label }}</label><br>
+
+                                        {{ item }}
+                                        <label for="" id="label_{{ item.name }}"></label>
                                     </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber.label }}</label>
-                                        {{ communication_form.phoneNumber }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.phoneNumber2.label }}</label>
-                                        {{ communication_form.phoneNumber2 }}
-                                    </div>
+                                {% endfor %}
+
+                                <div class="form-group">
+                                    <label> {{ communication_form.phoneNumber.label }}</label>
+                                    {{ communication_form.phoneNumber }}
+                                    <label for="" id="label_phoneNumber"></label>
+
+
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.country.label }}</label>
-                                        {{ communication_form.country }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.city.label }}</label>
-                                        {{ communication_form.city }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label> {{ communication_form.postalCode.label }}</label>
-                                        {{ communication_form.postalCode }}
-                                    </div>
-                                </div>
+
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label> {{ communication_form.address.label }}</label>
-                                        {{ communication_form.address }}
-                                    </div>
-                                </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Kaydet</button>
-                        </div>
 
 
+                        </div>
                     </div>
 
 
                 </div>
+                <div class="col-lg-7">
+                    <div class="col-lg-12">
 
-            </div>
-
-        </form>
-
-
-    </section>
+                        <div class="card card-primary card-outline collapsed-card">
 
 
+                            <div class="card-header with-border">
+                                <h3 class="card-title">DOKÜMAN BİLGİLERİ</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+
+
+                                <!-- /.card-tools -->
+
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+                                <button class="btn btn-outline-primary" id="btnDokuman" type="button"
+                                        title="Doküman Ekle" style="float:right;"><i class="fa fa-plus"></i></button>
+
+
+                            </div>
+                            <div class="card-body" style="display: none;">
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <table id="dokuman" class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Dosya</th>
+                                                <th>İşlemler</th>
+
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+
+                                            {% if company.files.all %}
+                                                {% for item in company.files.all %}
+                                                    <tr id="documents-{{ item.pk }}">
+                                                        <td>{{ forloop.counter }} </td>
+                                                        <td>{{ item.filename.name }}</td>
+
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-success"
+                                                                   data-toggle="modal"
+                                                                   href="/media/{{ item.file }}"><i
+                                                                        class="fa fa-download"></i></a>
+
+                                                                {#                                                        delete kısmı eklenecek#}
+                                                                <a class="btn btn-danger"
+                                                                   data-toggle="modal"
+                                                                   onclick=deletedocument({{ item.pk }})><i
+                                                                        class="fa fa-trash"></i></a>
+
+                                                            </div>
+                                                        </td>
+
+                                                    </tr>
+
+                                                {% endfor %}
+                                            {% endif %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-12">
+
+                        <div class="card card-primary card-outline collapsed-card">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">KULLANICI BİLGİLERİ</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                            class="fas fa-plus"></i>
+                                    </button>
+
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+
+
+                                <!-- /.card-tools -->
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: none;">
+
+
+
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Kullanıcı Listesi</h3>
+                            {% for item in perm %}
+                                {% if item == 'assigment_company_user' %}
+                                    <a href="{% url "ekabis:assigment_company_user" company.uuid %}"
+                                       type="button" class="btn btn-outline-primary"
+                                       style="float: right"><i
+                                            class="fa fa-plus"
+                                            title="Firma Kullanıcı Görevlendirme"></i>Kullanıcı Görevlendirme
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="card-body">
+                            <table id="company_user" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ad Soyad</th>
+                                    <th>Telefon</th>
+                                    <th>Email</th>
+                                    <th>Kullanıcı Durumu</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for company_user in company.companyuser.all %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ company_user.person.user.first_name }} {{ company_user.person.user.last_name }} </td>
+                                        <td>{{ company_user.communication.phoneNumber }}</td>
+                                        <td>{{ company_user.person.user.email }} </td>
+                                        {% if company_user.person.user.is_active %}
+                                            <td>
+                                               Aktif
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                               Pasif
+
+                                            </td>
+
+                                        {% endif %}
+                                        <td>
+                                            <div class="btn-group">
+
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown"> İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% if company_user.person.user.is_active %}
+
+                                                        <a onclick="activeUser({{ company_user.person.user.pk }})"
+                                                           type="button"
+                                                            class="dropdown-item"><i class="fa fa-ban"></i> Pasif Yap
+                                                        </a>
+
+                                                    {% else %}
+
+                                                        <a onclick="activeUser({{ company_user.person.user.pk }})"
+                                                           type="button"
+                                                           class="dropdown-item"><i class="fa fa-check"></i> Aktif Yap
+                                                        </a>
+
+
+
+                                                    {% endif %}
+
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+                                        {% for item in user_form %}
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label><br>
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        {% for item in person_form %}
+                                            <div class="form-group">
+                                                <label>{{ item.label }}</label><br>
+
+                                                {{ item }}
+                                                <label for="" id="label_{{ item.name }}"></label>
+                                            </div>
+                                        {% endfor %}
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                                </button>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+        </section>
+    </form>
+    {% load static %}
     <script>
 
         $(document).ready(function () {
-            var jop = new Array();
-            {% for item in company.JopDescription.all %}
-                jop.push("{{ item.pk }}");
-            {% endfor %}
-            $('#multipleSelect').val(jop);
 
 
-            isFormal = $("#id_isFormal option:selected").text();
+            $('#btnDokuman').click(function (e) {
+                $("#addDocument").modal('show');
+                $('#edit-btn-closereddet').click(function () {
 
-            if (isFormal == 'Bireysel') {
-                $('#labelTaxNumber').html('TC Kimlik Numarasi');
 
-            } else {
-                $('#labelTaxNumber').html('Vergi Numarası');
-            }
+                    $('#addDocument').modal('hide');
+                    $('.modal').modal('hide');
 
-            $('#id_isFormal').change(function () {
-                selected = $("#id_isFormal option:selected").text();
-                if (selected == 'Kurumsal') {
-                    $('#labelTaxNumber').html('Vergi Numarası');
-                } else {
-                    $('#labelTaxNumber').html('TC Kimlik Numarasi');
-                }
+                });
 
             });
 
-            $('#projects').DataTable({
 
+            {% if error_messages %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+
+            $('#dokuman').DataTable({
                 dom: 'Bfrtip',
-                {#orderFixed: [[6, 'asc']],#}
-                {#rowGroup: {#}
-                {#    dataSrc: 6#}
-                {# },#}
 
-                language: {
-                    buttons: {
-                        pageLength: {
-                            _: " %d  Tane Göster",
-                            '-1': "Hepsini Göster"
-                        }
-                    }
-                },
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                buttons: [
+                'buttons': [
 
 
                     {
                         extend: "pageLength",
-
                     },
 
 
                     {
                         extend: 'colvis',
-                        text: '<i class=" fa  fa-th-list"></i>',
                         titleAttr: 'Ekle Çıkar'
 
 
                     },
                     {
                         extend: 'print',
-                        title: 'Projeler',
-                        text: '<i class="fa  fa-print"></i>',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
+                        title: 'Yeka Firmaları',
+                        text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır'
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
-                        text: '<i class="fa fa-file-pdf-o"></i>',
-                        orientation: 'landscape',
-                        pageSize: 'LEGAL',
-                        exportOptions: {
-                            columns: [0, 1, ':visible'],
-
-
-                        },
+                        text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet'
                     },
 
                     {
                         extend: 'excelHtml5',
-                        title: 'Projeler',
-                        text: '<i class="fa fa-file-excel-o"></i>',
-                        messageTop: 'Etüt Bilgi Sistemi ',
-                        exportOptions: {
-                            columns: [0, 1, ':visible']
-                        },
-
+                        text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet'
                     },
-                    {
-                        text: '<i class="fa fa-file-text-o"></i>',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
-
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Projeler.json'
-                            );
-                        }
-                    }
 
 
                 ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
                 'ordering': true,
                 'info': true,
-                'autoWidth': true, "columnDefs": [
-                    {responsivePriority: 1, targets: 1},
-                    {responsivePriority: 2, targets: 7},
-                ],
-                'responsive': {
-                    'details': {
+                'autoWidth': true,
 
-
-                        'display': $.fn.dataTable.Responsive.display.modal({
-                            'header': function (row) {
-                                var data = row.data();
-                                return data[1];
-                            }
-                        }),
-                        'renderer': $.fn.dataTable.Responsive.renderer.tableAll(),
-                    }
-                },
-
-
-            });
+            })
 
 
         });
 
+  function activeUser(id) {
 
+            console.log(id);
+            var html = ''
+            $("#modal-active").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:view_status" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False'
+                        },
+                        success: function (result) {
+
+                            html = 'Kullanıcı Durumu Değiştirildi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:view_company" %}")
+
+
+                                });
+
+                            }).modal('show');
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-active').modal('hide');
+            });
+
+        }
     </script>
+
 
 {% endblock %}
 

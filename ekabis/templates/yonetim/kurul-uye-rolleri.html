@@ -2,14 +2,14 @@
 {% block content %}
 
 
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">İşlem Başarılı</h4>
+
                 </div>
                 <div class="modal-body successModal">
                     ...
@@ -24,30 +24,31 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <div class="modal modal-danger fade in deneme22" tabindex="-1" role="dialog" id="modal-danger"
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Uyarı</h4>
+
                 </div>
                 <div class="modal-body">
-                    <p>Silmek istediğinizden emin misiniz?</p>
+                    <p>Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf"
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
                             data-dismiss="modal">Evet
                     </button>
-                    <button type="button" class="btn btn-outline" id="btn-close">Hayır</button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
     </div>
-
 
 
     {% if messages %}
@@ -94,7 +95,27 @@
 
 
     {% endif %}
+  <section class="content-header">
 
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Kurul Üye Rolleri</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
     <section class="content">
 
         <!-- /.row -->
@@ -122,6 +143,8 @@
                                 <div class="form-group">
                                     <label> {{ member_role_form.name.label }}</label>
                                     {{ member_role_form.name }}
+                                    <label id="label_name"></label>
+
                                 </div>
 
 
@@ -153,16 +176,25 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ memberRole.name }}</td>
                                         <td>
-                                            <div class="btn-group">
-                                                <a href="{% url "ekabis:kurul-uye-rol-duzenle" memberRole.pk %}"
-                                                   type="button" class="btn btn-warning"><i
-                                                        class="fa fa-edit"></i>Güncelle
-                                                </a>
 
-                                                <a class="btn btn-danger"
-                                                   data-toggle="modal" onclick=deleteClubRole({{ memberRole.pk }})><i
-                                                        class="fa fa-trash"></i>Sil</a>
-                                            </div>
+                                            {% for item in perm %}
+                                                {% if item == 'add_directorymember' %}
+                                                    <div class="btn-group">
+                                                        <a href="{% url "ekabis:change_directorymemberrole" memberRole.uuid %}"
+                                                           type="button" class="btn btn-warning"><i
+                                                                class="fa fa-edit"></i>Güncelle
+                                                        </a>
+                                                    </div>
+                                                {% elif item == 'delete_directorymemberrole' %}
+                                                    <div class="btn-group">
+                                                        <a class="btn btn-danger"
+                                                           data-toggle="modal"
+                                                           onclick=deleteClubRole('{{ memberRole.uuid }}')><i
+                                                                class="fa fa-trash"></i>Sil</a></div>
+                                                {% endif %}
+                                            {% endfor %}
+
+
                                         </td>
 
                                     </tr>
@@ -221,7 +253,7 @@
                         extend: 'colvis',
                         text: "Ekle Çıkar",
                         titleAttr: 'Ekle Çıkar',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
 
 
                     },
@@ -235,7 +267,7 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: "Pdf",
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                         titleAttr: 'Pdf Kaydet'
                     },
 
@@ -243,7 +275,7 @@
                         extend: 'excelHtml5',
                         text: "Excel",
                         titleAttr: 'Excel Kaydet',
-                         title: 'YEKABİS',
+                        title: 'YEKABİS',
                     },
                     {
                         text: 'Json',
@@ -279,14 +311,15 @@
 
             console.log(id);
             var html = ''
-            $("#modal-danger").on("shown.bs.modal", function (e) {
-                $("#btn-conf").click(function () {
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
                     $.ajax({
-                        url: "{% url "ekabis:kurul_uye_rol_sil" pk=212121223232323232 %}".replace(/212121223232323232/, id.toString()),
+                        url: "{% url "ekabis:delete_directorymemberrole" %}",
                         type: "POST",
                         data: {
                             'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                            isActive: 'False'
+                            isActive: 'False',
+                            uuid: id
                         },
                         success: function (result) {
 
@@ -296,7 +329,7 @@
                             $('#modal-success').on("shown.bs.modal", function (e) {
                                 $(".btn-ok").click(function () {
 
-                                    window.location.replace("{% url "ekabis:kurul-uye-rolleri" %}");
+                                    window.location.replace("{% url "ekabis:view_directorymemberrole" %}");
 
                                 });
 
@@ -314,10 +347,14 @@
 
         }
     </script>
+ <script>
+        $(document).ready(function () {
 
-
-
-
+          {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+        });
+    </script>
 
 
 {% endblock %}

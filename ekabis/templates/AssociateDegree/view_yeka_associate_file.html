@@ -1,0 +1,325 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+
+    <!-- success modal -->
+    <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İşlem Başarılı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body successModal">
+                    ...
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Silmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div id="toast-container" class="toasts-top-right">
+
+        <div class="toast toast-error error" aria-live="polite" style="display: none" id="error_toast">
+            <div class="toast-message" id="error_message">
+
+            </div>
+        </div>
+
+
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-error" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <section class="content">
+        <section class="content-header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>  {{ name }} - Ön Lisans Süreci Dokümanları </h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+
+        <form method="post" role="form">
+            {% csrf_token %}
+
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Ön Lisans Doküman Listesi</h3>
+                            {% for p in perm %}
+                                {% if p == 'add_yeka_associate_degree_file' %}
+                                    <a href="{% url 'ekabis:add_yeka_associate_degree_file' associate.business.uuid %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"
+                                       title="Doküman Ekle"><i
+                                            class="fa fa-plus"></i>
+                                    </a>
+
+
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="card-body">
+                            <table id="file" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Dokuman Kategori</th>
+                                    <th>Doküman Tarihi</th>
+                                    <th>Doküman</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+
+                                {% for file in files %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ file.name }}</td>
+                                        <td>{{ file.date }}</td>
+                                        <td>
+                                            <a target="_blank" href="/media/{{ file.file }}">{{ file.file }}</a>
+                                        </td>
+
+
+                                        <td>
+                                            <div class="btn-group">
+
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown">İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% for p in perm %}
+                                                        {% if p == 'change_associate_file' %}
+                                                            <a href="{% url 'ekabis:change_associate_file' file.uuid associate.uuid %}"
+                                                               class="dropdown-item"> <i
+                                                                    class="fa fa-edit" title="Düzenle"></i> Düzenle
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% for p in perm %}
+                                                        {% if p == 'delete_associate_file' %}
+                                                            <a class="dropdown-item" href=""
+                                                               data-toggle="modal"
+                                                               onclick="deleteFile('{{ file.uuid }}')"><i
+                                                                    class="fa fa-trash" title="Sil"></i>Sil</a>
+
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    {% load static %}
+    <script>
+        $(function () {
+            {% if error_messages %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
+
+
+
+            $('#file').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        text: "Ekle Çıkar",
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'İş Bloğu Parametreleri',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                }
+            });
+
+        });
+
+        function deleteFile(id) {
+            debugger;
+            console.log(id);
+            var html = ''
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:delete_associate_file" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid: id,
+                        },
+                        success: function (result) {
+
+                            html = 'Doküman Silindi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    location.reload();
+                                });
+
+                            }).modal('show');
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-active').modal('hide');
+            });
+
+        }
+
+    </script>
+
+
+{% endblock %}

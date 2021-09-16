@@ -7,7 +7,7 @@ module.exports = function (grunt) {
   // Project configuration.
   grunt.initConfig({
     //Metadata
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: grunt.file.readJSON('datatable_tr.json'),
     banner: [
       '/*!',
       ' * Datepicker for Bootstrap v<%= pkg.version %> (<%= pkg.homepage %>)',
@@ -190,8 +190,8 @@ module.exports = function (grunt) {
       },
       npm: {
         files: [{
-          src: 'package.json',
-          dest: 'package.json'
+          src: 'datatable_tr.json',
+          dest: 'datatable_tr.json'
         }],
         options: {
           replacements: [{
