@@ -15,15 +15,15 @@ class PurchaseGuaranteeForm(BaseForm):
         fields = ('type', 'time', 'total_quantity',)
         labels = {
             'type': 'Alım Garantisi Türü',
-            'time': 'Alım Garanti Süresi',
+            'time': 'Alım Garanti Süresi (Süreyi Ay Olarak Giriniz)',
             'total_quantity': 'Toplam Üretim Miktarı (GWh)'}
         widgets = {
             'type': forms.Select(choices=choices, attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                                           'style': 'width: 100%;', 'required': 'required'}),
+                                                           'style': 'width: 100%;'}),
             'time': forms.NumberInput(
-                attrs={'class': 'form-control', 'required': 'required'}),
+                attrs={'class': 'form-control'}),
             'total_quantity': forms.NumberInput(
-                attrs={'class': 'form-control', 'required': 'required'}),
+                attrs={'class': 'form-control'}),
 
         }
 

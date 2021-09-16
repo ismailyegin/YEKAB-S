@@ -102,8 +102,15 @@
                                     {% for item in purchase_guarantee_form %}
                                         <div class="col-lg-6" id="control-{{ item.name }}">
                                             <div class="form-group">
-                                                <label>{{ item.label }}</label>
-                                                {{ item }}
+                                                {% if item.name == 'time' %}
+                                                    <label>{{ item.label }}</label>
+
+                                                    {{ item }} <small>Var Olan Süre Gün Olarak Gösterilmektedir.</small>
+                                                {% else %}
+                                                    <label>{{ item.label }}</label>
+
+                                                    {{ item }}
+                                                {% endif %}
                                                 <label for="" id="label_{{ item.name }}"></label>
                                             </div>
                                         </div>
@@ -133,7 +140,10 @@
                 errors_messages({{ error_messages |safe }}
             {% endif %}
 
+            if ($("#id_type option:selected").val() == 'Miktar') {
+                $('#control-time').hide();
 
+            }
 
             if ($("#id_indefinite option:selected").val() == 'True') {
                 $('#control-businessTime').hide();
@@ -152,17 +162,11 @@
 
             });
             $('#id_type').change(function () {
-                if ($("#id_type option:selected").val() == 'Süre') {
-                    $('#control-businessTime').hide();
-                    $('#control-time_type').hide();
-
-                } else if ($("#id_type option:selected").val() == 'Miktar') {
+                if ($("#id_type option:selected").val() == 'Miktar') {
                     $('#control-time').hide();
 
                 } else {
                     $('#control-time').show();
-                    $('#control-businessTime').show();
-                    $('#control-time_type').show();
 
                 }
 

@@ -10,69 +10,17 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7723d10b-0554-4c47-b5c6-4f6552a76209" name="Default Changelist" comment="extratime listeleme">
-      <change afterPath="$PROJECT_DIR$/ekabis/Views/APIViews.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/Views/CityViews.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/models/ConsortiumCompany.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/models/District.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/models/LogAPIObject.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/serializers/CompanySerializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/serializers/ConsortiumSerializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/serializers/DistrictSerializer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/serializers/EmployeeSerializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/serializers/YekaSerializer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/Company/AddConsortiumCompany.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/Company/ConsortiumList.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ekabis/templates/Company/UpdateConsortium.html" afterDir="false" />
+    <list default="true" id="7723d10b-0554-4c47-b5c6-4f6552a76209" name="Default Changelist" comment="bug fix">
       <change beforePath="$PROJECT_DIR$/.idea/YEKABIS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/YEKABIS.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Forms/ConnectionCapacityForm.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Forms/ConnectionCapacityForm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Forms/ExtraTimeForm.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Forms/ExtraTimeForm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Forms/PersonForm.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Forms/PersonForm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Views/CompanyView.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/CompanyView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Views/ConnectionRegionViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/ConnectionRegionViews.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Views/EmployeeViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/EmployeeViews.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Views/ExtraTimeViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/ExtraTimeViews.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/Views/YekaViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/YekaViews.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/Forms/PurchaseGuaranteeForm.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Forms/PurchaseGuaranteeForm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ekabis/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/models/Company.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/models/Company.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/models/ConnectionCapacity.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/models/ConnectionCapacity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/models/Person.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/models/Person.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/Company/Company.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Company/Company.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/Company/CompanyFileNameAdd.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Company/CompanyFileNameAdd.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/Company/CompanyFileNameList.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Company/CompanyFileNameList.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/Company/CompanyFileNameUpdate.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Company/CompanyFileNameUpdate.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/Company/Companys.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Company/Companys.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/ConnectionRegion/add-connectionCapacity.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/ConnectionRegion/add-connectionCapacity.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/ExtraTime/add_extratime.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/ExtraTime/add_extratime.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/Yeka/view_yeka.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Yeka/view_yeka.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/Yeka/yekaPersonList.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Yeka/yekaPersonList.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/Yeka/yeka_company_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Yeka/yeka_company_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/anasayfa/CalendarNameAdd.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/anasayfa/CalendarNameAdd.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/anasayfa/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/anasayfa/admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/kullanici/kullanicilar.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/kullanici/kullanicilar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/templates/personel/personeller.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/personel/personeller.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ekabis/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/Yeka/YekabussinesBlogUpdate.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Yeka/YekabussinesBlogUpdate.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ekabis/templates/Yeka/view_yeka_by_type.html" beforeDir="false" afterPath="$PROJECT_DIR$/ekabis/templates/Yeka/view_yeka_by_type.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/log.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/oxiterp/settings/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/settings/base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/oxiterp/settings/dev.py" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/settings/dev.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/build/config/rollup.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/build/config/rollup.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/eski/chart.js/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/eski/chart.js/gulpfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/bootstrap-datepicker/Gruntfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/bootstrap-datepicker/Gruntfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/css/buttons.bootstrap4.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/css/buttons.bootstrap4.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/js/buttons.bootstrap4.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/js/buttons.bootstrap4.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/js/buttons.colVis.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/js/buttons.colVis.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/js/buttons.print.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/js/buttons.print.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/js/dataTables.buttons.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-buttons/js/dataTables.buttons.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-responsive/css/responsive.bootstrap4.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-responsive/css/responsive.bootstrap4.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-responsive/js/responsive.bootstrap4.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/datatables-responsive/js/responsive.bootstrap4.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/raphael/Gruntfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/raphael/Gruntfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/static/plugins/toastr/toastr.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/static/plugins/toastr/toastr.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oxiterp/templates/base_layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/oxiterp/templates/base_layout.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,8 +39,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Setup Script" />
-        <option value="JavaScript File" />
         <option value="package.json" />
+        <option value="JavaScript File" />
         <option value="HTML File" />
         <option value="Python Script" />
       </list>
@@ -101,7 +49,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="standartlastirma" />
+        <entry key="$PROJECT_DIR$" value="control" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -129,7 +77,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/ekabis/serializers" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/oxiterp/static/loader" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -142,21 +90,21 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\loader" />
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\vis\dist" />
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\vis" />
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\vis\cytoscape" />
       <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\ekabis\serializers" />
-      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\images" />
-      <recent name="$PROJECT_DIR$/ekabis/templates/personel" />
-      <recent name="$PROJECT_DIR$/ekabis/templates" />
-      <recent name="$PROJECT_DIR$/ekabis/models" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\media" />
-      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static" />
-      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\language" />
-      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\ekabis\templates\Yeka" />
-      <recent name="$PROJECT_DIR$/ekabis/Forms" />
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\loader" />
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\ekabis\services" />
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\vis\dist" />
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\dist\img" />
+      <recent name="C:\Users\dogan\PycharmProjects\YEKAB-S\oxiterp\static\dist" />
     </key>
   </component>
-  <component name="RunManager" selected="Django Server.yekabis">
+  <component name="RunManager" selected="Django Server.yeka">
     <configuration name="Test: accounts.tests" type="DjangoTestsConfigurationType" temporary="true">
       <module name="YEKABIS" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -177,7 +125,33 @@
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="yekabis" type="Python.DjangoServer" factoryName="Django server">
+    <configuration name="pie.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/YEKABIS/oxiterp/static/eski/chart.js/samples/pie.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Python.DjangoServer" factoryName="Django server">
+      <module name="YEKABIS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\dogan\PycharmProjects\django-simple-captcha\venv\Scripts\python.exe" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="localhost" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="yeka" type="Python.DjangoServer" factoryName="Django server">
       <module name="YEKABIS" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -202,11 +176,13 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Django Server.yekabis" />
+      <item itemvalue="Django Server.yeka" />
       <item itemvalue="Django tests.Test: accounts.tests" />
+      <item itemvalue="JavaScript Debug.pie.html" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript Debug.pie.html" />
         <item itemvalue="Django tests.Test: accounts.tests" />
       </list>
     </recent_temporary>
@@ -252,6 +228,29 @@
       <workItem from="1627414539361" duration="34944000" />
       <workItem from="1627496608017" duration="12464000" />
       <workItem from="1627539017437" duration="21851000" />
+      <workItem from="1630045226184" duration="27794000" />
+      <workItem from="1630179956283" duration="12267000" />
+      <workItem from="1630239008772" duration="25428000" />
+      <workItem from="1630322435076" duration="31147000" />
+      <workItem from="1630393441050" duration="1314000" />
+      <workItem from="1630408014309" duration="12643000" />
+      <workItem from="1630477155622" duration="28335000" />
+      <workItem from="1630563486330" duration="24181000" />
+      <workItem from="1630649554255" duration="14644000" />
+      <workItem from="1630670473691" duration="10728000" />
+      <workItem from="1630908646788" duration="27459000" />
+      <workItem from="1630995034041" duration="23389000" />
+      <workItem from="1631037233664" duration="12167000" />
+      <workItem from="1631078323222" duration="151000" />
+      <workItem from="1631086272239" duration="18815000" />
+      <workItem from="1631182197755" duration="18768000" />
+      <workItem from="1631254407099" duration="18349000" />
+      <workItem from="1631514078559" duration="19349000" />
+      <workItem from="1631600916917" duration="28759000" />
+      <workItem from="1631686821494" duration="4830000" />
+      <workItem from="1631691717292" duration="13489000" />
+      <workItem from="1631706940198" duration="9465000" />
+      <workItem from="1631773002508" duration="4265000" />
     </task>
     <task id="LOCAL-00001" summary="commit initial">
       <created>1623933322363</created>
@@ -449,7 +448,77 @@
       <option name="project" value="LOCAL" />
       <updated>1627387697679</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="test">
+      <created>1630059921370</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1630059921370</updated>
+    </task>
+    <task id="LOCAL-00030" summary="yeka_detay">
+      <created>1630351873778</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1630351873779</updated>
+    </task>
+    <task id="LOCAL-00031" summary="yeka_detay">
+      <created>1630351884185</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1630351884185</updated>
+    </task>
+    <task id="LOCAL-00032" summary="yeka_detay">
+      <created>1630351929930</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1630351929930</updated>
+    </task>
+    <task id="LOCAL-00033" summary="yeka datey sayfaları">
+      <created>1630579221880</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1630579221880</updated>
+    </task>
+    <task id="LOCAL-00034" summary="detay sayfaları , personel user ekleme , iş bloğu tamamlandı durumu ...">
+      <created>1631016283723</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1631016283723</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Bildirim">
+      <created>1631049998620</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1631049998620</updated>
+    </task>
+    <task id="LOCAL-00036" summary="alım garantisi iş bloğu üretim miktari">
+      <created>1631282115287</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1631282115287</updated>
+    </task>
+    <task id="LOCAL-00037" summary="firma basvuru">
+      <created>1631707019808</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1631707019808</updated>
+    </task>
+    <task id="LOCAL-00038" summary="bug fix">
+      <created>1631717150570</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1631717150570</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -468,8 +537,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="commit initial" />
-    <MESSAGE value="ekabis app sisteme alındı" />
     <MESSAGE value="Ekabis app güncellemeler" />
     <MESSAGE value="yonetim ve şirket modülleri eklendi." />
     <MESSAGE value="personeller destek talep ve yönetici modelleri eklendi" />
@@ -485,10 +552,17 @@
     <MESSAGE value="alt yeka işlemleri" />
     <MESSAGE value="bug fix add_yeka" />
     <MESSAGE value="alt yeka zaman çizelgesi" />
-    <MESSAGE value="bug fix" />
     <MESSAGE value="Frontend standartlastirma" />
     <MESSAGE value="extratime listeleme" />
-    <option name="LAST_COMMIT_MESSAGE" value="extratime listeleme" />
+    <MESSAGE value="test" />
+    <MESSAGE value="yeka_detay" />
+    <MESSAGE value="yeka datey sayfaları" />
+    <MESSAGE value="detay sayfaları , personel user ekleme , iş bloğu tamamlandı durumu ..." />
+    <MESSAGE value="Bildirim" />
+    <MESSAGE value="alım garantisi iş bloğu üretim miktari" />
+    <MESSAGE value="firma basvuru" />
+    <MESSAGE value="bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -508,15 +582,125 @@
           <line>366</line>
           <option name="timeStamp" value="61" />
         </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ekabis/Views/DashboardViews.py</url>
-          <line>61</line>
-          <option name="timeStamp" value="151" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/ekabis/Views/ExtraTimeViews.py</url>
           <line>44</line>
           <option name="timeStamp" value="213" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Forms/CompanyFormDinamik.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="218" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaBussinessBlogStaticView.py</url>
+          <line>615</line>
+          <option name="timeStamp" value="224" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/APIViews.py</url>
+          <line>158</line>
+          <option name="timeStamp" value="238" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>701</line>
+          <option name="timeStamp" value="243" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>683</line>
+          <option name="timeStamp" value="244" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>917</line>
+          <option name="timeStamp" value="246" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/EmployeeViews.py</url>
+          <line>62</line>
+          <option name="timeStamp" value="262" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/accounts/views.py</url>
+          <line>87</line>
+          <option name="timeStamp" value="270" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/CompanyView.py</url>
+          <line>194</line>
+          <option name="timeStamp" value="279" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/BusinessBlogViews.py</url>
+          <line>377</line>
+          <option name="timeStamp" value="288" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaViews.py</url>
+          <line>825</line>
+          <option name="timeStamp" value="300" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaViews.py</url>
+          <line>851</line>
+          <option name="timeStamp" value="301" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/NotificationViews.py</url>
+          <line>47</line>
+          <option name="timeStamp" value="310" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/APIViews.py</url>
+          <line>235</line>
+          <option name="timeStamp" value="314" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>260</line>
+          <option name="timeStamp" value="333" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaBussinessBlogStaticView.py</url>
+          <line>630</line>
+          <option name="timeStamp" value="336" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>787</line>
+          <option name="timeStamp" value="337" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>794</line>
+          <option name="timeStamp" value="338" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaViews.py</url>
+          <line>1184</line>
+          <option name="timeStamp" value="345" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaBussinessBlogStaticView.py</url>
+          <line>1764</line>
+          <option name="timeStamp" value="350" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>431</line>
+          <option name="timeStamp" value="351" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>627</line>
+          <option name="timeStamp" value="355" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ekabis/Views/YekaCompetitionViews.py</url>
+          <line>590</line>
+          <option name="timeStamp" value="358" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="django-line">
           <url>file://$PROJECT_DIR$/ekabis/templates/Yeka/change_yeka.html</url>

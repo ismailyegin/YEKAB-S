@@ -91,7 +91,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1> YEKA Listesi
-                         </h1>
+                    </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -119,34 +119,38 @@
                             <h3 class="card-title"> {{ type }} Enerjisi</h3>
 
                         </div>
-                            <div class="card-body">
-                                <table id="yeka_by_type" class="table table-bordered table-hover">
-                                    <thead>
-                                    <tr>
+                        <div class="card-body">
+                            <table id="yeka_by_type" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
 
-                                        <th>#</th>
-                                        <th>Tanım</th>
-                                        <th>Resmi Gazete İlan Tarihi</th>
-                                        <th>Kapasite</th>
+                                    <th>#</th>
+                                    <th>Tanım</th>
+                                    <th>Resmi Gazete İlan Tarihi</th>
+                                    <th>Kapasite</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for yeka in yeka %}
+                                    <tr id="hover">
+                                        <td class='clickable-row'
+                                            data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ forloop.counter }} </td>
+                                        <td class='clickable-row'
+                                            data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.definition }}</td>
+                                        <td class='clickable-row'
+                                            data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.date }}</td>
+                                        <td class='clickable-row'
+                                            data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.capacity }}</td>
+
+
                                     </tr>
-                                    </thead>
-                                    <tbody>
 
-                                    {% for yeka in yeka %}
-                                        <tr>
-                                            <td>{{ forloop.counter }} </td>
-                                            <td>{{ yeka.definition }}</td>
-                                            <td>{{ yeka.date }}</td>
-                                            <td>{{ yeka.capacity }}</td>
+                                {% endfor %}
 
 
-                                        </tr>
-
-                                    {% endfor %}
-
-
-                                    </tbody>
-                                </table>
+                                </tbody>
+                            </table>
 
 
                         </div>
@@ -160,6 +164,9 @@
     {% load static %}
     <script>
         $(function () {
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
             $('#yeka_by_type').DataTable({
                 dom: 'Bfrtip',
 

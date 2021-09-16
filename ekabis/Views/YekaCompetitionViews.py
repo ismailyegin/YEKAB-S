@@ -535,7 +535,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
 
         business = BusinessBlogGetService(request, yeka_business_filter_)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
-
+        purchase_guarantee = None
         if business.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
             contract = None
             if YekaContract.objects.filter(business=competition.business):
@@ -548,8 +548,9 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                 contract.save()
             form_contract = YekaContractForm(request.POST or None, request.FILES or None, instance=contract)
             form_contract.fields['unit'].required = True
+
         elif business.name == 'Alım Garantisi':
-            purchase_guarantee = None
+
 
             if YekaPurchaseGuarantee.objects.filter(business=competition.business):
                 purchase_guarantee = YekaPurchaseGuarantee.objects.get(business=competition.business)
@@ -585,57 +586,55 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     contract.save()
                     competition.business.company = contract.company
                     competition.save()
-            if not yekaBusinessBlogo_form.cleaned_data['businessTime']:
-                if purchase_guarantee_form.is_valid():
+
+            if purchase_guarantee_form.is_valid():
+                if purchase_guarantee_form.cleaned_data['type'] == 'Miktar':
+                    purchase_guarantee.time =None
+                    purchase_guarantee.save()
+                else:
                     purchase_guarantee = purchase_guarantee_form.save(request, commit=False)
                     purchase_guarantee.save()
                     if purchase_guarantee_form.cleaned_data['time']:
-                        time = purchase_guarantee_form.cleaned_data['time']
                         time = purchase_guarantee_form.cleaned_data['time'] * 365. / 12
-                        type = purchase_guarantee_form.cleaned_data['type']
-
                         purchase_guarantee.time = int(time)
-                        purchase_guarantee.finisDate = purchase_guarantee.startDate + datetime.timedelta(days=time)
-                        purchase_guarantee.type=type
                         purchase_guarantee.save()
 
-            else:
-                if yekaBusinessBlogo_form.is_valid():
-                    finish_date = ''
-                    start_date = ''
+            if yekaBusinessBlogo_form.is_valid():
+                finish_date = ''
+                start_date = ''
 
-                    time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
-                    if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
-                        time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
-                        startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                        if time_type == 'is_gunu':
-                            time = yekaBusinessBlogo_form.cleaned_data['businessTime']
-                            add_time = time
-                            start_date = startDate.date()
-                            count = 0
-                            while add_time > 1:
-                                start_date = start_date + datetime.timedelta(days=1)
-                                count = count + 1
-                                is_vacation = is_vacation_day(start_date)
-                                if not is_vacation:
-                                    add_time = add_time - 1
-                        else:
-
-                            start_date = startDate.date() + datetime.timedelta(days=time)
-                        yekabussiness.startDate = startDate
-                        yekabussiness.finisDate = start_date
-                        yekabussiness.save()
+                time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
+                if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                    time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
+                    startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
+                    if time_type == 'is_gunu':
+                        time = yekaBusinessBlogo_form.cleaned_data['businessTime']
+                        add_time = time
+                        start_date = startDate.date()
+                        count = 0
+                        while add_time > 1:
+                            start_date = start_date + datetime.timedelta(days=1)
+                            count = count + 1
+                            is_vacation = is_vacation_day(start_date)
+                            if not is_vacation:
+                                add_time = add_time - 1
                     else:
-                        yekabussiness.businessTime = 0
-                        yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                        yekabussiness.save()
-                    yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
 
-                    messages.success(request, 'Basarıyla Kayıt Edilmiştir.')
-                    if purchase_guarantee_form.cleaned_data['type'] == 'Miktar':
-                        return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                        start_date = startDate.date() + datetime.timedelta(days=time)
+                    yekabussiness.startDate = startDate
+                    yekabussiness.finisDate = start_date
+                    yekabussiness.save()
+                else:
+                    yekabussiness.businessTime = 0
+                    yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
+                    yekabussiness.save()
+                yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
 
+                messages.success(request, 'Basarıyla Kayıt Edilmiştir.')
+                if purchase_guarantee_form.cleaned_data['type'] == 'Miktar':
                     return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+
+                return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
@@ -1042,10 +1041,10 @@ def view_sub_yeka_competition_detail(request, uuid):
         }
         yeka = YekaCompetitionGetService(request, yeka_filter)
         proposal_sub_yeka = None
-        yeka_proposal=None
+        yeka_proposal = None
         if ProposalSubYeka.objects.filter(sub_yeka=yeka, isDeleted=False):
             proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka=yeka, isDeleted=False).first()
-            yeka_proposal=YekaProposal.objects.filter(proposal=proposal_sub_yeka.proposal).first()
+            yeka_proposal = YekaProposal.objects.filter(proposal=proposal_sub_yeka.proposal).first()
         name = general_methods.yekaname(yeka.business)
 
         yekabusinessbloks = None
@@ -1070,7 +1069,7 @@ def view_sub_yeka_competition_detail(request, uuid):
 
         return render(request, 'YekaCompetition/sub_yeka_detail.html',
                       {'urls': urls, 'current_url': current_url, 'proposal_sub_yeka': proposal_sub_yeka,
-                       'url_name': url_name, 'name': name, 'bloks': blocks,'yeka_proposal':yeka_proposal,
+                       'url_name': url_name, 'name': name, 'bloks': blocks, 'yeka_proposal': yeka_proposal,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
                        'employees': employees,
 
