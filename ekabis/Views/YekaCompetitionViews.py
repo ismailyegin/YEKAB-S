@@ -587,6 +587,10 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     competition.save()
             if purchase_guarantee_form:
                 if purchase_guarantee_form.is_valid():
+                        if purchase_guarantee_form.cleaned_data['type'] == 'Süre':
+                            purchase_guarantee_form.cleaned_data['total_quantity']=competition.capacity
+                        elif purchase_guarantee_form.cleaned_data['type'] == 'Miktar':
+                            purchase_guarantee_form.cleaned_data['time']=None
                         purchase_guarantee = purchase_guarantee_form.save(request, commit=False)
                         purchase_guarantee.save()
                         if purchase_guarantee_form.cleaned_data['time']:

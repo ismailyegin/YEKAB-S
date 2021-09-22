@@ -504,8 +504,10 @@ urlpatterns = [
     path('yeka/yeka-tufe-second-month/<str:date>/', EskalasyonViews.month_value_tufe_ufe,
          name='second_month_value_tufe'),
     path('yeka/yeka-eskalasyon-hesapla/', EskalasyonViews.yeka_competition_eskalasyon, name='yeka_competition_eskalasyon'),
-    path('yeka/yeka-competition-rapor/', YekaViews.yeka_report, name='yeka_report'),
+    path('yeka/yeka-yarisma-rapor/', YekaViews.yeka_report, name='yeka_report'),
     path('yeka/yeka-yarisma-firma-getir/', YekaViews.get_yeka_competition_company, name='get_yeka_competition_company'),
     path('yeka/yeka-yarisma-aday-yeka-getir/', YekaViews.get_yeka_competition_proposal, name='get_yeka_competition_proposal'),
+    path('yeka/yeka-yarisma-guncel-fiyat/', YekaViews.get_yeka_competition_eskalasyon,
+         name='get_yeka_competition_eskalasyon'),
 
 ]
