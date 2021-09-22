@@ -353,7 +353,7 @@
                                 html2 += '<a class="btn btn-secondary" href="' + add_newspaper + '" type="button" style="float:right">Gazete Ekle</a>';
 
                             } else if (this.data('name') === 'Yarışmanın Yapılması' + ' ' + this.data('startDate')) {
-                                let change_competition = "{% url 'ekabis:change_competition' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
+                                let change_competition = "{% url 'ekabis:change_competition_block_' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 change_competition = change_competition.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 change_competition = change_competition.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
                                 html2 += '<a class="btn btn-secondary" href="' + change_competition + '" type="button" style="float:right">Yarışma Ayarları</a>';

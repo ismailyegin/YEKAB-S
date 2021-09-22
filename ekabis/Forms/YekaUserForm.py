@@ -20,12 +20,12 @@ class YekaUserForm(BaseForm):
             'startDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'id': 'datepicker', 'autocomplete': 'off',
                        'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
-                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
+                       "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
 
             'finisDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'id': 'datepicker2', 'autocomplete': 'off',
                        'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
-                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
+                       "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
             #
             # 'file': forms.FileInput(attrs={'class': '',
             #                                'style': 'width: 100%;', 'required': 'required'}),

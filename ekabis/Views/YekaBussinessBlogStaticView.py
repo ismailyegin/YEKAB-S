@@ -638,7 +638,7 @@ def change_competition(request, business, businessblog):
                 if competition_form.is_valid():
                     competition_form.save(request)
                     messages.success(request, 'Yarışma Güncellenmiştir')
-                    return redirect('ekabis:change_competition', competition.business.uuid,
+                    return redirect('ekabis:change_competition_block_', competition.business.uuid,
                                     competition.yekabusinessblog.uuid)
                 else:
                     error_messages = get_error_messages(competition_form)
@@ -674,15 +674,16 @@ def add_competition_company(request, competition):
         array_exclude = []
         for item in competition.company.all():
             array_exclude.append(item.company.pk)
+        company_form.fields['company'].queryset = Company.objects.exclude(id__in=array_exclude)
         # basvurular varsa oradan alınacak yoksa bütün firmalarda alınacak
-        if CompetitionApplication.objects.filter(business=competition.business):
-            application = CompetitionApplication.objects.get(business=competition.business)
-            array = []
-            for item in application.companys.all():
-                array.append(item.company.pk)
-            company_form.fields['company'].queryset = Company.objects.filter(id__in=array).exclude(id__in=array_exclude)
-        else:
-            company_form.fields['company'].queryset = Company.objects.exclude(id__in=array_exclude)
+        # if CompetitionApplication.objects.filter(business=competition.business):
+        #     application = CompetitionApplication.objects.get(business=competition.business)
+        #     array = []
+        #     for item in application.companys.all():
+        #         array.append(item.company.pk)
+        #     company_form.fields['company'].queryset = Company.objects.filter(id__in=array).exclude(id__in=array_exclude)
+        # else:
+        #     company_form.fields['company'].queryset = Company.objects.exclude(id__in=array_exclude)
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
@@ -698,7 +699,7 @@ def add_competition_company(request, competition):
                     competition.company.add(company)
                     competition.save()
                     messages.success(request, 'Firma  Eklenmistir')
-                    return redirect('ekabis:change_competition', competition.business.uuid,
+                    return redirect('ekabis:change_competition_block_', competition.business.uuid,
                                     competition.yekabusinessblog.uuid)
                 else:
                     error_messages = get_error_messages(company_form)

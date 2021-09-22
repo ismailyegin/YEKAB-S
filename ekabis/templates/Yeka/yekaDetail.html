@@ -285,7 +285,7 @@
                         select: function (ele) {
                             let html = '';
                             html += '<div class="col-md-6">'
-                            html += '<div class="form-group"> <label for="exampleInputEmail1">Başlangıç Tarihi : </label>  ' + '{{ blok.yekabusinessblog.startDate.date }}' + '  </div>';
+                            html += '<div class="form-group"> <label for="exampleInputEmail1">Başlangıç Tarihi: </label>  ' +this.data('startDate')+'</div>';
                             html += '<div class="form-group"> <label for="exampleInputEmail1">Bitiş Tarihi : </label> ' + this.data('finishDate') + '  </div>';
                             if (this.data('status')) {
                                 html += '<div class="form-group"> <label for="exampleInputEmail1">Durumu : </label> Devam Ediyor </div>';
@@ -305,7 +305,6 @@
                             let html2 = ''
                             html2 = '<h3 class="card-title">' + this.data('name') + '</h3>';
                             document.getElementById('blok_header').innerHTML = html2;
-
                             document.getElementById('blok_detail').innerHTML = html;
                             $('#modal-detail').modal('show');
                         },
