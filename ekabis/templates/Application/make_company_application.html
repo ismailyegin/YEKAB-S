@@ -487,7 +487,7 @@
                     for (let j = 0; j < array.length; j++) {
                         if (array[j].file) {
                             let url = "delete_yeka_company('" + array[j].uuid + "')";
-                            html += '<p class="text-primary" id="' + id + '"><div class="col-lg-5"><span  type="text">' + array[j].filename.filename + ' </span></div><div class="col-lg-5"><span type="text">' + array[j].file + '</span></div>';
+                            html += '<p class="text-primary" id="' + id + '"><div class="col-lg-2"><span  type="text">' + array[j].filename.filename + ' </span></div><div class="col-lg-8"><span type="text">' + array[j].file + '</span></div>';
                             html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Ekle"><i class="fa fa-times"></i></button></div></p>';
 
 
@@ -563,7 +563,7 @@
 
             let html = ''
             let url = "delete_file_line('" + id + "','" + file_input1 + "')";
-            html += '<p  id="' + id + '"><div class="col-lg-5 text-primary"><span  type="text">' + file_input.files[0].name + ' </span></div><div class="col-lg-5 text-primary"><span type="text">' + name.label + '</span></div>';
+            html += '<p  id="' + id + '"><div class="col-lg-5 text-primary"><span  type="text">' +name.label  + ' </span></div><div class="col-lg-5 text-primary"><span type="text">' +file_input.files[0].name  + '</span></div>';
             html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Ekle"><i class="fa fa-times"></i></button></div></p>';
 
 
