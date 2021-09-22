@@ -409,6 +409,7 @@
                         render: function (full, data, type, row) {
                             let html = ''
                             let url = "get_yeka_company('" + full.uuid + "')"
+
                             html = '<button type="button" onclick="' + url + '" class="btn btn-outline-primary btn-sm"> Belge Ekle  </button>';
                             return html;
 
@@ -486,7 +487,7 @@
                     for (let j = 0; j < array.length; j++) {
                         if (array[j].file) {
                             let url = "delete_yeka_company('" + array[j].uuid + "')";
-                            html += '<p class="text-primary" id="' + id + '"><div class="col-lg-5"><span  type="text">' + array[j].file + ' </span></div><div class="col-lg-5"><span type="text">' + array[j].filename.file + '</span></div>';
+                            html += '<p class="text-primary" id="' + id + '"><div class="col-lg-5"><span  type="text">' + array[j].filename.filename + ' </span></div><div class="col-lg-5"><span type="text">' + array[j].file + '</span></div>';
                             html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Ekle"><i class="fa fa-times"></i></button></div></p>';
 
 
@@ -548,10 +549,6 @@
 
 
         }
-
-
-
-
 
 
         function array_company_file() {

@@ -179,7 +179,7 @@
 
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-lg-6"></div>
+                <div class="col-lg-6"><h3>Rapor</h3></div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         {% for url in urls %}
@@ -201,7 +201,7 @@
                 <div class="col-md-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title">Firma Ekle</h3>
+                            <h3 class="card-title">Raporlama Seçenekleri</h3>
 
                         </div>
                         <div class="card-body">
@@ -250,6 +250,7 @@
                                         <option value="null">-------</option>
                                         <option value="Firmalar">Firmalar</option>
                                         <option value="aday_yeka">Aday Yekalar</option>
+                                        <option value="eskalasyon">Güncel Fiyat Listesi</option>
 
 
                                     </select>
@@ -259,14 +260,6 @@
 
                                 <img id="loading-image" src="{% static 'loader/wind.gif' %}" alt="Loading..."/>
                             </div>
-
-                            <div class="card-footer">
-                                <button class="btn btn-outline-primary" type="button" onclick="make_application()"
-                                        style="float:right">Kaydet
-                                </button>
-
-                            </div>
-
 
                         </div>
                     </div>
@@ -294,7 +287,7 @@
                         </tr>
                         </thead>
 
-                        <tbody id="company_yeka">
+                        <tbody>
 
 
                         </tbody>
@@ -327,7 +320,39 @@
                         </tr>
                         </thead>
 
-                        <tbody id="proposal_yeka">
+                        <tbody>
+
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-12" style="display: none" id="yeka_eskalasyon_list">
+            <div class="card card-primary card-outline" id="company">
+                <div class="card-header with-border">
+                    <h3 class="card-title">Güncel Fiyat Listesi</h3>
+                </div>
+
+                <div class="card-body">
+
+
+                    <table id="eskalasyon_table" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Güncel Fiyat</th>
+                            <th>Tarih</th>
+                            <th>Bir Önceki Dönem İçin Hesaplanan Fiyat</th>
+
+
+                        </tr>
+                        </thead>
+
+                        <tbody id="eskalasyon_yeka">
 
 
                         </tbody>
@@ -348,7 +373,7 @@
             $('#loading').show()
             get_region();
             get_yeka_competition();
-            get_yeka_competition_company();
+
 
         });
 
@@ -422,91 +447,332 @@
             debugger;
             $('#loading').show();
 
+
             var e = document.getElementById("select_competition");
             var id = e.options[e.selectedIndex].value;
 
             var x = document.getElementById('select_item');
             var value = x.options[x.selectedIndex].value;
+            let html = '';
+
             if (value === 'Firmalar') {
-                $.ajax({
-                    url: "{% url 'ekabis:get_yeka_competition_company' %}",
-                    type: "post", // or "get"
-                    async: true,
-                    data: {
-                        competition_id: id,
+
+                $('#yeka_company_list').show();
+
+                table = $('#company_table').DataTable();
+                table.destroy();
+
+
+                $('#company_table').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "paging": true,
+                    "ordering": true,
+                    "select": true,
+
+
+                    "ajax": {
+                        "url": "{% url 'ekabis:get_yeka_competition_company' %}",
+                        "type": "POST",
+                        "data": {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            'competition_id': id
+                        },
 
                     },
-                    success: function (result) {
-                        debugger;
-                        if (result.status === 'Fail') {
-                            $('#loading').hide();
+                    dom: 'Bfrtip',
 
-                            let toast = document.getElementById('error_message');
-                            let html = ''
-                            html = result.msg;
-                            toast.innerHTML = html;
-                            document.getElementById('error_toast').style.display = 'block';
-                            $('.error').toast('show');
-                            $('.toast').fadeOut(5000);
-
-                        }else {
-                             let html = '';
-                        for (let i = 0; i < result.company.length; i++) {
-                            var count = i + 1;
-                            html += '<tr><td>' + count + '</td>';
-                            html += '<td>' + result.company[i].company.name + '</td><tr>';
-
-                        }
-                        $('#yeka_company_list').show();
-                        $('#company_table').find('tbody').append(html);
-                        $('#loading').hide();
-                        }
+                    'buttons': [
 
 
+                        {
+                            extend: "pageLength",
+                        },
 
-                    }
-                });
-            } else if (value === 'aday_yeka') {
-                $.ajax({
-                    url: "{% url 'ekabis:get_yeka_competition_proposal' %}",
-                    type: "post", // or "get"
-                    async: true,
-                    data: {
-                        competition_id: id,
 
+                        {
+                            extend: 'colvis',
+                            titleAttr: 'Ekle Çıkar'
+
+
+                        },
+                        {
+                            extend: 'print',
+                            title: 'Firmalar',
+                            text: '<i class="fa fa-print"></i>',
+
+                            titleAttr: 'Yazdır'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            text: '<i class="fa fa-file-pdf"></i>',
+
+                            titleAttr: 'Pdf Kaydet'
+                        },
+
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-file-excel"></i>',
+                            titleAttr: 'Excel Kaydet'
+                        },
+
+
+                    ],
+
+
+                    'language': {
+                        "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                     },
-                    success: function (result) {
-                        debugger;
-                        $('#yeka_proposal_list').show();
-                        if (result.status === 'Fail') {
-                            $('#loading').hide();
+                    "columns": [
 
-                            let toast = document.getElementById('error_message');
-                            let html = ''
-                            html = result.msg;
-                            toast.innerHTML = html;
-                            document.getElementById('error_toast').style.display = 'block';
-                            $('.error').toast('show');
-                            $('.toast').fadeOut(5000);
+                        {"data": "id"},
+                        {
+                            "data": null,
+                            "bSortable": false,
+                            "mRender": function (data) {
 
-                        } else {
-                            let html = '';
-                            for (let i = 0; i < result.proposal.length; i++) {
-                                var count = i + 1;
-                                html += '<tr><td>' + count + '</td><td>' + result.proposal[i].name + '</td>';
-                                html += '<td>' + result.proposal[i].capacity + '</td>';
-                                html += '<td>' + result.proposal[i].date + '</td></tr>';
+                                return data.company.name
+
 
                             }
-
-                            $('#proposal_table').find('tbody').append(html);
-                            $('#loading').hide();
                         }
 
 
+                    ],
+                    "search": {
+                        "caseInsensitive": true
                     }
+
+
                 });
+                table.on('draw.dt', function () {
+                    var info = table.page.info();
+                    table.column(0, {
+                        search: 'applied',
+                        order: 'applied',
+                        page: 'applied'
+                    }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1 + info.start;
+                    });
+                });
+                $('#loading').hide();
+
+            } else if (value === 'aday_yeka') {
+                $('#yeka_proposal_list').show();
+
+                table = $('#proposal_table').DataTable();
+                table.destroy();
+
+
+                $('#proposal_table').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "paging": true,
+                    "ordering": true,
+                    "select": true,
+
+
+                    "ajax": {
+                        "url": "{% url 'ekabis:get_yeka_competition_proposal' %}",
+                        "type": "POST",
+                        "data": {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            'competition_id': id
+                        },
+
+                    },
+                    dom: 'Bfrtip',
+
+                    'buttons': [
+
+
+                        {
+                            extend: "pageLength",
+                        },
+
+
+                        {
+                            extend: 'colvis',
+                            titleAttr: 'Ekle Çıkar'
+
+
+                        },
+                        {
+                            extend: 'print',
+                            title: 'Firmalar',
+                            text: '<i class="fa fa-print"></i>',
+
+                            titleAttr: 'Yazdır'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            text: '<i class="fa fa-file-pdf"></i>',
+
+                            titleAttr: 'Pdf Kaydet'
+                        },
+
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-file-excel"></i>',
+                            titleAttr: 'Excel Kaydet'
+                        },
+
+
+                    ],
+
+
+                    'language': {
+                        "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                    },
+                    "columns": [
+
+                        {"data": "id"},
+                        {"data": "name"},
+                        {"data": "capacity"},
+                        {"data": "date"},
+
+
+                    ],
+                    "search": {
+                        "caseInsensitive": true
+                    }
+
+
+                });
+                table.on('draw.dt', function () {
+                    var info = table.page.info();
+                    table.column(0, {
+                        search: 'applied',
+                        order: 'applied',
+                        page: 'applied'
+                    }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1 + info.start;
+                    });
+                });
+                $('#loading').hide();
+
+
+            } else if (value === 'eskalasyon') {
+
+                $('#yeka_eskalasyon_list').show();
+
+                table = $('#eskalasyon_table').DataTable();
+                table.destroy();
+
+
+                $('#eskalasyon_table').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "paging": true,
+                    "ordering": true,
+                    "select": true,
+
+
+                    "ajax": {
+                        "url": "{% url 'ekabis:get_yeka_competition_eskalasyon' %}",
+                        "type": "POST",
+                        "data": {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            'competition_id': id
+                        },
+
+                    },
+                    dom: 'Bfrtip',
+
+                    'buttons': [
+
+
+                        {
+                            extend: "pageLength",
+                        },
+
+
+                        {
+                            extend: 'colvis',
+                            titleAttr: 'Ekle Çıkar'
+
+
+                        },
+                        {
+                            extend: 'print',
+                            title: 'Firmalar',
+                            text: '<i class="fa fa-print"></i>',
+
+                            titleAttr: 'Yazdır'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                            text: '<i class="fa fa-file-pdf"></i>',
+
+                            titleAttr: 'Pdf Kaydet'
+                        },
+
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-file-excel"></i>',
+                            titleAttr: 'Excel Kaydet'
+                        },
+
+
+                    ],
+
+
+                    'language': {
+                        "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                    },
+                    "columns": [
+
+                        {"data": "id"},
+                        {"data": "result"},
+                        {
+                            "data": null,
+                            "bSortable": false,
+                            "mRender": function (data) {
+                                debugger;
+                                let date = new Date(data.creationDate);
+                                let year = date.getFullYear().toString()
+                                let month = date.getMonth().toString()
+                                let day = date.getDay().toString()
+                                if (day.length <2) {
+                                    day = '0' + day
+                                }
+                                if (month.length <2) {
+                                    month = '0' + month
+                                }
+
+                                return [day,month,year].join('/')
+
+
+                            }
+                        },
+                        {"data": "pre_result"},
+
+
+                    ],
+                    "search": {
+                        "caseInsensitive": true
+                    }
+
+
+                });
+                table.on('draw.dt', function () {
+                    var info = table.page.info();
+                    table.column(0, {
+                        search: 'applied',
+                        order: 'applied',
+                        page: 'applied'
+                    }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1 + info.start;
+                    });
+                });
+                $('#loading').hide();
+
+
             }
+
 
         }
 

@@ -152,17 +152,17 @@
 
             });
             $('#id_type').change(function () {
+                debugger;
                 if ($("#id_type option:selected").val() == 'Süre') {
-                    $('#control-businessTime').hide();
-                    $('#control-time_type').hide();
-
+                    $('#control-time').show();
+                    $('#control-total_quantity').hide();
                 } else if ($("#id_type option:selected").val() == 'Miktar') {
                     $('#control-time').hide();
+                    $('#control-total_quantity').show();
 
                 } else {
                     $('#control-time').show();
-                    $('#control-businessTime').show();
-                    $('#control-time_type').show();
+                    $('#control-total_quantity').show();
 
                 }
 

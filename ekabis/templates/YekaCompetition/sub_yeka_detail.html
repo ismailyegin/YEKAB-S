@@ -227,7 +227,7 @@
 
                     data: {
                         id: '{{ blok.yekabusinessblog.id }}',
-                        name: '{{ blok.yekabusinessblog.businessblog.name }}',
+                        name: '{{ blok.yekabusinessblog.businessblog.name }}' + ' - (' + {{ blok.yekabusinessblog.startDate.date }} + ')',
                         yeka: '{{ blok.yeka }}',
                         business: '{{ yeka.business.uuid }}',
                         yekabusinessblog: '{{ blok.yekabusinessblog.uuid }}',
@@ -249,7 +249,7 @@
                         data: {
                             source: '{{item.dependence_parent.id}}',
                             target: '{{ item.id}}',
-                            label: '{{ item.businessTime }}',
+                            label: '{{ item.dependence_parent.businessTime }}',
                         }
                     });
                 {% endif %}

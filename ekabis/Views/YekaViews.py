@@ -1,4 +1,5 @@
 import json
+import time
 import traceback
 
 from django.contrib import messages
@@ -12,16 +13,18 @@ from django.shortcuts import redirect, render
 from django.urls import resolve
 # from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaCompanyForm import YekaCompanyForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import ExtraTime, \
-    Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension
+    Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension, YekaCompetitionEskalasyon
 
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
+from ekabis.models.LogAPIObject import LogAPIObject
 from ekabis.models.Yeka import Yeka
 from ekabis.models.CompetitionApplication import CompetitionApplication
 from ekabis.models.YekaApplicationFile import YekaApplicationFile
@@ -36,7 +39,8 @@ from ekabis.serializers.CompanySerializers import CompanySerializer
 from ekabis.serializers.CompetitionSerializers import YekaCompetitionSerializer
 from ekabis.serializers.ConnectionRegionSerializer import ConnectionRegionSerializer
 from ekabis.serializers.YekaCompanySerializers import YekaCompanySerializer
-from ekabis.serializers.YekaProposalSerializers import  ProposalSerializer
+from ekabis.serializers.YekaCompetitionEskalasyonSerializers import YekaCompetitionEskalasyonSerializer
+from ekabis.serializers.YekaProposalSerializers import ProposalSerializer, ProposalResponseSerializer
 from ekabis.serializers.YekaSerializer import YekaSerializer
 from ekabis.services import general_methods
 from ekabis.services.NotificationServices import yeka_added
@@ -1787,15 +1791,15 @@ def save_company_app_file(request):
                 ext = format.split('/')[-1]
                 if FileExtension.objects.filter(mime_type=ext):
                     ext = FileExtension.objects.get(mime_type=ext).extension
-
-                data = ContentFile(base64.b64decode(imgstr), name='temp.' + + ext)
+                date=time.time() * 1000
+                data = ContentFile(base64.b64decode(imgstr), name='temp.'+str(date) + ext)
                 x = {'name': item['filename'], 'file': data}
                 file_array.append(x)
             yeka_company = YekaCompany.objects.get(uuid=id)
             if not array == None:
 
                 for file in file_array:
-                    if not yeka_company.files.filter(filename=file['name'])[0].file:
+                    if not yeka_company.files.filter(filename__filename=YekaApplicationFileName.objects.get(pk=int(file['name'])).filename):
 
                         filename = YekaApplicationFileName.objects.get(pk=int(file['name']))
                         file_input = file['file']
@@ -1938,11 +1942,15 @@ def get_yeka_competition_company(request):
 
                 data_companies = YekaCompanySerializer(companies, many=True)
 
-                responseData = dict()
+                response = {
 
-                responseData['company'] = data_companies.data
+                    'data': data_companies.data,
+                    'draw': int(request.POST.get('draw')),
+                    'recordsTotal': companies.count(),
+                    'recordsFiltered': companies.count(),
 
-                return JsonResponse(responseData, safe=True)
+                }
+                return JsonResponse(response)
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Bu bilgilere ait firma bulunamadı'})
 
@@ -1966,18 +1974,47 @@ def get_yeka_competition_proposal(request):
                 proposal=yeka_proposal.proposal.filter(isDeleted=False)
                 data_proposal =ProposalSerializer(proposal, many=True)
 
-                responseData = dict()
+                response = {
 
-                responseData['proposal'] = data_proposal.data
+                    'data': data_proposal.data,
+                    'draw': int(request.POST.get('draw')),
+                    'recordsTotal': proposal.count(),
+                    'recordsFiltered':  proposal.count(),
 
-                return JsonResponse(responseData, safe=True)
+                }
+                return JsonResponse(response)
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Aday Yeka Bulunmamaktadır'})
 
         except Exception as e:
 
             return JsonResponse({'status': 'Fail', 'msg': e})
+@api_view(http_method_names=['POST'])
+def get_yeka_competition_eskalasyon(request):
+    if request.POST:
+        try:
 
+            id = request.POST.get('competition_id')
+            competition=YekaCompetition.objects.get(pk=id)
+            if YekaCompetitionEskalasyon.objects.filter(competition=competition):
+                yeka_eskalasyon=YekaCompetitionEskalasyon.objects.filter(competition=competition)
+                data_eskalasyon =YekaCompetitionEskalasyonSerializer(yeka_eskalasyon, many=True)
+
+                response = {
+
+                    'data': data_eskalasyon.data,
+                    'draw': int(request.POST.get('draw')),
+                    'recordsTotal': yeka_eskalasyon.count(),
+                    'recordsFiltered': yeka_eskalasyon.count(),
+
+                }
+                return JsonResponse(response)
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Güncel Fiyat Bilgisi Bulunmamaktadır'})
+
+        except Exception as e:
+
+            return JsonResponse({'status': 'Fail', 'msg': e})
 def yeka_report(request):
     perm = general_methods.control_access(request)
     if not perm:
