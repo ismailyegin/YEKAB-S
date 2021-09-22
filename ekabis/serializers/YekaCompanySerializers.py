@@ -7,7 +7,7 @@ class YekaCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = YekaCompany
         fields = '__all__'
-        depth = 3
+        depth = 4
 
 
 

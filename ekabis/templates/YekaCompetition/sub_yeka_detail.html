@@ -222,7 +222,7 @@
             debugger;
             var demoNodes = [];
             var demoEdges = [];
-            {% for blok in bloks %}
+            {% for blok in blocks %}
                 demoNodes.push({
 
                     data: {
@@ -781,7 +781,35 @@
         <div class="row">
             <section class="col-lg-12 ">
                 <div class="card card-default card-outline">
-                    <div class="card-header with-border"><h3 class="card-title">İş Planı</h3></div>
+                    <div class="card-header with-border"><h3 class="card-title">İş Planı</h3>
+                    {% for item in perm %}
+                            {% if item == 'add_yekabusiness' %}
+
+                                {% if not blocks %}
+
+                                    <a href="{% url 'ekabis:add_yekacompetitionbusiness'  yeka.uuid %}"
+                                       title="İş Planı Ekle"
+                                       type="button" class="btn btn-outline-primary btn-sm"
+                                       style="float: right"><i
+                                            class="fa fa-plus"></i>
+                                    </a>
+
+                                {% endif %}
+
+                            {% endif %}
+                            {% if item == 'change_yekabusiness' %}
+                                {% if  yekabusinessbloks %}
+
+                                    <a href="{% url 'ekabis:change_yekacompetitionbusiness'  yeka.business.uuid  yeka.uuid %}"
+                                       title="İş Planı Ekle"
+                                       type="button" class="btn btn-outline-primary btn-sm"
+                                       style="float: right"><i
+                                            class="fa fa-edit"></i>
+                                    </a>
+
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}</div>
                     <div class="card-body" style="height: 500px">
                         <div id="cy"></div>
 

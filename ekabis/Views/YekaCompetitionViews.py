@@ -585,19 +585,19 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     contract.save()
                     competition.business.company = contract.company
                     competition.save()
-            if not yekaBusinessBlogo_form.cleaned_data['businessTime']:
+            if purchase_guarantee_form:
                 if purchase_guarantee_form.is_valid():
-                    purchase_guarantee = purchase_guarantee_form.save(request, commit=False)
-                    purchase_guarantee.save()
-                    if purchase_guarantee_form.cleaned_data['time']:
-                        time = purchase_guarantee_form.cleaned_data['time']
-                        time = purchase_guarantee_form.cleaned_data['time'] * 365. / 12
-                        purchase_guarantee.time = int(time)
-                        purchase_guarantee.finisDate = purchase_guarantee.startDate + datetime.timedelta(days=time)
+                        purchase_guarantee = purchase_guarantee_form.save(request, commit=False)
                         purchase_guarantee.save()
+                        if purchase_guarantee_form.cleaned_data['time']:
+                            time = purchase_guarantee_form.cleaned_data['time'] * 365. / 12
+                            purchase_guarantee.time = int(time)
+                            purchase_guarantee.finisDate = purchase_guarantee.startDate + datetime.timedelta(days=time)
+                            purchase_guarantee.type=purchase_guarantee_form.cleaned_data['type']
+                            purchase_guarantee.save()
 
-            else:
-                if yekaBusinessBlogo_form.is_valid():
+
+            if yekaBusinessBlogo_form.is_valid():
                     finish_date = ''
                     start_date = ''
 
@@ -629,8 +629,6 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
 
                     messages.success(request, 'Basarıyla Kayıt Edilmiştir.')
-                    if purchase_guarantee_form.cleaned_data['type'] == 'Miktar':
-                        return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
 
                     return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
@@ -1067,7 +1065,7 @@ def view_sub_yeka_competition_detail(request, uuid):
 
         return render(request, 'YekaCompetition/sub_yeka_detail.html',
                       {'urls': urls, 'current_url': current_url, 'proposal_sub_yeka': proposal_sub_yeka,
-                       'url_name': url_name, 'name': name, 'bloks': blocks,'yeka_proposal':yeka_proposal,
+                       'url_name': url_name, 'name': name, 'blocks': blocks,'yeka_proposal':yeka_proposal,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
                        'employees': employees,
 

@@ -1,4 +1,4 @@
-import datetime
+import json
 import traceback
 
 from django.contrib import messages
@@ -18,21 +18,25 @@ from ekabis.Forms.YekaCompanyForm import YekaCompanyForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import ExtraTime, \
-    Permission, Logs, ConnectionRegion, YekaCompetition
+    Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension
 
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
 from ekabis.models.Yeka import Yeka
 from ekabis.models.CompetitionApplication import CompetitionApplication
 from ekabis.models.YekaApplicationFile import YekaApplicationFile
+from ekabis.models.YekaApplicationFileName import YekaApplicationFileName
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaCompany import YekaCompany
 from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.YekaPersonHistory import YekaPersonHistory
+from ekabis.models.YekaProposal import YekaProposal
 from ekabis.serializers import CompanySerializers
 from ekabis.serializers.CompanySerializers import CompanySerializer
 from ekabis.serializers.CompetitionSerializers import YekaCompetitionSerializer
 from ekabis.serializers.ConnectionRegionSerializer import ConnectionRegionSerializer
+from ekabis.serializers.YekaCompanySerializers import YekaCompanySerializer
+from ekabis.serializers.YekaProposalSerializers import  ProposalSerializer
 from ekabis.serializers.YekaSerializer import YekaSerializer
 from ekabis.services import general_methods
 from ekabis.services.NotificationServices import yeka_added
@@ -46,6 +50,9 @@ import datetime
 
 from ekabis.models.CompetitionApplication import CompetitionApplication
 from ekabis.models.YekaApplicationFile import YekaApplicationFile
+import base64
+
+from django.core.files.base import ContentFile
 
 
 @login_required
@@ -903,45 +910,43 @@ def add_yekabusinessblog_company(request, business, yekabusinessblog):
         name = general_methods.yekaname(yekabusiness)
 
         yekabussinessblog = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter)
-        application = CompetitionApplication.objects.get(business=yekabusiness)
 
-        array_company = []
-        for item in application.companys.all():
-            array_company.append(item.company.pk)
-        company_list = Company.objects.exclude(id__in=array_company).filter(isDeleted=False)
-        company_form = YekaCompanyForm()
-        company_form.fields['company'].queryset = company_list
+        application = CompetitionApplication.objects.get(business=yekabusiness)
+        competition = YekaCompetition.objects.get(business=yekabusiness)
+        region = ConnectionRegion.objects.filter(yekacompetition=competition).first()
+        yeka = Yeka.objects.filter(connection_region=region).first()
+        company_list = []
+        if YekaCompany.objects.filter(application=application):
+            yeka_company = YekaCompany.objects.filter(application=application)
+            array_company = []
+            for item in yeka_company:
+                array_company.append(item.company.pk)
+            company_list = Company.objects.exclude(id__in=array_company).filter(isDeleted=False)
+            companies = company_list
         if request.POST:
             with transaction.atomic():
-                company_form = YekaCompanyForm(request.POST)
-                if company_form.is_valid():
-                    company = company_form.save(request, commit=False)
+                get_list_company = request.POST.getlist('company')
 
-                    company.save()
-                    application.companys.add(company)
-                    application.save()
+                for id in get_list_company:
+                    company = Company.objects.get(uuid=id)
+                    yeka_app = YekaCompany(application=application, company=company, yeka=yeka, competition=competition,
+                                           connection_region=region)
+                    yeka_app.save()
 
-                    for necessary in application.necessary.all():
-                        file = YekaApplicationFile(
-                            filename=necessary,
-                        )
-                        file.save()
-                        company.files.add(file)
-                        company.save()
-                        messages.success(request, 'Firma  eklenmistir.')
-                    return redirect('ekabis:view_application', yekabusiness.uuid, yekabussinessblog.uuid)
-                else:
-                    error_messages = get_error_messages(company_form)
-                    return render(request, 'Yeka/add_yekabusinessblog_company.html',
-                                  {
-                                      'error_messages': error_messages,
-                                      'company_form': company_form,
-                                      'name': name, 'urls': urls, 'current_url': current_url, 'url_name': url_name
-                                  })
+                for necessary in application.necessary.all():
+                    file = YekaApplicationFile(
+                        filename=necessary,
+                    )
+                    file.save()
+                    yeka_app.files.add(file)
+                    yeka_app.save()
+                    messages.success(request, 'Firma  eklenmistir.')
+                return redirect('ekabis:view_application', yekabusiness.uuid, yekabussinessblog.uuid)
+
         return render(request, 'Yeka/add_yekabusinessblog_company.html',
                       {
-                          'company_form': company_form,
-                          'name': name, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                          'name': name, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                          'companies': company_list,
                       })
     except Exception as e:
 
@@ -972,33 +977,27 @@ def change_yekabusinessblog_company(request, uuid, business, yekabusinessblog):
 
         yekabussinessblog = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter)
         application = CompetitionApplication.objects.get(business=yekabusiness)
-
-        array_company = []
-        for item in application.companys.all():
-            array_company.append(item.company.pk)
-        company_list = Company.objects.exclude(id__in=array_company).filter(isDeleted=False)
-        company_form = YekaCompanyForm(request.POST or None, instance=yeka_business_company)
-        company_form.fields['company'].queryset = Company.objects.filter(pk=yeka_business_company.company.pk)
-        company_form.fields['company'].disabled = True
+        competition = YekaCompetition.objects.get(business=yekabusiness)
+        region = ConnectionRegion.objects.filter(yekacompetition=competition).first()
+        yeka = Yeka.objects.filter(connection_region=region).first()
+        company_list = []
+        if YekaCompany.objects.filter(application=application):
+            yeka_company = YekaCompany.objects.filter(application=application)
+            array_company = []
+            for item in yeka_company:
+                array_company.append(item.company.pk)
+            company_list = Company.objects.exclude(id__in=array_company).filter(isDeleted=False)
+            companies = company_list
         if request.POST:
             with transaction.atomic():
-                if company_form.is_valid():
-                    company = company_form.save(request, commit=False)
-                    company.save()
-                    messages.success(request, 'Başvuru güncellenmiştir.')
-                    return redirect('ekabis:view_application', yekabusiness.uuid, yekabussinessblog.uuid)
-                else:
-                    error_messages = get_error_messages(company_form)
-                    return render(request, 'Yeka/change_businessblog_company.html',
-                                  {
-                                      'error_messages': error_messages,
-                                      'company_form': company_form,
-                                      'name': name, 'urls': urls, 'current_url': current_url, 'url_name': url_name
-                                  })
+                new_company = request.POST('company')
+                yeka_business_company.company = Company.objects.get(uuid=new_company)
+                yeka_business_company.save()
+
         return render(request, 'Yeka/change_businessblog_company.html',
                       {
-                          'company_form': company_form,
-                          'name': name, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                          'name': name, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                          'companies': company_list, 'yeka_company': yeka_business_company
                       })
     except Exception as e:
 
@@ -1309,7 +1308,7 @@ def view_kur(request, ):
 
 
 def test_yeka(request):
-    table_th=[]
+    table_th = []
     from collections import namedtuple
     def namedtuplefetchall(cursor):
         "Return all rows from a cursor as a namedtuple"
@@ -1318,13 +1317,14 @@ def test_yeka(request):
             table_th.append(col[0])
         nt_result = namedtuple('Result', [col[0] for col in desc])
         return [nt_result(*row) for row in cursor.fetchall()]
+
     from django.db import connection
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT  yeka.capacity  ,yeka.name,app.finishDate,app.preRegistration FROM ekabis_yekacompetition as yeka left JOIN ekabis_yekaapplication as app ON yeka.business_id=app.business_id")
         row = namedtuplefetchall(cursor)
-    return render(request, 'Yeka/cytoscape.html',{'row':row,
-                                                  'table_th':table_th})
+    return render(request, 'Yeka/cytoscape.html', {'row': row,
+                                                   'table_th': table_th})
 
 
 @login_required()
@@ -1703,6 +1703,26 @@ def get_region(request):
 
 
 @api_view(http_method_names=['POST'])
+def get_yeka_company(request):
+    if request.POST:
+        try:
+
+            yeka_company_id = request.POST.get('yeka_company_id')
+            yeka_company = YekaCompany.objects.get(uuid=yeka_company_id)
+
+            data_company = YekaCompanySerializer(yeka_company)
+
+            responseData = dict()
+            responseData['yeka_company'] = data_company.data
+
+            return JsonResponse(responseData, safe=True)
+
+        except Exception as e:
+
+            return JsonResponse({'status': 'Fail', 'msg': e})
+
+
+@api_view(http_method_names=['POST'])
 def get_yeka_competition(request):
     if request.POST:
         try:
@@ -1727,7 +1747,7 @@ def get_yeka_competition(request):
             return JsonResponse({'status': 'Fail', 'msg': e})
 
 
-def company_aplication(request):
+def company_application(request):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -1748,6 +1768,52 @@ def company_aplication(request):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+def save_company_app_file(request):
+    if request.POST:
+        try:
+
+            id = request.POST['id']
+            array = []
+            array = json.loads(request.POST.get('files'))
+            file_array = []
+            for item in array:
+                file = item['file']
+                brc = file.split(';base64,')
+                format = brc[0]
+                imgstr = brc[1]
+                ext = format.split('/')[-1]
+                if FileExtension.objects.filter(mime_type=ext):
+                    ext = FileExtension.objects.get(mime_type=ext).extension
+
+                data = ContentFile(base64.b64decode(imgstr), name='temp.' + + ext)
+                x = {'name': item['filename'], 'file': data}
+                file_array.append(x)
+            yeka_company = YekaCompany.objects.get(uuid=id)
+            if not array == None:
+
+                for file in file_array:
+                    if not yeka_company.files.filter(filename=file['name'])[0].file:
+
+                        filename = YekaApplicationFileName.objects.get(pk=int(file['name']))
+                        file_input = file['file']
+                        app_file = yeka_company.files.filter(filename=filename).first()
+                        app_file.file = file_input
+                        app_file.save()
+
+                    else:
+                        return JsonResponse({'status': 'Fail', 'msg': "Bu dosya ismine ait dosya var."})
+
+                return JsonResponse({'status': 'Success', 'msg': "Başvuru Kayıt Edildi."})
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': "Başvuru dosyaları kayıt edilemedi."})
+
+
+        except Exception as e:
+
+            return JsonResponse({'status': 'Fail', 'msg': e})
 
 
 def make_application(request):
@@ -1780,6 +1846,13 @@ def make_application(request):
                         application=yeka_application
                     )
                     yeka_company.save()
+                    for necessary in yeka_application.necessary.all():
+                        file = YekaApplicationFile(
+                            filename=necessary,
+                        )
+                        file.save()
+                        yeka_company.files.add(file)
+                        yeka_company.save()
             else:
                 return JsonResponse({'status': 'Fail', 'msg': "Başvuruların alınması iş bloğu mevcut değil."})
 
@@ -1820,3 +1893,107 @@ def get_application(request):
         except Exception as e:
 
             return JsonResponse({'status': 'Fail', 'msg': e})
+
+
+@login_required
+def delete_yeka_company_file(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['id']
+                obj = YekaApplicationFile.objects.get(uuid=uuid)
+                data_as_json_pre = serializers.serialize('json', YekaApplicationFile.objects.filter(uuid=uuid))
+                obj.isDeleted = True
+                obj.save()
+
+                yeka_company = YekaCompany.objects.get(files=obj)
+                yeka_company.files.remove(obj)
+
+                log = str(obj.definition) + " - Yeka silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request),
+                            previousData=data_as_json_pre)
+                logs.save()
+                return JsonResponse({'status': 'Success', 'msg': 'save successfully'})
+
+
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+@api_view(http_method_names=['POST'])
+def get_yeka_competition_company(request):
+    if request.POST:
+        try:
+
+            id = request.POST.get('competition_id')
+            competition=YekaCompetition.objects.get(pk=id)
+            if YekaCompany.objects.filter(competition=competition):
+                companies= YekaCompany.objects.filter(competition=competition)
+
+                data_companies = YekaCompanySerializer(companies, many=True)
+
+                responseData = dict()
+
+                responseData['company'] = data_companies.data
+
+                return JsonResponse(responseData, safe=True)
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Bu bilgilere ait firma bulunamadı'})
+
+
+        except Exception as e:
+
+            return JsonResponse({'status': 'Fail', 'msg': e})
+
+
+
+
+@api_view(http_method_names=['POST'])
+def get_yeka_competition_proposal(request):
+    if request.POST:
+        try:
+
+            id = request.POST.get('competition_id')
+            competition=YekaCompetition.objects.get(pk=id)
+            if YekaProposal.objects.filter(business=competition.business):
+                yeka_proposal=YekaProposal.objects.get(business=competition.business)
+                proposal=yeka_proposal.proposal.filter(isDeleted=False)
+                data_proposal =ProposalSerializer(proposal, many=True)
+
+                responseData = dict()
+
+                responseData['proposal'] = data_proposal.data
+
+                return JsonResponse(responseData, safe=True)
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Aday Yeka Bulunmamaktadır'})
+
+        except Exception as e:
+
+            return JsonResponse({'status': 'Fail', 'msg': e})
+
+def yeka_report(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        with transaction.atomic():
+            urls = last_urls(request)
+            current_url = resolve(request.path_info)
+            url_name = Permission.objects.get(codename=current_url.url_name)
+            yekas = YekaService(request, None)
+
+            return render(request, 'Yeka/rapor.html',
+                          {'error_messages': '', 'urls': urls, 'current_url': current_url, 'yekas': yekas,
+                           'url_name': url_name})
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')

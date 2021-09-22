@@ -12,7 +12,7 @@ from ekabis.serializers.CompanySerializers import CompanyResponseSerializer, Com
 from ekabis.serializers.CompetitionSerializers import YekaCompetitionSerializer, YekaCompetitionResponseSerializer
 from ekabis.serializers.EmployeeSerializers import EmployeeResponseSerializer
 from ekabis.serializers.LogSerializers import LogResponseSerializer
-from ekabis.serializers.YekaCompanySeralizers import YekaCompanyResponseSerializer
+from ekabis.serializers.YekaCompanySerializers import YekaCompanyResponseSerializer
 from ekabis.serializers.YekaSerializer import YekaResponseSerializer, YekaSerializer
 from ekabis.services import general_methods
 from ekabis.services.services import EmployeeService, YekaService, LogsService, YekaCompetitionService

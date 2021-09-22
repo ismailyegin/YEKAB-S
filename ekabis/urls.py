@@ -6,7 +6,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     YekaBussinessBlogStaticView, HelpMenuViews, CityViews, ExtraTimeViews, APIViews, AcceptViews, YekaCompetitionViews, \
     VacationDayViews, ExtraTimeViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
     YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews, ReportViews, NotificationViews, \
-    ProduceAmountViews
+    ProduceAmountViews, EskalasyonViews
 from ekabis.services import general_methods, NotificationServices
 from ekabis.services.general_methods import add_block
 app_name = 'ekabis'
@@ -493,8 +493,19 @@ urlpatterns = [
 
     path('yeka/yeka-baglanti-bolge-getir/', YekaViews.get_region, name='get_region'),
     path('yeka/yeka-yarisma-getir/', YekaViews.get_yeka_competition, name='get_yeka_competition'),
-    path('yeka/yeka-firma-basvuru/', YekaViews.company_aplication, name='company_aplication'),
+    path('yeka/yeka-firma-basvuru/', YekaViews.company_application, name='company_aplication'),
     path('yeka/yeka-firma-basvuru-yap/', YekaViews.make_application, name='yeka_make_aplication_company'),
     path('yeka/basvuru-listesi/', APIViews.GetApplicationCompany.as_view(), name='view_application_company'),
+
+    path('yeka/yarisma-basvurusu-getir/', YekaViews.get_yeka_company, name='get_yeka_company'),
+    path('yeka/yarisma-dosya-kaydet/', YekaViews.save_company_app_file, name='save_company_app_file'),
+    path('yeka/yeka-basvuru-dosya-sil/', YekaViews.delete_yeka_company_file, name='delete_yeka_company_file'),
+    path('yeka/yeka-eskalasyon/<uuid:uuid>', EskalasyonViews.EskalasyonCalculation, name='eskalasyon_hesapla'),
+    path('yeka/yeka-tufe-second-month/<str:date>/', EskalasyonViews.month_value_tufe_ufe,
+         name='second_month_value_tufe'),
+    path('yeka/yeka-eskalasyon-hesapla/', EskalasyonViews.yeka_competition_eskalasyon, name='yeka_competition_eskalasyon'),
+    path('yeka/yeka-competition-rapor/', YekaViews.yeka_report, name='yeka_report'),
+    path('yeka/yeka-yarisma-firma-getir/', YekaViews.get_yeka_competition_company, name='get_yeka_competition_company'),
+    path('yeka/yeka-yarisma-aday-yeka-getir/', YekaViews.get_yeka_competition_proposal, name='get_yeka_competition_proposal'),
 
 ]

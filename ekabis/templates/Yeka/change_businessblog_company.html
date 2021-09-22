@@ -208,8 +208,19 @@
 
                         <div class="card-body">
 
-                            {{ company_form }}
+                            <div class="form-group" >
+                                <label>Firma Seç</label>
+                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;"
+                                         tabindex="-1" aria-hidden="true" id="company" name="company">
+                                    <option value="{{ yeka_company.company.uuid }}" selected="selected"
+                                            data-select2-id="{{ yeka_company.company.uuid }}">{{ yeka_company.company.name }}</option>
+                                    {% for company in companies %}
+                                        <option value="{{ company.uuid }}"
+                                                data-select2-id="{{company.uuid }}">{{ company.name }}</option>
 
+                                    {% endfor %}
+                                </select>
+                            </div>
 
                         </div>
                         <div class="card-footer">

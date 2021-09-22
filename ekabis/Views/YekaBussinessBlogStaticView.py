@@ -510,7 +510,6 @@ def change_yekaapplication(request, uuid):
 
 
 # basvurular
-
 @login_required
 def view_application(request, business, businessblog):
     perm = general_methods.control_access(request)
@@ -529,16 +528,16 @@ def view_application(request, business, businessblog):
     filter = {
         'business': yekabusiness
     }
+    name = general_methods.yekaname(yekabusiness)
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+
     if YekaApplicationService(request, filter):
         application = YekaApplicationGetService(request, filter)
-
-        name = general_methods.yekaname(yekabusiness)
-        urls = last_urls(request)
-        current_url = resolve(request.path_info)
-        url_name = Permission.objects.get(codename=current_url.url_name)
-
+        yeka_company=YekaCompany.objects.filter(application=application,isDeleted=False)
         return render(request, 'Application/view_application.html',
-                      {'application': application, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                      {'yeka_company': yeka_company, 'urls': urls, 'current_url': current_url, 'url_name': url_name,'application':application,
                        'name': name})
     else:
         return redirect('ekabis:add_yekaapplication', yekabusiness.uuid, businessblog.uuid)
