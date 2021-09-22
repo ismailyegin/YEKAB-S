@@ -922,7 +922,8 @@ def add_yekabusinessblog_company(request, business, yekabusinessblog):
             for item in yeka_company:
                 array_company.append(item.company.pk)
             company_list = Company.objects.exclude(id__in=array_company).filter(isDeleted=False)
-            companies = company_list
+        else:
+            company_list=Company.objects.all()
         if request.POST:
             with transaction.atomic():
                 get_list_company = request.POST.getlist('company')
@@ -932,15 +933,16 @@ def add_yekabusinessblog_company(request, business, yekabusinessblog):
                     yeka_app = YekaCompany(application=application, company=company, yeka=yeka, competition=competition,
                                            connection_region=region)
                     yeka_app.save()
+                    for necessary in application.necessary.all():
+                        file = YekaApplicationFile(
+                            filename=necessary,
+                        )
+                        file.save()
+                        yeka_app.files.add(file)
+                        yeka_app.save()
+                messages.success(request, 'Firma  eklenmistir.')
 
-                for necessary in application.necessary.all():
-                    file = YekaApplicationFile(
-                        filename=necessary,
-                    )
-                    file.save()
-                    yeka_app.files.add(file)
-                    yeka_app.save()
-                    messages.success(request, 'Firma  eklenmistir.')
+
                 return redirect('ekabis:view_application', yekabusiness.uuid, yekabussinessblog.uuid)
 
         return render(request, 'Yeka/add_yekabusinessblog_company.html',
@@ -1308,7 +1310,7 @@ def view_kur(request, ):
 
 
 def test_yeka(request):
-    table_th = []
+    table_th=[]
     from collections import namedtuple
     def namedtuplefetchall(cursor):
         "Return all rows from a cursor as a namedtuple"
@@ -1317,14 +1319,13 @@ def test_yeka(request):
             table_th.append(col[0])
         nt_result = namedtuple('Result', [col[0] for col in desc])
         return [nt_result(*row) for row in cursor.fetchall()]
-
     from django.db import connection
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT  yeka.capacity  ,yeka.name,app.finishDate,app.preRegistration FROM ekabis_yekacompetition as yeka left JOIN ekabis_yekaapplication as app ON yeka.business_id=app.business_id")
         row = namedtuplefetchall(cursor)
-    return render(request, 'Yeka/cytoscape.html', {'row': row,
-                                                   'table_th': table_th})
+    return render(request, 'Yeka/cytoscape.html',{'row':row,
+                                                  'table_th':table_th})
 
 
 @login_required()
