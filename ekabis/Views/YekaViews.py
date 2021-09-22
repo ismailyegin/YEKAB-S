@@ -1792,14 +1792,14 @@ def save_company_app_file(request):
                 if FileExtension.objects.filter(mime_type=ext):
                     ext = FileExtension.objects.get(mime_type=ext).extension
                 date=time.time() * 1000
-                data = ContentFile(base64.b64decode(imgstr), name='temp.'+str(date) + ext)
+                data = ContentFile(base64.b64decode(imgstr), name=str(date)+'temp.'+ext)
                 x = {'name': item['filename'], 'file': data}
                 file_array.append(x)
             yeka_company = YekaCompany.objects.get(uuid=id)
             if not array == None:
 
                 for file in file_array:
-                    if not yeka_company.files.filter(filename__filename=YekaApplicationFileName.objects.get(pk=int(file['name'])).filename):
+                    if not yeka_company.files.filter(filename=YekaApplicationFileName.objects.get(pk=int(file['name'])))[0].file:
 
                         filename = YekaApplicationFileName.objects.get(pk=int(file['name']))
                         file_input = file['file']
