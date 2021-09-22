@@ -1997,11 +1997,10 @@ def get_yeka_competition_eskalasyon(request):
 
             id = request.POST.get('competition_id')
             competition=YekaCompetition.objects.get(pk=id)
-            if YekaCompetitionEskalasyon.objects.filter(competition=competition):
-                yeka_eskalasyon=YekaCompetitionEskalasyon.objects.filter(competition=competition)
-                data_eskalasyon =YekaCompetitionEskalasyonSerializer(yeka_eskalasyon, many=True)
+            yeka_eskalasyon=YekaCompetitionEskalasyon.objects.filter(competition=competition)
+            data_eskalasyon =YekaCompetitionEskalasyonSerializer(yeka_eskalasyon, many=True)
 
-                response = {
+            response = {
 
                     'data': data_eskalasyon.data,
                     'draw': int(request.POST.get('draw')),
@@ -2009,9 +2008,7 @@ def get_yeka_competition_eskalasyon(request):
                     'recordsFiltered': yeka_eskalasyon.count(),
 
                 }
-                return JsonResponse(response)
-            else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Güncel Fiyat Bilgisi Bulunmamaktadır'})
+            return JsonResponse(response)
 
         except Exception as e:
 

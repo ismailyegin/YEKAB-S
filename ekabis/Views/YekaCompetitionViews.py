@@ -596,7 +596,6 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                         if purchase_guarantee_form.cleaned_data['time']:
                             time = purchase_guarantee_form.cleaned_data['time'] * 365. / 12
                             purchase_guarantee.time = int(time)
-                            purchase_guarantee.finisDate = purchase_guarantee.startDate + datetime.timedelta(days=time)
                             purchase_guarantee.type=purchase_guarantee_form.cleaned_data['type']
                             purchase_guarantee.save()
 
