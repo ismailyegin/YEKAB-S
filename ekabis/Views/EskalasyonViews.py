@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.db import transaction
+from django.shortcuts import redirect
 
 from ekabis.models import YekaCompetition, YekaCompetitionEskalasyon
 from ekabis.models.Settings import Settings
@@ -40,9 +41,11 @@ def EskalasyonCalculation(uuid):
                 else:
                     return {}
             current_date = datetime.today().date()
-            creation_date = YekaCompetitionEskalasyon.objects.filter(competition=competition).order_by(
-                '-creationDate').first().creationDate.date()
-            date_difference = (current_date.year - creation_date.year) * 12 + creation_date.month - creation_date.month
+            date_difference=0
+            if YekaCompetitionEskalasyon.objects.filter(competition=competition):
+                creation_date = YekaCompetitionEskalasyon.objects.filter(competition=competition).order_by(
+                    '-creationDate').first().creationDate.date()
+                date_difference = (current_date.year - creation_date.year) * 12 + creation_date.month - creation_date.month
             if date_difference == 3:
                 if Settings.objects.get(
                         key='eskalasyon_peak value').value != current_energy_price:  # Eskalasyon Değeri pik değere ulaşmamış ise yeni değer hesaplanır.
@@ -220,8 +223,7 @@ def yeka_competition_eskalasyon(request):
         yeka_competitions = YekaCompetitionService(request, None)
         for competition in yeka_competitions:
             EskalasyonCalculation(competition.uuid)
-
-        return {}
+        return redirect('ekabis:yeka_report')
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
