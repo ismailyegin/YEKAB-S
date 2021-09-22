@@ -51,3 +51,6 @@ from .YekaPurchaseGuarantee import YekaPurchaseGuarantee
 from .YekaProduceAmount import YekaProduceAmount
 from .ProduceAmount import ProduceAmount
 from .ProposalSubYeka import ProposalSubYeka
+from .Eskalasyon import Eskalasyon
+from .YekaCompetitionEskalasyon import YekaCompetitionEskalasyon
+from .FileExtension import FileExtension

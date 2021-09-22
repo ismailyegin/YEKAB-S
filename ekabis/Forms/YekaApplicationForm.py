@@ -17,11 +17,11 @@ class YekaApplicationForm(forms.ModelForm):
                                         'style': 'width: 100%;', 'required': 'required'}),
             'startDate':forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
-                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       'onkeydown': 'return true',  "data-inputmask-alias": "datetime",
                        "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
             'finishDate':forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker4', 'autocomplete': 'off',
-                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       'onkeydown': 'return true',  "data-inputmask-alias": "datetime",
                        "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
 
         }

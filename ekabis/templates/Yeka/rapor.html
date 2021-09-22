@@ -179,9 +179,7 @@
 
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Basvuru Firma Ekle</h1>
-                </div>
+                <div class="col-lg-6"></div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         {% for url in urls %}
@@ -243,12 +241,17 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="select_yeka form-control select2 select2-hidden-accessible">
-                                        Firma</label>
+                                        Seçenekler</label>
                                     <select class="form-control select2 select2-hidden-accessible"
                                             style="width: 100%;" required="required" maxlength="100"
                                             aria-label="multiple select example"
-                                            name="select_company" id="select_company">
-                                        <option value=""></option>
+                                            name="select_item" id="select_item"
+                                            onchange="get_yeka_competition_company()">
+                                        <option value="null">-------</option>
+                                        <option value="Firmalar">Firmalar</option>
+                                        <option value="aday_yeka">Aday Yekalar</option>
+
+
                                     </select>
                                 </div>
                             </div>
@@ -267,41 +270,74 @@
 
                         </div>
                     </div>
-                    <div class="card card-default card-outline" id="competition">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">Başvurular</h3>
-                        </div>
-
-
-                        <div class="card-body">
-
-
-                            <table id="app_table" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>YEKA</th>
-                                    <th>Bağlantı Bölgesi</th>
-                                    <th>Yarışma</th>
-                                    <th>Firma</th>
-                                    <th></th>
-
-                                </tr>
-                                </thead>
-
-                                <tbody>
-
-
-                                </tbody>
-                            </table>
-
-
-                        </div>
-                    </div>
 
 
                 </div>
         </form>
+        <div class="col-lg-12" style="display: none" id="yeka_company_list">
+            <div class="card card-primary card-outline" id="company">
+                <div class="card-header with-border">
+                    <h3 class="card-title">Firmalar</h3>
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <table id="company_table" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Firma</th>
+
+
+                        </tr>
+                        </thead>
+
+                        <tbody id="company_yeka">
+
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-12" style="display: none" id="yeka_proposal_list">
+            <div class="card card-primary card-outline" id="company">
+                <div class="card-header with-border">
+                    <h3 class="card-title">Aday Yekalar</h3>
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <table id="proposal_table" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Aday Yeka</th>
+                            <th>Kapasite</th>
+                            <th>Tarih</th>
+
+
+                        </tr>
+                        </thead>
+
+                        <tbody id="proposal_yeka">
+
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+
+        </div>
 
 
     </section>
@@ -312,383 +348,10 @@
             $('#loading').show()
             get_region();
             get_yeka_competition();
-
-            table = $('#app_table').DataTable({
-
-                "processing": true,
-                "serverSide": true,
-                "paging": true,
-                "ordering": true,
-
-
-                "ajax": {
-                    "url": "{% url 'ekabis:view_application_company' %}",
-                    "type": "POST"
-
-                },
-
-                dom: 'Bfrtip',
-
-                'buttons': [
-
-
-                    {
-                        extend: "pageLength",
-                    },
-
-
-                    {
-                        extend: 'colvis',
-                        titleAttr: 'Ekle Çıkar'
-
-
-                    },
-                    {
-                        extend: 'print',
-                        title: 'Firmalar',
-                        text: '<i class="fa fa-print"></i>',
-
-                        titleAttr: 'Yazdır'
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        download: 'open',
-                        text: '<i class="fa fa-file-pdf"></i>',
-
-                        titleAttr: 'Pdf Kaydet'
-                    },
-
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fa fa-file-excel"></i>',
-                        titleAttr: 'Excel Kaydet'
-                    },
-
-
-                ],
-
-
-                'language': {
-                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
-                },
-                "columns": [
-                    {"data": "id"},
-
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.yeka.definition;
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.connection_region.name;
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.competition.name;
-
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.company.name;
-
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (full, data, type, row) {
-                            let html = ''
-                            let url = "get_yeka_company('" + full.uuid + "')"
-                            html = '<button type="button" onclick="' + url + '" class="btn btn-outline-primary btn-sm"> Belge Ekle  </button>';
-                            return html;
-
-
-                        }
-                    },
-
-
-                ],
-
-                "search": {
-                    "caseInsensitive": true
-                }
-
-
-            });
-
-            table.on('draw.dt', function () {
-                var info = table.page.info();
-                table.column(0, {
-                    search: 'applied',
-                    order: 'applied',
-                    page: 'applied'
-                }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1 + info.start;
-                });
-
-                for (var i = 0; i < array.length; i++) {
-                    json(array[i])
-
-
-                }
-
-            });
-
+            get_yeka_competition_company();
 
         });
 
-        var array = []
-
-        function get_yeka_company(id) {
-
-            $('#loading').show();
-
-            $.ajax({
-                url: "{% url 'ekabis:get_yeka_company' %}",
-                type: "post", // or "get"
-                async: false,
-                data: {
-                    yeka_company_id: id,
-                },
-
-                success: function (result) {
-
-
-                    debugger;
-                    let select = document.getElementById("filename");
-                    let array = []
-                    let yeka_company = []
-                    array = result.yeka_company.files
-                    yeka_company = result.yeka_company
-                    select.options[select.options.length] = new Option('Text 1', 'Value1');
-
-                    $('#filename').empty();
-
-                    for (let i = 0; i < array.length; i++) {
-                        select.options[select.options.length] = new Option(array[i].filename.filename, array[i].filename.id);
-                    }
-                    document.getElementById('yekacompany_id').value = id;
-
-                    debugger;
-
-                    let html = '';
-                    document.getElementById('file_text').innerHTML = html;
-                    for (let j = 0; j < array.length; j++) {
-                        if (array[j].file) {
-                            let url = "delete_yeka_company('" + array[j].uuid + "')";
-                            html += '<p class="text-primary" id="' + id + '"><div class="col-lg-5"><span  type="text">' + array[j].file + ' </span></div><div class="col-lg-5"><span type="text">' + array[j].filename.file + '</span></div>';
-                            html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Ekle"><i class="fa fa-times"></i></button></div></p>';
-
-
-                        }
-
-                    }
-                    $("#file_text").append(html);
-
-
-                    $('#modal-lg').modal();
-                    $('#loading').hide();
-
-
-                }
-            });
-
-        }
-
-        var array_file = [];
-
-        function getBase64(file) {
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                console.log(reader.result);
-                return reader.result
-            };
-            reader.onerror = function (error) {
-                console.log('Error: ', error);
-                return 'Hata';
-            };
-        }
-
-         document.getElementById('file_input').addEventListener('change',x , false);
-
-        const toBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-
-        function x () {
-            const uploadedFile = document.querySelector('#file_input').files[0];
-            toBase64(uploadedFile)
-                .then(res => {
-                    console.log(res);
-                     var x = document.getElementById("filename");
-                    var id = x.options[x.selectedIndex].value;
-                    var json = {
-                        'filename': id, 'file': res
-                    }
-
-                    array_file.push(json)
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-
-
-        }
-
-
-
-
-
-
-        function array_company_file() {
-            debugger;
-            var e = document.getElementById("filename");
-            var id = e.options[e.selectedIndex].value;
-            var name = e.options[e.selectedIndex]
-            var file_input1 = document.getElementById('file_input').value;
-            var myfile = document.getElementById('file_input').files;
-            var file = document.getElementById("myForm").elements.namedItem("file_input").value;
-
-
-            let html = ''
-            let url = "delete_file_line('" + id + "','" + file_input1 + "')";
-            html += '<p  id="' + id + '"><div class="col-lg-5 text-primary"><span  type="text">' + file_input.files[0].name + ' </span></div><div class="col-lg-5 text-primary"><span type="text">' + name.label + '</span></div>';
-            html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Ekle"><i class="fa fa-times"></i></button></div></p>';
-
-
-            $("#file_text").append(html);
-
-
-        }
-
-        function delete_file_line(id, filename) {
-            debugger;
-            let json = {
-                'filename': id,
-                'file': filename
-            }
-            let index = array_file.indexOf(json)
-            if (index === -1) {
-                array_file.splice(index, 1);
-            }
-            document.getElementById('file_' + id).remove();
-        }
-
-
-        function save_file() {
-
-            debugger;
-            var id = document.getElementById('yekacompany_id').value
-            var company_files = JSON.stringify(array_file);
-
-            $.ajax({
-                url: "{% url 'ekabis:save_company_app_file' %}",
-                type: "post", // or "get"
-                async: false,
-                data: {
-                    files: company_files,
-                    id: id
-                },
-
-                success: function (result) {
-                    debugger;
-                    if (result.status === 'Success') {
-                        debugger;
-                        let toast = document.getElementById('success_message');
-                        let html = ''
-                        html = 'Belge Kaydedildi';
-                        toast.innerHTML = html;
-                        document.getElementById('success_toast').style.display = 'block';
-                        $('.success').toast('show');
-                        $('.toast').fadeOut(5000);
-                        $('#modal-lg').modal('hide');
-
-                    } else {
-                        debugger;
-                        let toast = document.getElementById('error_message');
-                        let html = ''
-                        html = result.msg;
-                        toast.innerHTML = html;
-                        document.getElementById('error_toast').style.display = 'block';
-                        $('.error').toast('show');
-                        $('.toast').fadeOut(5000);
-
-
-                    }
-
-
-                }
-            });
-        }
-
-
-        function make_application() {
-            $('#loading').show();
-
-            var company = document.getElementById("select_company").value;
-            var competition = document.getElementById("select_competition").value;
-            var yeka = document.getElementById("select_yeka").value;
-            var region = document.getElementById("select_region").value;
-
-
-            $.ajax({
-                url: "{% url 'ekabis:yeka_make_aplication_company' %}",
-                type: "post", // or "get"
-                async: false,
-                data: {
-                    yeka_id: yeka,
-                    company_id: company,
-                    region_id: region,
-                    competition_id: competition
-                },
-
-                success: function (result) {
-                    debugger;
-                    table.ajax.reload();
-                    if (result.status === 'Success') {
-                        debugger;
-                        let toast = document.getElementById('success_message');
-                        let html = ''
-                        html = 'Başvuru Kaydedildi';
-                        toast.innerHTML = html;
-                        document.getElementById('success_toast').style.display = 'block';
-                        $('.success').toast('show');
-                        $('.toast').fadeOut(5000);
-                        $('#loading').hide();
-
-
-                    } else {
-                        debugger;
-                        let toast = document.getElementById('error_message');
-                        let html = ''
-                        html = result.msg;
-                        toast.innerHTML = html;
-                        document.getElementById('error_toast').style.display = 'block';
-                        $('.error').toast('show');
-                        $('.toast').fadeOut(5000);
-                        $('#loading').hide();
-
-
-                    }
-
-
-                }
-            });
-        }
 
         function get_region() {
             debugger;
@@ -715,30 +378,10 @@
                         select.options[select.options.length] = new Option(result.region[i].name, result.region[i].id);
                     }
 
-
                 }
             });
         }
 
-        function delete_yeka_company(id) {
-            debugger;
-
-            $.ajax({
-                url: "{% url 'ekabis:delete_yeka_company_file' %}",
-                type: "post", // or "get"
-                async: false,
-                data: {
-                    id: id,
-                },
-
-                success: function (result) {
-
-                    alert('basarılı')
-
-
-                }
-            });
-        }
 
         function get_yeka_competition() {
             debugger;
@@ -768,20 +411,112 @@
                         select.options[select.options.length] = new Option(result.competition[i].name, result.competition[i].id);
                     }
 
-                    let select2 = document.getElementById("select_company");
-                    $('#select_company').empty();
-
-                    select2.options[select2.options.length] = new Option('Text 1', 'Value1');
-
-                    for (let i = 0; i < result.company.length; i++) {
-                        select2.options[select2.options.length] = new Option(result.company[i].name, result.company[i].id);
-                    }
                     $('#loading').hide();
 
 
                 }
             });
         }
+
+        function get_yeka_competition_company() {
+            debugger;
+            $('#loading').show();
+
+            var e = document.getElementById("select_competition");
+            var id = e.options[e.selectedIndex].value;
+
+            var x = document.getElementById('select_item');
+            var value = x.options[x.selectedIndex].value;
+            if (value === 'Firmalar') {
+                $.ajax({
+                    url: "{% url 'ekabis:get_yeka_competition_company' %}",
+                    type: "post", // or "get"
+                    async: true,
+                    data: {
+                        competition_id: id,
+
+                    },
+                    success: function (result) {
+                        debugger;
+                        if (result.status === 'Fail') {
+                            $('#loading').hide();
+
+                            let toast = document.getElementById('error_message');
+                            let html = ''
+                            html = result.msg;
+                            toast.innerHTML = html;
+                            document.getElementById('error_toast').style.display = 'block';
+                            $('.error').toast('show');
+                            $('.toast').fadeOut(5000);
+
+                        }else {
+                             let html = '';
+                        for (let i = 0; i < result.company.length; i++) {
+                            var count = i + 1;
+                            html += '<tr><td>' + count + '</td>';
+                            html += '<td>' + result.company[i].company.name + '</td><tr>';
+
+                        }
+                        $('#yeka_company_list').show();
+                        $('#company_table').find('tbody').append(html);
+                        $('#loading').hide();
+                        }
+
+
+
+                    }
+                });
+            } else if (value === 'aday_yeka') {
+                $.ajax({
+                    url: "{% url 'ekabis:get_yeka_competition_proposal' %}",
+                    type: "post", // or "get"
+                    async: true,
+                    data: {
+                        competition_id: id,
+
+                    },
+                    success: function (result) {
+                        debugger;
+                        $('#yeka_proposal_list').show();
+                        if (result.status === 'Fail') {
+                            $('#loading').hide();
+
+                            let toast = document.getElementById('error_message');
+                            let html = ''
+                            html = result.msg;
+                            toast.innerHTML = html;
+                            document.getElementById('error_toast').style.display = 'block';
+                            $('.error').toast('show');
+                            $('.toast').fadeOut(5000);
+
+                        } else {
+                            let html = '';
+                            for (let i = 0; i < result.proposal.length; i++) {
+                                var count = i + 1;
+                                html += '<tr><td>' + count + '</td><td>' + result.proposal[i].name + '</td>';
+                                html += '<td>' + result.proposal[i].capacity + '</td>';
+                                html += '<td>' + result.proposal[i].date + '</td></tr>';
+
+                            }
+
+                            $('#proposal_table').find('tbody').append(html);
+                            $('#loading').hide();
+                        }
+
+
+                    }
+                });
+            }
+
+        }
+
+        $('#select_competition').change(function () {
+            debugger;
+            $('#select_item').val('null').trigger('change');
+            $('#loading').hide();
+
+
+        });
 
 
         function getCookie(name) {

@@ -117,16 +117,16 @@
 
 
 
-   {% if messages %}
+    {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -180,7 +180,7 @@
         <section class="content-header">
             <div class="row">
                 <div class="col-lg-6">
-                    <h3>{{ name }}  -Firma Başvurusu Ekle</h3>
+                    <h3>{{ name }} -Firma Başvurusu Ekle</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -208,14 +208,24 @@
 
                         <div class="card-body">
 
-                          {{ company_form }}
+                            <div class="form-group">
+                                <label>Firma Seç</label>
+                                <select class="select2 select2-hidden-accessible" multiple=""
+                                        data-placeholder="Firmalar" style="width: 100%;"
+                                        tabindex="-1" aria-hidden="true" name="company" id="company">
+                                    {% for company in companies %}
+                                        <option value="{{ company.uuid }}" data-select2-id="{{ company.uuid }}">{{ company.name }}</option>
+                                    {% endfor %}
+
+                                </select>
+                            </div>
 
 
                         </div>
                         <div class="card-footer">
-                                        <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet</button>
+                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet</button>
 
-                                </div>
+                        </div>
                     </div>
                     <!-- /.card -->
 
@@ -228,75 +238,5 @@
         <!-- /.row (main row) -->
 
     </section>
-{% load static %}
-    <script>
-        $(function () {
-            $('#company').DataTable({
-                dom: 'Bfrtip',
-
-
-
-                lengthMenu: [
-                    [10, 25, 50, 100, -1],
-                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
-                ],
-
-                'buttons': [
-
-
-                    {
-                        extend: "pageLength",
-                    },
-
-
-                    {
-                        extend: 'colvis',
-                        titleAttr: 'Ekle Çıkar'
-
-
-                    },
-                    {
-                        extend: 'print',
-                        title: 'YEKA LİSTESİ',
-                        text: '<i class="fa fa-print"></i>',
-
-                        titleAttr: 'Yazdır'
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        download: 'open',
-                        text: '<i class="fa fa-file-pdf"></i>',
-
-                        titleAttr: 'Pdf Kaydet'
-                    },
-
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fa fa-file-excel"></i>',
-                        titleAttr: 'Excel Kaydet'
-                    },
-
-
-                ],
-                "search": {
-                    "caseInsensitive": true,
-                },
-                'bubble': true,
-                'paging': true,
-                'lengthChange': true,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': true,
-                'responsive': true,
-                'select': true,
-                'language': {
-                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
-                }
-            })
-
-        })
-
-
-    </script>
+    {% load static %}
 {% endblock %}
