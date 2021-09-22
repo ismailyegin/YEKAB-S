@@ -13,7 +13,7 @@ class FactoryForm(BaseForm):
             'date':forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
                        'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
-                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
+                       "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
 
         }

@@ -28,7 +28,7 @@ class YekaForm(BaseForm):
             'date':forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'id': 'datepicker', 'autocomplete': 'off',
                        'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
-                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
+                       "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
             'capacity': forms.TextInput(attrs={'class': 'form-control ', 'onkeypress': 'validate(event)'}),
             'type': forms.Select(choices=STATUS_CHOICES,
                                  attrs={'class': 'form-control select2 select2-hidden-accessible',

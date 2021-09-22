@@ -20,7 +20,7 @@ class YekaContractForm(BaseForm):
             'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
                        'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
-                       "data-inputmask-inputformat": "mm/dd/yyyy", "data-mask": "", "inputmode": "numeric"}),
+                       "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
             'price': forms.NumberInput(
                 attrs={'class': 'form-control ', 'required': 'required'}),
             'company': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
