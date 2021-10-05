@@ -99,6 +99,7 @@ def add_competition(request, region):
 
                     competition = competition_form.save(request, commit=False)
 
+
                     total = int(
                         YekaCompetition.objects.filter(connectionregion=region, isDeleted=False).distinct().aggregate(
                             Sum('capacity'))[
@@ -508,7 +509,7 @@ def change_yekacompetitionbusiness(request, uuid, competition):
 
 
 @login_required()
-def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, business):
+def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, business): #yeka iş bloğu düzenleme
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -604,8 +605,8 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     finish_date = ''
                     start_date = ''
 
-                    time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
                     if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
+                        time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
                         time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
                         startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
                         if time_type == 'is_gunu':

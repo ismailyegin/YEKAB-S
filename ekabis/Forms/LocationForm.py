@@ -10,8 +10,8 @@ class LocationForm(BaseForm):
     class Meta:
         model = Location
 
-        fields = ('city', 'district', 'neighborhood',)
-        labels = {'city': 'Şehir * ', 'district': 'İlçe * ', 'neighborhood': 'Mahalle * '}
+        fields = ('city', 'district', 'neighborhood','parcel')
+        labels = {'city': 'Şehir * ', 'district': 'İlçe * ', 'neighborhood': 'Mahalle * ','parcel':'Ada-Parsel'}
         widgets = {
             'city': forms.Select(
                 attrs={'class': 'form-control select2 select2-hidden-accessible',
@@ -24,5 +24,6 @@ class LocationForm(BaseForm):
                        'style': 'width: 100%; ',
                        'placeholder': 'Mahalle', 'id': 'neighborhood_id',
                        }),
+            'parcel': forms.Textarea(attrs={'class': 'form-control','rows':'3'}),
 
         }

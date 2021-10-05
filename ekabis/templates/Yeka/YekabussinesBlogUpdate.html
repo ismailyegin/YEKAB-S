@@ -1,6 +1,10 @@
 {% extends 'base_layout.html' %}
 {% block content %}
-
+    <style>
+   label.upper_case {
+  text-transform: uppercase;
+}
+    </style>
     {% if messages %}
         {% for message in messages %}
 
@@ -75,7 +79,7 @@
 
                                         <div class="form-group">
 
-                                            <label>{{ item.label }}</label>
+                                            <label class="upper_case">{{ item.label }}</label>
                                             {{ item }}
                                             <label for="" id="label_{{ item.name }}"></label>
 
@@ -89,7 +93,7 @@
                                     {% for item in contract_form %}
                                         <div class="col-lg-6" id="control-{{ item.name }}">
                                             <div class="form-group">
-                                                <label>{{ item.label }}</label>
+                                                <label  class="upper_case">{{ item.label }}</label>
                                                 {{ item }}
                                                 <label for="" id="label_{{ item.name }}"></label>
                                             </div>
@@ -102,7 +106,7 @@
                                     {% for item in purchase_guarantee_form %}
                                         <div class="col-lg-6" id="control-{{ item.name }}">
                                             <div class="form-group">
-                                                <label>{{ item.label }}</label>
+                                                <label  class="upper_case">{{ item.label }}</label>
                                                 {{ item }}
                                                 <label for="" id="label_{{ item.name }}"></label>
                                             </div>

@@ -653,7 +653,8 @@
                 $('#loading').hide();
 
 
-            } else if (value === 'eskalasyon') {
+            } else if (value === 'eskalasyon')
+            {
 
                 $('#yeka_eskalasyon_list').show();
 
@@ -771,51 +772,54 @@
 
 
             }
+            else {
+
+            }
 
 
-        }
+            }
 
-        $('#select_competition').change(function () {
-            debugger;
-            $('#select_item').val('null').trigger('change');
-            $('#loading').hide();
-
-
-        });
+            $('#select_competition').change(function () {
+                debugger;
+                $('#select_item').val('null').trigger('change');
+                $('#loading').hide();
 
 
-        function getCookie(name) {
-            var cookieValue = null;
-            var i = 0;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (i; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
+            });
+
+
+            function getCookie(name) {
+                var cookieValue = null;
+                var i = 0;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (i; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
                     }
                 }
+                return cookieValue;
             }
-            return cookieValue;
-        }
 
-        var csrftoken = getCookie('csrftoken');
+            var csrftoken = getCookie('csrftoken');
 
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
 
-        $.ajaxSetup({
-            crossDomain: false, // obviates need for sameOrigin test
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type)) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            $.ajaxSetup({
+                crossDomain: false, // obviates need for sameOrigin test
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type)) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
                 }
-            }
-        });
+            });
 
     </script>
 

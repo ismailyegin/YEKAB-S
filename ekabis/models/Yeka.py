@@ -18,6 +18,7 @@ class Yeka(BaseModel):
     business = models.OneToOneField(YekaBusiness, on_delete=models.CASCADE, null=True, blank=True)
     connection_region = models.ManyToManyField(ConnectionRegion)
     type = models.CharField(max_length=100, null=True, blank=True)
+    kml_file=models.FileField(null=True,blank=True)
 
     def __str__(self):
         return '%s ' % self.definition
