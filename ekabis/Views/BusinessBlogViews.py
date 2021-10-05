@@ -163,6 +163,8 @@ def add_businessBlogParametre(request, uuid):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
+        business = BusinessBlog.objects.get(uuid=uuid)
+
         if request.method == 'POST':
             with transaction.atomic():
                 business_form = BusinessBlogParametreForm(request.POST)
@@ -172,7 +174,6 @@ def add_businessBlogParametre(request, uuid):
                     businessparametre = business_form.save(request, commit=False)
                     businessparametre.save()
 
-                    business = BusinessBlog.objects.get(uuid=uuid)
                     business.parametre.add(businessparametre)
                     business.save()
 
@@ -182,12 +183,12 @@ def add_businessBlogParametre(request, uuid):
                     error_messages = get_error_messages(business_form)
                     return render(request, 'Yeka/parametreAdd.html', {'business_form': business_form,
                                                                       'error_messages': error_messages, 'urls': urls,
-                                                                      'current_url': current_url, 'url_name': url_name
+                                                                      'current_url': current_url, 'url_name': url_name,'business_blog':business
                                                                       })
 
         return render(request, 'Yeka/parametreAdd.html', {'business_form': business_form,
                                                           'error_messages': '', 'urls': urls,
-                                                          'current_url': current_url, 'url_name': url_name
+                                                          'current_url': current_url, 'url_name': url_name,'business_blog':business
                                                           })
     except Exception as e:
         traceback.print_exc()

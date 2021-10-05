@@ -17,4 +17,5 @@ class Proposal(BaseModel):
     name = models.TextField(blank=False, null=False, verbose_name='Aday Yeka')
     # Kurum önerileri
     institution=models.ManyToManyField(ProposalInstitution)
+    kml_file=models.FileField(null=True,blank=True,verbose_name='KML Dosyası')
 

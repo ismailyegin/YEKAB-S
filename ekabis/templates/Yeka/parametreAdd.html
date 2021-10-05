@@ -36,13 +36,13 @@
 
 
     {% endif %}
- <section class="content-header">
+    <section class="content-header">
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Parametre Ekle</h1>
+                        {{ business_blog.name }} - Parametre Ekle</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -72,14 +72,24 @@
 
                                 {% for item in business_form %}
                                     <div class="form-group">
-                                        <label>{{ item.label }}</label><br>
-                                        {{ item }}
-                                        <label for="" id="label_{{ item.name }}"></label>
+                                        {% if item.name == 'visibility_in_yeka' %}
+                                            <div class="form-check">
+                                            {{ item }}
+                                                <label class="form-check-label" >{{ item.label }}</label>
+
+                                            </div>
+                                        {% else %}
+                                            <label>{{ item.label }}</label><br>
+                                            {{ item }}
+                                            <label for="" id="label_{{ item.name }}"></label>
+
+                                        {% endif %}
                                     </div>
 
                                 {% endfor %}
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-outline-primary" style="float: right">Kaydet</button>
+                                    <button type="submit" class="btn btn-outline-primary" style="float: right">Kaydet
+                                    </button>
                                 </div>
                             </div>
                         </div>

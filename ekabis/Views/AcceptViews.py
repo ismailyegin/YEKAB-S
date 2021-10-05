@@ -26,6 +26,8 @@ def view_yeka_accept(request, business, businessblog):
         return redirect('accounts:login')
 
     try:
+        total_mwe = 0
+        total_mwm = 0
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
@@ -42,8 +44,12 @@ def view_yeka_accept(request, business, businessblog):
         else:
             accept = YekaAccept.objects.get(business=yekabusiness)
 
+            for item in accept.accept.all():
+                total_mwm=int(item.installedPower)+total_mwm
+                total_mwe=int(item.currentPower)+total_mwe
+
         return render(request, 'Accept/view_accept.html',
-                      {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
+                      {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,'total_installed_power':total_mwm,'total_current_power':total_mwe,
                        'url_name': url_name, 'name': name, 'accept': accept
                        })
     except Exception as e:

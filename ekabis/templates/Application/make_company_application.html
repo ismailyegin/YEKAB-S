@@ -757,7 +757,6 @@
 
                     let select = document.getElementById("select_competition");
 
-                    select.options[select.options.length] = new Option('Text 1', 'Value1');
 
                     $('#select_competition').empty();
 
@@ -768,7 +767,6 @@
                     let select2 = document.getElementById("select_company");
                     $('#select_company').empty();
 
-                    select2.options[select2.options.length] = new Option('Text 1', 'Value1');
 
                     for (let i = 0; i < result.company.length; i++) {
                         select2.options[select2.options.length] = new Option(result.company[i].name, result.company[i].id);

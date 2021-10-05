@@ -11,7 +11,7 @@ from django.urls import resolve
 
 from ekabis.Forms.ProduceAmountForm import ProduceAmountForm
 from ekabis.models import Permission, BusinessBlog, YekaProduceAmount, YekaBusinessBlog, YekaBusiness, YekaCompetition, \
-    ProduceAmount, Logs
+    ProduceAmount, Logs, YekaPurchaseGuarantee
 from ekabis.models.Competition import Competition
 from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages, get_client_ip
@@ -36,30 +36,39 @@ def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
         }
         yeka_business_block = YekaBusinessBlogGetService(request, filter)
         yeka_produce_amount = YekaProduceAmount.objects.get(yekabusinessblog=yeka_business_block)
+        total = 0
+        for amount in yeka_produce_amount.amount.all():
+            total = total + amount
+        if YekaPurchaseGuarantee.objects.filter(business=yeka_business):
+            purchase_guarantee = YekaPurchaseGuarantee.objects.get(business=yeka_business)
+        else:
+            purchase_guarantee = 0
+        competition = YekaCompetition.objects.get(business=yeka_business)
         if request.method == 'POST':
             with transaction.atomic():
                 form = ProduceAmountForm(request.POST)
+                if not purchase_guarantee ==0:
+                    if total<purchase_guarantee.total_quantity:
+                        if form.is_valid():
+                            produce_amount = form.save(request, commit=False)
+                            produce_amount.save()
+                            yeka_produce_amount.save()
+                            yeka_produce_amount.amount.add(produce_amount)
+                            yeka_produce_amount.save()
 
-                if form.is_valid():
 
-                    produce_amount = form.save(request, commit=False)
-                    produce_amount.save()
-                    yeka_produce_amount.save()
-                    yeka_produce_amount.amount.add(produce_amount)
-                    yeka_produce_amount.save()
-
-                    competition = YekaCompetition.objects.get(business=yeka_business)
-                    messages.success(request, 'Üretim Miktarı Başarıyla  Eklenmiştir.')
+                            messages.success(request, 'Üretim Miktarı Başarıyla  Eklenmiştir.')
+                            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                        else:
+                            error_messages = get_error_messages(form)
+                            return render(request, 'ProduceAmount/add_produce_amount.html', {'form': form,
+                                                                                             'error_messages': error_messages,
+                                                                                             'urls': urls,
+                                                                                             'current_url': current_url,
+                                                                                             'url_name': url_name
+                                                                                             })
+                    messages.success(request, 'Toplam üretim miktarına ulaşıldığı için yeni bir miktar eklenememektedir.')
                     return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
-                else:
-                    error_messages = get_error_messages(form)
-                    return render(request, 'ProduceAmount/add_produce_amount.html', {'form': form,
-                                                                                     'error_messages': error_messages,
-                                                                                     'urls': urls,
-                                                                                     'current_url': current_url,
-                                                                                     'url_name': url_name
-                                                                                     })
-
         return render(request, 'ProduceAmount/add_produce_amount.html', {'form': form,
                                                                          'error_messages': '', 'urls': urls,
                                                                          'current_url': current_url,

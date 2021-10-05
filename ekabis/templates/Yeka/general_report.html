@@ -1,0 +1,426 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    {% load static %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+
+            {% if message.tags == 'warning' %}
+
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-warning"></i> Hata!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+
+
+            {% if message.tags == 'success' %}
+
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-check"></i> Başarılı!</h4>
+
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+    <style>
+        #loading {
+            position: fixed;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 100;
+        }
+
+        #loading-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 100;
+        }
+    </style>
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Raporlar</h1>
+                </div>
+                <div class="col-sm-6">
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="content">
+
+        <form method="post" enctype="multipart/form-data" role="form" name="personForm" id="personForm">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-info-circle"></i>
+                                YEKA Genel Bilgi Tablosu
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <form action="" enctype="multipart/form-data" method="post">
+                                        <div class="row">
+                                            <div class="form-group col-lg-3">
+                                                <label for="select_yeka"> Yeka</label>
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        style="width: 100%;" required="required" maxlength="100"
+                                                        aria-label="Default select example" onchange="get_region()"
+                                                        name="select_yeka" id="select_yeka">
+                                                    <option value="not_matter">Farketmez</option>
+
+                                                    {% for yeka in yekas %}
+                                                        <option value="{{ yeka.pk }}">{{ yeka.definition }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                <label for="select_yeka"> Bağlantı Bölgesi</label>
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        style="width: 100%;" required="required" maxlength="100"
+                                                        aria-label="Default select example"
+                                                        onchange="get_yeka_competition()"
+                                                        name="select_region" id="select_region">
+                                                    <option value="not_matter">Farketmez</option>
+                                                    {% for region in regions %}
+                                                        <option value="{{ region.pk }}">{{ region.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                <label for="select_yeka form-control select2 select2-hidden-accessible">
+                                                    Yarışma</label>
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        style="width: 100%;" required="required" maxlength="100"
+                                                        aria-label="Default select example"
+                                                        name="select_competition" id="select_competition">
+                                                    <option value="not_matter">Farketmez</option>
+                                                    {% for competition in competitions %}
+                                                        <option value="{{ competition.pk }}">{{ competition.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                <label for="select_yeka form-control select2 select2-hidden-accessible">
+                                                    Firma</label>
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        style="width: 100%;" required="required" maxlength="100"
+                                                        aria-label="multiple select example"
+                                                        name="select_company" id="select_company">
+                                                    <option value="not_matter">Farketmez</option>
+                                                    {% for company in companies %}
+                                                        <option value="{{ company.pk }}">{{ company.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-lg-12">
+                                                <button class="btn btn-outline-primary" type="submit"
+                                                        style="float:right;">Göster
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="loading" style="display: none">
+
+                                            <img id="loading-image" src="{% static 'loader/wind.gif' %}"
+                                                 alt="Loading..."/>
+                                        </div>
+                                    </form>
+                                    <div class="card-body">
+                                        <table id="deneme" class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+
+                                                <th>#</th>
+                                                {% for key in keys %}
+                                                    <th>{{ key }}</th>
+                                                {% endfor %}
+
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                            {% for result in results %}
+                                                <tr>
+                                                    <td>{{ forloop.counter0 }}</td>
+                                                    {% for key, value in result.items %}
+                                                        {% if not value == "yok" %}
+                                                            {% if not value %}
+                                                                <td>---</td>
+                                                            {% else %}
+                                                                <td>{{ value }}</td>
+
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </tr>
+                                            {% endfor %}
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </form>
+
+    </section>
+    <script>
+
+
+        $(function () {
+            get_region();
+            get_yeka_competition();
+            {% load static %}
+            $('#deneme').DataTable({
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                "scrollX": true,
+                'select': true,
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        text: '<i class="fa fa-print"></i>',
+                    },
+
+
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+
+            })
+
+
+        });
+
+
+        function get_region() {
+            debugger;
+            $('#loading').show();
+
+            var e = document.getElementById("select_yeka");
+            var yeka_id = e.options[e.selectedIndex].value;
+            if (yeka_id !== 'not_matter') {
+                $.ajax({
+                    url: "{% url 'ekabis:get_region' %}",
+                    type: "post", // or "get"
+                    async: false,
+                    data: {
+                        yeka_id: yeka_id,
+                    },
+
+                    success: function (result) {
+                        debugger;
+
+                        let select = document.getElementById("select_region");
+                        $('#select_region').empty();
+                        select.options[select.options.length] = new Option('Farketmez', 'not_matter');
+
+
+                        for (let i = 0; i < result.region.length; i++) {
+                            select.options[select.options.length] = new Option(result.region[i].name, result.region[i].id);
+                        }
+
+                        $('#loading').hide();
+
+
+                    }
+                });
+            } else {
+                $('#loading').hide();
+
+            }
+
+        }
+
+        function get_yeka_competition() {
+            debugger;
+            $('#loading').show();
+
+            var e = document.getElementById("select_region");
+            var region_id = e.options[e.selectedIndex].value;
+            if (region_id !== 'not_matter') {
+                $.ajax({
+                    url: "{% url 'ekabis:get_yeka_competition' %}",
+                    type: "post", // or "get"
+                    async: true,
+                    data: {
+                        region_id: region_id,
+
+                    },
+                    success: function (result) {
+                        debugger;
+
+                        let select = document.getElementById("select_competition");
+
+
+                        $('#select_competition').empty();
+
+                        select.options[select.options.length] = new Option('Farketmez', 'not_matter');
+
+                        for (let i = 0; i < result.competition.length; i++) {
+                            select.options[select.options.length] = new Option(result.competition[i].name, result.competition[i].id);
+                        }
+
+
+                        let select2 = document.getElementById("select_company");
+                        $('#select_company').empty();
+
+                        select2.options[select2.options.length] = new Option('Farketmez', 'not_matter');
+
+                        for (let i = 0; i < result.company.length; i++) {
+                            select2.options[select2.options.length] = new Option(result.company[i].name, result.company[i].id);
+                        }
+
+
+                        $('#loading').hide();
+
+
+                    }
+                });
+            } else {
+                $('#loading').hide();
+
+            }
+
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    </script>
+
+{% endblock %}
+
+
+

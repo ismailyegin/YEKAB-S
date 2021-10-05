@@ -44,6 +44,9 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
 
         if user:  # Şifrenin doğru girilmesi
+            if user.is_superuser :
+                auth.login(request, user)
+                return redirect('ekabis:view_admin')
             person = Person.objects.get(user=login_user)
 
             if datetime.datetime.now() - person.failed_time < datetime.timedelta(

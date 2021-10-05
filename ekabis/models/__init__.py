@@ -54,3 +54,5 @@ from .ProposalSubYeka import ProposalSubYeka
 from .Eskalasyon import Eskalasyon
 from .YekaCompetitionEskalasyon import YekaCompetitionEskalasyon
 from .FileExtension import FileExtension
+from .ReportObject import ReportObject
+from .YekaCompetitionEskalasyon_eskalasyon import YekaCompetitionEskalasyon_eskalasyon

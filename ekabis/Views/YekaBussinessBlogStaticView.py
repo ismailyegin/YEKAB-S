@@ -1103,7 +1103,7 @@ def change_proposal_active(request, business, businessblog):
 
             return render(request, 'Proposal/change_proposal_active.html',
                           {'pro_active': pro_active,
-                           'yekabusiness': yekabusiness,
+                           'yekabusiness': yekabusiness,'businessblog':businessblog,'business':business,
                            'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
                            'url_name': url_name, 'name': name,
                            })
