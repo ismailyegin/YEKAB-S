@@ -13,7 +13,7 @@ from django.shortcuts import redirect, render
 from django.urls import resolve
 
 from ekabis.models import City, YekaBusinessBlog, YekaCompetition, BusinessBlog, Yeka, YekaBusiness, ConnectionRegion, \
-    YekaBusinessBlogParemetre
+    YekaBusinessBlogParemetre, BusinessBlogParametreType
 from ekabis.services.general_methods import control_access
 from ekabis.services.services import last_urls, YekaService, ConnectionRegionService, YekaCompetitionService, \
     CompanyService
@@ -205,7 +205,6 @@ def general_reporting(request):
                 sql += " group by yeka_business_block.id "
                 sql2 += " group by yeka_business_block.id"
 
-
             sql_join = "SELECT * FROM ( " + sql + " ) A  LEFT JOIN  (" + sql2 + ") B ON A.yarisma_id=B.yarisma_id group by  B.total_elektriksel_guc "
 
             yeka = YekaService(request, None)
@@ -218,28 +217,30 @@ def general_reporting(request):
             keys = results
 
             result_array = table_column_name(keys)
+            parameters = BusinessBlogParametreType.objects.filter(isDeleted=False)
 
 
+            end_result=[]
             for i, result in enumerate(results):
-                blocks = YekaBusiness.objects.filter(isDeleted=False).filter(businessblogs__paremetre__isnull=False)
-                for yeka_business in blocks:
-                    yeka_business_blocks =yeka_business.businessblogs.filter(paremetre__isnull=False)
-                    for yeka_business_block in yeka_business_blocks:
-                        for parameter in yeka_business_block.paremetre.all():
-                            print(parameter.title)
-                            if not parameter.title in result_array['key_array']:
-                                result_array['key_array'].append(parameter.title)
-                            if YekaBusiness.objects.filter(pk=results[i]['blok_id']).filter(businessblogs__paremetre=parameter):
-                                new_yeka_business=YekaBusiness.objects.get(pk=results[i]['blok_id'])
-                                new_business_blog=new_yeka_business.businessblogs.get(paremetre=parameter)
-                                yeka_business_block_parameter=new_business_blog.paremetre.all().get(title=parameter.title)
-                                result_array['results'][i].__setitem__(parameter.title, yeka_business_block_parameter.value)
-                            else:
-                                result_array['results'][i].__setitem__(parameter.title, None)
+                parameter_dict = dict()
+                competititon = YekaCompetition.objects.get(pk=result['yarisma_id'])
+
+                for parameter in parameters:
+                    parameter_dict[parameter.title] = None
+                result.pop('blok_id')
+                result.pop('yarisma_id')
+                result.pop('yeka_business_block_id')
+                result.pop('is_blok_durumu')
+                parameter_dict['result']=result
+                for blog in competititon.business.businessblogs.all():
+                    for blog_parameter in blog.paremetre.all():
+                        print(blog.businessblog.name + ' - ' + blog_parameter.title)
+                        parameter_dict[blog_parameter.title] =blog_parameter.value
+                end_result.append(parameter_dict)
 
             results = result_array['results']
             return render(request, 'Yeka/general_report.html',
-                          {'results': results,
+                          {'blog_results': end_result,
                            'keys': result_array['key_array'], 'yekas': yeka, 'regions': regions, 'companies': companies,
                            'competitions': competitions})
     except Exception as e:
@@ -281,112 +282,111 @@ def table_column_name(results):
             params = []
             for key, value in result.items():
 
+                x = dict()
+                x['value'] = value
+                if key == 'baglanti_bolgesi':
+                    if key not in column_name:
+                        key_array.append('Bağlanti Bölgesi')
+                    x['key'] = 'Bağlanti Bölgesi'
+                    params.append(value)
 
-                    x = dict()
-                    x['value'] = value
-                    if key == 'baglanti_bolgesi':
-                        if key not in column_name:
-                            key_array.append('Bağlanti Bölgesi')
-                        x['key'] = 'Bağlanti Bölgesi'
-                        params.append(value)
+                elif key == 'yeka':
+                    if key not in column_name:
+                        key_array.append('YEKA')
+                    x['key'] = 'YEKA'
+                    params.append(value)
 
-                    elif key == 'yeka':
-                        if key not in column_name:
-                            key_array.append('YEKA')
-                        x['key'] = 'YEKA'
-                        params.append(value)
+                elif key == 'firma':
+                    if key not in column_name:
+                        key_array.append('Firma')
+                    x['key'] = 'Firma'
+                    params.append(value)
 
-                    elif key == 'firma':
-                        if key not in column_name:
-                            key_array.append('Firma')
-                        x['key'] = 'Firma'
-                        params.append(value)
+                elif key == 'vergi_no':
+                    if key not in column_name:
+                        key_array.append('Vergi Numarası')
+                    x['key'] = 'Vergi Numarası'
+                    params.append(value)
 
-                    elif key == 'vergi_no':
-                        if key not in column_name:
-                            key_array.append('Vergi Numarası')
-                        x['key'] = 'Vergi Numarası'
-                        params.append(value)
+                elif key == 'vergi_dairesi':
+                    if key not in column_name:
+                        key_array.append('Vergi Dairesi')
+                    x['key'] = 'Vergi Dairesi'
+                    params.append(value)
 
-                    elif key == 'vergi_dairesi':
-                        if key not in column_name:
-                            key_array.append('Vergi Dairesi')
-                        x['key'] = 'Vergi Dairesi'
-                        params.append(value)
+                elif key == 'firma_mail':
+                    if key not in column_name:
+                        key_array.append('E-mail')
+                    x['key'] = 'E-mail'
+                    params.append(value)
 
-                    elif key == 'firma_mail':
-                        if key not in column_name:
-                            key_array.append('E-mail')
-                        x['key'] = 'E-mail'
-                        params.append(value)
+                elif key == 'yarisma':
+                    if key not in column_name:
+                        key_array.append('Yarışma')
+                    x['key'] = 'Yarışma'
+                    params.append(value)
 
-                    elif key == 'yarisma':
-                        if key not in column_name:
-                            key_array.append('Yarışma')
-                        x['key'] = 'Yarışma'
-                        params.append(value)
+                elif key == 'sozlesme_fiyat':
+                    if key not in column_name:
+                        key_array.append('Sözleşme Fiyatı')
+                    x['key'] = 'Sözleşme Fiyatı'
+                    params.append(value)
 
-                    elif key == 'sozlesme_fiyat':
-                        if key not in column_name:
-                            key_array.append('Sözleşme Fiyatı')
-                        x['key'] = 'Sözleşme Fiyatı'
-                        params.append(value)
+                elif key == 'sozlesme_tarih':
+                    if key not in column_name:
+                        key_array.append('Sözleşme Tarihi')
+                    x['key'] = 'Sözleşme Tarihi'
+                    params.append(value)
 
-                    elif key == 'sozlesme_tarih':
-                        if key not in column_name:
-                            key_array.append('Sözleşme Tarihi')
-                        x['key'] = 'Sözleşme Tarihi'
-                        params.append(value)
+                elif key == 'is_blogu':
+                    if key not in column_name:
+                        key_array.append('Durumu')
+                    x['key'] = 'Durumu'
+                    params.append(value)
 
-                    elif key == 'is_blogu':
-                        if key not in column_name:
-                            key_array.append('Durumu')
-                        x['key'] = 'Durumu'
-                        params.append(value)
+                elif key == 'guncel_fiyat':
+                    if key not in column_name:
+                        key_array.append('Güncel Fiyat')
+                    x['key'] = 'Güncel Fiyat'
+                    params.append(value)
 
-                    elif key == 'guncel_fiyat':
-                        if key not in column_name:
-                            key_array.append('Güncel Fiyat')
-                        x['key'] = 'Güncel Fiyat'
-                        params.append(value)
+                elif key == 'ada_parsel':
+                    if key not in column_name:
+                        key_array.append('Ada-Parsel')
+                    x['key'] = 'Ada-Parsel'
+                    params.append(value)
 
-                    elif key == 'ada_parsel':
-                        if key not in column_name:
-                            key_array.append('Ada-Parsel')
-                        x['key'] = 'Ada-Parsel'
-                        params.append(value)
-
-                    elif key == 'baslangic_tarihi':
-                        if key not in column_name:
-                            key_array.append('Başlangıç Tarihi')
-                        x['key'] = 'Başlangıç Tarihi'
-                        result['baslangic_tarihi']=value.strftime("%d-%m-%Y ")
-                        params.append(value.strftime("%d-%m-%Y "))
-
-
-                    elif key == 'bitis_tarihi':
-                        if key not in column_name:
-                            key_array.append('Bitiş Tarihi')
-                        x['key'] = 'Bitiş Tarihi'
-                        params.append(value.strftime("%d-%m-%Y "))
-                        result['bitis_tarihi']=value.strftime("%d-%m-%Y ")
+                elif key == 'baslangic_tarihi':
+                    if key not in column_name:
+                        key_array.append('Başlangıç Tarihi')
+                    x['key'] = 'Başlangıç Tarihi'
+                    result['baslangic_tarihi'] = value.strftime("%d-%m-%Y ")
+                    params.append(value.strftime("%d-%m-%Y "))
 
 
-                    elif key == 'total_elektriksel_guc':
-                        if key not in column_name:
-                            key_array.append('Toplam Elektriksel Güç(MWe)')
-                        x['key'] = 'Toplam Elektriksel Güç(MWe)'
-                        params.append(value)
+                elif key == 'bitis_tarihi':
+                    if key not in column_name:
+                        key_array.append('Bitiş Tarihi')
+                    x['key'] = 'Bitiş Tarihi'
+                    params.append(value.strftime("%d-%m-%Y "))
+                    result['bitis_tarihi'] = value.strftime("%d-%m-%Y ")
 
-                    elif key == 'total_mekanik_guc':
-                        if key not in column_name:
-                            key_array.append('Toplam Mekanik Güç(MWm)')
-                        x['key'] = 'Toplam Mekanik Güç(MWm)'
-                        params.append(value)
 
-                    else:
-                        result[key] = 'yok'
-                    column_name.append(key)
+                elif key == 'total_elektriksel_guc':
+                    if key not in column_name:
+                        key_array.append('Toplam Elektriksel Güç(MWe)')
+                    x['key'] = 'Toplam Elektriksel Güç(MWe)'
+                    params.append(value)
+
+                elif key == 'total_mekanik_guc':
+                    if key not in column_name:
+                        key_array.append('Toplam Mekanik Güç(MWm)')
+                    x['key'] = 'Toplam Mekanik Güç(MWm)'
+                    params.append(value)
+
+                else:
+                    result[key] = 'yok'
+                column_name.append(key)
 
         result_dict['results'] = new_result
         result_dict['key_array'] = key_array

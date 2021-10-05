@@ -174,29 +174,39 @@
                                                     <th>{{ key }}</th>
                                                 {% endfor %}
 
+                                                {% for key in blog_results.0.keys %}
+                                                    {% if not key == 'result' %}
+                                                        <th>{{ key }}</th>
+                                                    {% endif %}
+                                                {% endfor %}
 
                                             </tr>
                                             </thead>
 
                                             <tbody>
 
-                                            {% for result in results %}
-                                                <tr>
-                                                    <td>{{ forloop.counter0 }}</td>
-                                                    {% for key, value in result.items %}
-                                                        {% if not value == "yok" %}
-                                                            {% if not value %}
-                                                                <td>---</td>
-                                                            {% else %}
-                                                                <td>{{ value }}</td>
+                                            {% for result in blog_results %}
+                                            <tr>
+                                                <td>{{ forloop.counter0 }}</td>
+                                                {% for key, value in result.result.items %}
+                                                    {% if not value == "yok" %}
+                                                        {% if not value %}
+                                                            <td>---</td>
+                                                        {% else %}
+                                                            <td>{{ value }}</td>
 
-                                                            {% endif %}
                                                         {% endif %}
-                                                    {% endfor %}
-                                                </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% for key, value in result.items %}
+                                                    {% if not  key == 'result' %}
+                                                    <td>{{ value }}</td>
+                                                    {% endif %}
+                                                {% endfor %}
+
+
+                                            </tr>
                                             {% endfor %}
-
-
                                             </tbody>
                                         </table>
 
