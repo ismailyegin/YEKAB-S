@@ -380,30 +380,36 @@
         function get_region() {
             debugger;
             var e = document.getElementById("select_yeka");
-            var yeka_id = e.options[e.selectedIndex].value;
-            $.ajax({
-                url: "{% url 'ekabis:get_region' %}",
-                type: "post", // or "get"
-                async: false,
-                data: {
-                    yeka_id: yeka_id,
-                },
+            if (e.options[e.selectedIndex]) {
+                var yeka_id = e.options[e.selectedIndex].value;
+                $.ajax({
+                    url: "{% url 'ekabis:get_region' %}",
+                    type: "post", // or "get"
+                    async: false,
+                    data: {
+                        yeka_id: yeka_id,
+                    },
 
-                success: function (result) {
-                    debugger;
+                    success: function (result) {
+                        debugger;
 
-                    let select = document.getElementById("select_region");
+                        let select = document.getElementById("select_region");
 
-                    select.options[select.options.length] = new Option('Text 1', 'Value1');
+                        select.options[select.options.length] = new Option('Text 1', 'Value1');
 
-                    $('#select_region').empty();
+                        $('#select_region').empty();
 
-                    for (let i = 0; i < result.region.length; i++) {
-                        select.options[select.options.length] = new Option(result.region[i].name, result.region[i].id);
+                        for (let i = 0; i < result.region.length; i++) {
+                            select.options[select.options.length] = new Option(result.region[i].name, result.region[i].id);
+                        }
+
                     }
+                });
+            } else {
+                $('#loading').hide();
 
-                }
-            });
+            }
+
         }
 
 
@@ -412,34 +418,41 @@
             $('#loading').show();
 
             var e = document.getElementById("select_region");
-            var region_id = e.options[e.selectedIndex].value;
+            if (e.options[e.selectedIndex].value) {
+                var region_id = e.options[e.selectedIndex].value;
 
-            $.ajax({
-                url: "{% url 'ekabis:get_yeka_competition' %}",
-                type: "post", // or "get"
-                async: true,
-                data: {
-                    region_id: region_id,
+                $.ajax({
+                    url: "{% url 'ekabis:get_yeka_competition' %}",
+                    type: "post", // or "get"
+                    async: true,
+                    data: {
+                        region_id: region_id,
 
-                },
-                success: function (result) {
-                    debugger;
+                    },
+                    success: function (result) {
+                        debugger;
 
-                    let select = document.getElementById("select_competition");
+                        let select = document.getElementById("select_competition");
 
-                    select.options[select.options.length] = new Option('Text 1', 'Value1');
+                        select.options[select.options.length] = new Option('Text 1', 'Value1');
 
-                    $('#select_competition').empty();
+                        $('#select_competition').empty();
 
-                    for (let i = 0; i < result.competition.length; i++) {
-                        select.options[select.options.length] = new Option(result.competition[i].name, result.competition[i].id);
+                        for (let i = 0; i < result.competition.length; i++) {
+                            select.options[select.options.length] = new Option(result.competition[i].name, result.competition[i].id);
+                        }
+
+                        $('#loading').hide();
+
+
                     }
+                });
+            } else {
+                $('#loading').hide();
 
-                    $('#loading').hide();
+            }
 
 
-                }
-            });
         }
 
         function get_yeka_competition_company() {
@@ -653,8 +666,7 @@
                 $('#loading').hide();
 
 
-            } else if (value === 'eskalasyon')
-            {
+            } else if (value === 'eskalasyon') {
 
                 $('#yeka_eskalasyon_list').show();
 
@@ -771,55 +783,54 @@
                 $('#loading').hide();
 
 
-            }
-            else {
+            } else {
 
             }
 
 
-            }
+        }
 
-            $('#select_competition').change(function () {
-                debugger;
-                $('#select_item').val('null').trigger('change');
-                $('#loading').hide();
-
-
-            });
+        $('#select_competition').change(function () {
+            debugger;
+            $('#select_item').val('null').trigger('change');
+            $('#loading').hide();
 
 
-            function getCookie(name) {
-                var cookieValue = null;
-                var i = 0;
-                if (document.cookie && document.cookie !== '') {
-                    var cookies = document.cookie.split(';');
-                    for (i; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
+        });
+
+
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
                     }
                 }
-                return cookieValue;
             }
+            return cookieValue;
+        }
 
-            var csrftoken = getCookie('csrftoken');
+        var csrftoken = getCookie('csrftoken');
 
-            function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
 
-            $.ajaxSetup({
-                crossDomain: false, // obviates need for sameOrigin test
-                beforeSend: function (xhr, settings) {
-                    if (!csrfSafeMethod(settings.type)) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
-            });
+            }
+        });
 
     </script>
 

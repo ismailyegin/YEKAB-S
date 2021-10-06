@@ -223,22 +223,22 @@ def general_reporting(request):
             end_result=[]
             for i, result in enumerate(results):
                 parameter_dict = dict()
-                competititon = YekaCompetition.objects.get(pk=result['yarisma_id'])
+                if YekaCompetition.objects.filter(pk=result['yarisma_id']):
+                    competititon = YekaCompetition.objects.get(pk=result['yarisma_id'])
+                    for parameter in parameters:
+                        parameter_dict[parameter.title] = None
+                    result.pop('blok_id')
+                    result.pop('yarisma_id')
+                    result.pop('yeka_business_block_id')
+                    result.pop('is_blok_durumu')
+                    parameter_dict['result']=result
+                    for blog in competititon.business.businessblogs.all():
+                        for blog_parameter in blog.paremetre.all():
+                            print(blog.businessblog.name + ' - ' + blog_parameter.parametre.title)
+                            parameter_dict[blog_parameter.parametre.title] =blog_parameter.value
+                    end_result.append(parameter_dict)
 
-                for parameter in parameters:
-                    parameter_dict[parameter.title] = None
-                result.pop('blok_id')
-                result.pop('yarisma_id')
-                result.pop('yeka_business_block_id')
-                result.pop('is_blok_durumu')
-                parameter_dict['result']=result
-                for blog in competititon.business.businessblogs.all():
-                    for blog_parameter in blog.paremetre.all():
-                        print(blog.businessblog.name + ' - ' + blog_parameter.title)
-                        parameter_dict[blog_parameter.title] =blog_parameter.value
-                end_result.append(parameter_dict)
-
-            results = result_array['results']
+                results = result_array['results']
             return render(request, 'Yeka/general_report.html',
                           {'blog_results': end_result,
                            'keys': result_array['key_array'], 'yekas': yeka, 'regions': regions, 'companies': companies,
@@ -360,16 +360,25 @@ def table_column_name(results):
                     if key not in column_name:
                         key_array.append('Başlangıç Tarihi')
                     x['key'] = 'Başlangıç Tarihi'
-                    result['baslangic_tarihi'] = value.strftime("%d-%m-%Y ")
-                    params.append(value.strftime("%d-%m-%Y "))
+                    if value:
+                        params.append(value.strftime("%d-%m-%Y "))
+                        result['baslangic_tarihi'] = value.strftime("%d-%m-%Y ")
+                    else:
+                        params.append(value)
+                        result['baslangic_tarihi'] = value
+
 
 
                 elif key == 'bitis_tarihi':
                     if key not in column_name:
                         key_array.append('Bitiş Tarihi')
                     x['key'] = 'Bitiş Tarihi'
-                    params.append(value.strftime("%d-%m-%Y "))
-                    result['bitis_tarihi'] = value.strftime("%d-%m-%Y ")
+                    if value:
+                        params.append(value.strftime("%d-%m-%Y "))
+                        result['bitis_tarihi'] = value.strftime("%d-%m-%Y ")
+                    else:
+                        params.append(value)
+                        result['bitis_tarihi'] = value
 
 
                 elif key == 'total_elektriksel_guc':

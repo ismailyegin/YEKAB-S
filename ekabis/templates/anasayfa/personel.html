@@ -1,15 +1,6 @@
 {% extends 'base_layout.html' %}
 {% block content %}
-     <style>
-        .table tr {
-            cursor: pointer;
 
-        }
-        #hover:hover {
-            background-color: #007bff;
-            color: white
-        }
-    </style>
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -36,278 +27,338 @@
     </div>
 
 
-
-    <section class="content">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-
-
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>{{ aktif }}-
-                            Ana Sayfa</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Ana Sayfa</a></li>
-                            {#              <li class="breadcrumb-item active">Advanced Form</li>#}
-                        </ol>
-                    </div>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Anasayfa</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
+        </div><!-- /.container-fluid -->
+    </section>
 
-        </section>
+    <!-- Content Header (Page header) -->
 
-        <!-- Main content -->
-        <section class="content">
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <h5 class="mb-2">Toplam YEKA Sayıları</h5>
             <div class="row">
-                {% if person_competitions %}
-                    <script>
-                        function deleteCompetition(id) {
-                            $("#modal-delete").on("shown.bs.modal", function (e) {
-                                $("#btn-conf1").click(function () {
-                                    debugger;
-
-                                    $.ajax({
-                                        url: "{% url "ekabis:delete_competition"%}",
-                                        type: "POST",
-                                        data: {
-                                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                                            isActive: 'False',
-                                            uuid: id.toString()
-                                        },
-
-                                        success: function (result) {
-                                            if (result.status === 'Fail') {
-
-
-                                                html = result.msg;
-                                                debugger;
-                                                $(".errorModal").html(html);
-                                                $('#modal-error').on("shown.bs.modal", function (e) {
-                                                    $(".btn-ok").click(function () {
-
-
-                                                    });
-
-                                                }).modal('show');
-                                                console.log(result.status)
-                                            } else {
-                                                html = 'Yarışma Başarıyla Silindi';
-                                                $(".successModal").html(html);
-                                                $('#modal-success').on("shown.bs.modal", function (e) {
-                                                    $(".btn-ok").click(function () {
-
-
-                                                    });
-
-                                                }).modal('show');
-                                                console.log(result.status)
-
-                                            }
-
-                                        },
-
-
-                                    });
-                                });
-                            }).modal('show');
-                            $('#btn-close').click(function () {
-                                $('#modal-danger').modal('hide');
-                            });
-
-                        }</script>
-                    <div class="col-lg-12">
-                        <div class="card card-primary card-outline">
-                            <div class="card-header">
-                                <h4 class="card-title">YEKA Yarışma Listesi</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        {#                        alt yeka#}
-
-
-                                        <table id="region" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Tanım</th>
-                                                <th>Kapasite</th>
-                                                <th>İşlemler</th>
-
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-
-                                            {% for person in person_competitions %}
-                                                <tr id="hover" >
-                                                    <td>{{ forloop.counter }} </td>
-                                                    <td class='clickable-row'
-                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.name }}</td>
-                                                    <td class='clickable-row'
-                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.capacity }} MW</td>
-                                                    <td>
-
-                                                        <div class="btn-group">
-                                                            <button type="button"
-                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                    data-toggle="dropdown"> İşlemler
-                                                            </button>
-                                                            <div class="dropdown-menu" role="menu">
-                                                                {% for item in perm %}
-                                                                    {% if item == 'change_sumcompetition' %}
-
-                                                                        <a href="{% url "ekabis:change_sumcompetition" person.competition.uuid %}"
-                                                                           class="dropdown-item"
-                                                                           title="Düzenle "
-                                                                           type="button"><i
-                                                                                class="fa fa-edit"></i>Düzenle
-                                                                        </a>
-                                                                    {% elif item == 'view_sub_yeka_competition_detail' %}
-                                                                        <a href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}"
-                                                                           class="dropdown-item" title="Detay"
-                                                                           type="button"><i
-                                                                                class="fa fa-search"></i>Detay
-                                                                        </a>
-                                                                    {% elif item == 'delete_competition' %}
-                                                                        <a onclick="deleteCompetition('{{ person.competition.uuid }}')"
-                                                                           class="dropdown-item" title="Sil"
-                                                                           type="button"><i
-                                                                                class="fa fa-edit"></i>Sil</a>
-
-
-                                                                    {% endif %}
-                                                                {% endfor %}
-
-
-                                                            </div>
-                                                        </div>
-
-
-                                                </tr>
-
-                                            {% endfor %}
-
-
-                                            </tbody>
-                                        </table>
-
-
-                                    </div>
-
-
-                                    {#personel Listesi#}
-
-                                </div>
-
-                            </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>  {{ res_count }}</h3>
+                            <p>Rüzgar Enerjisi</p>
                         </div>
+                        <div class="icon">
 
-                    </div>
-                    <script>
-                        function deleteCompetition(id) {
-                            $("#modal-delete").on("shown.bs.modal", function (e) {
-                                $("#btn-conf1").click(function () {
-                                    debugger;
-
-                                    $.ajax({
-                                        url: "{% url "ekabis:delete_competition"%}",
-                                        type: "POST",
-                                        data: {
-                                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                                            isActive: 'False',
-                                            uuid: id.toString()
-                                        },
-
-                                        success: function (result) {
-                                            if (result.status === 'Fail') {
-
-
-                                                html = result.msg;
-                                                debugger;
-                                                $(".errorModal").html(html);
-                                                $('#modal-error').on("shown.bs.modal", function (e) {
-                                                    $(".btn-ok").click(function () {
-
-
-                                                    });
-
-                                                }).modal('show');
-                                                console.log(result.status)
-                                            } else {
-                                                html = 'Yarışma Başarıyla Silindi';
-                                                $(".successModal").html(html);
-                                                $('#modal-success').on("shown.bs.modal", function (e) {
-                                                    $(".btn-ok").click(function () {
-
-
-                                                    });
-
-                                                }).modal('show');
-                                                console.log(result.status)
-
-                                            }
-
-                                        },
-
-
-                                    });
-                                });
-                            }).modal('show');
-                            $('#btn-close').click(function () {
-                                $('#modal-danger').modal('hide');
-                            });
-
-                        }</script>
-                {% endif %}
-                <div class="col-md-3">
-                    <div class="sticky-top mb-3">
-                        <div class="card card-primary card-outline">
-                            <div class="card-header">
-                                <h4 class="card-title">İşaretler</h4>
-                            </div>
-                            <div class="card-body">
-                                <!-- the events -->
-                                <div id="external-events">
-                                    {% for cale in calendarNames %}
-                                        <div id="{{ cale.uuid }}"
-                                             class="external-event  ui-draggable ui-draggable-handle"
-                                             style="position: relative; background-color: {{ cale.color }}">{{ cale.name }}
-                                        </div>
-
-                                    {% endfor %}
-
-
-                                </div>
-                            </div>
-                            <!-- /.card-body -->
+                            <i class="fa fa-wind"></i>
                         </div>
-                        <!-- /.card -->
 
                     </div>
                 </div>
-                <!-- /.col -->
-                <div class="col-md-9">
-                        <div class="card card-primary card-outline">
-                        <div class="card-body p-1">
-                            <!-- THE CALENDAR -->
-                            <div id="calendar">
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-gradient-yellow">
+                        <div class="inner">
+                            <h3>  {{ ges_count }}</h3>
+                            <p>Güneş Enerjisi</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-sun"></i>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>  {{ biyo_count }}</h3>
+                            <p>Biyokütle Enerjisi</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-globe"></i>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>  {{ jeo_count }}</h3>
+                            <p>Jeotermal Enerjisi</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-fire"></i>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="row">
+            {% if person_competitions %}
+                <script>
+                    function deleteCompetition(id) {
+                        $("#modal-delete").on("shown.bs.modal", function (e) {
+                            $("#btn-conf1").click(function () {
+                                debugger;
+
+                                $.ajax({
+                                    url: "{% url "ekabis:delete_competition"%}",
+                                    type: "POST",
+                                    data: {
+                                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                        isActive: 'False',
+                                        uuid: id.toString()
+                                    },
+
+                                    success: function (result) {
+                                        if (result.status === 'Fail') {
+
+
+                                            html = result.msg;
+                                            debugger;
+                                            $(".errorModal").html(html);
+                                            $('#modal-error').on("shown.bs.modal", function (e) {
+                                                $(".btn-ok").click(function () {
+
+
+                                                });
+
+                                            }).modal('show');
+                                            console.log(result.status)
+                                        } else {
+                                            html = 'Yarışma Başarıyla Silindi';
+                                            $(".successModal").html(html);
+                                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                                $(".btn-ok").click(function () {
+
+
+                                                });
+
+                                            }).modal('show');
+                                            console.log(result.status)
+
+                                        }
+
+                                    },
+
+
+                                });
+                            });
+                        }).modal('show');
+                        $('#btn-close').click(function () {
+                            $('#modal-danger').modal('hide');
+                        });
+
+                    }</script>
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h4 class="card-title">YEKA Yarışma Listesi</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {#                        alt yeka#}
+
+
+                                    <table id="region" class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tanım</th>
+                                            <th>Kapasite</th>
+                                            <th>İşlemler</th>
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                        {% for person in person_competitions %}
+                                            <tr id="hover">
+                                                <td>{{ forloop.counter }} </td>
+                                                <td class='clickable-row'
+                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.name }}</td>
+                                                <td class='clickable-row'
+                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.capacity }}
+                                                    MW
+                                                </td>
+                                                <td>
+
+                                                    <div class="btn-group">
+                                                        <button type="button"
+                                                                class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                data-toggle="dropdown"> İşlemler
+                                                        </button>
+                                                        <div class="dropdown-menu" role="menu">
+                                                            {% for item in perm %}
+                                                                {% if item == 'change_sumcompetition' %}
+
+                                                                    <a href="{% url "ekabis:change_sumcompetition" person.competition.uuid %}"
+                                                                       class="dropdown-item"
+                                                                       title="Düzenle "
+                                                                       type="button"><i
+                                                                            class="fa fa-edit"></i>Düzenle
+                                                                    </a>
+                                                                {% elif item == 'view_sub_yeka_competition_detail' %}
+                                                                    <a href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}"
+                                                                       class="dropdown-item" title="Detay"
+                                                                       type="button"><i
+                                                                            class="fa fa-search"></i>Detay
+                                                                    </a>
+                                                                {% elif item == 'delete_competition' %}
+                                                                    <a onclick="deleteCompetition('{{ person.competition.uuid }}')"
+                                                                       class="dropdown-item" title="Sil"
+                                                                       type="button"><i
+                                                                            class="fa fa-edit"></i>Sil</a>
+
+
+                                                                {% endif %}
+                                                            {% endfor %}
+
+
+                                                        </div>
+                                                    </div>
+
+
+                                            </tr>
+
+                                        {% endfor %}
+
+
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+
+
+                                {#personel Listesi#}
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <script>
+                    function deleteCompetition(id) {
+                        $("#modal-delete").on("shown.bs.modal", function (e) {
+                            $("#btn-conf1").click(function () {
+                                debugger;
+
+                                $.ajax({
+                                    url: "{% url "ekabis:delete_competition"%}",
+                                    type: "POST",
+                                    data: {
+                                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                        isActive: 'False',
+                                        uuid: id.toString()
+                                    },
+
+                                    success: function (result) {
+                                        if (result.status === 'Fail') {
+
+
+                                            html = result.msg;
+                                            debugger;
+                                            $(".errorModal").html(html);
+                                            $('#modal-error').on("shown.bs.modal", function (e) {
+                                                $(".btn-ok").click(function () {
+
+
+                                                });
+
+                                            }).modal('show');
+                                            console.log(result.status)
+                                        } else {
+                                            html = 'Yarışma Başarıyla Silindi';
+                                            $(".successModal").html(html);
+                                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                                $(".btn-ok").click(function () {
+
+
+                                                });
+
+                                            }).modal('show');
+                                            console.log(result.status)
+
+                                        }
+
+                                    },
+
+
+                                });
+                            });
+                        }).modal('show');
+                        $('#btn-close').click(function () {
+                            $('#modal-danger').modal('hide');
+                        });
+
+                    }</script>
+            {% endif %}
+            <div class="col-md-3">
+                <div class="sticky-top mb-3">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h4 class="card-title">İşaretler</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- the events -->
+                            <div id="external-events">
+                                {% for cale in calendarNames %}
+                                    <div id="{{ cale.uuid }}"
+                                         class="external-event  ui-draggable ui-draggable-handle"
+                                         style="position: relative; background-color: {{ cale.color }}">{{ cale.name }}
+                                    </div>
+
+                                {% endfor %}
+
 
                             </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
+
                 </div>
-                <!-- /.col -->
             </div>
-        </section>
+            <!-- /.col -->
+            <div class="col-md-9">
+                <div class="card card-primary card-outline">
+                    <div class="card-body p-1">
+                        <!-- THE CALENDAR -->
+                        <div id="calendar">
 
-
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
     </section>
+
+
+
 
 
     <script>

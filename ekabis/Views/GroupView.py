@@ -126,7 +126,7 @@ def change_groupPermission(request, pk):
         # logout(request)
         # return redirect('accounts:login')
     groupfilter = {
-        'group__pk': pk
+        'group__id': pk
     }
     permGroup = PermissionGroupService(request, groupfilter)
     try:
