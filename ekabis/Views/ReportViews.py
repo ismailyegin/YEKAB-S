@@ -167,13 +167,57 @@ def general_reporting(request):
     try:
         with connection.cursor() as cursor:
 
-            f = open("sql-1.txt", "r")
-            sql = f.read()
-            f.close()
+            sql = "  SELECT  yeka_business.id as blok_id,yeka_business_block.id as yeka_business_block_id, baglanti_bol.name as baglanti_bolgesi, yeka.definition as yeka ,yarisma.id as yarisma_id , "
+            sql += "  firma.name as firma , firma.taxnumber as vergi_no , firma.taxOffice as vergi_dairesi , "
+            sql += "  firma.mail as firma_mail  , yarisma.name as yarisma , sozlesme.price as sozlesme_fiyat , "
+            sql += "  sozlesme.date as sozlesme_tarih , business_block.name as is_blogu ,yeka_business_block.status as is_blok_durumu , "
+            sql += "  eskalasyon.result as guncel_fiyat , location.parcel as ada_parsel , yeka_business_block.startDate as baslangic_tarihi , "
+            sql += " yeka_business_block.finisDate as bitis_tarihi "
+            sql += " FROM ekabis_yekacompetition as yarisma "
+            sql += " LEFT JOIN ekabis_connectionregion_yekacompetition as x ON x.yekacompetition_id=yarisma.id "  # yarisma.id
+            sql += " LEFT JOIN ekabis_connectionregion as baglanti_bol ON baglanti_bol.id=x.connectionregion_id "
+            sql += " LEFT JOIN ekabis_yeka_connection_region as y ON y.yeka_id=x.connectionregion_id "
+            sql += " LEFT JOIN ekabis_yeka as yeka ON yeka.id=y.yeka_id "  # y.yeka_id
+            sql += " LEFT JOIN ekabis_yekacompany as yeka_company ON yeka_company.competition_id=yarisma.id "  # yarisma.id
+            sql += " LEFT JOIN ekabis_company as firma ON firma.id=yeka_company.company_id "
+            sql += " LEFT JOIN ekabis_yekacontract as sozlesme ON sozlesme.business_id=yarisma.business_id "
+            sql += " LEFT JOIN ekabis_yekabusiness as yeka_business ON yeka_business.id=yarisma.business_id "
+            sql += " LEFT JOIN ekabis_yekabusiness_businessblogs as ybb ON ybb.yekabusiness_id=yeka_business.id "
+            sql += "  LEFT JOIN ekabis_yekabusinessblog as yeka_business_block ON yeka_business_block.id=ybb.yekabusinessblog_id "
+            sql += "  LEFT JOIN ekabis_businessblog as business_block ON business_block.id=yeka_business_block.businessblog_id "
+            sql += "  left JOIN ekabis_businessblog_parametre as business_parametre ON business_parametre.businessblog_id=business_block.id "
+            sql += "  left JOIN ekabis_businessblogparametretype as  parametre_type ON parametre_type.id=business_parametre.businessblogparametretype_id "
+            sql += "  left JOIN ekabis_yekabusinessblogparemetre as yeka_blok_parametre ON yeka_blok_parametre.parametre_id=parametre_type.id "
+            sql += "  LEFT JOIN ekabis_yekaconnectionregion as y_con ON y_con.yeka_id=yeka.id " # yeka.id
+            sql += "  LEFT JOIN ekabis_yekacompetitioneskalasyon as yeka_eskalasyon ON yeka_eskalasyon.competition_id=yarisma.id "
+            sql += "  LEFT JOIN ekabis_yekacompetitioneskalasyon_eskalasyon as e ON e.yeka_competition_eskalasyon_id=yeka_eskalasyon.id "
+            sql += "  LEFT JOIN ekabis_eskalasyon as eskalasyon ON eskalasyon.id=e.eskalasyon_info_id "
+            sql += "  LEFT JOIN ekabis_yekaproposal as yeka_proposal ON yeka_proposal.business_id=yeka_business.id "
+            sql += "  LEFT JOIN ekabis_yekaproposal_proposal as yekaproposal_proposal ON yekaproposal_proposal.yekaproposal_id=yeka_proposal.id "
+            sql += "  LEFT JOIN ekabis_proposal_location as proposal_location ON proposal_location.proposal_id=yekaproposal_proposal.proposal_id "
+            sql += "  LEFT JOIN ekabis_location as location ON location.id=proposal_location.location_id "
+            sql += "  LEFT JOIN  ekabis_yekaaccept as yeka_accept ON yeka_accept.business_id=yeka_business.id "
+            sql += "  LEFT JOIN ekabis_yekaaccept_accept as yeka_yekaaccept ON yeka_yekaaccept.yekaaccept_id=yeka_accept.id "
+            sql += "  LEFT JOIN ekabis_accept as accept ON accept.id=yeka_yekaaccept.accept_id "
+            sql += "  where  yeka.id is  not null and yeka_business_block.status= %s "
 
-            f = open("sql-2.txt", "r")
-            sql2 = f.read()
-            f.close()
+            # f = open("sql-2.txt", "r")
+            #sql2 = f.read()
+            # f.close()
+
+            sql2 = " SELECT SUM(accept.currentPower) as total_elektriksel_guc , SUM(accept.installedPower) as total_mekanik_guc , yarisma.id as yarisma_id "
+            sql2 += " FROM ekabis_yekacompetition as yarisma "
+            sql2 += " left JOIN ekabis_yekabusiness as yeka_business ON yeka_business.id=yarisma.business_id "
+            sql2 += " left JOIN ekabis_yekabusiness_businessblogs as ybb ON ybb.yekabusiness_id=yeka_business.id "
+            sql2 += " left JOIN ekabis_yekabusinessblog as yeka_business_block ON yeka_business_block.id=ybb.yekabusinessblog_id "
+            sql2 += " left JOIN ekabis_businessblog as business_block ON business_block.id=yeka_business_block.businessblog_id "
+            sql2 += " left JOIN ekabis_businessblog_parametre as business_parametre ON business_parametre.businessblog_id=business_block.id "
+            sql2 += " left JOIN ekabis_businessblogparametretype as  parametre_type ON parametre_type.id=business_parametre.businessblogparametretype_id "
+            sql2 += " left JOIN ekabis_yekabusinessblogparemetre as yeka_blok_parametre ON yeka_blok_parametre.parametre_id=parametre_type.id "
+            sql2 += " LEFT JOIN  ekabis_yekaaccept as yeka_accept ON yeka_accept.business_id=yeka_business.id "
+            sql2 += " LEFT JOIN ekabis_yekaaccept_accept as yeka_yekaaccept ON yeka_yekaaccept.yekaaccept_id=yeka_accept.id "
+            sql2 += " LEFT JOIN ekabis_accept as accept ON accept.id=yeka_yekaaccept.accept_id "
+            sql2 += " where business_block.name= %s "
 
             params = ['3']
             params2 = ['Kabuller']
@@ -219,8 +263,7 @@ def general_reporting(request):
             result_array = table_column_name(keys)
             parameters = BusinessBlogParametreType.objects.filter(isDeleted=False)
 
-
-            end_result=[]
+            end_result = []
             for i, result in enumerate(results):
                 parameter_dict = dict()
                 if YekaCompetition.objects.filter(pk=result['yarisma_id']):
@@ -231,11 +274,11 @@ def general_reporting(request):
                     result.pop('yarisma_id')
                     result.pop('yeka_business_block_id')
                     result.pop('is_blok_durumu')
-                    parameter_dict['result']=result
+                    parameter_dict['result'] = result
                     for blog in competititon.business.businessblogs.all():
                         for blog_parameter in blog.paremetre.all():
                             print(blog.businessblog.name + ' - ' + blog_parameter.parametre.title)
-                            parameter_dict[blog_parameter.parametre.title] =blog_parameter.value
+                            parameter_dict[blog_parameter.parametre.title] = blog_parameter.value
                     end_result.append(parameter_dict)
 
                 results = result_array['results']
