@@ -28,7 +28,6 @@ from django.core import serializers
 from rest_framework.response import Response
 from ekabis.services.services import UserGetService
 
-
 from ekabis.models.BlockEnumField import BlockEnumFields
 
 
@@ -60,7 +59,11 @@ def return_personel_dashboard(request):
     }
 
     calendarNames = CalendarNameService(request, calendar_filter)
-
+    yeka = YekaService(request, None).order_by('-date')
+    res_count = yeka.filter(type='Rüzgar').count()
+    ges_count = yeka.filter(type='Güneş').count()
+    biyo_count = yeka.filter(type='Biyokütle').count()
+    jeo_count = yeka.filter(type='Jeotermal').count()
     user = request.user
     person_filter = {
         'person__user': user,
@@ -73,9 +76,11 @@ def return_personel_dashboard(request):
     competitions = YekaCompetitionPersonService(request, competition_filter)
 
     return render(request, 'anasayfa/personel.html',
-                  {
-                      'calendarNames': calendarNames,'person_competitions':competitions,
-                  })
+                  {'res_count': res_count,
+                   'ges_count': ges_count,
+                   'jeo_count': jeo_count, 'biyo_count': biyo_count,
+                   'calendarNames': calendarNames, 'person_competitions': competitions,
+                   })
 
 
 @login_required
@@ -90,9 +95,9 @@ def return_admin_dashboard(request):
     url_name = Permission.objects.get(codename=current_url.url_name)
 
     yeka = YekaService(request, None).order_by('-date')
-    res_count=yeka.filter(type='Rüzgar').count()
-    ges_count=yeka.filter(type='Güneş').count()
-    biyo_count=yeka.filter(type='Biyokütle').count()
+    res_count = yeka.filter(type='Rüzgar').count()
+    ges_count = yeka.filter(type='Güneş').count()
+    biyo_count = yeka.filter(type='Biyokütle').count()
     jeo_count = yeka.filter(type='Jeotermal').count()
 
     regions = ConnectionRegionService(request, None)
@@ -101,25 +106,24 @@ def return_admin_dashboard(request):
     # yeka_json = serializers.serialize("json",yeka, cls=DjangoJSONEncoder)
     # list_yeka=list(yeka)
 
-    yeka_acccepts=YekaAccept.objects.filter(isDeleted=False)
+    yeka_acccepts = YekaAccept.objects.filter(isDeleted=False)
 
-    installedPower_array=[]
-    currentPower_array=[]
-
+    installedPower_array = []
+    currentPower_array = []
 
     for yeka_accept in yeka_acccepts:
-        accept_dict=dict()
-        currentPower_dict=dict()
-        accept_dict['label']=YekaCompetition.objects.get(business=yeka_accept.business).name
-        total=yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
+        accept_dict = dict()
+        currentPower_dict = dict()
+        accept_dict['label'] = YekaCompetition.objects.get(business=yeka_accept.business).name
+        total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
         currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
         if total['installedPower__sum'] is None:
-            total['installedPower__sum']=0
+            total['installedPower__sum'] = 0
         if currentPower['currentPower__sum'] is None:
-            currentPower['currentPower__sum']=0
-        accept_dict['power']=total['installedPower__sum']
-        currentPower_dict['currentPower']= currentPower['currentPower__sum']
-        currentPower_dict['label']=YekaCompetition.objects.get(business=yeka_accept.business).name
+            currentPower['currentPower__sum'] = 0
+        accept_dict['power'] = total['installedPower__sum']
+        currentPower_dict['currentPower'] = currentPower['currentPower__sum']
+        currentPower_dict['label'] = YekaCompetition.objects.get(business=yeka_accept.business).name
         currentPower_array.append(currentPower_dict)
         installedPower_array.append(accept_dict)
 
@@ -127,11 +131,13 @@ def return_admin_dashboard(request):
         'yeka': yeka,
         # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
-        'res_count':res_count,'accepts':installedPower_array,
-        'ges_count':ges_count,'current_power':currentPower_array,
-        'jeo_count':jeo_count,
-        'biyo_count':biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+        'res_count': res_count, 'accepts': installedPower_array,
+        'ges_count': ges_count, 'current_power': currentPower_array,
+        'jeo_count': jeo_count,
+        'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
+
+
 @login_required
 def activeGroup(request, pk):
     activefilter = {
@@ -205,6 +211,8 @@ def add_calendar(request):
     except:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
 @login_required
 def api_connection_region_cities(request):
     perm = general_methods.control_access(request)
@@ -219,7 +227,7 @@ def api_connection_region_cities(request):
                     'uuid': uuid
                 }
                 yeka = YekaGetService(request, yekafilter)
-                cities=City.objects.filter(connectionregion__id__in=yeka.connection_region.all().values_list('pk'))
+                cities = City.objects.filter(connectionregion__id__in=yeka.connection_region.all().values_list('pk'))
                 cities = serializers.serialize("json", cities, cls=DjangoJSONEncoder)
                 return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'cities': cities})
             else:
@@ -229,8 +237,6 @@ def api_connection_region_cities(request):
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
 
-
-
 @login_required
 def api_connection_region_competitions(request):
     perm = general_methods.control_access(request)
@@ -238,27 +244,31 @@ def api_connection_region_competitions(request):
         logout(request)
         return redirect('accounts:login')
 
-
     try:
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
-                yeka=None
-                competitions= {}
+                yeka = None
+                competitions = {}
 
                 if request.POST['uuid']:
                     uuid = request.POST['uuid']
                     yekafilter = {
-                    'uuid': uuid
+                        'uuid': uuid
                     }
                     yeka = YekaGetService(request, yekafilter)
                 if request.POST['plateNo']:
                     if City.objects.filter(plateNo=request.POST['plateNo']):
-                        city=City.objects.get(plateNo=request.POST['plateNo'])
+                        city = City.objects.get(plateNo=request.POST['plateNo'])
                         if yeka:
-                            regions=yeka.connection_region.filter(cities=city,isDeleted=False).distinct().values_list('id', flat=True)
+                            regions = yeka.connection_region.filter(cities=city,
+                                                                    isDeleted=False).distinct().values_list('id',
+                                                                                                            flat=True)
                         else:
-                            regions=ConnectionRegion.objects.filter(cities=city,isDeleted=False).distinct().values_list('id', flat=True)
-                        competitions=YekaCompetition.objects.filter(connectionregion__id__in=regions,isDeleted=False).distinct()
+                            regions = ConnectionRegion.objects.filter(cities=city,
+                                                                      isDeleted=False).distinct().values_list('id',
+                                                                                                              flat=True)
+                        competitions = YekaCompetition.objects.filter(connectionregion__id__in=regions,
+                                                                      isDeleted=False).distinct()
 
                 competitions = serializers.serialize("json", competitions, cls=DjangoJSONEncoder)
                 return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'competitions': competitions})

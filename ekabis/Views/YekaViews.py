@@ -521,7 +521,9 @@ def yeka_person_list(request, uuid):
         array = []
         for person in yeka_person:
             array.append(person.employee.uuid)
-        name = general_methods.yekaname(yeka.business)
+        name=''
+        if yeka.business:
+            name = general_methods.yekaname(yeka.business)
         # ekstra servis yazılacak
         persons = Employee.objects.filter(isDeleted=False).exclude(uuid__in=array).order_by('-creationDate')
         if request.POST:

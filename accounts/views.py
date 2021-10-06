@@ -142,6 +142,11 @@ def forgot(request):
 
 
 def show_urls(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
     for entry in urlpatterns:
         perm = Permission(codename=entry.name, codeurl=entry.pattern.regex.pattern, name=entry.name)
         if not (Permission.objects.filter(codename=entry.name)):
@@ -152,9 +157,15 @@ def show_urls(request):
     for group in groups:
         for item in Permission.objects.all():
             if not (PermissionGroup.objects.filter(group=group, permissions=item)):
-                perm = PermissionGroup(group=group,
-                                       permissions=item,
-                                       is_active=True)
+                if group.name == 'Admin':
+                    perm = PermissionGroup(group=group,
+                                           permissions=item,
+                                           is_active=True)
+                else:
+                    perm = PermissionGroup(group=group,
+                                           permissions=item,
+                                           is_active=False)
+
                 perm.save()
     #Bütün url ler için yardım metni oluşturuldu.
     for item in Permission.objects.all():

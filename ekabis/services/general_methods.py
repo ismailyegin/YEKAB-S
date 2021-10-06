@@ -133,7 +133,7 @@ def aktif(request):
         if not (ActiveGroupService(request, activfilter)):
             aktifgroup = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
             aktifgroup.save()
-            aktif = aktifgroup.name
+            aktif = aktifgroup.group.name
         else:
             activfilter = {
                 'user': request.user
@@ -144,7 +144,7 @@ def aktif(request):
         perm = []
 
         groupfilter = {
-            'group_id': aktifgroup.group_id,
+            'group__id': aktifgroup.group.pk,
             'is_active': True
         }
         permission = PermissionGroupService(request, groupfilter)

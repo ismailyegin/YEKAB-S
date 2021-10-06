@@ -184,7 +184,7 @@
                         data: {
                             source: '{{item.dependence_parent.id}}',
                             target: '{{ item.id}}',
-                            label: '{{ item.businessTime }} Gün',
+                            label: ('{{ item.dependence_parent.businessTime  }} Gün'),
                         }
                     });
                 {% endif %}
