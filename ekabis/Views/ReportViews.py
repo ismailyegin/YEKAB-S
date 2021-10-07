@@ -247,7 +247,7 @@ def general_reporting(request):
 
             else:
                 sql += " group by yeka_business_block.id "
-                sql2 += " group by yeka_business_block.id"
+                sql2 += " group by yeka_business_block.id "
 
             sql_join = "SELECT * FROM ( " + sql + " ) A  LEFT JOIN  (" + sql2 + ") B ON A.yarisma_id=B.yarisma_id group by  B.total_elektriksel_guc "
 

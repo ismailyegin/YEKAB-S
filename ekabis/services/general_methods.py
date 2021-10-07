@@ -435,33 +435,33 @@ def kur():
     return data
 
 
-def ufe():
-    # üfe tüfe bilgilerinin alındıgı alan
-    data = []
-
-    url = "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Istatistikler/Enflasyon+Verileri/Uretici+Fiyatlari"
-    response = requests.get(url)
-    html_icerigi = response.content
-    soup = BeautifulSoup(html_icerigi, "html.parser")
-    tr = soup.find_all("tr")
-    data = []
-    for td in tr:
-        if td.find_all("strong"):
-            print(td.text)
-            test = td.text.split('\n')
-        else:
-            print(td.text)
-            t = td.text.split('\n')
-            if len(t) == 7 and t:
-                beka = {
-                    'date': t[1],
-                    'yiufe': t[2],
-                    'ufe': t[3],
-                    'yitufe': t[4],
-                    'tufe': t[5],
-                }
-                data.append(beka)
-    return data
+# def ufe():
+#     # üfe tüfe bilgilerinin alındıgı alan
+#     data = []
+#
+#     url = "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Istatistikler/Enflasyon+Verileri/Uretici+Fiyatlari"
+#     response = requests.get(url)
+#     html_icerigi = response.content
+#     soup = BeautifulSoup(html_icerigi, "html.parser")
+#     tr = soup.find_all("tr")
+#     data = []
+#     for td in tr:
+#         if td.find_all("strong"):
+#             print(td.text)
+#             test = td.text.split('\n')
+#         else:
+#             print(td.text)
+#             t = td.text.split('\n')
+#             if len(t) == 7 and t:
+#                 beka = {
+#                     'date': t[1],
+#                     'yiufe': t[2],
+#                     'ufe': t[3],
+#                     'yitufe': t[4],
+#                     'tufe': t[5],
+#                 }
+#                 data.append(beka)
+#     return data
 
 
 def add_block(request):

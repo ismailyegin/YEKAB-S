@@ -165,51 +165,73 @@
                                         </div>
                                     </form>
                                     <div class="card-body">
-                                        <table id="deneme" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
+                                        {% if blog_results %}
+                                            <table id="deneme" class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
 
-                                                <th>#</th>
-                                                {% for key in keys %}
-                                                    <th>{{ key }}</th>
-                                                {% endfor %}
-
-                                                {% for key in blog_results.0.keys %}
-                                                    {% if not key == 'result' %}
+                                                    <th>#</th>
+                                                    {% for key in keys %}
                                                         <th>{{ key }}</th>
-                                                    {% endif %}
-                                                {% endfor %}
+                                                    {% endfor %}
 
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-
-                                            {% for result in blog_results %}
-                                            <tr>
-                                                <td>{{ forloop.counter0 }}</td>
-                                                {% for key, value in result.result.items %}
-                                                    {% if not value == "yok" %}
-                                                        {% if not value %}
-                                                            <td>---</td>
-                                                        {% else %}
-                                                            <td>{{ value }}</td>
-
+                                                    {% for key in blog_results.0.keys %}
+                                                        {% if not key == 'result' %}
+                                                            <th>{{ key }}</th>
                                                         {% endif %}
-                                                    {% endif %}
+                                                    {% endfor %}
+
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+
+                                                {% for result in blog_results %}
+                                                    <tr>
+                                                        <td>{{ forloop.counter0 }}</td>
+                                                        {% for key, value in result.result.items %}
+                                                            {% if not value == "yok" %}
+                                                                {% if not value %}
+                                                                    <td>---</td>
+                                                                {% else %}
+                                                                    <td>{{ value }}</td>
+
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for key, value in result.items %}
+                                                            {% if not  key == 'result' %}
+                                                               {% if not value %}
+                                                                    <td>---</td>
+                                                                {% else %}
+                                                                    <td>{{ value }}</td>
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+
+
+                                                    </tr>
                                                 {% endfor %}
-                                                {% for key, value in result.items %}
-                                                    {% if not  key == 'result' %}
-                                                    <td>{{ value }}</td>
-                                                    {% endif %}
-                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <table id="deneme" class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
 
+                                                </tr>
+                                                </thead>
 
-                                            </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
+                                                <tbody>
+                                                <tr>
+                                                    <td>Tabloda herhangi bir veri mevcut değil</td>
+                                                </tr>
 
+                                                </tbody>
+                                            </table>
+
+                                        {% endif %}
 
                                     </div>
                                 </div>

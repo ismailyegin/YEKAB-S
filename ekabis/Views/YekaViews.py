@@ -1275,7 +1275,8 @@ def view_ufe(request):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
-        data = general_methods.ufe()
+        # data = general_methods.ufe()
+        data=[]
 
         return render(request, 'Yeka/ufe.html',
                       {'urls': urls, 'current_url': current_url, 'url_name': url_name,
