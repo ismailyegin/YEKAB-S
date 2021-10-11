@@ -20,9 +20,11 @@ from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import UnitService, ConnectionUnitGetService, \
     ConnectionRegionGetService, YekaGetService, CityService, CityGetService, last_urls
 
-
+# params request
 @login_required
 def return_connectionRegionUnit(request):
+
+    # Definition:# unit insertion area function
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -68,9 +70,14 @@ def return_connectionRegionUnit(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_units')
 
+# return unitform-urls-error_message,units
 
+# Params:(ajax-post) uuid(Unit)
 @login_required
 def delete_unit(request):
+
+    # Definition:is the function where units are deleted with ajax
+
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -95,9 +102,12 @@ def delete_unit(request):
     except obj.DoesNotExist:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+# return  json status and mesege
 
+# params connnectionunit uuid
 @login_required
 def update_unit(request, uuid):
+    # definition:unit is the updated field
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -147,8 +157,12 @@ def return_connectionRegion(request,uuid):
                   { 'regions': regions, 'error_messages': '', 'yeka': yeka, 'urls': urls,
                    'current_url': current_url, 'url_name': url_name})
 
+# return regions-error_message,yeka,urls,url_name
+
+# params (yeka uuid)
 @login_required
 def add_connectionRegion(request,uuid):
+    # definition:It is the function where the connection area is added to the yeka.
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -223,11 +237,12 @@ def add_connectionRegion(request,uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
+# return  region_form ,error_message,yeka ,urls ,url_name,name
 
-
-
+# params (ajax-post) (connectionregion uuid)
 @login_required
 def delete_region(request):
+    # Definition:is the function where connection region  are deleted with ajax
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -264,10 +279,14 @@ def delete_region(request):
     except obj.DoesNotExist:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+# return json  status and msg
 
 
+
+# params yeka uuid connection region uuid
 @login_required
 def update_region(request, uuid,yeka):
+    # definition:is the updated area of the connection zone
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -342,3 +361,5 @@ def update_region(request, uuid,yeka):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+
+# return region form,error_message,units urls ,last_url
