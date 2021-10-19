@@ -76,16 +76,16 @@ def add_yekabusiness(request, uuid):
                         return redirect('ekabis:view_yeka_detail', uuid)
                 else:
                     error_messages = get_error_messages(form)
-                    return render(request, 'Yeka/yekabusinessAdd.html', {'business_form': form,
+                    return render(request, 'Yeka/yekabusinessAdd.html', {'business_form': form,'business': business,
                                                                          'error_messages': error_messages, 'urls': urls,
                                                                          'current_url': current_url,
-                                                                         'url_name': url_name, 'yeka': yeka,
+                                                                         'url_name': url_name.name, 'yeka': yeka,
                                                                          })
 
         return render(request, 'Yeka/yekabusinessAdd.html', {'business': business,
-                                                             'yekabusiness_form': form,
+                                                             'business_form': form,
                                                              'error_messages': '', 'urls': urls,
-                                                             'current_url': current_url, 'url_name': url_name,
+                                                             'current_url': current_url, 'url_name': url_name.name,
                                                              'yeka': yeka,
                                                              })
     except Exception as e:
@@ -183,12 +183,12 @@ def add_businessBlogParametre(request, uuid):
                     error_messages = get_error_messages(business_form)
                     return render(request, 'Yeka/parametreAdd.html', {'business_form': business_form,
                                                                       'error_messages': error_messages, 'urls': urls,
-                                                                      'current_url': current_url, 'url_name': url_name,'business_blog':business
+                                                                      'current_url': current_url, 'url_name': url_name.name,'business_blog':business
                                                                       })
 
         return render(request, 'Yeka/parametreAdd.html', {'business_form': business_form,
                                                           'error_messages': '', 'urls': urls,
-                                                          'current_url': current_url, 'url_name': url_name,'business_blog':business
+                                                          'current_url': current_url, 'url_name': url_name.name,'business_blog':business
                                                           })
     except Exception as e:
         traceback.print_exc()
@@ -203,7 +203,7 @@ def view_businessBlog(request):
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
     return render(request, 'Yeka/businessBlogList.html',
-                  {'business_blog': business_blog, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                  {'business_blog': business_blog, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
 
 
 @login_required
@@ -220,19 +220,19 @@ def add_businessBlog(request):
                 if business_form.is_valid():
                     business = business_form.save(request, commit=False)
                     business.save()
-                    messages.success(request, 'İş  Blogu  Eklenmiştir.')
+                    messages.success(request, 'İş  Bloğu  Eklenmiştir.')
                     return redirect('ekabis:view_businessBlog')
                 else:
                     error_messages = get_error_messages(business_form)
                     return render(request, 'Yeka/businessBlogAdd.html', {'business_form': business_form,
                                                                          'error_messages': error_messages, 'urls': urls,
                                                                          'current_url': current_url,
-                                                                         'url_name': url_name
+                                                                         'url_name': url_name.name
                                                                          })
 
         return render(request, 'Yeka/businessBlogAdd.html', {'business_form': business_form,
                                                              'error_messages': '', 'urls': urls,
-                                                             'current_url': current_url, 'url_name': url_name
+                                                             'current_url': current_url, 'url_name': url_name.name
                                                              })
     except Exception as e:
         traceback.print_exc()
@@ -277,13 +277,13 @@ def change_businessBlog(request, uuid):
                                                                             'business': business,
                                                                             'parametre': parametre, 'urls': urls,
                                                                             'current_url': current_url,
-                                                                            'url_name': url_name
+                                                                            'url_name': url_name.name
                                                                             })
         return render(request, 'Yeka/businessBlogUpdate.html', {'business_form': business_form,
                                                                 'error_messages': '',
                                                                 'business': business,
                                                                 'parametre': parametre, 'urls': urls,
-                                                                'current_url': current_url, 'url_name': url_name
+                                                                'current_url': current_url, 'url_name': url_name.name
                                                                 })
     except Exception as e:
         traceback.print_exc()
@@ -313,11 +313,11 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
                     return render(request, 'Yeka/parametreUpdate.html', {'business_form': business_form,
                                                                          'error_messages': error_messages, 'urls': urls,
                                                                          'current_url': current_url,
-                                                                         'url_name': url_name
+                                                                         'url_name': url_name.name
                                                                          })
         return render(request, 'Yeka/parametreUpdate.html', {'business_form': business_form,
                                                              'error_messages': '', 'urls': urls,
-                                                             'current_url': current_url, 'url_name': url_name
+                                                             'current_url': current_url, 'url_name': url_name.name
                                                              })
     except Exception as e:
         traceback.print_exc()
@@ -411,7 +411,7 @@ def change_yekabusiness(request, uuid, yeka):
                                                                 'error_messages': '',
                                                                 'unbusiness': unbusiness,
                                                                 'business': business, 'urls': urls,
-                                                                'current_url': current_url, 'url_name': url_name
+                                                                'current_url': current_url, 'url_name': url_name.name
                                                                 })
 
     except Exception as e:

@@ -4,7 +4,7 @@ from idlelib.help import HelpText
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db.models import Sum
+from django.db.models import Sum, Count, Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve
@@ -60,6 +60,8 @@ def return_personel_dashboard(request):
 
     calendarNames = CalendarNameService(request, calendar_filter)
     yeka = YekaService(request, None).order_by('-date')
+    days = VacationDayService(request, None)
+
     res_count = yeka.filter(type='Rüzgar').count()
     ges_count = yeka.filter(type='Güneş').count()
     biyo_count = yeka.filter(type='Biyokütle').count()
@@ -76,7 +78,7 @@ def return_personel_dashboard(request):
     competitions = YekaCompetitionPersonService(request, competition_filter)
 
     return render(request, 'anasayfa/personel.html',
-                  {'res_count': res_count,
+                  {'res_count': res_count,'yeka':yeka,'vacation_days':days,
                    'ges_count': ges_count,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
@@ -111,6 +113,12 @@ def return_admin_dashboard(request):
     installedPower_array = []
     currentPower_array = []
 
+    calendar_filter = {
+        'isDeleted': False,
+        'user': request.user
+    }
+
+    calendarNames = CalendarNameService(request, calendar_filter)
     for yeka_accept in yeka_acccepts:
         accept_dict = dict()
         currentPower_dict = dict()
@@ -133,7 +141,7 @@ def return_admin_dashboard(request):
         'regions': regions, 'vacation_days': days,
         'res_count': res_count, 'accepts': installedPower_array,
         'ges_count': ges_count, 'current_power': currentPower_array,
-        'jeo_count': jeo_count,
+        'jeo_count': jeo_count,'calendarNames': calendarNames,
         'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
 
@@ -174,14 +182,14 @@ def add_calendarName(request):
             if request.method == 'POST':
                 calender_form = CalendarNameForm(request.POST)
                 if calender_form.is_valid():
-                    name = calender_form.save(commit=False)
+                    name = calender_form.save(request,commit=False)
                     name.user = request.user
                     name.save()
-            calanders = CalendarName.objects.filter(isDeleted=False)
+            calenders = CalendarName.objects.filter(isDeleted=False)
             return render(request, 'anasayfa/CalendarNameAdd.html',
                           {
                               'calender_form': calender_form,
-                              'calanders': calanders, 'urls': urls,
+                              'calanders': calenders, 'urls': urls,
                               'current_url': current_url, 'url_name': url_name
                           })
     except Exception as e:
@@ -226,15 +234,49 @@ def api_connection_region_cities(request):
                 yekafilter = {
                     'uuid': uuid
                 }
+                array = []
                 yeka = YekaGetService(request, yekafilter)
                 cities = City.objects.filter(connectionregion__id__in=yeka.connection_region.all().values_list('pk'))
                 cities = serializers.serialize("json", cities, cls=DjangoJSONEncoder)
-                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'cities': cities})
+                regions = serializers.serialize("json", yeka.connection_region.all(), cls=DjangoJSONEncoder)
+                array.append(cities)
+                array.append(regions)
+                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'cities': array})
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+
+@login_required
+def api_yeka_by_type(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                type = request.POST['type']
+
+                regions = ConnectionRegion.objects.filter(yeka__type=type).values('cities__plateNo').annotate(count=Count('cities__id'))
+                array=[]
+                for region in regions:
+                    yeka_dict=dict()
+                    yeka_dict['city']=region['cities__plateNo']
+                    yeka_dict['count']=region['count']
+                    array.append(yeka_dict)
+
+                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'yeka_type_cities': array})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
 
 
 @login_required

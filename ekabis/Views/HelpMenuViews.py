@@ -11,7 +11,7 @@ from django.urls import resolve
 from ekabis.Forms.HelpMenuForm import HelpMenuForm
 from ekabis.models import Permission, HelpMenu
 from ekabis.services import general_methods
-from ekabis.services.general_methods import get_error_messages, log_model
+from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import last_urls, HelpMenuGetService
 
 
@@ -44,11 +44,13 @@ def help_text_add(request):
                     error_messages = get_error_messages(help_form)
 
                     return render(request, 'helpMenu/add_help_text.html',
-                                  {'help_form': help_form, 'error_messages': error_messages, 'perms': perms})
-            return render(request, 'helpMenu/add_help_text.html',
-                          {'help_form': help_form, 'perms': perms, 'error_messages': '', 'urls': urls,
+                                  {'help_form': help_form, 'error_messages': error_messages, 'perms': perms,'urls': urls,
                            'current_url': current_url,
-                           'url_name': url_name})
+                           'url_name': url_name.name})
+            return render(request, 'helpMenu/add_help_text.html',
+                          {'help_form': help_form, 'error_messages': '', 'urls': urls,
+                           'current_url': current_url,
+                           'url_name': url_name.name})
 
     except Exception as e:
         traceback.print_exc()
@@ -67,7 +69,7 @@ def return_help_text(request):
 
     help_texts = HelpMenu.objects.filter(isDeleted=False)
     return render(request, 'helpMenu/view_help_text.html',
-                  {'texts': help_texts, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                  {'texts': help_texts, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
 
 
 @login_required
@@ -103,12 +105,12 @@ def update_help_menu(request, uuid):
                     return render(request, 'helpMenu/add_help_text.html',
                                   {'help_form': help_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name,'hiden_url':hiden_url
+                                   'url_name': url_name.name,'hiden_url':hiden_url
                                    })
 
             return render(request, 'helpMenu/add_help_text.html',
                           {'help_form': help_form, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name, 'error_messages': '','hiden_url':hiden_url})
+                           'url_name': url_name.name, 'error_messages': '','hiden_url':hiden_url})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')

@@ -14,8 +14,9 @@ from ekabis.models import YekaBusiness, YekaCompetition, Permission, YekaAccept,
 from ekabis.models.Yeka import Yeka
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.services import general_methods
+from ekabis.services.NotificationServices import notification
 from ekabis.services.general_methods import get_error_messages, get_client_ip
-from ekabis.services.services import last_urls
+from ekabis.services.services import last_urls, YekaCompetitionGetService
 
 
 @login_required
@@ -65,6 +66,10 @@ def add_yeka_accept(request, uuid):
         logout(request)
         return redirect('accounts:login')
     yeka_accept = YekaAccept.objects.get(uuid=uuid)
+    filter={
+        'business':yeka_accept.business
+    }
+    competition=YekaCompetitionGetService(request,filter)
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -83,6 +88,11 @@ def add_yeka_accept(request, uuid):
                     yeka_accept.accept.add(form)
                     yeka_accept.save()
                     messages.success(request, 'Kabul kayıt edildi.')
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ' + str(
+                        competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ' +str(yeka_accept.pk)+' id li kabul eklendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
                     return redirect('ekabis:view_yeka_accept', yeka_accept.business.uuid,
                                     yeka_accept.yekabusinessblog.uuid)
                 else:
@@ -113,6 +123,10 @@ def change_accept(request, uuid, accept_uuid):
         return redirect('accounts:login')
     accept = Accept.objects.get(uuid=uuid)
     yeka_accept = YekaAccept.objects.get(uuid=accept_uuid)
+    filter = {
+        'business': yeka_accept.business
+    }
+    competition = YekaCompetitionGetService(request, filter)
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -132,6 +146,12 @@ def change_accept(request, uuid, accept_uuid):
                     form = accept_form.save(request, commit=False)
                     form.save()
                     messages.success(request, 'Kabul kayıt güncellendi.')
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ' + str(
+                        competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait ' + str(
+                        yeka_accept.pk) + ' id li kabul güncellendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
                     return redirect('ekabis:view_yeka_accept', yeka_accept.business.uuid,
                                     yeka_accept.yekabusinessblog.uuid)
                 else:
@@ -169,10 +189,15 @@ def delete_accept(request):
                 obj = Accept.objects.get(uuid=uuid)
                 obj.isDeleted = False
                 obj.save()
+                yeka_accept = YekaAccept.objects.get(accept=obj)
+                competition=YekaCompetition.objects.get(business=yeka_accept.business)
 
-                log = ' adlı kabul silindi.'
+                log = str(obj.pk)+' id li kabul silindi.'
                 logs = Logs(user=request.user, subject=log, previousData=pre, ip=get_client_ip(request))
                 logs.save()
+                url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                html = '<a style="" href="' + url + '"> ' + str(obj.pk)+'</a> id li kabul silindi.'
+                notification(request, html, competition.uuid, 'yeka_competition')
                 return JsonResponse({'status': 'Success', 'msg': 'save successfully'})
 
             else:

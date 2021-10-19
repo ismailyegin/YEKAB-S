@@ -11,6 +11,22 @@
         }
     }
 
+    .fc-event-main {
+        cursor: pointer;
+    }
+
+    .hover-end {
+        padding: 0;
+        margin: 0;
+        font-size: 75%;
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        opacity: .8
+    }
+
+
     .chartjs-render-monitor {
         animation: chartjs-render-animation 1ms
     }
@@ -72,8 +88,8 @@
 
 
         #il-isimleri {
+            display: none;
             font-family: 'Open Sans';
-        {#display: inline-block;#} display: none;
             background: #1094F6;
             color: #fff;
             padding: 8px 16px;
@@ -101,6 +117,8 @@
         var city;
 
         $(function () {
+
+
             $("g").click(function (e) {
 
                 $("#competition_list a").remove();
@@ -149,7 +167,53 @@
                     });
                 }
                 $("#modal-competition").modal('show');
+            }).hover(function (e) {
+
+                var name = $(this).attr("data-iladi");
+                const info = document.querySelector('#il-isimleri');
+                const element = document.querySelector('#svg-turkiye-haritasi');
+
+
+                var position = $('#svg-turkiye-haritasi').position();
+                $('#il-isimleri').toggle();
+                debugger;
+                element.addEventListener(
+                    'mouseover',
+                    function (event) {
+                        if (event.target.parentNode.id !== 'guney-kibris' || event.target.parentNode.id !== 'kuzey-kibris') {
+                            info.style.display = 'block';
+                            info.innerHTML = name
+                        } else if (event.target.parentNode.id === 'guney-kibris') {
+
+                            info.style.display = 'block';
+                            info.innerHTML = 'Güney Kıbrıs';
+                        } else if (event.target.parentNode.id === 'kuzey-kibris') {
+
+                            info.style.display = 'block';
+                            info.innerHTML = 'Kuzey Kıbrıs';
+                        }
+                    }
+                );
+
+                element.addEventListener(
+                    'mousemove',
+                    function (event) {
+                        info.style.top = event.pageY - position.top + 'px';
+                        info.style.left = event.pageX - position.left + 130 + 'px';
+                    }
+                );
+
+                element.addEventListener(
+                    'mouseout',
+                    function (event) {
+                        info.style.display = 'none';
+                        info.innerHTML = '';
+                    }
+                );
+
+
             });
+
 
         });
     </script>
@@ -667,18 +731,32 @@
                         <div class="card-header">
 
                             <h4 class="card-title">Harita</h4>
-                            <select class="form-select float-right" id="id_yeka_select" aria-label="Yeka Seçiniz">
-                                <option value="" selected>Bütün Baglantı Bölgeleri</option>
-
+                            <select class="form-select float-right" id="id_yeka_select" aria-label="">
+                                <option value="all_regions" selected> Bağlantı Bölgeleri</option>
+                                <option value="yeka_type_select"> Kaynak Türleri</option>
+                                <option value="select_yeka">Yekaya Göre Kapasite</option>
+                            </select>
+                            <select style="display: none;margin-right: 5px;" class="form-select float-right"
+                                    id="selected_yeka" aria-label="Yeka Seçiniz">
+                                <option value="">---</option>
                                 {% for item in yeka %}
                                     <option value="{{ item.uuid }}">{{ item.definition }}</option>
                                 {% endfor %}
+                            </select>
+                            <select style="display: none;margin-right: 5px;" class="form-select float-right"
+                                    id="selected_yeka_type" aria-label="Yeka Kaynak Türü Seçiniz">
+                                <option value="">---</option>
+                                <option value="Güneş">Güneş</option>
+                                <option value="Rüzgar">Rüzgar</option>
+                                <option value="Biyokütle">Biyokütle</option>
+                                <option value="Jeotermal">Jeotermal</option>
+                                <option value="Hibrit">Hibrit</option>
 
                             </select>
                         </div>
                         <div class="card-body">
                             <div class="box-body no-padding">
-                                <div id="il-isimleri"> il isimleri</div>
+                                <div id="il-isimleri"> İl isimleri</div>
 
                                 <div class="svg-turkiye-haritasi">
                                     <svg version="1.1" id="svg-turkiye-haritasi" viewBox="0 0 1007.478 527.323">
@@ -950,7 +1028,7 @@
                                         <g id="duzce" data-plakakodu="81" data-alankodu="380" data-iladi="Düzce">
                                             <path d="M294.325,81.136l-4.501,1.279h-0.062l-0.031,0.031l-6.312,0.372l-5.376,0.466l0.624,2.156 l0.031,0.125v0.125l-0.658,2.907l-0.031,0.156l-0.094,0.094l-3.158,3.279l-0.031,0.031l-0.031,0.031l-3.157,2.06l-1.314,3.28 l-0.003,5.094l2.406,0.532l0.281,0.062l0.094,0.281l0.998,3.532l0.062,0.25l-0.156,0.188l-2.221,3.03l1.812,0.22h0.062 l11.312-0.119h0.157l0.125,0.062l1.874,1.22h0.062l3.999,1.221l4.376-1.06l1.657-1.874l-0.122-4.875v-0.094l0.062-0.125 c0,0,0.235-0.5,0.501-1.062c0.265-0.562,0.57-1.275,0.595-1.375c0.079-0.316,0.235-0.493,0.438-0.812s0.44-0.68,0.689-1.031 c0.495-0.702,0.97-1.343,0.97-1.343l0.125-0.188l0.219-0.031l3.531-0.498v0.031l4.501-1.029l4.282-1.092l2.813-2.686l0.441-4.938 l-3.188-0.783h-0.062l-3.062-0.502h-0.031l-8.938-0.63h-0.125l-0.125-0.094l-2.905-2.002l-0.031-0.062l-0.062-0.031L294.325,81.136 z"/>
                                         </g>
-                                        </g>
+
                                         <g id="kibris">
                                             <g id="kuzey-kibris" data-plakakodu="00" data-alankodu="392"
                                                data-iladi="Kuzey Kıbrıs">
@@ -965,6 +1043,11 @@
 
 
                                 <!-- /.users-list -->
+                            </div>
+                            <div class="card-footer" style="padding: 5px;margin-top:25px;float: right;width: 100%"
+                                 id="color-picker">
+
+
                             </div>
 
 
@@ -982,21 +1065,13 @@
                                         <div class="card-body">
                                             <!-- the events -->
                                             <div id="external-events">
-                                                <div class="external-event bg-success ui-draggable ui-draggable-handle"
-                                                     style="position: relative;">Test
-                                                </div>
-                                                <div class="external-event bg-warning ui-draggable ui-draggable-handle"
-                                                     style="position: relative;">Test
-                                                </div>
-                                                <div class="external-event bg-info ui-draggable ui-draggable-handle"
-                                                     style="position: relative;">Test
-                                                </div>
-                                                <div class="external-event bg-primary ui-draggable ui-draggable-handle"
-                                                     style="position: relative;">Test
-                                                </div>
-                                                <div class="external-event bg-danger ui-draggable ui-draggable-handle"
-                                                     style="position: relative;">Test
-                                                </div>
+                                                {% for cale in calendarNames %}
+                                                    <div id="{{ cale.uuid }}"
+                                                         class="external-event  ui-draggable ui-draggable-handle"
+                                                         style="position: relative; background-color: {{ cale.color }}">{{ cale.name }}
+                                                    </div>
+
+                                                {% endfor %}
 
                                             </div>
                                         </div>
@@ -1185,40 +1260,150 @@
             });
             $("#id_yeka_select").change(function (e) {
 
+                debugger;
+                if ($(this).val() === 'all_regions') {
+                    var select2 = document.getElementById('selected_yeka')
+                    var select3 = document.getElementById('selected_yeka_type')
+                    select2.style.display = 'none';
+                    select2.value = ""
+                    select3.value = ""
+                    select3.style.display = 'none';
 
-                if ($("#id_yeka_select").val() != "") {
-                    if (e.handled !== true) { // This will prevent event triggering more then once
-                        e.handled = true;
+                    all_region();
+                } else if ($(this).val() === 'select_yeka') {
+                    var select = document.getElementById('selected_yeka_type')
+                    select.style.display = 'none';
+                    select.value = ""
+                    document.getElementById('selected_yeka').style.display = 'block';
 
-                        $.ajax({
-                            url: "{% url "ekabis:api_connection_region_cities" %}",
-                            type: "POST",
-                            data: {
-                                'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                                uuid: $("#id_yeka_select").val(),
-                            },
-                            success: function (result) {
+                } else if ($(this).val() === 'yeka_type_select') {
+                    var select4 = document.getElementById('selected_yeka')
+                    select4.style.display = 'none';
+                    select4.value = ""
+                    document.getElementById('selected_yeka_type').style.display = 'block';
 
-                                console.log(result)
+                }
 
-                                if (result.status === 'Success') {
-                                    $("g path").css({fill: '#222'});
-                                    var cities = JSON.parse(result.cities);
-                                    debugger
-                                    for (var k in cities) {
-                                        $("g[data-plakakodu=" + cities[k].fields.plateNo + "] path").css({fill: '#E7721C'});
-                                        console.log(cities[k].fields.plateNo);
+            });
+
+            $("#selected_yeka").change(function (e) {
+
+                debugger;
+
+                if (e.handled !== true) { // This will prevent event triggering more then once
+                    e.handled = true;
+
+                    $.ajax({
+                        url: "{% url "ekabis:api_connection_region_cities" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid: $(this).val(),
+                        },
+                        success: function (result) {
+                            debugger;
+                            console.log(result)
+
+                            if (result.status === 'Success') {
+                                $("g path").css({fill: '#222'});
+                                var cities = JSON.parse(result.cities[0]);
+                                var regions = JSON.parse(result.cities[1]);
+                                var city_array = []
+                                for (var x in regions) {
+                                    var capacity = 0
+                                    var city = regions[x].fields.cities
+                                    capacity = regions[x].fields.capacity;
+                                    var field = {
+                                        cities: city,
+                                        capacity: capacity,
                                     }
+                                    city_array.push(field)
+                                }
+                                for (var k in city_array) {
+                                    var region_city = $("g[data-plakakodu=" + cities[k].fields.plateNo + "] path")
+                                    console.log(cities[k].fields.plateNo);
+                                    if (city_array[k].capacity > 0 && city_array[k].capacity <= 100) {
+                                        region_city.css({fill: '#007bff'});
+                                    } else if (city_array[k].capacity > 100 && city_array[k].capacity <= 250) {
+                                        region_city.css({fill: '#28a745'});
+                                    } else if (city_array[k].capacity >= 250 && city_array[k].capacity <= 500) {
+                                        region_city.css({fill: '#ffc107'});
+                                    } else if (city_array[k].capacity >= 500 && city_array[k].capacity <= 750) {
+                                        region_city.css({fill: '#fd7e14'});
+                                    } else if (city_array[k].capacity >= 750 && city_array[k].capacity <= 1000) {
+                                        region_city.css({fill: '#dc3545'});
+                                    }
+
                                 }
 
+                                var html = '<ul class="fc-color-picker" id="color-chooser" style="font-size: 25px">';
+                                html += ' <li><a class="text-primary" style="font-size: 20px" ><i class="fas fa-square"></i> 0-100 MW</a></li>';
+                                html += ' <li><a class="text-warning" style="font-size: 20px"><i class="fas fa-square"></i> 100-250 MW</a></li>';
+                                html += ' <li><a class="text-success" style="font-size: 20px"><i class="fas fa-square"></i> 250-500 MW</a></li>';
+                                html += '<li><a class="text-orange" style="font-size: 20px"><i class="fas fa-square"></i> 500-750 MW</a></li>';
+                                html += '<li><a class="text-danger" style="font-size: 20px"><i class="fas fa-square"></i> 750-1000 MW</a></li></ul>';
+
+                                document.getElementById('color-picker').innerHTML = html;
                             }
-                        });
 
-                    }
+                        }
+                    });
 
+                }
+            });
+            $("#selected_yeka_type").change(function (e) {
 
-                } else {
-                    all_region();
+                debugger;
+
+                if (e.handled !== true) { // This will prevent event triggering more then once
+                    e.handled = true;
+
+                    $.ajax({
+                        url: "{% url "ekabis:api_yeka_by_type" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            type: $(this).val(),
+                        },
+                        success: function (result) {
+                            debugger;
+                            console.log(result)
+
+                            if (result.status === 'Success') {
+                                $("g path").css({fill: '#222'});
+                                var type = result.yeka_type_cities;
+                                var city_array = []
+
+                                for (var i in type) {
+                                    var region_city = $("g[data-plakakodu=" + type[i].city + "] path")
+                                    console.log(type[i].city);
+                                    if (type[i].count > 0 && type[i].count <= 2) {
+                                        region_city.css({fill: '#007bff'});
+                                    } else if (type[i].count > 2 && type[i].count <= 4) {
+                                        region_city.css({fill: '#28a745'});
+                                    } else if (type[i].count >= 4 && type[i].count <= 6) {
+                                        region_city.css({fill: '#ffc107'});
+                                    } else if (type[i].count >= 6 && type[i].count <= 8) {
+                                        region_city.css({fill: '#fd7e14'});
+                                    } else if (type[i].count >= 8 && type[i].count <= 10) {
+                                        region_city.css({fill: '#dc3545'});
+                                    }
+
+                                }
+
+                                var html = '<ul class="fc-color-picker" id="color-chooser" style="font-size: 25px">';
+                                html += ' <li><a class="text-primary" style="font-size: 20px" ><i class="fas fa-square"></i> 0-2 </a></li>';
+                                html += ' <li><a class="text-warning" style="font-size: 20px"><i class="fas fa-square"></i> 2-4 </a></li>';
+                                html += ' <li><a class="text-success" style="font-size: 20px"><i class="fas fa-square"></i> 4-6 </a></li>';
+                                html += '<li><a class="text-orange" style="font-size: 20px"><i class="fas fa-square"></i> 6-8</a></li>';
+                                html += '<li><a class="text-danger" style="font-size: 20px"><i class="fas fa-square"></i> 8-10</a></li></ul>';
+
+                                document.getElementById('color-picker').innerHTML = html;
+                            }
+
+                        }
+                    });
+
                 }
             });
             var data = new Array();
@@ -1260,6 +1445,7 @@
             /* initialize the calendar
              -----------------------------------------------------------------*/
             //Date for the calendar events (dummy data)
+            debugger;
             var date = new Date()
             var d = date.getDate(),
                 m = date.getMonth(),
@@ -1273,8 +1459,9 @@
 
             // initialize the external events
             // -----------------------------------------------------------------
-
+            debugger;
             new Draggable(containerEl, {
+
                 itemSelector: '.external-event',
                 eventData: function (eventEl) {
                     console.log(containerEl)
@@ -1305,11 +1492,31 @@
                             start: "{{ i.date | date:"Y-m-d" }}",
                             backgroundColor: '#f88507', //red
                             borderColor: '#f88507', //red
-                            allDay: true
+                            allDay: true,
+                        },
+                    {% endfor %}
+                    {% for x in yeka %}
+
+                        {
+                            title: "{{ x.definition }}",
+                            start: "{{ x.date | date:"Y-m-d" }}",
+                            backgroundColor: '#007bff', //red
+                            borderColor: '#007bff', //red
+                            allDay: true,
+                            url: '{% url 'ekabis:view_yeka_detail' x.uuid %}'
                         },
                     {% endfor %}
 
                 ],
+                eventClick: function (info) {
+                    info.jsEvent.preventDefault(); // don't let the browser navigate
+
+                    if (info.event.url) {
+                        window.open(info.event.url);
+                    }
+                },
+
+
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar !!!
                 drop: function (info) {

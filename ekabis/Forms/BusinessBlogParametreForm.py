@@ -8,11 +8,11 @@ from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 class BusinessBlogParametreForm(BaseForm):
     class Meta:
         model = BusinessBlogParametreType
-        fields = ('title', 'type', 'necessary', 'companynecessary', 'is_change', 'visibility_in_yeka')
+        fields = ('title', 'type', 'necessary', 'company_necessary', 'is_change', 'visibility_in_yeka')
         labels = {'title': 'Tanımı',
                   'type': 'Türü',
                   'necessary': 'Zorunlu ',
-                  'companynecessary': 'Firma Müdahale Edebilir Mi?', 'is_change': 'Düzenlenebilir mi?',
+                  'company_necessary': 'Firma Müdahale Edebilir Mi?', 'is_change': 'Düzenlenebilir mi?',
                   'visibility_in_yeka': 'Yeka İş Bloğunda Görünmeli Mi?'}
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
@@ -20,7 +20,7 @@ class BusinessBlogParametreForm(BaseForm):
                                         'style': 'width: 100%;', 'required': 'required'}),
             'necessary': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                              'style': 'width: 100%;', 'required': 'required'}),
-            'companynecessary': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+            'company_necessary': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                                     'style': 'width: 100%;', 'required': 'required'}),
             'is_change': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                              'style': 'width: 100%;', 'required': 'required'}),

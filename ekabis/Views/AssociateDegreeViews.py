@@ -47,11 +47,11 @@ def add_associate_file_name(request):
                     return render(request, 'AssociateDegree/add_associate_degree_filename.html',
                                   {'file_name_form': file_name_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name.name
                                    })
 
         return render(request, 'AssociateDegree/add_associate_degree_filename.html',
-                      {'file_name_form': file_name_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                      {'file_name_form': file_name_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name
 
                        })
 
@@ -68,7 +68,7 @@ def view_associate_file_name(request):
     url_name = Permission.objects.get(codename=current_url.url_name)
     file_names = AssociateFileNameService(request, None)
     return render(request, 'AssociateDegree/view_associate_filename.html',
-                  {'file_names': file_names, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                  {'file_names': file_names, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
 
 
 @login_required
@@ -99,12 +99,12 @@ def change_factory_file_name(request, uuid):
                     return render(request, 'AssociateDegree/change_associate_filename.html',
                                   {'file_name_form': file_name_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name.name
                                    })
 
         return render(request, 'AssociateDegree/change_associate_filename.html',
-                      {'file_name_form': file_name_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name
-
+                      {'file_name_form': file_name_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name,
+                       'error_messages': '',
                        })
 
     except Exception as e:
@@ -177,7 +177,7 @@ def view_yeka_associate_degree(request, business, businessblog):
 
         return render(request, 'AssociateDegree/view_yeka_associate_file.html',
                       {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
-                       'url_name': url_name, 'name': name, 'associate': associate, 'files': files,
+                       'url_name': url_name.name, 'name': name, 'associate': associate, 'files': files,
                        })
     except Exception as e:
         traceback.print_exc()
@@ -219,7 +219,7 @@ def add_associate_file(request, uuid):
                                   {'associate_file_form': associate_file_form, 'business': yeka_associate.business,
                                    'yekabussinessblog': yeka_associate.yekabusinessblog,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name, 'name': name,
+                                   'url_name': url_name.name, 'name': name,
                                    })
 
             return render(request, 'AssociateDegree/add_associate_file.html',
@@ -227,7 +227,7 @@ def add_associate_file(request, uuid):
                            'business': yeka_associate.business,
                            'yekabussinessblog': yeka_associate.yekabusinessblog, 'urls': urls,
                            'current_url': current_url,
-                           'url_name': url_name, 'name': name
+                           'url_name': url_name.name, 'name': name
                            })
     except Exception as e:
         traceback.print_exc()
@@ -266,7 +266,7 @@ def change_associate_file(request, uuid, yeka_associate):
                                   {'associate_file_form': associate_file_form, 'business': yeka_associate.business,
                                    'yekabussinessblog': yeka_associate.yekabusinessblog,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name,
+                                   'url_name': url_name.name,
                                    })
 
             return render(request, 'AssociateDegree/add_associate_file.html',
@@ -274,7 +274,7 @@ def change_associate_file(request, uuid, yeka_associate):
                            'business': yeka_associate.business,
                            'yekabussinessblog': yeka_associate.yekabusinessblog, 'urls': urls,
                            'current_url': current_url,
-                           'url_name': url_name,
+                           'url_name': url_name.name,
                            })
     except Exception as e:
         traceback.print_exc()

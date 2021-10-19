@@ -20,7 +20,7 @@ from ekabis.Forms.YekaCompanyForm import YekaCompanyForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import ExtraTime, \
-    Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension, YekaCompetitionEskalasyon
+    Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension, YekaCompetitionEskalasyon, YekaBusiness
 
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
@@ -43,7 +43,7 @@ from ekabis.serializers.YekaCompetitionEskalasyonSerializers import YekaCompetit
 from ekabis.serializers.YekaProposalSerializers import ProposalSerializer, ProposalResponseSerializer
 from ekabis.serializers.YekaSerializer import YekaSerializer
 from ekabis.services import general_methods
-from ekabis.services.NotificationServices import yeka_added
+from ekabis.services.NotificationServices import notification
 from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import YekaService, YekaConnectionRegionService, YekaGetService, \
     YekaPersonService, \
@@ -97,7 +97,9 @@ def add_yeka(request):
                 if yeka_form.is_valid():
                     yeka = yeka_form.save(request, commit=False)
                     yeka.save()
-                    yeka_added(request, yeka.pk)
+                    url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
+                    html = '<a style="" href="' + url + '">ID: ' + str(yeka.pk) + ' - ' + yeka.definition + '</a> YEKA eklendi.'
+                    notification(request, html, yeka.uuid, 'yeka')
 
                     messages.success(request, 'Yeka Başarıyla Kayıt Edilmiştir.')
                     return redirect('ekabis:view_yeka_detail', yeka.uuid)
@@ -178,6 +180,9 @@ def delete_yeka(request):
                     data_as_json_pre = serializers.serialize('json', Yeka.objects.filter(uuid=uuid))
                     obj.isDeleted = True
                     obj.save()
+                    url = redirect('ekabis:view_yeka').url
+                    html = '<a style="" href="' + url + '">ID: ' + str(obj.pk) + ' - ' + obj.definition + '</a> YEKA  silindi.'
+                    notification(request, html, obj.uuid, 'yeka')
                     log = str(obj.definition) + " - Yeka silindi."
                     logs = Logs(user=request.user, subject=log, ip=get_client_ip(request),
                                 previousData=data_as_json_pre)
@@ -240,7 +245,9 @@ def update_yeka(request, uuid):
                     yeka.capacity = yeka_form.cleaned_data['capacity']
                     yeka.type = yeka_form.cleaned_data['type']
                     yeka.save()
-
+                    url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
+                    html = '<a style="" href="' + url + '">ID: ' + str(yeka.pk) + ' - ' + yeka.definition + '</a> YEKA güncellendi.'
+                    notification(request,html,yeka.uuid,'yeka')
                     messages.success(request, 'Yeka Başarıyla Güncellendi')
                     return redirect('ekabis:view_yeka_detail', yeka.uuid)
                 else:
@@ -521,7 +528,7 @@ def yeka_person_list(request, uuid):
         array = []
         for person in yeka_person:
             array.append(person.employee.uuid)
-        name=''
+        name = ''
         if yeka.business:
             name = general_methods.yekaname(yeka.business)
         # ekstra servis yazılacak
@@ -545,6 +552,11 @@ def yeka_person_list(request, uuid):
                             log = str(yeka.definition) + ' adlı yekaya - ' + str(
                                 employee.person.user.get_full_name()) + " adlı personel atandı."
                             log = general_methods.logwrite(request, request.user, log)
+                            url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
+                            html = '<a style="color:black;" href="' + url + '">' + str(
+                                id) + str(yeka.definition) + ' </a> adlı yekaya - ' + str(
+                                employee.person.user.get_full_name()) + ' adlı personel atandı.'
+                            notification(request, html, yeka.uuid, 'yeka')
                 else:
                     persons = request.POST.getlist('sub_employee')
                     if persons:
@@ -566,6 +578,11 @@ def yeka_person_list(request, uuid):
                             log = str(yeka_person.yeka.definition) + ' adlı yekadan -' + str(
                                 employee.person.user.get_full_name()) + " personeli çıkarıldı."
                             log = general_methods.logwrite(request, request.user, log)
+                            url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
+                            html = '<a style="" href="' + url + '">' + str(
+                                id) + str(yeka.definition) + ' </a> adlı yekaya - ' + str(
+                                employee.person.user.get_full_name()) + ' adlı personel çıkarıldı.'
+                            notification(request, html, yeka.uuid, 'yeka')
 
             return redirect('ekabis:view_yeka_detail', yeka.uuid)
         return render(request, 'Yeka/yekaPersonList.html',
@@ -786,7 +803,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         yekaBusinessBlogo_form.fields['dependence_parent'].queryset = yeka.business.businessblogs.exclude(
             uuid=yekabussiness.uuid).filter(isDeleted=False)
         name = general_methods.yekaname(yeka.business)
-        for item in yekabussiness.paremetre.all():
+        for item in yekabussiness.parameter.all():
 
             if item.parametre.type == 'file':
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
@@ -836,12 +853,14 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                     yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 if yekabussiness.completion_date:
-                    dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
+                    dependence_block = YekaBusinessBlog.objects.get(dependence_parent=yekabussiness)
+                    x = YekaBusiness.objects.get(businessblogs=dependence_block)
+                    list=x.businessblogs.filter(sorting__gte=dependence_block.sorting)
                     i = 0
                     while dependence_block:
                         if i == 0:
                             start_date = yekabussiness.completion_date.date()
-                            for block in dependence_block:
+                            for block in list:
                                 block.startDate = start_date
                                 if block.time_type == 'is_gunu':
                                     time = block.businessTime
@@ -881,7 +900,10 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                                 block.save()
                                 dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
                                 i = i + 1
-
+                url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
+                html = '<a style="" href="' + url + '"> ID: ' + str(
+                    yekabussiness.pk) +'-'+ str(yekabussiness.businessblog.name) + ' </a> adlı iş bloğu güncellendi.'
+                notification(request, html, yeka.uuid, 'yeka')
                 return redirect('ekabis:view_yeka_detail', yeka.uuid)
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
@@ -929,7 +951,7 @@ def add_yekabusinessblog_company(request, business, yekabusinessblog):
                 array_company.append(item.company.pk)
             company_list = Company.objects.exclude(id__in=array_company).filter(isDeleted=False)
         else:
-            company_list=Company.objects.all()
+            company_list = Company.objects.all()
         if request.POST:
             with transaction.atomic():
                 get_list_company = request.POST.getlist('company')
@@ -947,8 +969,6 @@ def add_yekabusinessblog_company(request, business, yekabusinessblog):
                         yeka_app.files.add(file)
                         yeka_app.save()
                 messages.success(request, 'Firma  eklenmistir.')
-
-
                 return redirect('ekabis:view_application', yekabusiness.uuid, yekabussinessblog.uuid)
 
         return render(request, 'Yeka/add_yekabusinessblog_company.html',
@@ -1276,7 +1296,7 @@ def view_ufe(request):
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
         # data = general_methods.ufe()
-        data=[]
+        data = []
 
         return render(request, 'Yeka/ufe.html',
                       {'urls': urls, 'current_url': current_url, 'url_name': url_name,
@@ -1317,22 +1337,23 @@ def view_kur(request, ):
 
 
 def test_yeka(request):
-    table_th=[]
+    table_th = []
     from collections import namedtuple
     def namedtuplefetchall(cursor):
         "Return all rows from a cursor as a namedtuple"
-        desc = cursor.description
+        desc = cursor.not_description
         for col in desc:
             table_th.append(col[0])
         nt_result = namedtuple('Result', [col[0] for col in desc])
         return [nt_result(*row) for row in cursor.fetchall()]
+
     from django.db import connection
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT  yeka.capacity  ,yeka.name,app.finishDate,app.preRegistration FROM ekabis_yekacompetition as yeka left JOIN ekabis_yekaapplication as app ON yeka.business_id=app.business_id")
         row = namedtuplefetchall(cursor)
-    return render(request, 'Yeka/cytoscape.html',{'row':row,
-                                                  'table_th':table_th})
+    return render(request, 'Yeka/cytoscape.html', {'row': row,
+                                                   'table_th': table_th})
 
 
 @login_required()
@@ -1781,7 +1802,7 @@ def company_application(request):
 def save_company_app_file(request):
     if request.POST:
         try:
-
+            name=""
             id = request.POST['id']
             array = []
             array = json.loads(request.POST.get('files'))
@@ -1794,9 +1815,9 @@ def save_company_app_file(request):
                 ext = format.split('/')[-1]
                 if FileExtension.objects.filter(mime_type=ext):
                     ext = FileExtension.objects.get(mime_type=ext).extension
-                date=time.time() * 1000
-                name=YekaApplicationFileName.objects.get(pk=item['filename']).filename
-                data = ContentFile(base64.b64decode(imgstr), name=name+'_'+str(date)+'_temp.'+ext)
+                date = time.time() * 1000
+                name = YekaApplicationFileName.objects.get(pk=item['filename']).filename
+                data = ContentFile(base64.b64decode(imgstr), name=name + '_' + str(date) + '_temp.' + ext)
                 x = {'name': item['filename'], 'file': data}
                 file_array.append(x)
             yeka_company = YekaCompany.objects.get(uuid=id)
@@ -1813,7 +1834,9 @@ def save_company_app_file(request):
 
                     else:
                         return JsonResponse({'status': 'Fail', 'msg': "Bu dosya ismine ait dosya var."})
-
+                url = redirect('ekabis:view_yeka_detail', yeka_company.yeka.uuid).url
+                html = '<a style="" href="' + url + '"> ID: ' + str(yeka_company.company.name) + ' </a> firmanın '+ name +' belgesi  yüklendi.'
+                notification(request, html, yeka_company.yeka.uuid, 'yeka')
                 return JsonResponse({'status': 'Success', 'msg': "Başvuru Kayıt Edildi."})
 
             else:
@@ -1862,6 +1885,10 @@ def make_application(request):
                         file.save()
                         yeka_company.files.add(file)
                         yeka_company.save()
+                url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
+                html = '<a style="" href="' + url + '"> ID: ' + str(
+                    company.pk) + '-' + str(company.name) + ' </a> firma başvurusu oluşturuldu.'
+                notification(request, html, yeka.uuid, 'yeka')
             else:
                 return JsonResponse({'status': 'Fail', 'msg': "Başvuruların alınması iş bloğu mevcut değil."})
 
@@ -1922,7 +1949,7 @@ def delete_yeka_company_file(request):
                 yeka_company = YekaCompany.objects.get(files=obj)
                 yeka_company.files.remove(obj)
 
-                log = str(obj.definition) + " - Yeka silindi."
+                log = 'Başvuru dosya ID: '+str(obj.pk)+ ' - '+str(obj.filename.filename) + " belgesi silindi."
                 logs = Logs(user=request.user, subject=log, ip=get_client_ip(request),
                             previousData=data_as_json_pre)
                 logs.save()
@@ -1940,9 +1967,9 @@ def get_yeka_competition_company(request):
         try:
 
             id = request.POST.get('competition_id')
-            competition=YekaCompetition.objects.get(pk=id)
+            competition = YekaCompetition.objects.get(pk=id)
             if YekaCompany.objects.filter(competition=competition):
-                companies= YekaCompany.objects.filter(competition=competition)
+                companies = YekaCompany.objects.filter(competition=competition)
 
                 data_companies = YekaCompanySerializer(companies, many=True)
 
@@ -1964,58 +1991,61 @@ def get_yeka_competition_company(request):
             return JsonResponse({'status': 'Fail', 'msg': e})
 
 
-
-
 @api_view(http_method_names=['POST'])
 def get_yeka_competition_proposal(request):
     if request.POST:
         try:
 
             id = request.POST.get('competition_id')
-            competition=YekaCompetition.objects.get(pk=id)
+            competition = YekaCompetition.objects.get(pk=id)
             if YekaProposal.objects.filter(business=competition.business):
-                yeka_proposal=YekaProposal.objects.get(business=competition.business)
-                proposal=yeka_proposal.proposal.filter(isDeleted=False)
-                data_proposal =ProposalSerializer(proposal, many=True)
+                yeka_proposal = YekaProposal.objects.get(business=competition.business)
+                proposal = yeka_proposal.proposal.filter(isDeleted=False)
+                data_proposal = ProposalSerializer(proposal, many=True)
 
                 response = {
 
                     'data': data_proposal.data,
                     'draw': int(request.POST.get('draw')),
                     'recordsTotal': proposal.count(),
-                    'recordsFiltered':  proposal.count(),
+                    'recordsFiltered': proposal.count(),
 
                 }
                 return JsonResponse(response)
             else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Aday Yeka Bulunmamaktadır'})
+                response={}
+                return JsonResponse({'status': 'Fail', 'msg': 'Aday Yeka Bulunmamaktadır','response':response})
 
         except Exception as e:
 
             return JsonResponse({'status': 'Fail', 'msg': e})
+
+
 @api_view(http_method_names=['POST'])
 def get_yeka_competition_eskalasyon(request):
     if request.POST:
         try:
 
             id = request.POST.get('competition_id')
-            competition=YekaCompetition.objects.get(pk=id)
-            yeka_eskalasyon=YekaCompetitionEskalasyon.objects.filter(competition=competition)
-            data_eskalasyon =YekaCompetitionEskalasyonSerializer(yeka_eskalasyon, many=True)
+            competition = YekaCompetition.objects.get(pk=id)
+            yeka_eskalasyon = YekaCompetitionEskalasyon.objects.filter(competition=competition)
+            data_eskalasyon = YekaCompetitionEskalasyonSerializer(yeka_eskalasyon, many=True)
 
             response = {
 
-                    'data': data_eskalasyon.data,
-                    'draw': int(request.POST.get('draw')),
-                    'recordsTotal': yeka_eskalasyon.count(),
-                    'recordsFiltered': yeka_eskalasyon.count(),
+                'data': data_eskalasyon.data,
+                'draw': int(request.POST.get('draw')),
+                'recordsTotal': yeka_eskalasyon.count(),
+                'recordsFiltered': yeka_eskalasyon.count(),
 
-                }
+            }
             return JsonResponse(response)
 
         except Exception as e:
 
             return JsonResponse({'status': 'Fail', 'msg': e})
+
+
 def yeka_report(request):
     perm = general_methods.control_access(request)
     if not perm:

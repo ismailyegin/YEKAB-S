@@ -13,7 +13,7 @@ from django.urls import resolve
 
 from ekabis.Forms.ExtraTimeFileForm import ExtraTimeFileForm
 from ekabis.Forms.ExtraTimeForm import ExtraTimeForm
-from ekabis.Views.VacationDayViews import weekday_count, add_business_days, is_vacation_day
+from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Logs
 from ekabis.models.ExtraTime import ExtraTime
 from ekabis.models.VacationDay import VacationDay

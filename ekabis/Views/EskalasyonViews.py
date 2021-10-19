@@ -19,10 +19,11 @@ import requests
 
 from ekabis.models.YekaContract import YekaContract
 from ekabis.services import general_methods
+from ekabis.services.NotificationServices import notification
 from ekabis.services.services import YekaCompetitionService
 
 
-def EskalasyonCalculation(uuid):
+def EskalasyonCalculation(request,uuid):
     try:
         with transaction.atomic():
 
@@ -45,8 +46,8 @@ def EskalasyonCalculation(uuid):
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması"):
                 yeka_business = YekaBusiness.objects.get(pk=competition.business.pk).businessblogs.get(
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması")
-                if yeka_business.paremetre.filter(parametre__title='Tavan Fiyatı (USD)'):
-                    peak_value = yeka_business.paremetre.get(
+                if yeka_business.parameter.filter(parametre__title='Tavan Fiyatı (USD)'):
+                    peak_value = yeka_business.parameter.get(
                         parametre__title='Tavan Fiyatı (USD)').value  # Sözleşme iş bloğunda girilen eskalasyon pik değeri (USD)
                     startDate = 'startDate=' + str(datetime.today().date().strftime('%d-%m-%Y')) + '&'
                     endDate = 'endDate=' + str(datetime.today().date().strftime('%d-%m-%Y'))
@@ -136,7 +137,10 @@ def EskalasyonCalculation(uuid):
 
                         yeka_competition_eskalasyon.result = result
                         yeka_competition_eskalasyon.save()
-
+                        url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                        html = '<a style="color:black;" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                            competition.name) + '</a> adlı yarışmanın eskalasyon hesabı yapıldı.'
+                        notification(request, html, competition.uuid, 'yeka_competition')
                         return result
 
     except Exception as e:
@@ -248,7 +252,7 @@ def yeka_competition_eskalasyon(request):
         }
         yeka_competitions = YekaCompetitionService(request, filter)
         for competition in yeka_competitions:
-            EskalasyonCalculation(competition.uuid)
+            EskalasyonCalculation(request,competition.uuid)
         return redirect('ekabis:yeka_report')
     except Exception as e:
         traceback.print_exc()

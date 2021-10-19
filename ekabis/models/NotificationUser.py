@@ -10,4 +10,4 @@ class NotificationUser(BaseModel):
     is_seen = models.BooleanField(default=False)
     is_read = models.BooleanField(default=False)
     read_date = models.DateField(null=True, blank=True)
-    notification = models.OneToOneField(Notification, on_delete=models.DO_NOTHING,null=True,blank=True)
+    notification = models.ForeignKey(Notification, on_delete=models.DO_NOTHING,null=True,blank=True)

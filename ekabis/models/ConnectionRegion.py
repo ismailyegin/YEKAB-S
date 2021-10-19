@@ -9,7 +9,7 @@ class ConnectionRegion(BaseModel):
     name = models.TextField(blank=False, null=False, verbose_name='Bağlantı Bölgesi')
     capacity = models.IntegerField(null=False, blank=False, verbose_name='Kapasite')
     cities=models.ManyToManyField(City)
-    yekacompetition=models.ManyToManyField(YekaCompetition)
+    yekacompetition=models.ManyToManyField(YekaCompetition,related_name='competition_regions')
     def __str__(self):
         return '%s ' % self.name
 

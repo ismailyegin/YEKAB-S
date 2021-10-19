@@ -194,9 +194,8 @@
 
                         data: {
                             label: ('{{ item.dependence_parent.businessTime  }} Gün'),
-                            source: '{{item.dependence_parent.id}}',
-                            target: '{{ item.id}}',
-
+                            source:  '{{item.dependence_parent.id}}',
+                            target: '{{ item.id}}'
                         }
                     });
                 {% else %}
@@ -732,11 +731,9 @@
                             <label for="">Durumlar</label>
                             <div class="color-palette-set">
                                 <div class="bg-primary color-palette" style="padding: 3px"><span>Başlanmadı</span></div>
-                                <div class="bg-warning color-palette" style="padding: 3px"><span>Devam Ediyor</span>
-                                </div>
+                                <div class="bg-warning color-palette" style="padding: 3px"><span>Devam Ediyor</span> </div>
                                 <div class="bg-success color-palette" style="padding: 3px"><span>Tamamlandı</span></div>
-                                <div class="bg-danger color-palette" style="padding: 3px"><span>Tamamlanmadı</span>
-                                </div>
+                                <div class="bg-danger color-palette" style="padding: 3px"><span>Tamamlanmadı</span> </div>
 
                             </div>
                         </div>

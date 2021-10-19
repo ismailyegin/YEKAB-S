@@ -17,12 +17,14 @@ from ekabis.models.Factory import Factory
 from ekabis.models.FactoryFileName import FactoryFileName
 from ekabis.models.YekaFactory import YekaFactory
 from ekabis.services import general_methods
+from ekabis.services.NotificationServices import notification
 from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import last_urls, FactoryFileNameService, FactoryFileNameGetService, FactoryGetService, \
     FactoryFileGetService
 
 
 @login_required
+# factory file name added in the system
 def add_factory_file_name(request):
     perm = general_methods.control_access(request)
     if not perm:
@@ -47,11 +49,11 @@ def add_factory_file_name(request):
                     return render(request, 'Factory/add_factory_file_name.html',
                                   {'file_name_form': file_name_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name.name
                                    })
 
         return render(request, 'Factory/add_factory_file_name.html',
-                      {'file_name_form': file_name_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                      {'file_name_form': file_name_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name
 
                        })
 
@@ -62,16 +64,18 @@ def add_factory_file_name(request):
 
 
 @login_required
+# lists factory file name in the system
 def view_factory_file_name(request):
     urls = last_urls(request)
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
     file_names = FactoryFileNameService(request, None)
     return render(request, 'Factory/view_factory_file_name.html',
-                  {'file_names': file_names, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                  {'file_names': file_names, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
 
 
 @login_required
+# the factory file name in the system is updated
 def change_factory_file_name(request, uuid):
     perm = general_methods.control_access(request)
     if not perm:
@@ -99,12 +103,12 @@ def change_factory_file_name(request, uuid):
                     return render(request, 'Factory/update_factory_file_name.html',
                                   {'file_name_form': file_name_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name.name
                                    })
 
         return render(request, 'Factory/update_factory_file_name.html',
                       {'file_name_form': file_name_form, 'urls': urls, 'current_url': current_url,
-                       'url_name': url_name})
+                       'url_name': url_name.name})
 
     except Exception as e:
         traceback.print_exc()
@@ -113,6 +117,7 @@ def change_factory_file_name(request, uuid):
 
 
 @login_required
+# delete factory file name in the system
 def delete_factory_file_name(request):
     perm = general_methods.control_access(request)
     if not perm:
@@ -148,6 +153,7 @@ def delete_factory_file_name(request):
 
 
 @login_required
+# lists yeka factory in the system
 def view_yeka_factory(request, business, businessblog):
     perm = general_methods.control_access(request)
     if not perm:
@@ -173,7 +179,7 @@ def view_yeka_factory(request, business, businessblog):
 
         return render(request, 'Factory/view_yeka_factory.html',
                       {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
-                       'url_name': url_name, 'name': name, 'factory': factory
+                       'url_name': url_name.name, 'name': name, 'factory': factory
                        })
     except Exception as e:
         traceback.print_exc()
@@ -182,12 +188,14 @@ def view_yeka_factory(request, business, businessblog):
 
 
 @login_required
+# factory is added in the system
 def add_yeka_factory(request, uuid):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
         return redirect('accounts:login')
     yeka_factory = YekaFactory.objects.get(uuid=uuid)
+    competition=YekaCompetition.objects.get(business=yeka_factory.business)
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -205,6 +213,10 @@ def add_yeka_factory(request, uuid):
                     form.save()
                     yeka_factory.factory.add(form)
                     yeka_factory.save()
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ' +yeka_factory.factory.name + ' adlı fabrika bilgileri eklendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
                     messages.success(request, 'Fabrika kayıt edildi.')
                     return redirect('ekabis:update_factory', form.uuid)
                 else:
@@ -212,14 +224,14 @@ def add_yeka_factory(request, uuid):
                     return render(request, 'Factory/add_yeka_factory.html',
                                   {'factory_form': factory_form, 'yeka_factory': yeka_factory,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name, 'name': name,
+                                   'url_name': url_name.name, 'name': name,
                                    })
 
             return render(request, 'Factory/add_yeka_factory.html',
                           {'factory_form': factory_form, 'yeka_factory': yeka_factory,
                            'business': yeka_factory.business,
                            'yekabussinessblog': yeka_factory.yekabusinessblog, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name, 'name': name
+                           'url_name': url_name.name, 'name': name
                            })
     except Exception as e:
         traceback.print_exc()
@@ -228,6 +240,7 @@ def add_yeka_factory(request, uuid):
 
 
 @login_required
+# the yeka factory in the system is updated
 def update_yeka_factory(request, uuid):
     perm = general_methods.control_access(request)
     if not perm:
@@ -235,6 +248,8 @@ def update_yeka_factory(request, uuid):
         return redirect('accounts:login')
     factory = Factory.objects.get(uuid=uuid)
     yeka_factory = YekaFactory.objects.get(factory=factory)
+    competition=YekaCompetition.objects.get(business=yeka_factory.business)
+
 
     try:
         urls = last_urls(request)
@@ -256,7 +271,11 @@ def update_yeka_factory(request, uuid):
                     form.save()
                     yeka_factory.factory.add(form)
                     yeka_factory.save()
-                    messages.success(request, 'Fabrika kayıt edildi.')
+                    messages.success(request, 'Fabrika bilgileri güncellendi.')
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + yeka_factory.factory.name + ' adlı fabrika bilgileri güncellendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
                     return redirect('ekabis:view_yeka_factory', yeka_factory.business.uuid,
                                     yeka_factory.yekabusinessblog.uuid)
                 else:
@@ -264,14 +283,14 @@ def update_yeka_factory(request, uuid):
                     return render(request, 'Factory/update_yeka_factory.html',
                                   {'factory_form': factory_form, 'yeka_factory': yeka_factory,'factory':factory,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name, 'name': name,
+                                   'url_name': url_name.name, 'name': name,
                                    })
 
             return render(request, 'Factory/update_yeka_factory.html',
                           {'factory_form': factory_form, 'yeka_factory': yeka_factory,
                            'business': yeka_factory.business,'factory':factory,
                            'yekabussinessblog': yeka_factory.yekabusinessblog, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name, 'name': name
+                           'url_name': url_name.name, 'name': name
                            })
     except Exception as e:
         traceback.print_exc()
@@ -280,6 +299,7 @@ def update_yeka_factory(request, uuid):
 
 
 @login_required
+# factory file added in the system
 def add_factory_file(request, uuid):
     perm = general_methods.control_access(request)
     if not perm:
@@ -317,14 +337,14 @@ def add_factory_file(request, uuid):
                     return render(request, 'Factory/add_factory_file.html',
                                   {'factory_form': factory_form, 'yeka_factory': yeka_factory,'factory':factory,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name, 'name': name,
+                                   'url_name': url_name.name, 'name': name,
                                    })
 
             return render(request, 'Factory/add_factory_file.html',
                           {'factory_form': factory_form, 'yeka_factory': yeka_factory,
                            'business': yeka_factory.business,'factory':factory,
                            'yekabussinessblog': yeka_factory.yekabusinessblog, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name, 'name': name
+                           'url_name': url_name.name, 'name': name
                            })
     except Exception as e:
         traceback.print_exc()
@@ -334,6 +354,7 @@ def add_factory_file(request, uuid):
 
 
 @login_required
+# the factory file in the system is updated
 def update_factory_file(request, uuid,factory_uuid):
     perm = general_methods.control_access(request)
     if not perm:
@@ -361,14 +382,14 @@ def update_factory_file(request, uuid,factory_uuid):
                     return render(request, 'Factory/update_factory_file.html',
                                   {'factory_form': factory_form, 'factory':factory,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name,
+                                   'url_name': url_name.name,
                                    })
 
             return render(request, 'Factory/update_factory_file.html',
                           {'factory_form': factory_form,
                            'factory':factory,
                             'urls': urls, 'current_url': current_url,
-                           'url_name': url_name,
+                           'url_name': url_name.name,
                            })
     except Exception as e:
         traceback.print_exc()
@@ -376,6 +397,7 @@ def update_factory_file(request, uuid,factory_uuid):
         return redirect('ekabis:update_factory', factory_uuid)
 
 @login_required
+# delete factory in the system
 def delete_factory(request):
     perm = general_methods.control_access(request)
     if not perm:
@@ -396,6 +418,12 @@ def delete_factory(request):
                 logs.save()
                 obj.isDeleted = True
                 obj.save()
+                yeka_factory=YekaFactory.objects.get(factory=obj)
+                competition=YekaCompetition.objects.get(business=yeka_factory.business)
+                url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                    competition.name) + '</a> adlı YEKA yarışmasına ait  ' + yeka_factory.factory.name + ' adlı fabrika bilgileri silindi.'
+                notification(request, html, competition.uuid, 'yeka_competition')
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
             else:
@@ -408,6 +436,7 @@ def delete_factory(request):
         return redirect('ekabis:view_yeka')
 
 @login_required
+# delete factory file in the system
 def delete_factory_file(request):
     perm = general_methods.control_access(request)
     if not perm:

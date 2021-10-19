@@ -28,6 +28,7 @@ from ekabis.services.services import CompanyService, CompanyGetService, GroupSer
 
 
 @login_required
+# Adding a new company to the system
 def return_add_Company(request):
     perm = general_methods.control_access(request)
     if not perm:
@@ -48,7 +49,7 @@ def return_add_Company(request):
                     communication = communication_form.save(request, commit=False)
                     communication.save()
 
-                    company = company_form.save(request,communication)
+                    company = company_form.save(request, communication)
                     company.save()
 
                     # if Settings.objects.filter(key='mail_companyuser'):
@@ -67,12 +68,12 @@ def return_add_Company(request):
                     error_messages = error_messages_communication + error_message_company
                     return render(request, 'Company/Company.html',
                                   {'company_form': company_form, 'communication_form': communication_form,
-                                   'form': company_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                                   'urls': urls, 'url_name': url_name.name,
                                    'error_messages': error_messages, })
 
             return render(request, 'Company/Company.html',
-                          {'company_form': company_form, 'communication_form': communication_form, 'form': company_form,
-                           'error_messages': '', 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                          {'company_form': company_form, 'communication_form': communication_form,
+                           'error_messages': '', 'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
     except Exception as e:
         print(e)
         traceback.print_exc()
@@ -81,6 +82,7 @@ def return_add_Company(request):
 
 
 @login_required
+# delete the company in the system
 def delete_company(request):
     perm = general_methods.control_access(request)
 
@@ -122,14 +124,17 @@ def delete_company(request):
 
 
 @login_required
-def return_list_Company(request):
+# listing companies in the system
+def return_list_company(request):
     urls = last_urls(request)
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
-    return render(request, 'Company/Companys.html', {'urls': urls, 'current_url': current_url, 'url_name': url_name})
+    return render(request, 'Company/Companys.html',
+                  {'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
 
 
 @login_required
+# company information whose user is known in the system
 def return_user_company(request, uuid):
     urls = last_urls(request)
     current_url = resolve(request.path_info)
@@ -139,10 +144,11 @@ def return_user_company(request, uuid):
     }
     company = CompanyGetService(request, filter)
     return render(request, 'Company/company_users.html',
-                  {'urls': urls, 'current_url': current_url, 'url_name': url_name, 'company': company})
+                  {'urls': urls, 'current_url': current_url, 'url_name': url_name.name, 'company': company})
 
 
 @login_required
+# lists company users in the system
 def company_users(request):
     urls = last_urls(request)
     current_url = resolve(request.path_info)
@@ -150,10 +156,11 @@ def company_users(request):
 
     company = CompanyUser.objects.filter(isDeleted=False, person__user__is_active=True)
     return render(request, 'Company/view_company_user.html',
-                  {'urls': urls, 'current_url': current_url, 'url_name': url_name, 'company': company})
+                  {'urls': urls, 'current_url': current_url, 'url_name': url_name.name, 'company': company})
 
 
 @login_required
+# company user is added to the system
 def add_company_user(request):
     perm = general_methods.control_access(request)
 
@@ -188,7 +195,7 @@ def add_company_user(request):
                     person = person_form.save(request, commit=False)
                     communication = communication_form.save(request, commit=False)
                     person.save()
-                    person.user=user
+                    person.user = user
                     person.save()
                     communication.save()
 
@@ -215,7 +222,7 @@ def add_company_user(request):
 
                     messages.success(request, 'Firma Kullanıcısı Başarıyla Kayıt Edilmiştir.')
 
-                    return redirect('ekabis:view_company' )
+                    return redirect('ekabis:view_company')
 
                 else:
 
@@ -228,21 +235,22 @@ def add_company_user(request):
                                   {'user_form': user_form, 'person_form': person_form,
                                    'communication_form': communication_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name, 'company_user_form': company_user_form
+                                   'url_name': url_name.name, 'company_user_form': company_user_form
                                    })
 
             return render(request, 'Company/add_company_user.html',
                           {'user_form': user_form, 'person_form': person_form, 'communication_form': communication_form,
                            'error_messages': '', 'urls': urls, 'current_url': current_url,
                            'company_user_form': company_user_form,
-                           'url_name': url_name,
+                           'url_name': url_name.name,
                            })
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_company')
 
-
+@login_required
+# user is assigned to the company in the system
 def assigment_company_user(request, uuid):
     perm = general_methods.control_access(request)
 
@@ -264,7 +272,8 @@ def assigment_company_user(request, uuid):
     for company_user in company.companyuser.all():
         array.append(company_user.uuid)
 
-    company_users = CompanyUser.objects.filter(isDeleted=False, person__user__is_active=True).exclude(uuid__in=array).order_by(
+    company_users = CompanyUser.objects.filter(isDeleted=False, person__user__is_active=True).exclude(
+        uuid__in=array).order_by(
         '-creationDate')
 
     # ekstra servis yazılacak
@@ -294,12 +303,13 @@ def assigment_company_user(request, uuid):
         return redirect('ekabis:view_company_user', company.uuid)
 
     return render(request, 'Company/company_user_list.html',
-                  {'yeka_uuid': uuid, 'urls': urls, 'users': company_users,
-                   'current_url': current_url, 'url_name': url_name, 'company': company})
+                  {'urls': urls, 'users': company_users,
+                   'current_url': current_url, 'url_name': url_name.name, 'company': company})
 
 
 @login_required
-def return_update_Company(request, uuid):
+# the company in the system is updated
+def change_company(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -330,7 +340,7 @@ def return_update_Company(request, uuid):
                     company.files.add(companyfile)
                     company.save()
                 if company_form.is_valid() and communication_form.is_valid():
-                    communication=communication_form.save(request, commit=False)
+                    communication = communication_form.save(request, commit=False)
                     communication.save()
                     company = company_form.save(request, commit=False)
                     company.save()
@@ -343,9 +353,8 @@ def return_update_Company(request, uuid):
                                   {'company_form': company_form,
                                    'communication_form': communication_form,
                                    'company': company, 'error_messages': error_messages,
-
                                    'companyDocumentName': companyDocumentName, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name.name
                                    })
 
         return render(request, 'Company/CompanyUpdate.html',
@@ -353,7 +362,7 @@ def return_update_Company(request, uuid):
                        'communication_form': communication_form,
                        'company': company, 'error_messages': '',
                        'urls': urls, 'current_url': current_url,
-                       'companyDocumentName': companyDocumentName, 'url_name': url_name
+                       'companyDocumentName': companyDocumentName, 'url_name': url_name.name
 
                        })
 
@@ -364,7 +373,8 @@ def return_update_Company(request, uuid):
 
 
 @login_required
-def add_companyfilename(request):
+# company file name is added to the system
+def add_company_file_name(request):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -375,6 +385,7 @@ def add_companyfilename(request):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
+        error_messages = []
         if request.method == 'POST':
             with transaction.atomic():
                 company_form = CompanyFileNameForm(request.POST)
@@ -389,11 +400,13 @@ def add_companyfilename(request):
                     return render(request, 'Company/CompanyFileNameAdd.html',
                                   {'company_form': company_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name.name
                                    })
 
         return render(request, 'Company/CompanyFileNameAdd.html',
-                      {'company_form': company_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                      {'company_form': company_form, 'urls': urls, 'current_url': current_url,
+                       'url_name': url_name.name,
+                       'error_messages': error_messages,
 
                        })
 
@@ -404,17 +417,20 @@ def add_companyfilename(request):
 
 
 @login_required
-def view_companyfilename(request):
+# lists company file name in the system
+def view_company_file_name(request):
     urls = last_urls(request)
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
     companyNameList = CompanyFileNamesService(request, None)
     return render(request, 'Company/CompanyFileNameList.html',
-                  {'companyNameList': companyNameList, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                  {'companyNameList': companyNameList, 'urls': urls, 'current_url': current_url,
+                   'url_name': url_name.name})
 
 
 @login_required
-def change_companyfilename(request, uuid):
+# the company file name in the system is updated
+def change_company_file_name(request, uuid):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -442,11 +458,11 @@ def change_companyfilename(request, uuid):
                     return render(request, 'Company/CompanyFileNameUpdate.html',
                                   {'company_form': company_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name.name
                                    })
 
         return render(request, 'Company/CompanyFileNameUpdate.html',
-                      {'company_form': company_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name
+                      {'company_form': company_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name
                        })
     except Exception as e:
         traceback.print_exc()
@@ -455,7 +471,8 @@ def change_companyfilename(request, uuid):
 
 
 @login_required
-def delete_companyfilename(request, uuid):
+# delete the company file name in the system
+def delete_company_file_name(request):
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -489,6 +506,7 @@ def delete_companyfilename(request, uuid):
 
 
 @login_required
+# consortium is added in the system
 def add_consortium(request):
     perm = general_methods.control_access(request)
     if not perm:
@@ -530,12 +548,12 @@ def add_consortium(request):
                     return render(request, 'Company/AddConsortiumCompany.html',
                                   {'company_form': company_form, 'communication_form': communication_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name})
+                                   'url_name': url_name.name})
 
             return render(request, 'Company/AddConsortiumCompany.html',
                           {'company_form': company_form, 'communication_form': communication_form,
                            'form': company_form, 'companies': companies, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name,
+                           'url_name': url_name.name,
                            'error_messages': ''})
     except Exception as e:
         print(e)
@@ -545,6 +563,7 @@ def add_consortium(request):
 
 
 @login_required
+# lists consortium in the system
 def view_consortium(request):
     try:
 
@@ -557,7 +576,7 @@ def view_consortium(request):
         consortium = CompanyService(request, company)
 
         return render(request, 'Company/ConsortiumList.html',
-                      {'companies': consortium, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
+                      {'companies': consortium, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
 
     except Exception as e:
         traceback.print_exc()
@@ -565,7 +584,8 @@ def view_consortium(request):
 
 
 @login_required
-def return_update_consortium(request, uuid):
+# the consortium in the system is updated
+def change_consortium(request, uuid):
     perm = general_methods.control_access(request)
 
     if not perm:
@@ -584,10 +604,10 @@ def return_update_consortium(request, uuid):
         company = CompanyGetService(request, companyfilter)
         filter = {
             'isDeleted': False,
-            'is_consortium':False
+            'is_consortium': False
 
         }
-        consortium=ConsortiumCompany.objects.filter(isDeleted=False, company=company)
+        consortium = ConsortiumCompany.objects.filter(isDeleted=False, company=company)
         company_exc = ConsortiumCompany.objects.filter(isDeleted=False, company=company).values_list('consortium__id')
 
         companies = CompanyService(request, filter).exclude(pk__in=company_exc)
@@ -598,7 +618,6 @@ def return_update_consortium(request, uuid):
 
         with transaction.atomic():
             if request.method == 'POST':
-
 
                 list = request.POST['consortium_list']
                 consortium_list = list.split(',')
@@ -639,7 +658,7 @@ def return_update_consortium(request, uuid):
                                    'company': company, 'error_messages': error_messages,
                                    'companyDocumentName': companyDocumentName, 'companies': companies,
                                    'consortium': consortium, 'employess': employess, 'urls': urls,
-                                   'current_url': current_url, 'url_name': url_name
+                                   'current_url': current_url, 'url_name': url_name.name
                                    })
 
         return render(request, 'Company/UpdateConsortium.html',
@@ -648,7 +667,7 @@ def return_update_consortium(request, uuid):
                        'company': company, 'error_messages': '',
                        'companies': companies, 'employess': employess,
                        'companyDocumentName': companyDocumentName, 'consortium': consortium, 'urls': urls,
-                       'current_url': current_url, 'url_name': url_name
+                       'current_url': current_url, 'url_name': url_name.name
 
                        })
 

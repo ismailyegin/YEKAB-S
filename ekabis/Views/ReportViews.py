@@ -166,7 +166,9 @@ def view_report(request):
 def general_reporting(request):
     try:
         with connection.cursor() as cursor:
-
+            urls = last_urls(request)
+            current_url = resolve(request.path_info)
+            url_name = Permission.objects.get(codename=current_url.url_name)
             sql = "  SELECT  yeka_business.id as blok_id,yeka_business_block.id as yeka_business_block_id, baglanti_bol.name as baglanti_bolgesi, yeka.definition as yeka ,yarisma.id as yarisma_id , "
             sql += "  firma.name as firma , firma.taxnumber as vergi_no , firma.taxOffice as vergi_dairesi , "
             sql += "  firma.mail as firma_mail  , yarisma.name as yarisma , sozlesme.price as sozlesme_fiyat , "
@@ -188,7 +190,7 @@ def general_reporting(request):
             sql += "  left JOIN ekabis_businessblog_parametre as business_parametre ON business_parametre.businessblog_id=business_block.id "
             sql += "  left JOIN ekabis_businessblogparametretype as  parametre_type ON parametre_type.id=business_parametre.businessblogparametretype_id "
             sql += "  left JOIN ekabis_yekabusinessblogparemetre as yeka_blok_parametre ON yeka_blok_parametre.parametre_id=parametre_type.id "
-            sql += "  LEFT JOIN ekabis_yekaconnectionregion as y_con ON y_con.yeka_id=yeka.id " # yeka.id
+            sql += "  LEFT JOIN ekabis_yekaconnectionregion as y_con ON y_con.yeka_id=yeka.id "  # yeka.id
             sql += "  LEFT JOIN ekabis_yekacompetitioneskalasyon as yeka_eskalasyon ON yeka_eskalasyon.competition_id=yarisma.id "
             sql += "  LEFT JOIN ekabis_yekacompetitioneskalasyon_eskalasyon as e ON e.yeka_competition_eskalasyon_id=yeka_eskalasyon.id "
             sql += "  LEFT JOIN ekabis_eskalasyon as eskalasyon ON eskalasyon.id=e.eskalasyon_info_id "
@@ -276,16 +278,17 @@ def general_reporting(request):
                     result.pop('is_blok_durumu')
                     parameter_dict['result'] = result
                     for blog in competititon.business.businessblogs.all():
-                        for blog_parameter in blog.paremetre.all():
+                        for blog_parameter in blog.parameter.all():
                             print(blog.businessblog.name + ' - ' + blog_parameter.parametre.title)
                             parameter_dict[blog_parameter.parametre.title] = blog_parameter.value
                     end_result.append(parameter_dict)
 
                 results = result_array['results']
             return render(request, 'Yeka/general_report.html',
-                          {'blog_results': end_result,
+                          {'block_results': end_result,
                            'keys': result_array['key_array'], 'yekas': yeka, 'regions': regions, 'companies': companies,
-                           'competitions': competitions})
+                           'competitions': competitions,'urls': urls, 'current_url': current_url,
+                           'url_name': url_name.name})
     except Exception as e:
 
         traceback.print_exc()
@@ -293,19 +296,9 @@ def general_reporting(request):
         return redirect('ekabis:view_yeka')
 
 
-from collections import namedtuple
-
-
-def namedtuplefetchall(cursor):
-    "Return all rows from a cursor as a namedtuple"
-    desc = cursor.description
-    nt_result = namedtuple('Result', [col[0] for col in desc])
-    return [nt_result(*row) for row in cursor.fetchall()]
-
-
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
-    columns = [col[0] for col in cursor.description]
+    columns = [col[0] for col in cursor.not_description]
     return [
         dict(zip(columns, row))
         for row in cursor.fetchall()

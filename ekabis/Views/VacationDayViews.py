@@ -21,25 +21,6 @@ from ekabis.services.general_methods import get_error_messages, log, log_model, 
 from ekabis.services.services import VacationDayService, VacationDayGetService, last_urls
 
 
-def weekday_count(start, end):
-    start_date = datetime.datetime.strptime(start, '%d/%m/%Y')
-    end_date = datetime.datetime.strptime(end, '%d/%m/%Y')
-    week = {}
-    range = (end_date - start_date).days
-    weekends = []
-    while range >= 0:
-        day = calendar.day_name[(start_date.weekday())]
-        if day == 'Saturday' or day == 'Sunday':
-            weekends.append(start_date.date().strftime("%d/%m/%Y"))
-            start_date = start_date + datetime.timedelta(days=1)
-            range = range - 1
-        else:
-            start_date = start_date + datetime.timedelta(days=1)
-            range = range - 1
-
-    return weekends
-
-
 @login_required
 def add_vacation_day(request):
     perm = general_methods.control_access(request)
@@ -206,13 +187,6 @@ def update_vacation_date(request, uuid):
         return redirect('ekabis:vacation_days')
 
 
-def add_business_days(from_date, number_of_days):
-    to_date = from_date
-    while number_of_days:
-        to_date += datetime.timedelta(1)
-        if to_date.weekday() < 5:  # i.e. is not saturday or sunday
-            number_of_days -= 1
-    return to_date
 
 
 def is_vacation_day(date):

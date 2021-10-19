@@ -95,26 +95,24 @@ urlpatterns = [
 
     # firma
     path('firma/firma-ekle/', CompanyView.return_add_Company, name='add_company'),
-    path('firma/firma-listesi/', CompanyView.return_list_Company, name='view_company'),
+    path('firma/firma-listesi/', CompanyView.return_list_company, name='view_company'),
     path('firma/konsorsiyum-firma-ekle/', CompanyView.add_consortium, name='add_consortium'),
     path('firma/konsorsiyum/', CompanyView.view_consortium, name='view_consortium'),
-    path('firma/konsorsiyum-guncelle/<uuid:uuid>/', CompanyView.return_update_consortium, name='change_consortium'),
+    path('firma/konsorsiyum-guncelle/<uuid:uuid>/', CompanyView.change_consortium, name='change_consortium'),
 
     path('firma/api-firma-listesi/', APIViews.GetCompany.as_view(), name='view_company-api'),
-    path('firma/firma-guncelle/<uuid:uuid>/', CompanyView.return_update_Company, name='change_company'),
+    path('firma/firma-guncelle/<uuid:uuid>/', CompanyView.change_company, name='change_company'),
     path('firma/firma-sil/', CompanyView.delete_company, name='delete_company'),
 
     # Dokuman isim ekleme
-    path('firma/dokumanisim-ekle/', CompanyView.add_companyfilename, name='add_companyfilename'),
-    path('firma/dokumanisim-listesi/', CompanyView.view_companyfilename, name='view_companyfilename'),
+    path('firma/dokumanisim-ekle/', CompanyView.add_company_file_name, name='add_companyfilename'),
+    path('firma/dokumanisim-listesi/', CompanyView.view_company_file_name, name='view_companyfilename'),
 
-    path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename,
+    path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_company_file_name,
          name='change_companyfilename'),
-    path('firma/dokumanisim-sil/<uuid:uuid>/', CompanyView.delete_companyfilename,
+    path('firma/dokumanisim-sil/', CompanyView.delete_company_file_name,
          name='delete_companyfilename'),
 
-    path('firma/dokumanisim-guncelleme/<uuid:uuid>/', CompanyView.change_companyfilename,
-         name='change_companyfilename'),
 
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
@@ -373,7 +371,6 @@ urlpatterns = [
     path('aday-yeka/konum-sil/', YekaBussinessBlogStaticView.delete_location, name='delete_location'),
 
     # aday yeka kurum önerileri
-
     path('yeka/aday-yeka-kurum-oneri-listesi/<uuid:yekaproposal>/<uuid:uuid>',
          YekaBussinessBlogStaticView.view_proposal_institution,
          name='view_proposal_institution'),
@@ -471,6 +468,7 @@ urlpatterns = [
     path('bildirim/bildirim-getir/', NotificationViews.get_notification, name='bildirim-getir'),
     path('bildirim/bildirimler/', NotificationViews.view_notification, name='bildirimler'),
     path('bildirim/bildirim-okundu/<int:id>', NotificationViews.is_read, name='bildirim-okundu-yap'),
+    path('bildirim/okundu-isaretle/', NotificationViews.make_is_read, name='bildirim-okundu-isaretle'),
 
     # Alım Garantisi
     path('yeka/yarisma-uretim-miktari-ekle/<uuid:yeka_business_uuid>/<uuid:yeka_business_block_uuid>/',
@@ -512,4 +510,6 @@ urlpatterns = [
     path('yeka/genel-raporlama', ReportViews.general_reporting,
          name='general_reporting'),
 
+    path('yeka/butun-yekalar/', DashboardViews.api_yeka_by_type,
+         name='api_yeka_by_type'),
 ]
