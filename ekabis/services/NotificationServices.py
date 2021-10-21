@@ -3,32 +3,45 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.shortcuts import redirect
+from django.urls import resolve
 from django.utils.safestring import mark_safe
 
-from ekabis.models import Notification, NotificationUser
-from ekabis.services.services import YekaGetService
+from ekabis.models import Notification, NotificationUser, Permission
+from ekabis.services.services import YekaCompetitionGetService, YekaCompetitionPersonService
 
 
-def yeka_added(request, id):
+
+
+def notification(request, html,uuid,type):
     try:
         with transaction.atomic():
-            filter = {
-                'pk': id
-            }
-            yeka = YekaGetService(request, filter)
             notification = Notification()
-            url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
-            html = '<a style="color:black;" href="' + url + '">' + str(id) + '</a> id li  YEKA  eklenmiştir.'
-            notification.description = mark_safe(html)
-            notification.title = 'YEKA Ekleme'
+            notification.not_description = mark_safe(html)
+            url_name = resolve(request.path_info).url_name
+            title = Permission.objects.get(codename=url_name)
+            notification.title = title.name
             notification.save()
+            if type =='yeka_competition':
+                filter = {
+                    'uuid': uuid
+                }
+                competition = YekaCompetitionGetService(request, filter)
+                filter = {
+                    'competition':competition
+                }
+                yeka_persons = YekaCompetitionPersonService(request, filter)
+                for yeka_person in yeka_persons:
+                    user_not = NotificationUser()
+                    user_not.notification = notification
+                    user_not.user = yeka_person.employee.person.user
+                    user_not.save()
 
             admins = User.objects.filter(groups__name='Admin')
             for user in admins:
-                user_not = NotificationUser()
-                user_not.notification = notification
-                user_not.user = user
-                user_not.save()
+                user_not_admin = NotificationUser()
+                user_not_admin.notification = notification
+                user_not_admin.user = user
+                user_not_admin.save()
 
     except Exception as e:
         traceback.print_exc()

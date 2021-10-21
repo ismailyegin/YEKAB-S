@@ -19,8 +19,8 @@ class YekaBusinessBlog(BaseModel):
     time_type = models.CharField(null=True, blank=True, max_length=100)
     status = models.CharField(max_length=100, null=True, blank=True, default='Başlanmadı')
     sorting = models.IntegerField(default=0)
-    companys = models.ManyToManyField(Company)
-    paremetre = models.ManyToManyField(YekaBusinessBlogParemetre, null=True, blank=True) #dinamik parametre bilgileri
+    companies = models.ManyToManyField(Company)
+    parameter = models.ManyToManyField(YekaBusinessBlogParemetre, null=True, blank=True) #dinamik parametre bilgileri
     indefinite = models.BooleanField(default=False, choices=INDEFINETE_CHOICES)
     explanation = models.TextField(null=True, blank=True)
     dependence_parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='depence_parent', null=True,

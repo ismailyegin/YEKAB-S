@@ -1,6 +1,6 @@
 {% extends 'base_layout.html' %}
 {% block content %}
-
+    {% load static %}
     {% if messages %}
         {% for message in messages %}
 
@@ -116,7 +116,7 @@
 
 
                         <div class="card-header with-border">
-                            <h3 class="card-title">Aday Yeka Listesi</h3>
+                            <h3 class="card-title">Aday Yeka Listesi </h3>
                             {% for item in perm %}
                                 {% if item == 'add_proposal' %}
 
@@ -135,11 +135,12 @@
                                     <tr>
 
                                         <th>#</th>
+                                        <th>Aday YEKA</th>
                                         <th>Basvuru Tarihi</th>
                                         <th>Kapasite</th>
                                         <th>Tarım Yazısı</th>
                                         <th>Bilgi Formu</th>
-                                        <th></th>
+                                        <th>KML Dosyası</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -147,11 +148,25 @@
                                     {% for proposal in yekaproposal.proposal.all %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
+                                        <td>{{ proposal.name }}</td>
                                             <td>{{ proposal.date }}</td>
                                             <td>{{ proposal.capacity }}</td>
-                                            <td>{{ proposal.farm_form }}</td>
-                                            <td>{{ proposal.information_form }}</td>
-
+                                            <td>
+                                                {% if proposal.farm_form %}
+                                                    <a target="_blank"
+                                                       href="{{ MEDIA_URL }}{{ proposal.farm_form.url }}"
+                                                       download="">{{ proposal.farm_form }}</a>
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if proposal.information_form %}
+                                                <a target="_blank"
+                                                   href="{{ MEDIA_URL }}{{ proposal.information_form.url }}"
+                                                   download="">{{ proposal.information_form }}</a>
+                                            {% endif %}</td>
+                                            <td>{% if proposal.kml_file %}
+                                                <a target="_blank" href="{{ MEDIA_URL }}{{ proposal.kml_file.url }}"
+                                                   download="">{{ proposal.kml_file }}</a></td>
+                                            {% endif %}
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button"
@@ -178,7 +193,8 @@
                                                             {% elif item == 'add_coordinate' %}
                                                                 <a href="{% url 'ekabis:add_coordinate' proposal.uuid  yekaproposal.uuid %}"
                                                                    class="dropdown-item"> <i
-                                                                        class="fa fa-search-location" title="Koordinat Listesi"></i>
+                                                                        class="fa fa-search-location"
+                                                                        title="Koordinat Listesi"></i>
                                                                     Koordinat Listesi
                                                                 </a>
 
@@ -186,7 +202,8 @@
                                                             {% elif item == 'add_location' %}
                                                                 <a href="{% url 'ekabis:add_location' proposal.uuid  yekaproposal.uuid %}"
                                                                    class="dropdown-item"> <i
-                                                                        class="fa fa-location-arrow" title="Konum Listesi"></i>
+                                                                        class="fa fa-location-arrow"
+                                                                        title="Konum Listesi"></i>
                                                                     Konum Listesi
                                                                 </a>
 
@@ -208,6 +225,7 @@
 
 
                                             </td>
+
                                         </tr>
 
                                     {% endfor %}

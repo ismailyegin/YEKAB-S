@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import transaction
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve
 
@@ -39,6 +39,7 @@ from ekabis.models.CompetitionApplication import CompetitionApplication
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaProposal import YekaProposal
 from ekabis.services import general_methods
+from ekabis.services.NotificationServices import notification
 from ekabis.services.general_methods import get_client_ip
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import last_urls, \
@@ -535,9 +536,10 @@ def view_application(request, business, businessblog):
 
     if YekaApplicationService(request, filter):
         application = YekaApplicationGetService(request, filter)
-        yeka_company=YekaCompany.objects.filter(application=application,isDeleted=False)
+        yeka_company = YekaCompany.objects.filter(application=application, isDeleted=False)
         return render(request, 'Application/view_application.html',
-                      {'yeka_company': yeka_company, 'urls': urls, 'current_url': current_url, 'url_name': url_name,'application':application,
+                      {'yeka_company': yeka_company, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                       'application': application,
                        'name': name})
     else:
         return redirect('ekabis:add_yekaapplication', yekabusiness.uuid, businessblog.uuid)
@@ -771,7 +773,7 @@ def change_competition_company(request, competition, uuid):
         if CompetitionApplication.objects.filter(business=competition.business):
             application = CompetitionApplication.objects.get(business=competition.business)
             array = []
-            for item in application.companys.all():
+            for item in application.companies.all():
                 array.append(item.company.pk)
             company_form.fields['company'].queryset = Company.objects.filter(id__in=array).exclude(id__in=array_exclude)
         else:
@@ -891,6 +893,7 @@ def change_yekaproposal(request, business, businessblog):
 
         yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
         yekabusiness = YekaBusiness.objects.get(uuid=business)
+        competition=YekaCompetition.objects.get(business=yekabusiness)
 
         yekaproposal = None
         if YekaProposal.objects.filter(business=yekabusiness):
@@ -903,6 +906,11 @@ def change_yekaproposal(request, business, businessblog):
             yekaproposal.save()
 
         name = general_methods.yekaname(yekabusiness)
+        url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+        html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+            competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+            yekaproposal.proposal.name) + ' adlı aday yeka bilgileri güncellendi.'
+        notification(request, html, competition.uuid, 'yeka_competition')
 
         return render(request, 'Proposal/change_yekaproposal.html',
                       {'yekaproposal': yekaproposal,
@@ -917,8 +925,6 @@ def change_yekaproposal(request, business, businessblog):
 
 
 # Aday yeka ekle
-
-
 @login_required
 def add_proposal(request, uuid):
     perm = general_methods.control_access(request)
@@ -945,6 +951,12 @@ def add_proposal(request, uuid):
                     company.save()
                     yeka_proposal.proposal.add(company)
                     yeka_proposal.save()
+                    competition = YekaCompetition.objects.get(business=yeka_proposal.business)
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                        yeka_proposal.proposal.name) + ' adlı aday yeka bilgileri eklendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
                     messages.success(request, 'Aday Yeka  Eklenmistir')
                     return redirect('ekabis:change_yekaproposal', yeka_proposal.business.uuid,
                                     yeka_proposal.yekabusinessblog.uuid)
@@ -958,6 +970,7 @@ def add_proposal(request, uuid):
                                       'error_messages': error_messages,
                                       'proposal_form': proposal_form, 'name': name,
                                   })
+
             return render(request, 'Proposal/add_proposal.html',
                           {'urls': urls,
                            'current_url': current_url, 'url_name': url_name,
@@ -1035,10 +1048,16 @@ def delete_proposal(request):
                 log = str(obj.pk) + " - aday yeka silindi."
                 logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
                 logs.save()
+                yeka_proposal=YekaProposal.objects.get(proposal=obj)
+                competition = YekaCompetition.objects.get(business=yeka_proposal.business)
+
+                url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                    competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                    yeka_proposal.proposal.name) + ' adlı aday yeka bilgileri silindi.'
+                notification(request, html, competition.uuid, 'yeka_competition')
 
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
-
-
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
     except:
@@ -1103,7 +1122,7 @@ def change_proposal_active(request, business, businessblog):
 
             return render(request, 'Proposal/change_proposal_active.html',
                           {'pro_active': pro_active,
-                           'yekabusiness': yekabusiness,'businessblog':businessblog,'business':business,
+                           'yekabusiness': yekabusiness, 'businessblog': businessblog, 'business': business,
                            'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
                            'url_name': url_name, 'name': name,
                            })
@@ -1768,13 +1787,11 @@ def add_competition_company_select(request):
 
         yekas = serializers.serialize("json", Yeka.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
         regions = serializers.serialize("json", ConnectionRegion.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
-        competitions = serializers.serialize("json", YekaCompetition.objects.filter(isDeleted=False), cls=DjangoJSONEncoder)
-
-
+        competitions = serializers.serialize("json", YekaCompetition.objects.filter(isDeleted=False),
+                                             cls=DjangoJSONEncoder)
 
         with transaction.atomic():
             if request.method == 'POST':
-
                 competition = YekaCompetition.objects.get(pk=request.POST.get('select_competition'))
                 company = Company.objects.get(pk=request.POST.get('select_company'))
                 yeka_application = CompetitionApplication.objects.get(business=competition.business)
@@ -1782,7 +1799,7 @@ def add_competition_company_select(request):
                     company=company
                 )
                 yeka_company.save()
-                yeka_application.companys.add(yeka_company)
+                yeka_application.companies.add(yeka_company)
                 yeka_application.save()
             return render(request, 'Application/add_competitions_company_select.html',
                           {'urls': urls,
@@ -1864,13 +1881,13 @@ def proposal_add_sub_yeka(request, yeka_business, yeka_business_block):
             yekaproposal.save()
 
         name = general_methods.yekaname(yeka_business)
-        competition=None
+        competition = None
         if YekaCompetition.objects.filter(business=yeka_business):
             competition = YekaCompetition.objects.get(business=yeka_business)
 
         return render(request, 'Proposal/proposal_sub_yeka_list.html',
                       {'yekaproposal': yekaproposal,
-                       'business': yeka_business,'competition':competition,
+                       'business': yeka_business, 'competition': competition,
                        'yekabussinessblog': yeka_bussiness_block, 'urls': urls, 'current_url': current_url,
                        'url_name': url_name, 'name': name,
                        })

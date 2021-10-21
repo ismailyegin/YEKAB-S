@@ -127,10 +127,10 @@ class YekaBusinessBlogForm(ModelForm):
         tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.type == 'file':
-                if tyekabusinessblog.paremetre.filter(parametre=item, isDeleted=False):
+                if tyekabusinessblog.parameter.filter(parametre=item, isDeleted=False):
                     try:
                         if self.files[item.title]:
-                            bValue = tyekabusinessblog.paremetre.get(parametre=item)
+                            bValue = tyekabusinessblog.parameter.get(parametre=item)
                             bValue.file = self.files[item.title]
                             bValue.save()
                     except:
@@ -145,14 +145,14 @@ class YekaBusinessBlogForm(ModelForm):
                             )
                             parametre.parametre = item
                             parametre.save()
-                            tyekabusinessblog.paremetre.add(parametre)
+                            tyekabusinessblog.parameter.add(parametre)
                             tyekabusinessblog.save()
                     except:
                         print('deger yok ')
                         pass
             else:
-                if tyekabusinessblog.paremetre.filter(parametre=item):
-                    bValue = tyekabusinessblog.paremetre.get(parametre=item)
+                if tyekabusinessblog.parameter.filter(parametre=item):
+                    bValue = tyekabusinessblog.parameter.get(parametre=item)
                     bValue.value = str(self.data[item.title])
                     bValue.save()
                 else:
@@ -161,7 +161,7 @@ class YekaBusinessBlogForm(ModelForm):
                     )
                     parametre.parametre = item
                     parametre.save()
-                    tyekabusinessblog.paremetre.add(parametre)
+                    tyekabusinessblog.parameter.add(parametre)
                     tyekabusinessblog.save()
 
         super().save(*args, **kwargs)

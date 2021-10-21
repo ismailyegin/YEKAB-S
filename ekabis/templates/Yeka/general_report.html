@@ -67,15 +67,22 @@
             z-index: 100;
         }
     </style>
-    <section class="content-header">
+     <section class="content-header">
+
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Raporlar</h1>
+                    <h1>Rapor</h1>
                 </div>
                 <div class="col-sm-6">
-
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
         </div>
@@ -165,7 +172,7 @@
                                         </div>
                                     </form>
                                     <div class="card-body">
-                                        {% if blog_results %}
+                                        {% if block_results %}
                                             <table id="deneme" class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
@@ -175,7 +182,7 @@
                                                         <th>{{ key }}</th>
                                                     {% endfor %}
 
-                                                    {% for key in blog_results.0.keys %}
+                                                    {% for key in block_results.0.keys %}
                                                         {% if not key == 'result' %}
                                                             <th>{{ key }}</th>
                                                         {% endif %}
@@ -186,7 +193,7 @@
 
                                                 <tbody>
 
-                                                {% for result in blog_results %}
+                                                {% for result in block_results %}
                                                     <tr>
                                                         <td>{{ forloop.counter0 }}</td>
                                                         {% for key, value in result.result.items %}

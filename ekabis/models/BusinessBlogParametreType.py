@@ -31,6 +31,6 @@ class BusinessBlogParametreType(BaseModel):  # dinamik oluşturulan parametreler
     title = models.CharField(max_length=120, null=True, blank=True, verbose_name='Başlık')
     type = models.CharField(max_length=128, verbose_name='Türü ', choices=Type, default=aString)
     necessary = models.BooleanField(default=False, choices=necesssary_choices)
-    companynecessary = models.BooleanField(default=False, choices=COMPANY_CHOICES)
+    company_necessary = models.BooleanField(default=False, choices=COMPANY_CHOICES)
     is_change = models.BooleanField(null=True, blank=True, choices=CHANGE_CHOICES)
     visibility_in_yeka = models.BooleanField(null=True, blank=True,default=True)

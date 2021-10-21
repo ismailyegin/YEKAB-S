@@ -153,8 +153,7 @@
                                     {% csrf_token %}
 
                                     <div class="form-group">
-                                        <label> {{ competition_form.name.label }}</label><small
-                                            style="color: red">*</small>
+                                        <label> {{ competition_form.name.label }}</label>
                                         {{ competition_form.name }}
                                         <label id="label_name"></label>
 
@@ -162,10 +161,9 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label> {{ competition_form.capacity.label }}</label><small
-                                                    style="color: red">*</small>
+                                                <label> {{ competition_form.capacity.label }}</label>
                                                 {{ competition_form.capacity }}
-                                                <label id="label_value"></label>
+                                                <label id="label_capacity"></label>
                                             </div>
                                         </div>
 
@@ -176,7 +174,7 @@
 
                                 <div class="card-footer">
                                     <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet</button>
-                                    <small style="color: red">(*) Olan Alanlar zorunludur.</small>
+                                    <small style="">(*) Olan Alanlar zorunludur.</small>
 
                                 </div>
                             </form>

@@ -230,13 +230,14 @@
                     {% for notification in notifications %}
 
                         <a href="{% url 'ekabis:bildirim-okundu-yap' notification.pk %}" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> {{ notification.notification.title }}
-                            <span class="float-right text-muted text-sm">{{ notification.notification.creationDate.date | date:"d/m/y" }}</span>
+                            <i class="fas fa-envelope mr-1 fa-sm"></i> {{ notification.notification.title }}
+                            <span class="float-right text-muted text-sm">{{ notification.notification.creationDate }}</span>
                         </a>
                         <div class="dropdown-divider"></div>
                     {% endfor %}
                     <a href="{% url 'ekabis:bildirimler' %}" class="dropdown-item dropdown-footer">Tüm Bildirimleri
                         Gör</a>
+
                 </div>
 
             </li>
@@ -319,11 +320,11 @@
                                        class="btn btn-default btn-flat">Profil Bilgisi</a>
 
                                 {% elif aktif == "Yonetim" %}
-                                    <a href="{% url "ekabis:yonetim-kurul-profil-guncelle" %}"
+                                    <a href=""
                                        class="btn btn-default btn-flat">Profil Bilgisi</a>
 
                                 {% elif aktif == "Personel" %}
-                                    <a href="{% url "ekabis:yonetim-kurul-profil-guncelle" %}"
+                                    <a href=""
                                        class="btn btn-default btn-flat">Profil Bilgisi</a>
 
 
@@ -752,6 +753,7 @@
 
     $(document).ready(function () {
         debugger;
+         setInterval();
         $('.toast').fadeOut(5000);
 
 
@@ -781,10 +783,6 @@
             }
         });
     }, 50000);
-
-    $(function () {
-        setInterval()
-    })
 
 
 </script>

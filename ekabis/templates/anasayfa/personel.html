@@ -1,5 +1,36 @@
 {% extends 'base_layout.html' %}
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-warning" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
 
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
@@ -186,6 +217,7 @@
                                             <th>Kapasite</th>
                                             <th>İşlemler</th>
 
+
                                         </tr>
                                         </thead>
 
@@ -209,15 +241,17 @@
                                                         </button>
                                                         <div class="dropdown-menu" role="menu">
                                                             {% for item in perm %}
-                                                                {% if item == 'change_sumcompetition' %}
 
-                                                                    <a href="{% url "ekabis:change_sumcompetition" person.competition.uuid %}"
-                                                                       class="dropdown-item"
-                                                                       title="Düzenle "
-                                                                       type="button"><i
-                                                                            class="fa fa-edit"></i>Düzenle
-                                                                    </a>
-                                                                {% elif item == 'view_sub_yeka_competition_detail' %}
+                                                                {% if item == 'change_competition' %}
+                                                                    {% if person.competition.competition_regions.all.0 %}
+                                                                        <a href="{% url "ekabis:change_competition" person.competition.competition_regions.all.0.uuid  person.competition.uuid %}"
+                                                                           class="dropdown-item"
+                                                                           title="Düzenle "
+                                                                           type="button"><i
+                                                                                class="fa fa-edit"></i>Düzenle
+                                                                        </a>
+                                                                    {% endif %}
+                                                                {% elif item == 'view_yeka_competition_detail' %}
                                                                     <a href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}"
                                                                        class="dropdown-item" title="Detay"
                                                                        type="button"><i
@@ -434,51 +468,26 @@
                 themeSystem: 'bootstrap',
                 //Random default events
                 events: [
-                    {
-                        title: 'Kobiltek Bilişim',
-                        start: new Date(y, m, 1),
-                        backgroundColor: '#f56954', //red
-                        borderColor: '#f56954', //red
-                        allDay: true
-                    },
-                    {
-                        title: 'Fatih berktug',
-                        start: new Date(y, m, d - 5),
-                        end: new Date(y, m, d - 2),
-                        backgroundColor: '#f39c12', //yellow
-                        borderColor: '#f39c12' //yellow
-                    },
-                    {
-                        title: 'Tanışma',
-                        start: new Date(y, m, d, 10, 30),
-                        allDay: false,
-                        backgroundColor: '#0073b7', //Blue
-                        borderColor: '#0073b7' //Blue
-                    },
-                    {
-                        title: 'Akşam Yemegi',
-                        start: new Date(y, m, d, 12, 0),
-                        end: new Date(y, m, d, 14, 0),
-                        allDay: true,
-                        backgroundColor: '#00c0ef', //Info (aqua)
-                        borderColor: '#00c0ef' //Info (aqua)
-                    },
-                    {
-                        title: 'Dogum günü',
-                        start: new Date(y, m, d + 1, 19, 0),
-                        end: new Date(y, m, d + 1, 22, 30),
-                        allDay: false,
-                        backgroundColor: '#00a65a', //Success (green)
-                        borderColor: '#00a65a' //Success (green)
-                    },
-                    {
-                        title: 'Google',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        url: 'https://www.google.com/',
-                        backgroundColor: '#3c8dbc', //Primary (light-blue)
-                        borderColor: '#3c8dbc' //Primary (light-blue)
-                    }
+                    {% for i in vacation_days %}
+                        {
+                            title: "{{ i.definition }}",
+                            start: "{{ i.date | date:"Y-m-d" }}",
+                            backgroundColor: '#f88507', //red
+                            borderColor: '#f88507', //red
+                            allDay: true,
+                        },
+                    {% endfor %}
+                    {% for x in yeka %}
+
+                        {
+                            title: "{{ x.definition }}",
+                            start: "{{ x.date | date:"Y-m-d" }}",
+                            backgroundColor: '#007bff', //red
+                            borderColor: '#007bff', //red
+                            allDay: true,
+                            url: '{% url 'ekabis:view_yeka_detail' x.uuid %}'
+                        },
+                    {% endfor %}
                 ],
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar !!!

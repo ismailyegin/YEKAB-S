@@ -1149,7 +1149,11 @@ def last_urls(request):
         with transaction.atomic():
             if request.META.get('HTTP_REFERER'):
                 urlpath = urlparse(request.META.get('HTTP_REFERER')).path
-                url = urlpath.split('/yekabis/')[1]
+                hostname=urlparse(request.META.get('HTTP_REFERER')).hostname
+                if hostname == 'kobiltek.com':
+                    url = urlpath.split('/yekabis/yekabis/')[1]
+                else:
+                    url = urlpath.split('/yekabis/')[1]
                 for urlpattern in urlpatterns:
 
                     if str("/".join(str(urlpattern.pattern).split("/", 3)[:2])) == str(
@@ -1508,3 +1512,11 @@ def AssociateFileGetService(request, filter):
         return None
     except Exception as e:
         traceback.print_exc()
+
+def validate_file_extension(value):  #Aday YEKA eklerken sadece kml ve kmz dosyalarını kayıt etmek
+    import os
+    from django.core.exceptions import ValidationError
+    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+    valid_extensions = ['.kml','.kmz']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Sadece .kml ve .kmz uzantılı dosya yükleyebilirsiniz.')

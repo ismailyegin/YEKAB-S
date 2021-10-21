@@ -14,6 +14,7 @@ from ekabis.models import Permission, BusinessBlog, YekaProduceAmount, YekaBusin
     ProduceAmount, Logs, YekaPurchaseGuarantee
 from ekabis.models.Competition import Competition
 from ekabis.services import general_methods
+from ekabis.services.NotificationServices import notification
 from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import last_urls, YekaBusinessBlogGetService, BusinessBlogGetService, \
     YekaBusinessGetService
@@ -56,6 +57,10 @@ def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
                             yeka_produce_amount.amount.add(produce_amount)
                             yeka_produce_amount.save()
 
+                            url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                            html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                                competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(yeka_produce_amount.pk) + ' id li üretim miktarı bilgileri eklendi.'
+                            notification(request, html, competition.uuid, 'yeka_competition')
 
                             messages.success(request, 'Üretim Miktarı Başarıyla  Eklenmiştir.')
                             return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
@@ -127,6 +132,7 @@ def change_produce_amount(request, uuid, yeka_business_uuid):
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
         produce_amount = ProduceAmount.objects.get(uuid=uuid)
+        yeka_produce_amount=YekaProduceAmount.objects.get(amount=produce_amount)
         form = ProduceAmountForm(request.POST or None, instance=produce_amount)
 
         if request.method == 'POST':
@@ -144,6 +150,11 @@ def change_produce_amount(request, uuid, yeka_business_uuid):
 
                     competition = YekaCompetition.objects.get(business=yeka_business)
                     messages.success(request, 'Üretim Miktarı Başarıyla  Güncellenmiştir.')
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                        yeka_produce_amount.pk) + ' id li üretim miktarı bilgileri güncellendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
                     return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
                 else:
                     error_messages = get_error_messages(form)

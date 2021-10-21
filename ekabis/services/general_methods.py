@@ -208,10 +208,12 @@ def getProfileImage(request):
 
 def get_notification(request):
     notifications = None
-    if (request.user.id):
+    date = None
+    if request.user.id:
         user = request.user
-        notifications = NotificationUser.objects.filter(is_read=False,user=user).order_by('-creationDate')[:10]
-    return {'notifications': notifications}
+        notifications = NotificationUser.objects.filter(is_read=False, user=user).order_by('-creationDate')[:10]
+        date = datetime.now().date()
+    return {'notifications': notifications, 'date': date}
 
 
 def get_error_messages(form):
@@ -230,15 +232,15 @@ def get_error_messages(form):
 def get_help_text(request):
     current_url_name = resolve(request.path_info).url_name
     help_text = ''
-    help_url=''
+    help_url = ''
     texts = HelpMenu.objects.filter(isDeleted=False)
     for text in texts:
         if text.url.codename == current_url_name:
             help_text = text.text
-            help_url=text.uuid
+            help_url = text.uuid
             break
     return {'text': help_text
-            ,'help_url':help_url}
+        , 'help_url': help_url}
 
 
 def do_something_with_the_message(message):

@@ -45,7 +45,27 @@
 
 
     {% endif %}
+    <section class="content-header">
 
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Bildirimler </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </section>
     <section class="content">
         <div class="row">
             <section class="col-lg-12 ">
@@ -58,12 +78,13 @@
                         </div>
 
                         <div class="card-body">
-                            <table id="company" class="table table-bordered table-hover">
+                            <table id="notifications" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Başlık</th>
                                     <th>İçerik</th>
+                                    <th>Okundu Olarak İşaretle</th>
                                     <th>Oluşturulma Tarihi</th>
                                     <th>Okunma Tarihi</th>
 
@@ -72,17 +93,25 @@
                                 </thead>
                                 <tbody>
 
-                                {% for item in notifications %}
+                                {% for item in notification_all %}
                                     {% if  item.is_read %}
                                         <tr style="color: #a3a3a3">
 
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ item.notification.title }}</td>
 
-                                            <td>{{ item.notification.description | safe }}</td>
+                                            <td>{{ item.notification.not_description | safe }}</td>
+                                            <td>
+                                                <div class="icheck-success d-inline">
+
+                                                    <input type="checkbox" disabled checked="" id="checkboxSuccess1">
+
+                                                    <label for="checkboxSuccess1">
+                                                    </label>
+                                                </div>
+                                            </td>
                                             <td>{{ item.notification.creationDate.date }}</td>
                                             <td>{{ item.read_date }}</td>
-
 
 
                                         </tr>
@@ -92,7 +121,14 @@
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ item.notification.title }}</td>
 
-                                            <td>{{ item.notification.description | safe }}</td>
+                                            <td>{{ item.notification.not_description | safe }}</td>
+                                            <td>
+                                                <div class="icheck-success d-inline">
+                                                    <input type="checkbox" id="{{ item.pk }}" class="isread">
+                                                    <label for="{{ item.pk }}">
+                                                    </label>
+                                                </div>
+                                            </td>
                                             <td>{{ item.notification.creationDate }}</td>
                                             <td>-----</td>
 
@@ -119,5 +155,64 @@
         <!-- /.row (main row) -->
 
     </section>
+    <script>
+        {% load  static %}
+     $(function () {
+             table =$('#notifications').DataTable({
 
+
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            });
+            table.on('draw.dt', function () {
+                var info = table.page.info();
+                table.column(0, {
+                    search: 'applied',
+                    order: 'applied',
+                    page: 'applied'
+                }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1 + info.start;
+                });
+            });
+
+
+        })
+        $(".isread").change(function () {
+            debugger;
+            var id = $(this).attr("id");
+            $.ajax({
+                url: "{% url 'ekabis:bildirim-okundu-isaretle' %}",
+                type: "post", // or "get"
+                async: true,
+                data: {
+                    id: parseInt(id),
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+                },
+                success: function (result) {
+                    debugger;
+
+                   window.location.reload();
+
+
+
+
+                }
+            });
+        })
+    </script>
 {% endblock %}

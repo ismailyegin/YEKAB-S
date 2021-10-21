@@ -10,8 +10,8 @@ class PersonForm(BaseForm):
         model = Person
 
         fields = (
-            'tc', 'profileImage', 'birthDate', 'gender', 'birthplace', 'bloodType','motherName','fatherName')
-        labels = {'tc': 'T.C. *', 'gender': 'Cinsiyet', 'profileImage': 'Profil Resmi'}
+            'tc', 'profileImage', )
+        labels = {'tc': 'T.C. *', 'profileImage': 'Profil Resmi'}
 
         widgets = {
             'profileImage': forms.FileInput(),
