@@ -765,7 +765,6 @@
             url: "{% url "ekabis:bildirim-getir" %}",
             type: "GET",
             success: function (result) {
-                debugger;
                 for (let i = 0; i < result.notifications.length; i++) {
 
                     $(document).Toasts('create', {

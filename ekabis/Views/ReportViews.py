@@ -251,7 +251,7 @@ def general_reporting(request):
                 sql += " group by yeka_business_block.id "
                 sql2 += " group by yeka_business_block.id "
 
-            sql_join = "SELECT * FROM ( " + sql + " ) A  LEFT JOIN  (" + sql2 + ") B ON A.yarisma_id=B.yarisma_id group by  B.total_elektriksel_guc "
+            sql_join = "SELECT * FROM ( " + sql + " ) A  LEFT JOIN  (" + sql2 + ") B ON A.yarisma_id=B.yarisma_id group by  B.yarisma_id "
 
             yeka = YekaService(request, None)
             regions = ConnectionRegionService(request, None)
@@ -298,7 +298,7 @@ def general_reporting(request):
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
-    columns = [col[0] for col in cursor.not_description]
+    columns = [col[0] for col in cursor.description]
     return [
         dict(zip(columns, row))
         for row in cursor.fetchall()

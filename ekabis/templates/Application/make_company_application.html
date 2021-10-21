@@ -60,8 +60,7 @@
                             </div>
                         </form>
 
-                        <div class="row" id="file_text">
-                        </div>
+                        <div id="file_text"></div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -487,8 +486,8 @@
                     for (let j = 0; j < array.length; j++) {
                         if (array[j].file) {
                             let url = "delete_yeka_company('" + array[j].uuid + "')";
-                            html += '<p class="text-primary" id="' + id + '"><div class="col-lg-2"><span  type="text">' + array[j].filename.filename + ' </span></div><div class="col-lg-8"><span type="text">' + array[j].file + '</span></div>';
-                            html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Ekle"><i class="fa fa-times"></i></button></div></p>';
+                            html += '<div class="row" id="file_' + array[j].uuid+ '"><p class="text-primary" id="' + id + '"><div class="col-lg-2"><span  type="text">' + array[j].filename.filename + ' </span></div><div class="col-lg-8"><span type="text">' + array[j].file + '</span></div>';
+                            html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Sil"><i class="fa fa-times"></i></button></div></p></div>';
 
 
                         }
@@ -512,7 +511,6 @@
             var reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function () {
-                console.log(reader.result);
                 return reader.result
             };
             reader.onerror = function (error) {
@@ -521,7 +519,7 @@
             };
         }
 
-         document.getElementById('file_input').addEventListener('change',x , false);
+        document.getElementById('file_input').addEventListener('change', x, false);
 
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -530,12 +528,12 @@
             reader.onerror = error => reject(error);
         });
 
-        function x () {
+        function x() {
             const uploadedFile = document.querySelector('#file_input').files[0];
             toBase64(uploadedFile)
                 .then(res => {
                     console.log(res);
-                     var x = document.getElementById("filename");
+                    var x = document.getElementById("filename");
                     var id = x.options[x.selectedIndex].value;
                     var json = {
                         'filename': id, 'file': res
@@ -563,8 +561,8 @@
 
             let html = ''
             let url = "delete_file_line('" + id + "','" + file_input1 + "')";
-            html += '<p  id="' + id + '"><div class="col-lg-5 text-primary"><span  type="text">' +name.label  + ' </span></div><div class="col-lg-5 text-primary"><span type="text">' +file_input.files[0].name  + '</span></div>';
-            html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Ekle"><i class="fa fa-times"></i></button></div></p>';
+            html += '<div class="row" id="file_' + id + '"><div class="col-lg-5 text-primary"><span  type="text">' + name.label + ' </span></div><div class="col-lg-5 text-primary"><span type="text">' + file_input.files[0].name + '</span></div>';
+            html += '<div class="col-lg-2"><button onclick="' + url + '" type="button" class="btn btn-outline-danger btn-sm" title="Ekle"><i class="fa fa-times"></i></button></div></div>';
 
 
             $("#file_text").append(html);
@@ -730,7 +728,15 @@
 
                 success: function (result) {
 
-                    alert('basarılı')
+                    debugger;
+                    document.getElementById('file_' + id).remove();
+                     let toast = document.getElementById('error_message');
+                        let html = ''
+                        html = result.msg;
+                        toast.innerHTML = html;
+                        document.getElementById('error_toast').style.display = 'block';
+                        $('.error').toast('show');
+                        $('.toast').fadeOut(5000);
 
 
                 }

@@ -118,16 +118,14 @@
 
         $(function () {
 
-
             $("g").click(function (e) {
-
                 $("#competition_list a").remove();
                 var name = $(this).attr("data-iladi");
                 var city = $(this).attr("data-plakakodu");
                 $("#modal_city").text("");
                 var yeka = null
-                if ($("#id_yeka_select").val() != "") {
-                    yeka = $("#id_yeka_select").val();
+                if ($("#selected_yeka").val() != "") {
+                    yeka = $("#selected_yeka").val();
                 }
 
                 if (e.handled !== true) { // This will prevent event triggering more then once
@@ -176,7 +174,6 @@
 
                 var position = $('#svg-turkiye-haritasi').position();
                 $('#il-isimleri').toggle();
-                debugger;
                 element.addEventListener(
                     'mouseover',
                     function (event) {
@@ -1475,6 +1472,21 @@
             });
 
             var calendar = new Calendar(calendarEl, {
+                monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                monthNamesShort: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                dayNames: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+                dayNamesShort: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+                buttonText: {
+                    today: 'Bugün',
+                    month: 'Ay',
+                    week: 'Hafta',
+                    day: 'Gün',
+                    list: 'Liste',
+                    listMonth: 'Aylık Liste',
+                    listYear: 'Yıllık Liste',
+                    listWeek: 'Haftalık Liste',
+                    listDay: 'Günlük Liste'
+                },
                 locale: 'tr',
                 headerToolbar: {
                     left: 'prev,next today',
@@ -1541,6 +1553,7 @@
                 }
 
             });
+
 
             calendar.render();
             // $('#calendar').fullCalendar()

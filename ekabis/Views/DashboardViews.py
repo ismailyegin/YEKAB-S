@@ -78,7 +78,7 @@ def return_personel_dashboard(request):
     competitions = YekaCompetitionPersonService(request, competition_filter)
 
     return render(request, 'anasayfa/personel.html',
-                  {'res_count': res_count,'yeka':yeka,'vacation_days':days,
+                  {'res_count': res_count, 'yeka': yeka, 'vacation_days': days,
                    'ges_count': ges_count,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
@@ -141,7 +141,7 @@ def return_admin_dashboard(request):
         'regions': regions, 'vacation_days': days,
         'res_count': res_count, 'accepts': installedPower_array,
         'ges_count': ges_count, 'current_power': currentPower_array,
-        'jeo_count': jeo_count,'calendarNames': calendarNames,
+        'jeo_count': jeo_count, 'calendarNames': calendarNames,
         'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
 
@@ -182,7 +182,7 @@ def add_calendarName(request):
             if request.method == 'POST':
                 calender_form = CalendarNameForm(request.POST)
                 if calender_form.is_valid():
-                    name = calender_form.save(request,commit=False)
+                    name = calender_form.save(request, commit=False)
                     name.user = request.user
                     name.save()
             calenders = CalendarName.objects.filter(isDeleted=False)
@@ -249,7 +249,6 @@ def api_connection_region_cities(request):
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
 
-
 @login_required
 def api_yeka_by_type(request):
     perm = general_methods.control_access(request)
@@ -261,12 +260,13 @@ def api_yeka_by_type(request):
             if request.method == 'POST' and request.is_ajax():
                 type = request.POST['type']
 
-                regions = ConnectionRegion.objects.filter(yeka__type=type).values('cities__plateNo').annotate(count=Count('cities__id'))
-                array=[]
+                regions = ConnectionRegion.objects.filter(yeka__type=type).values('cities__plateNo').annotate(
+                    count=Count('cities__id'))
+                array = []
                 for region in regions:
-                    yeka_dict=dict()
-                    yeka_dict['city']=region['cities__plateNo']
-                    yeka_dict['count']=region['count']
+                    yeka_dict = dict()
+                    yeka_dict['city'] = region['cities__plateNo']
+                    yeka_dict['count'] = region['count']
                     array.append(yeka_dict)
 
                 return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'yeka_type_cities': array})
@@ -275,8 +275,6 @@ def api_yeka_by_type(request):
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
-
-
 
 
 @login_required
@@ -309,7 +307,7 @@ def api_connection_region_competitions(request):
                             regions = ConnectionRegion.objects.filter(cities=city,
                                                                       isDeleted=False).distinct().values_list('id',
                                                                                                               flat=True)
-                        competitions = YekaCompetition.objects.filter(connectionregion__id__in=regions,
+                        competitions = YekaCompetition.objects.filter(competition_regions__id__in=regions,
                                                                       isDeleted=False).distinct()
 
                 competitions = serializers.serialize("json", competitions, cls=DjangoJSONEncoder)
