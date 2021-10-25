@@ -112,6 +112,7 @@ def return_admin_dashboard(request):
 
     installedPower_array = []
     currentPower_array = []
+    yeka_capacity_array = []
 
     calendar_filter = {
         'isDeleted': False,
@@ -122,7 +123,9 @@ def return_admin_dashboard(request):
     for yeka_accept in yeka_acccepts:
         accept_dict = dict()
         currentPower_dict = dict()
-        accept_dict['label'] = YekaCompetition.objects.get(business=yeka_accept.business).name
+        yeka_capacity_dict = dict()
+        competition=YekaCompetition.objects.get(business=yeka_accept.business)
+        accept_dict['label'] = competition.name
         total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
         currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
         if total['installedPower__sum'] is None:
@@ -130,8 +133,18 @@ def return_admin_dashboard(request):
         if currentPower['currentPower__sum'] is None:
             currentPower['currentPower__sum'] = 0
         accept_dict['power'] = total['installedPower__sum']
-        currentPower_dict['currentPower'] = currentPower['currentPower__sum']
-        currentPower_dict['label'] = YekaCompetition.objects.get(business=yeka_accept.business).name
+        currentPower_dict['power'] = currentPower['currentPower__sum']
+        currentPower_dict['label'] =competition.name
+        total_capacity = int(total['installedPower__sum']) + int(currentPower['currentPower__sum'])
+        if Yeka.objects.filter(connection_region__yekacompetition=competition):
+            current_yeka = Yeka.objects.get(connection_region__yekacompetition=competition)
+            yeka_capacity_dict['label'] = current_yeka.definition
+            yeka_capacity_dict['remaining_capacity'] = current_yeka.capacity - total_capacity
+            yeka_capacity_dict['total']=current_yeka.capacity
+            if total_capacity == 0:
+                total_capacity=current_yeka.capacity
+            yeka_capacity_dict['capacity']=total_capacity
+            yeka_capacity_array.append(yeka_capacity_dict)
         currentPower_array.append(currentPower_dict)
         installedPower_array.append(accept_dict)
 
@@ -139,7 +152,7 @@ def return_admin_dashboard(request):
         'yeka': yeka,
         # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
-        'res_count': res_count, 'accepts': installedPower_array,
+        'res_count': res_count, 'accepts': installedPower_array,'yeka_capacity':yeka_capacity_array,
         'ges_count': ges_count, 'current_power': currentPower_array,
         'jeo_count': jeo_count, 'calendarNames': calendarNames,
         'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name

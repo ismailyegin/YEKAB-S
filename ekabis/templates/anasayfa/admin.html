@@ -573,11 +573,11 @@
 
                     </div>
 
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
 
-                        <div class="card card-danger card-outline">
+                        <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title">YEKA Yarışmaları Toplam Kurulu Güç</h3>
+                                <h3 class="card-title">YEKA Yarışmaları Toplam Kurulu Güç (MW<sub>e</sub>)</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -599,33 +599,118 @@
                                         style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 572px;"
                                         width="715" height="312" class="chartjs-render-monitor"></canvas>
                             </div>
+
                             <!-- /.card-body -->
                         </div>
 
 
                     </div>
+                    <div class="col-lg-6">
 
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">YEKA Yarışmaları Toplam Kurulu Güç (MW<sub>m</sub>)
+                                </h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor">
+                                    <div class="chartjs-size-monitor-expand">
+                                        <div class=""></div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink">
+                                        <div class=""></div>
+                                    </div>
+                                </div>
+                                <canvas id="pieChart"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 572px;"
+                                        width="715" height="312" class="chartjs-render-monitor"></canvas>
+                            </div>
+
+                            <!-- /.card-body -->
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">YEKA da Ulaşılan Kapasite</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <div class="chartjs-size-monitor">
+                                        <div class="chartjs-size-monitor-expand">
+                                            <div class=""></div>
+                                        </div>
+                                        <div class="chartjs-size-monitor-shrink">
+                                            <div class=""></div>
+                                        </div>
+                                    </div>
+                                    <canvas id="stackedBarChart"
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 764px;"
+                                            width="764" height="250" class="chartjs-render-monitor"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
                     <script>
                         $(document).ready(function () {
 
 
-                            //-------------
-                            //- DONUT CHART -
-                            //-------------
-                            // Get context with jQuery - using jQuery's .get() method.
-                            debugger;
+
+                            var y = [];
                             var x = [];
+                            var z = [];
 
                             x ={{ accepts|safe }};
+                            y ={{ current_power | safe }};
+                            z ={{ yeka_capacity | safe }};
                             // LINE CHART
 
                             let graphArray = [];
                             let label = []
 
+                            let graphArray2 = [];
+                            let label2 = []
+
+                            let capacity_labels = [];
+                            let capacity_remaining = []
+                            let capacity = [];
+
 
                             for (var i = 0; i < x.length; i++) {
                                 label.push(x[i].label.toString())
                                 graphArray.push(x[i].power)
+
+                            }
+                            for (var j = 0; j < y.length; j++) {
+                                label2.push(y[j].label.toString())
+                                graphArray2.push(y[j].power)
+
+                            }
+                            for (var k = 0; k < z.length; k++) {
+                                debugger;
+                                capacity_labels.push(z[k].label)
+                                capacity_remaining.push(z[k].remaining_capacity)
+                                capacity.push(z[k].capacity)
+
 
                             }
 
@@ -638,13 +723,21 @@
                                     }
                                 ]
                             }
-
+                            var donutData2 = {
+                                labels: label2,
+                                datasets: [
+                                    {
+                                        data: graphArray2,
+                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                                    }
+                                ]
+                            }
 
                             //-------------
                             //- PIE CHART -
                             //-------------
                             // Get context with jQuery - using jQuery's .get() method.
-                            var pieChartCanvas = $('#pieChart2').get(0).getContext('2d')
+                            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
                             var pieData = donutData;
                             var pieOptions = {
                                 maintainAspectRatio: false,
@@ -656,6 +749,70 @@
                                 type: 'pie',
                                 data: pieData,
                                 options: pieOptions
+                            })
+
+                            var pieChartCanvas2 = $('#pieChart2').get(0).getContext('2d')
+                            var pieData2 = donutData2;
+                            var pieOptions2 = {
+                                maintainAspectRatio: false,
+                                responsive: true,
+                            }
+                            //Create pie or douhnut chart
+                            // You can switch between pie and douhnut using the method below.
+                            new Chart(pieChartCanvas2, {
+                                type: 'pie',
+                                data: pieData2,
+                                options: pieOptions2
+                            })
+
+                            var areaChartData = {
+                                labels: capacity_labels,
+                                datasets: [
+                                    {
+                                        label: 'Kalan Güç',
+                                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                                        borderColor: 'rgba(210, 214, 222, 1)',
+                                        pointRadius: false,
+                                        pointColor: 'rgba(210, 214, 222, 1)',
+                                        pointStrokeColor: '#c1c7d1',
+                                        pointHighlightFill: '#fff',
+                                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                                        data: capacity_remaining
+                                    },
+                                    {
+                                        label: 'Kurulu Güç',
+                                        backgroundColor: 'rgba(60,141,188,0.9)',
+                                        borderColor: 'rgba(60,141,188,0.8)',
+                                        pointRadius: false,
+                                        pointColor: '#3b8bba',
+                                        pointStrokeColor: 'rgba(60,141,188,1)',
+                                        pointHighlightFill: '#fff',
+                                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                                        data: capacity
+                                    },
+
+                                ]
+                            }
+                            var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+                            var stackedBarChartData = $.extend(true, {}, areaChartData)
+
+                            var stackedBarChartOptions = {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    xAxes: [{
+                                        stacked: true,
+                                    }],
+                                    yAxes: [{
+                                        stacked: true
+                                    }]
+                                }
+                            }
+
+                            new Chart(stackedBarChartCanvas, {
+                                type: 'bar',
+                                data: stackedBarChartData,
+                                options: stackedBarChartOptions
                             })
 
 
