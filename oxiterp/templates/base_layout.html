@@ -507,7 +507,6 @@
 <script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
 
 
-
 <!-- bs-custom-file-input -->
 <script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
 <!-- PAGE PLUGINS -->
@@ -563,6 +562,7 @@
 <script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
 
 <script>
+
 
     function help_text(text) {
         debugger;
@@ -751,21 +751,12 @@
     }
 
 
-    $(document).ready(function () {
-        debugger;
-         setInterval();
-        $('.toast').fadeOut(5000);
-
-
-    });
-
     const interval = setInterval(function () {
 
         $.ajax({
             url: "{% url "ekabis:bildirim-getir" %}",
             type: "GET",
             success: function (result) {
-                debugger;
                 for (let i = 0; i < result.notifications.length; i++) {
 
                     $(document).Toasts('create', {
@@ -784,6 +775,14 @@
         });
     }, 50000);
 
+    $(document).ready(function () {
+        debugger;
+        $('.toast').delay(3000).fadeOut(2000);
+
+        setInterval();
+
+
+    });
 
 </script>
 </body>

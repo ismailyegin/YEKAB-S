@@ -78,7 +78,7 @@ def return_personel_dashboard(request):
     competitions = YekaCompetitionPersonService(request, competition_filter)
 
     return render(request, 'anasayfa/personel.html',
-                  {'res_count': res_count,'yeka':yeka,'vacation_days':days,
+                  {'res_count': res_count, 'yeka': yeka, 'vacation_days': days,
                    'ges_count': ges_count,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
@@ -112,6 +112,7 @@ def return_admin_dashboard(request):
 
     installedPower_array = []
     currentPower_array = []
+    yeka_capacity_array = []
 
     calendar_filter = {
         'isDeleted': False,
@@ -122,7 +123,9 @@ def return_admin_dashboard(request):
     for yeka_accept in yeka_acccepts:
         accept_dict = dict()
         currentPower_dict = dict()
-        accept_dict['label'] = YekaCompetition.objects.get(business=yeka_accept.business).name
+        yeka_capacity_dict = dict()
+        competition=YekaCompetition.objects.get(business=yeka_accept.business)
+        accept_dict['label'] = competition.name
         total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
         currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
         if total['installedPower__sum'] is None:
@@ -130,8 +133,18 @@ def return_admin_dashboard(request):
         if currentPower['currentPower__sum'] is None:
             currentPower['currentPower__sum'] = 0
         accept_dict['power'] = total['installedPower__sum']
-        currentPower_dict['currentPower'] = currentPower['currentPower__sum']
-        currentPower_dict['label'] = YekaCompetition.objects.get(business=yeka_accept.business).name
+        currentPower_dict['power'] = currentPower['currentPower__sum']
+        currentPower_dict['label'] =competition.name
+        total_capacity = int(total['installedPower__sum']) + int(currentPower['currentPower__sum'])
+        if Yeka.objects.filter(connection_region__yekacompetition=competition):
+            current_yeka = Yeka.objects.get(connection_region__yekacompetition=competition)
+            yeka_capacity_dict['label'] = current_yeka.definition
+            yeka_capacity_dict['remaining_capacity'] = current_yeka.capacity - total_capacity
+            yeka_capacity_dict['total']=current_yeka.capacity
+            if total_capacity == 0:
+                total_capacity=current_yeka.capacity
+            yeka_capacity_dict['capacity']=total_capacity
+            yeka_capacity_array.append(yeka_capacity_dict)
         currentPower_array.append(currentPower_dict)
         installedPower_array.append(accept_dict)
 
@@ -139,9 +152,9 @@ def return_admin_dashboard(request):
         'yeka': yeka,
         # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
-        'res_count': res_count, 'accepts': installedPower_array,
+        'res_count': res_count, 'accepts': installedPower_array,'yeka_capacity':yeka_capacity_array,
         'ges_count': ges_count, 'current_power': currentPower_array,
-        'jeo_count': jeo_count,'calendarNames': calendarNames,
+        'jeo_count': jeo_count, 'calendarNames': calendarNames,
         'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
 
@@ -182,7 +195,7 @@ def add_calendarName(request):
             if request.method == 'POST':
                 calender_form = CalendarNameForm(request.POST)
                 if calender_form.is_valid():
-                    name = calender_form.save(request,commit=False)
+                    name = calender_form.save(request, commit=False)
                     name.user = request.user
                     name.save()
             calenders = CalendarName.objects.filter(isDeleted=False)
@@ -249,7 +262,6 @@ def api_connection_region_cities(request):
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
 
-
 @login_required
 def api_yeka_by_type(request):
     perm = general_methods.control_access(request)
@@ -261,12 +273,13 @@ def api_yeka_by_type(request):
             if request.method == 'POST' and request.is_ajax():
                 type = request.POST['type']
 
-                regions = ConnectionRegion.objects.filter(yeka__type=type).values('cities__plateNo').annotate(count=Count('cities__id'))
-                array=[]
+                regions = ConnectionRegion.objects.filter(yeka__type=type).values('cities__plateNo').annotate(
+                    count=Count('cities__id'))
+                array = []
                 for region in regions:
-                    yeka_dict=dict()
-                    yeka_dict['city']=region['cities__plateNo']
-                    yeka_dict['count']=region['count']
+                    yeka_dict = dict()
+                    yeka_dict['city'] = region['cities__plateNo']
+                    yeka_dict['count'] = region['count']
                     array.append(yeka_dict)
 
                 return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'yeka_type_cities': array})
@@ -275,8 +288,6 @@ def api_yeka_by_type(request):
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
-
-
 
 
 @login_required
@@ -309,7 +320,7 @@ def api_connection_region_competitions(request):
                             regions = ConnectionRegion.objects.filter(cities=city,
                                                                       isDeleted=False).distinct().values_list('id',
                                                                                                               flat=True)
-                        competitions = YekaCompetition.objects.filter(connectionregion__id__in=regions,
+                        competitions = YekaCompetition.objects.filter(competition_regions__id__in=regions,
                                                                       isDeleted=False).distinct()
 
                 competitions = serializers.serialize("json", competitions, cls=DjangoJSONEncoder)

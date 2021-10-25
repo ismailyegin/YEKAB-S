@@ -1943,17 +1943,17 @@ def delete_yeka_company_file(request):
                 uuid = request.POST['id']
                 obj = YekaApplicationFile.objects.get(uuid=uuid)
                 data_as_json_pre = serializers.serialize('json', YekaApplicationFile.objects.filter(uuid=uuid))
-                obj.isDeleted = True
-                obj.save()
 
                 yeka_company = YekaCompany.objects.get(files=obj)
-                yeka_company.files.remove(obj)
+                file=yeka_company.files.get(file=obj.file)
+                file.file.delete()
+                file.save()
 
                 log = 'Başvuru dosya ID: '+str(obj.pk)+ ' - '+str(obj.filename.filename) + " belgesi silindi."
                 logs = Logs(user=request.user, subject=log, ip=get_client_ip(request),
                             previousData=data_as_json_pre)
                 logs.save()
-                return JsonResponse({'status': 'Success', 'msg': 'save successfully'})
+                return JsonResponse({'status': 'Success', 'msg': 'Belge Silindi'})
 
 
     except:

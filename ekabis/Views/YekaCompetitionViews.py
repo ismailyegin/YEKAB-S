@@ -178,7 +178,8 @@ def add_competition(request, region):
                     log = " Yeka Yarışması  eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     url = redirect('ekabis:view_yeka_competition_detail', yeka.uuid).url
-                    html = '<a style="" href="' + url + '"> ID: ' + str(competition.pk) + ' - ' + competition.name +'</a> YEKA yarışması eklendi.'
+                    html = '<a style="" href="' + url + '"> ID: ' + str(
+                        competition.pk) + ' - ' + competition.name + '</a> YEKA yarışması eklendi.'
                     notification(request, html, competition.uuid, 'yeka_competition')
                     messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
                     return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
@@ -231,7 +232,8 @@ def delete_competition(request):
                     obj.isDeleted = True
                     obj.save()
                     url = redirect('ekabis:view_yeka').url
-                    html = '<a style="" href="' + url + '"> ID: ' + str(obj.pk) + ' - ' + obj.name +'</a> YEKA yarışması silindi.'
+                    html = '<a style="" href="' + url + '"> ID: ' + str(
+                        obj.pk) + ' - ' + obj.name + '</a> YEKA yarışması silindi.'
                     notification(request, html, obj.uuid, 'yeka_competition')
                     return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
 
@@ -266,14 +268,15 @@ def update_competition(request, region, competition):
             'uuid': competition,
             'isDeleted': False,
         }
-        filter={
-            'user':user
+        filter = {
+            'user': user
         }
         active = ActiveGroupGetService(request, filter)
         competition = YekaCompetitionGetService(request, competition_filter)
-        if YekaCompetitionPerson.objects.filter(competition=competition) or active.group.name == 'Admin': #personel atanmama durumunu kontrol etme atanmamıs ise admin olma ihtimali
+        if YekaCompetitionPerson.objects.filter(
+                competition=competition) or active.group.name == 'Admin':  # personel atanmama durumunu kontrol etme atanmamıs ise admin olma ihtimali
             person_competition = YekaCompetitionPerson.objects.get(competition=competition)
-            if person_competition.employee.person.user == user or active.group.name == 'Admin': # yarışmaya  personel atanmıs. Request user bu atanan kullanıcı ya da admin mı ?
+            if person_competition.employee.person.user == user or active.group.name == 'Admin':  # yarışmaya  personel atanmıs. Request user bu atanan kullanıcı ya da admin mı ?
                 competition_form = YekaCompetitionForm(request.POST or None, instance=competition)
                 with transaction.atomic():
                     if request.method == 'POST':
@@ -281,7 +284,8 @@ def update_competition(request, region, competition):
                             competition = competition_form.save(request, commit=False)
 
                             total = int(
-                                region.yekacompetition.all().exclude(id=competition.id).distinct().aggregate(Sum('capacity'))['capacity__sum'] or 0)
+                                region.yekacompetition.all().exclude(id=competition.id).distinct().aggregate(
+                                    Sum('capacity'))['capacity__sum'] or 0)
                             total += competition.capacity
 
                             if total > region.capacity:
@@ -316,7 +320,7 @@ def update_competition(request, region, competition):
                                            'error_messages': error_message_region, 'urls': urls,
                                            'current_url': current_url,
                                            'url_name': url_name, 'competition': competition, })
-                    url = redirect('ekabis:view_yeka_competition_detail',competition.uuid).url
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
                     html = '<a style="" href="' + url + '"> ID: ' + str(
                         competition.pk) + ' - ' + competition.name + '</a> YEKA yarışması güncellendi.'
                     notification(request, html, competition.uuid, 'yeka_competition')
@@ -428,7 +432,8 @@ def add_yekacompetitionbusiness(request, uuid):
                             blog.businessblog.name) + " adlı iş bloğu atandı."
                         log = general_methods.logwrite(request, request.user, log)
                         url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
-                        html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk)+ ' - ' + str(competition.name) + '</a> adlı yarışmaya - ' + str(
+                        html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                            competition.name) + '</a> adlı yarışmaya - ' + str(
                             blog.businessblog.name) + " adlı iş bloğu atandı."
                         notification(request, html, competition.uuid, 'yeka_competition')
 
@@ -518,7 +523,7 @@ def change_yekacompetitionbusiness(request, uuid, competition):
                                 parent = blog
                             yekabusiness.businessblogs.add(blog)
                             yekabusiness.save()
-                    yeka_competition=YekaCompetition.objects.get(uuid=competition)
+                    yeka_competition = YekaCompetition.objects.get(uuid=competition)
                     url = redirect('ekabis:view_yeka_competition_detail', competition).url
                     html = '<a style="" href="' + url + '"> ID : ' + str(
                         yeka_competition.pk) + ' - ' + str(
@@ -609,6 +614,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
 
         for item in yekabussiness.parameter.all():
             if item.parametre.type == 'file':
+                yekaBusinessBlogo_form.fields[item.parametre.title].required = False
                 yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
                 yekaBusinessBlogo_form.fields[
                     item.parametre.title].hidden_widget.template_name = "django/forms/widgets/clearable_file_input.html"
@@ -788,7 +794,7 @@ def yeka_person_list(request, uuid):
                         log = general_methods.logwrite(request, request.user, log)
                         url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
                         html = '<a style="" href="' + url + '"> ' + str(
-                            competition.pk)  + ' - '+str(
+                            competition.pk) + ' - ' + str(
                             competition.name) + '</a> adlı yarışmaya - ' + str(
                             person.person.user.get_full_name()) + " adlı personel atandı."
                         notification(request, html, competition.uuid, 'yeka_competition')
