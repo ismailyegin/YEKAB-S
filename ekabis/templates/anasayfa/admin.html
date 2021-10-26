@@ -670,9 +670,57 @@
                             <!-- /.card-body -->
                         </div>
                     </div>
+                    <div class="col-lg-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h4 class="card-title">Firmalardaki Toplam Güç</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <table id="accept_company" class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Firma</th>
+                                                <th>Ulaşılan Güç (MW<sub>m</sub>)</th>
+                                                <th>Ulaşılan Güç (MW<sub>e</sub>)</th>
+
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+
+                                            {% for accept in company_accepts %}
+                                                <tr id="hover">
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td>{{ accept.company.name }}</td>
+                                                    <td>{{ accept.mechanical_power }}</td>
+                                                    <td>{{ accept.electrical_power }}</td>
+
+                                                </tr>
+
+                                            {% endfor %}
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+
+                                    {#personel Listesi#}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
                     <script>
                         $(document).ready(function () {
-
 
 
                             var y = [];
@@ -719,7 +767,7 @@
                                 datasets: [
                                     {
                                         data: graphArray,
-                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df','#ce60d0','#f1d53b','#3275d5'],
                                     }
                                 ]
                             }
@@ -728,7 +776,7 @@
                                 datasets: [
                                     {
                                         data: graphArray2,
-                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df','#ce60d0','#f1d53b','#3275d5'],
                                     }
                                 ]
                             }
