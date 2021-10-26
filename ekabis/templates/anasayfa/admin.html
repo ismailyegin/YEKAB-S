@@ -683,8 +683,11 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Firma</th>
+                                                <th>Yarışma</th>
                                                 <th>Ulaşılan Güç (MW<sub>m</sub>)</th>
                                                 <th>Ulaşılan Güç (MW<sub>e</sub>)</th>
+                                                <th>Sözleşme Fiyatı</th>
+                                                <th>Güncel Fiyat</th>
 
 
                                             </tr>
@@ -696,10 +699,13 @@
                                             {% for accept in company_accepts %}
                                                 <tr id="hover">
                                                     <td>{{ forloop.counter }} </td>
-                                                    <td>{{ accept.company.name }}</td>
+                                                    <td>{{ accept.contract.company.name }}</td>
+                                                    <td>{{ accept.competition.name }}</td>
                                                     <td>{{ accept.mechanical_power }}</td>
                                                     <td>{{ accept.electrical_power }}</td>
+                                                    <td>{{ accept.contract.price }} {{ accept.contract.unit }}</td>
 
+                                                    <td>{{ accept.price.result }} $</td>
                                                 </tr>
 
                                             {% endfor %}
@@ -767,7 +773,7 @@
                                 datasets: [
                                     {
                                         data: graphArray,
-                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df','#ce60d0','#f1d53b','#3275d5'],
+                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df', '#ce60d0', '#f1d53b', '#3275d5', '#4659c7', '#d77399', '#fc0000'],
                                     }
                                 ]
                             }
@@ -776,7 +782,7 @@
                                 datasets: [
                                     {
                                         data: graphArray2,
-                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df','#ce60d0','#f1d53b','#3275d5'],
+                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df', '#ce60d0', '#f1d53b', '#3275d5', '#4659c7', '#d77399', '#fc0000'],
                                     }
                                 ]
                             }

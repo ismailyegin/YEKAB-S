@@ -10,7 +10,8 @@ from django.shortcuts import render, redirect
 from django.urls import resolve
 from django.utils.safestring import mark_safe
 
-from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition, HelpMenu, YekaAccept, Yeka
+from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition, HelpMenu, YekaAccept, Yeka, \
+    YekaCompetitionEskalasyon_eskalasyon, YekaCompetitionEskalasyon
 from ekabis.models.VacationDay import VacationDay
 from ekabis.models.YekaContract import YekaContract
 from ekabis.serializers.YekaSerializer import YekaSerializer
@@ -153,12 +154,17 @@ def return_admin_dashboard(request):
         contract=YekaContract.objects.filter(business=competition.business)
         if contract:
             if contract[0].company:
-                company_dict['company']=YekaContract.objects.get(business=competition.business).company
+                company_dict['contract']=YekaContract.objects.get(business=competition.business)
             else:
-                company_dict['company']=None
+                company_dict['contract']=None
         else:
-            company_dict['company'] = None
+            company_dict['contract'] = None
         company_dict['mechanical_power']=total['installedPower__sum']
+        company_dict['competition']=competition
+        if YekaCompetitionEskalasyon.objects.filter(competition=competition):
+            company_dict['price']=YekaCompetitionEskalasyon.objects.get(competition=competition)
+        else:
+            company_dict['price']=None
         company_array.append(company_dict)
 
 
@@ -345,3 +351,9 @@ def api_connection_region_competitions(request):
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+def success_initial_data(request):
+    return render(request, 'anasayfa/initial_data_success.html')
+def error_initial_data(request):
+    return render(request, 'anasayfa/initial_data_error.html')
