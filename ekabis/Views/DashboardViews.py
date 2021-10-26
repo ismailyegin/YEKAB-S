@@ -10,8 +10,10 @@ from django.shortcuts import render, redirect
 from django.urls import resolve
 from django.utils.safestring import mark_safe
 
-from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition, HelpMenu, YekaAccept, Yeka
+from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition, HelpMenu, YekaAccept, Yeka, \
+    YekaCompetitionEskalasyon_eskalasyon, YekaCompetitionEskalasyon
 from ekabis.models.VacationDay import VacationDay
+from ekabis.models.YekaContract import YekaContract
 from ekabis.serializers.YekaSerializer import YekaSerializer
 from ekabis.services import general_methods
 from ekabis.services.services import ActiveGroupService, GroupService, ActiveGroupGetService, GroupGetService, \
@@ -113,6 +115,7 @@ def return_admin_dashboard(request):
     installedPower_array = []
     currentPower_array = []
     yeka_capacity_array = []
+    company_array=[]
 
     calendar_filter = {
         'isDeleted': False,
@@ -124,6 +127,7 @@ def return_admin_dashboard(request):
         accept_dict = dict()
         currentPower_dict = dict()
         yeka_capacity_dict = dict()
+        company_dict=dict()
         competition=YekaCompetition.objects.get(business=yeka_accept.business)
         accept_dict['label'] = competition.name
         total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
@@ -141,12 +145,29 @@ def return_admin_dashboard(request):
             yeka_capacity_dict['label'] = current_yeka.definition
             yeka_capacity_dict['remaining_capacity'] = current_yeka.capacity - total_capacity
             yeka_capacity_dict['total']=current_yeka.capacity
-            if total_capacity == 0:
-                total_capacity=current_yeka.capacity
             yeka_capacity_dict['capacity']=total_capacity
             yeka_capacity_array.append(yeka_capacity_dict)
         currentPower_array.append(currentPower_dict)
         installedPower_array.append(accept_dict)
+        accept_company=competition.company
+        company_dict['electrical_power']=currentPower['currentPower__sum']
+        contract=YekaContract.objects.filter(business=competition.business)
+        if contract:
+            if contract[0].company:
+                company_dict['contract']=YekaContract.objects.get(business=competition.business)
+            else:
+                company_dict['contract']=None
+        else:
+            company_dict['contract'] = None
+        company_dict['mechanical_power']=total['installedPower__sum']
+        company_dict['competition']=competition
+        if YekaCompetitionEskalasyon.objects.filter(competition=competition):
+            company_dict['price']=YekaCompetitionEskalasyon.objects.get(competition=competition)
+        else:
+            company_dict['price']=None
+        company_array.append(company_dict)
+
+
 
     return render(request, 'anasayfa/admin.html', {
         'yeka': yeka,
@@ -154,7 +175,7 @@ def return_admin_dashboard(request):
         'regions': regions, 'vacation_days': days,
         'res_count': res_count, 'accepts': installedPower_array,'yeka_capacity':yeka_capacity_array,
         'ges_count': ges_count, 'current_power': currentPower_array,
-        'jeo_count': jeo_count, 'calendarNames': calendarNames,
+        'jeo_count': jeo_count, 'calendarNames': calendarNames,'company_accepts':company_array,
         'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
 
@@ -330,3 +351,9 @@ def api_connection_region_competitions(request):
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
+def success_initial_data(request):
+    return render(request, 'anasayfa/initial_data_success.html')
+def error_initial_data(request):
+    return render(request, 'anasayfa/initial_data_error.html')

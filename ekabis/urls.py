@@ -9,6 +9,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     ProduceAmountViews, EskalasyonViews
 from ekabis.services import general_methods, NotificationServices
 from ekabis.services.general_methods import add_block
+
 app_name = 'ekabis'
 
 urlpatterns = [
@@ -113,7 +114,6 @@ urlpatterns = [
     path('firma/dokumanisim-sil/', CompanyView.delete_company_file_name,
          name='delete_companyfilename'),
 
-
     # Grup
     path('grup/grup-ekle/', GroupView.add_group, name='add_group'),
     path('grup/grup-listesi/', GroupView.return_list_group, name='view_group'),
@@ -149,7 +149,8 @@ urlpatterns = [
          name='view_yekacompetition_personel'),
 
     # alt yeka
-    path('yarisma/alt-yeka-ekle/<uuid:uuid>/<uuid:proposal_uuid>', YekaCompetitionViews.add_sumcompetition, name='add_sumcompetition'),
+    path('yarisma/alt-yeka-ekle/<uuid:uuid>/<uuid:proposal_uuid>', YekaCompetitionViews.add_sumcompetition,
+         name='add_sumcompetition'),
     path('yarisma/alt-yeka-listesi/<uuid:uuid>', YekaCompetitionViews.return_sub_competition,
          name='view_sub_competition'),
 
@@ -281,7 +282,7 @@ urlpatterns = [
     path('yeka/kabul-sil/', AcceptViews.delete_accept, name='delete_accept'),
 
     # yarisma
-     path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_competition,
+    path('yeka/yeka-yarisma/<uuid:business>/<uuid:businessblog>', YekaBussinessBlogStaticView.change_competition,
          name='change_competition_block_'),
 
     path('yeka/yeka-yarisma-firma-ekle/<uuid:competition>',
@@ -501,10 +502,12 @@ urlpatterns = [
     path('yeka/yeka-eskalasyon/<uuid:uuid>', EskalasyonViews.EskalasyonCalculation, name='eskalasyon_hesapla'),
     path('yeka/yeka-tufe-second-month/<str:date>/', EskalasyonViews.month_value_tufe_ufe,
          name='second_month_value_tufe'),
-    path('yeka/yeka-eskalasyon-hesapla/', EskalasyonViews.yeka_competition_eskalasyon, name='yeka_competition_eskalasyon'),
+    path('yeka/yeka-eskalasyon-hesapla/', EskalasyonViews.yeka_competition_eskalasyon,
+         name='yeka_competition_eskalasyon'),
     path('yeka/yeka-yarisma-rapor/', YekaViews.yeka_report, name='yeka_report'),
     path('yeka/yeka-yarisma-firma-getir/', YekaViews.get_yeka_competition_company, name='get_yeka_competition_company'),
-    path('yeka/yeka-yarisma-aday-yeka-getir/', YekaViews.get_yeka_competition_proposal, name='get_yeka_competition_proposal'),
+    path('yeka/yeka-yarisma-aday-yeka-getir/', YekaViews.get_yeka_competition_proposal,
+         name='get_yeka_competition_proposal'),
     path('yeka/yeka-yarisma-guncel-fiyat/', YekaViews.get_yeka_competition_eskalasyon,
          name='get_yeka_competition_eskalasyon'),
     path('yeka/genel-raporlama', ReportViews.general_reporting,
@@ -512,4 +515,9 @@ urlpatterns = [
 
     path('yeka/butun-yekalar/', DashboardViews.api_yeka_by_type,
          name='api_yeka_by_type'),
+    path('yeka/initial_data/', general_methods.initial_data, name='add_setting_data'),
+
+    path('yeka/initial_data_success/', DashboardViews.success_initial_data, name='initial_data_success_page'),
+    path('yeka/initial_data_error/', DashboardViews.error_initial_data, name='initial_data_error_page'),
+
 ]

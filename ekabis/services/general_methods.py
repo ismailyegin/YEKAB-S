@@ -4,11 +4,15 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 from django.contrib.admin.models import LogEntry
+from django.contrib.auth import logout
+from django.contrib.auth.models import User, Group
 from django.contrib.messages import get_messages
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect
 from django.urls import resolve, reverse
 from django.utils.safestring import mark_safe
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 from accounts.models import Forgot
 from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition, BusinessBlog, NotificationUser
@@ -16,11 +20,12 @@ from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
 from ekabis.models.PermissionGroup import PermissionGroup
+from ekabis.models.Settings import Settings
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.services.services import ActiveGroupService, MenuService, EmployeeService, DirectoryMemberService, \
     UserService, PermissionGroupService, ActiveGroupGetService, EmployeeGetService, DirectoryMemberGetService, \
     YekaPersonService, YekaCompanyService, UserGetService, YekaCompetitionPersonService, CompanyUserGetService
-from django.contrib import messages
+from django.contrib import messages, auth
 
 from ekabis.models.Permission import Permission
 from ekabis.models.BlockEnumField import BlockEnumFields
@@ -480,3 +485,50 @@ def add_block(request):
     except Exception as e:
         traceback.print_exc()
         return redirect('ekabis:view_admin')
+
+
+@api_view(http_method_names=['GET'])
+def initial_data(request):
+    if request.method == 'GET':
+        perm = control_access(request)
+        if not perm:
+            logout(request)
+            return redirect('accounts:login')
+        try:
+            user = request.user
+            if user.is_superuser:
+                settings = Settings.objects.all()
+                if not settings:
+                    setting = Settings(key='maintenance', value=False)
+                    setting.save()
+                    setting = Settings(key='mail_companyuser', value=False)
+                    setting.save()
+                    setting = Settings(key='mail_person', value=False)
+                    setting.save()
+                    setting = Settings(key='mail_company_user', value=False)
+                    setting.save()
+                    setting = Settings(key='failed_login', value=2, label='Başarısız Giriş Sayısı')
+                    setting.save()
+                    setting = Settings(key='failed_time', value=2, label='Başarısız Giriş Bekleme Süresi')
+                    setting.save()
+                    setting = Settings(key='logout_time', value=60, label='Oturum Açık Kalma Süresi')
+                    setting.save()
+
+                    if not Group.objects.all():
+                        group = Group(name='Admin')
+                        group.save()
+                        group = Group(name='Personel')
+                        group.save()
+                        group = Group(name='Firma')
+                        group.save()
+                    if not user.groups.filter(name='Admin'):
+                        group = Group.objects.get('Admin')
+                        group.user_set.add(user)
+                        active = ActiveGroup(user=user, group=group)
+                        active.save()
+
+                    return redirect('ekabis:initial_data_success_page')
+                return redirect('ekabis:initial_data_error_page')
+        except Exception as e:
+            traceback.print_exc()
+            return redirect('ekabis:view_admin')

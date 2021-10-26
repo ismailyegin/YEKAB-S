@@ -1,0 +1,44 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+<section class="content-header">
+      <div class="container-fluid">
+
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Başarılı ! </h3>
+
+
+            </div>
+            <div class="card-body">
+                Veriler Başarıyla Kayıt Edilmiştir.
+                <br>
+
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <a href="{% url 'ekabis:view_admin' %}" target="_blank"
+                                                            rel="noopener noreferrer">Admin anasayfasına buradan ulaşabilirsiniz</a>
+            </div>
+            <!-- /.card-footer-->
+        </div>
+        <!-- /.card -->
+
+    </section>
+
+
+
+
+
+
+
+
+{% endblock %}
+
