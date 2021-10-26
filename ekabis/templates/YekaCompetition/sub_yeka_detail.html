@@ -246,10 +246,10 @@
                 {% if item.dependence_parent %}
                     demoEdges.push({
 
-                        data: {
-                            source: '{{item.dependence_parent.id}}',
-                            target: '{{ item.id}}',
-                            label: '{{ item.dependence_parent.businessTime }}'+' Gün',
+                          data: {
+                            label: (' {% if not item.dependence_parent.businessTime  %} __ {% else %}{{ item.dependence_parent.businessTime  }} Gün{% endif %} '),
+                            source:  '{{item.dependence_parent.id}}',
+                            target: '{{ item.id}}'
                         }
                     });
                 {% endif %}

@@ -1269,6 +1269,17 @@
                                     <div class="card card-primary card-outline">
                                         <div class="card-header">
                                             <h4 class="card-title">Notlar</h4>
+                                            {% for item in perm %}
+                                                {% if item == 'add_calendarName' %}
+
+                                                    <a href="{% url "ekabis:add_calendarName" %}"
+                                                       type="button" class="btn btn-outline-primary btn-sm"
+                                                       style="float: right"><i
+                                                            class="fa fa-plus" title="Not Ekle"></i>
+                                                    </a>
+
+                                                {% endif %}
+                                            {% endfor %}
                                         </div>
                                         <div class="card-body">
                                             <!-- the events -->

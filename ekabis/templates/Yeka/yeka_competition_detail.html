@@ -193,7 +193,7 @@
                     demoEdges.push({
 
                         data: {
-                            label: ('{{ item.dependence_parent.businessTime  }} Gün'),
+                            label: (' {% if not item.dependence_parent.businessTime  %} __ {% else %}{{ item.dependence_parent.businessTime  }} Gün{% endif %} '),
                             source:  '{{item.dependence_parent.id}}',
                             target: '{{ item.id}}'
                         }
