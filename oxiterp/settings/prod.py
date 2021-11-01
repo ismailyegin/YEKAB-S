@@ -17,7 +17,7 @@ ALLOWED_HOSTS = ['*']
 # }
 # }
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'admin_sbs',
@@ -25,6 +25,17 @@ DATABASES = {
         'PORT': '3306',
         'USER': 'admin_sbs',
         'PASSWORD': 'kobil2013'
+    }
+}'''
+
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'sp000dbo-scan/kdstdw',
+        'USER': 'yekabis',
+        'PASSWORD': 'Yebis1759Ka',        
     }
 }
 
