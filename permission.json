@@ -1,0 +1,3680 @@
+[
+  {
+    "model": "ekabis.permission",
+    "pk": 1,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:20.987644",
+      "modificationDate": "2021-08-31 14:45:56.051546",
+      "kobilid": 1,
+      "name": "Bak\u0131m Modu",
+      "codename": "view_repair_page",
+      "codeurl": "^maintenance\\-page/$",
+      "group": "Ayarlar",
+      "parent_id": 52
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 2,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.018880",
+      "modificationDate": "2021-08-05 22:51:26.036448",
+      "kobilid": 1,
+      "name": "Admin Anasayfa",
+      "codename": "view_admin",
+      "codeurl": "^anasayfa/admin/$",
+      "group": "Anasayfa",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 3,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.018880",
+      "modificationDate": "2021-07-12 13:07:21.018880",
+      "kobilid": 1,
+      "name": "view_federasyon",
+      "codename": "view_federasyon",
+      "codeurl": "^anasayfa/federasyon/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 4,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.018880",
+      "modificationDate": "2021-08-05 22:51:08.396871",
+      "kobilid": 1,
+      "name": "Personel Anasayfa",
+      "codename": "view_personel",
+      "codeurl": "^anasayfa/personel/$",
+      "group": "Anasayfa",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 5,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.034517",
+      "modificationDate": "2021-08-05 22:50:39.030137",
+      "kobilid": 1,
+      "name": "Not Ekle",
+      "codename": "add_calendarName",
+      "codeurl": "^anasayfa/takvim\\-not\\-ekle/$",
+      "group": "Anasayfa",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 6,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.034517",
+      "modificationDate": "2021-07-12 13:07:21.034517",
+      "kobilid": 1,
+      "name": "add_calendarfdk",
+      "codename": "add_calendarfdk",
+      "codeurl": "^anasayfa/takvim\\-not\\-ekle/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 7,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.034517",
+      "modificationDate": "2021-08-31 16:20:04.671974",
+      "kobilid": 1,
+      "name": "Admin Profil G\u00fcncelle",
+      "codename": "admin-profil-guncelle",
+      "codeurl": "^admin/admin\\-profil\\-guncelle/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 8,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.034517",
+      "modificationDate": "2021-07-12 13:07:21.034517",
+      "kobilid": 1,
+      "name": "yonetim-kurul-profil-guncelle",
+      "codename": "yonetim-kurul-profil-guncelle",
+      "codeurl": "^yonetim/yonetim\\-kurul\\-profil\\-guncelle/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 9,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.050133",
+      "modificationDate": "2021-08-05 22:50:10.123831",
+      "kobilid": 1,
+      "name": "personel-profil-g\u00fcncelle",
+      "codename": "personel-profil-g\u00fcncelle",
+      "codeurl": "^personel/personel\\-profil\\-guncelle/$",
+      "group": "Personel",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 10,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.050133",
+      "modificationDate": "2021-07-12 13:07:21.050133",
+      "kobilid": 1,
+      "name": "view_directoryMember",
+      "codename": "view_directoryMember",
+      "codeurl": "^kurul\\-uyeleri/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 11,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.050133",
+      "modificationDate": "2021-07-12 13:07:21.050133",
+      "kobilid": 1,
+      "name": "add_directorymember",
+      "codename": "add_directorymember",
+      "codeurl": "^kurul\\-uyesi\\-ekle/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 12,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.050133",
+      "modificationDate": "2021-07-12 13:07:21.050133",
+      "kobilid": 1,
+      "name": "change_directorymember",
+      "codename": "change_directorymember",
+      "codeurl": "^kurul\\-uyesi\\-duzenle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 13,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.050133",
+      "modificationDate": "2021-07-12 13:07:21.050133",
+      "kobilid": 1,
+      "name": "delete_directorymember",
+      "codename": "delete_directorymember",
+      "codeurl": "^kurul\\-uyeleri/sil/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 14,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.065780",
+      "modificationDate": "2021-07-12 13:07:21.065780",
+      "kobilid": 1,
+      "name": "view_directorymemberrole",
+      "codename": "view_directorymemberrole",
+      "codeurl": "^kurul\\-uye\\-rolleri/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 15,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.065780",
+      "modificationDate": "2021-07-12 13:07:21.065780",
+      "kobilid": 1,
+      "name": "delete_directorymemberrole",
+      "codename": "delete_directorymemberrole",
+      "codeurl": "^kurul\\-uye\\-rolleri/sil/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 16,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.065780",
+      "modificationDate": "2021-07-12 13:07:21.065780",
+      "kobilid": 1,
+      "name": "change_directorymemberrole",
+      "codename": "change_directorymemberrole",
+      "codeurl": "^kurul\\-uye\\-rol\\-duzenle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 17,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.065780",
+      "modificationDate": "2021-07-12 13:07:21.065780",
+      "kobilid": 1,
+      "name": "view_directorycommission",
+      "codename": "view_directorycommission",
+      "codeurl": "^kurullar/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 18,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.081400",
+      "modificationDate": "2021-07-12 13:07:21.081400",
+      "kobilid": 1,
+      "name": "delete_directorycommission",
+      "codename": "delete_directorycommission",
+      "codeurl": "^kurullar/sil/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 19,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.081400",
+      "modificationDate": "2021-07-12 13:07:21.081400",
+      "kobilid": 1,
+      "name": "change_directorycommission",
+      "codename": "change_directorycommission",
+      "codeurl": "^kurul\\-duzenle/(?P<pk>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 20,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.081400",
+      "modificationDate": "2021-08-05 22:50:02.545690",
+      "kobilid": 1,
+      "name": "Kullan\u0131c\u0131 Listesi",
+      "codename": "view_user",
+      "codeurl": "^kullanici/kullanicilar/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 21,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.081400",
+      "modificationDate": "2021-07-12 13:07:21.081400",
+      "kobilid": 1,
+      "name": "change_user",
+      "codename": "change_user",
+      "codeurl": "^kullanici/kullanici\\-duzenle/(?P<pk>[0-9]+)/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 22,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.097010",
+      "modificationDate": "2021-08-31 16:08:56.076909",
+      "kobilid": 1,
+      "name": "Kullan\u0131c\u0131 Durumu G\u00fcncelle",
+      "codename": "view_status",
+      "codeurl": "^kullanici/kullanicilar/aktifet(?P<pk>[0-9]+)/$",
+      "group": "Ayarlar",
+      "parent_id": 20
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 23,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.097010",
+      "modificationDate": "2021-08-31 16:45:34.815587",
+      "kobilid": 1,
+      "name": "Kullan\u0131c\u0131 Mail G\u00f6nder",
+      "codename": "view_email",
+      "codeurl": "^kullanici/kullanici\\-mail\\-gonder/(?P<pk>[0-9]+)/$",
+      "group": "Ayarlar",
+      "parent_id": 20
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 24,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.097010",
+      "modificationDate": "2021-08-31 16:09:46.014507",
+      "kobilid": 1,
+      "name": "Kullan\u0131c\u0131 Gurubu G\u00fcncelle",
+      "codename": "change_user_group",
+      "codeurl": "^kullanici/kullanici\\-group\\-guncelle/(?P<pk>[0-9]+)/$",
+      "group": "Ayarlar",
+      "parent_id": 20
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 25,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.097010",
+      "modificationDate": "2021-08-05 22:48:34.506230",
+      "kobilid": 1,
+      "name": "Personel Listesi",
+      "codename": "view_employee",
+      "codeurl": "^personel/personel\\-listesi/$",
+      "group": "Personel",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 26,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.097010",
+      "modificationDate": "2021-08-31 16:10:23.045839",
+      "kobilid": 1,
+      "name": "Personel Ekle",
+      "codename": "add_employee",
+      "codeurl": "^personel/personel\\-ekle/$",
+      "group": "Personel",
+      "parent_id": 25
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 27,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.112640",
+      "modificationDate": "2021-08-31 16:10:31.842720",
+      "kobilid": 1,
+      "name": "Personel G\u00fcncelle",
+      "codename": "change_employee",
+      "codeurl": "^personel/personel\\-duzenle/(?P<pk>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Personel",
+      "parent_id": 25
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 28,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.112640",
+      "modificationDate": "2021-08-31 16:10:46.170876",
+      "kobilid": 1,
+      "name": "Personel Sil",
+      "codename": "delete_employee",
+      "codeurl": "^personel/personel\\-sil/$",
+      "group": "Personel",
+      "parent_id": 25
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 29,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.112640",
+      "modificationDate": "2021-08-05 22:46:05.171479",
+      "kobilid": 1,
+      "name": "Personel Unvan Listesi",
+      "codename": "view_categoryitem",
+      "codeurl": "^personel/unvan\\-listesi/$",
+      "group": "Personel",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 30,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.112640",
+      "modificationDate": "2021-08-05 22:45:49.723866",
+      "kobilid": 1,
+      "name": "Personel Unvan G\u00fcncelle",
+      "codename": "change_categoryitem",
+      "codeurl": "^personel/Unvan\\-duzenle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Personel",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 31,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.128263",
+      "modificationDate": "2021-08-05 22:45:32.244070",
+      "kobilid": 1,
+      "name": "Persenol Unvan Sil",
+      "codename": "delete_categoryitem",
+      "codeurl": "^personel/Unvan\\-sil/$",
+      "group": "Personel",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 32,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.128263",
+      "modificationDate": "2021-08-05 22:45:14.759662",
+      "kobilid": 1,
+      "name": "Log Listesi",
+      "codename": "view_logs",
+      "codeurl": "^log/log\\-kayitlari/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 33,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.128263",
+      "modificationDate": "2021-08-31 16:11:27.358454",
+      "kobilid": 1,
+      "name": "Grup Degi\u015ftir",
+      "codename": "change_activegroup",
+      "codeurl": "^rol/guncelle/(?P<pk>[0-9]+)/$",
+      "group": "Ayarlar",
+      "parent_id": 20
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 34,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.128263",
+      "modificationDate": "2021-08-31 16:11:48.514743",
+      "kobilid": 1,
+      "name": "Aktiv Grup G\u00fcncelle",
+      "codename": "sporcu-aktive-group",
+      "codeurl": "^rol/degisitir/(?P<pk>[0-9]+)/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 35,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.143886",
+      "modificationDate": "2021-08-31 16:12:09.780416",
+      "kobilid": 1,
+      "name": "Destek Talep Listesi",
+      "codename": "view_claim",
+      "codeurl": "^destek\\-talep\\-listesi/$",
+      "group": "Firma",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 36,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.143886",
+      "modificationDate": "2021-08-31 16:12:19.296064",
+      "kobilid": 1,
+      "name": "Destek Talep Ekle",
+      "codename": "add_claim",
+      "codeurl": "^destek/Destek\\-Ekle$",
+      "group": "Ayarlar",
+      "parent_id": 35
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 37,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.143886",
+      "modificationDate": "2021-08-05 22:40:18.662164",
+      "kobilid": 1,
+      "name": "Destek Talep Sil",
+      "codename": "delete_claim",
+      "codeurl": "^destek/destek\\-sil/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 38,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.143886",
+      "modificationDate": "2021-08-31 16:12:28.296076",
+      "kobilid": 1,
+      "name": "Destek Talep G\u00fcncelle",
+      "codename": "change_claim",
+      "codeurl": "^destek/destek\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Firma",
+      "parent_id": 35
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 39,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.159513",
+      "modificationDate": "2021-08-31 16:12:46.421118",
+      "kobilid": 1,
+      "name": "Yard\u0131m Sayfas\u0131",
+      "codename": "view_help",
+      "codeurl": "^yardim$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 40,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.159513",
+      "modificationDate": "2021-08-31 16:12:56.233630",
+      "kobilid": 1,
+      "name": "Firma Ekle",
+      "codename": "add_company",
+      "codeurl": "^firma/firma\\-ekle/$",
+      "group": "Firma",
+      "parent_id": 41
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 41,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.159513",
+      "modificationDate": "2021-08-05 22:39:06.501277",
+      "kobilid": 1,
+      "name": "Firma Listesi",
+      "codename": "view_company",
+      "codeurl": "^firma/firma\\-listesi/$",
+      "group": "Firma",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 42,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.159513",
+      "modificationDate": "2021-08-05 22:38:49.071136",
+      "kobilid": 1,
+      "name": "Firma G\u00fcncelle",
+      "codename": "change_company",
+      "codeurl": "^firma/firma\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Firma",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 43,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.175137",
+      "modificationDate": "2021-08-31 16:13:22.686806",
+      "kobilid": 1,
+      "name": "Firma Sil",
+      "codename": "delete_company",
+      "codeurl": "^firma/firma\\-sil/$",
+      "group": "Firma",
+      "parent_id": 41
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 44,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.175137",
+      "modificationDate": "2021-08-31 16:13:47.093103",
+      "kobilid": 1,
+      "name": "Firma Dosya Tan\u0131m\u0131 Ekle",
+      "codename": "add_companyfilename",
+      "codeurl": "^firma/dokumanisim\\-ekle/$",
+      "group": "Firma",
+      "parent_id": 45
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 45,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.175137",
+      "modificationDate": "2021-08-05 22:37:55.800979",
+      "kobilid": 1,
+      "name": "Firma Dosya Tan\u0131m\u0131 Listesi",
+      "codename": "view_companyfilename",
+      "codeurl": "^firma/dokumanisim\\-listesi/$",
+      "group": "Firma",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 46,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.175137",
+      "modificationDate": "2021-08-31 16:14:12.358774",
+      "kobilid": 1,
+      "name": "Firma Dosya Tan\u0131m\u0131 G\u00fcncelle",
+      "codename": "change_companyfilename",
+      "codeurl": "^firma/dokumanisim\\-guncelleme/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Firma",
+      "parent_id": 45
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 47,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.190762",
+      "modificationDate": "2021-08-31 16:14:30.390075",
+      "kobilid": 1,
+      "name": "Firma Dosya Tan\u0131m\u0131 Sil",
+      "codename": "delete_companyfilename",
+      "codeurl": "^firma/dokumanisim\\-sil/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Firma",
+      "parent_id": 45
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 48,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.190762",
+      "modificationDate": "2021-08-31 16:15:00.265139",
+      "kobilid": 1,
+      "name": "Grup Ekle",
+      "codename": "add_group",
+      "codeurl": "^grup/grup\\-ekle/$",
+      "group": "Ayarlar",
+      "parent_id": 49
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 49,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.190762",
+      "modificationDate": "2021-08-05 22:36:36.831759",
+      "kobilid": 1,
+      "name": "Grup Listesi",
+      "codename": "view_group",
+      "codeurl": "^grup/grup\\-listesi/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 50,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.190762",
+      "modificationDate": "2021-08-31 16:15:28.890178",
+      "kobilid": 1,
+      "name": "Grup D\u00fczenle",
+      "codename": "change_group",
+      "codeurl": "^grup/grup\\-guncelleme/(?P<pk>[0-9]+)/$",
+      "group": "Ayarlar",
+      "parent_id": 49
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 51,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.206384",
+      "modificationDate": "2021-08-31 16:15:43.296453",
+      "kobilid": 1,
+      "name": "Grup \u0130zinlerini G\u00fcncelle",
+      "codename": "change_groupPermission",
+      "codeurl": "^grup/grup\\-izin\\-ekle/(?P<pk>[0-9]+)$",
+      "group": "Ayarlar",
+      "parent_id": 49
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 52,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.206384",
+      "modificationDate": "2021-08-31 16:16:15.062144",
+      "kobilid": 1,
+      "name": "Sistem Ayarlar\u0131",
+      "codename": "view_settings",
+      "codeurl": "^ayar/ayar\\-listesi/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 53,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.206384",
+      "modificationDate": "2021-08-31 16:16:43.718450",
+      "kobilid": 1,
+      "name": "Sistem Ayarlar\u0131 G\u00fcncelle",
+      "codename": "change_settings",
+      "codeurl": "^ayar/ayar\\-guncelleme/(?P<pk>[0-9]+)/$",
+      "group": "Ayarlar",
+      "parent_id": 52
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 54,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.206384",
+      "modificationDate": "2021-08-31 16:17:04.702873",
+      "kobilid": 1,
+      "name": "Birim Listesi",
+      "codename": "view_units",
+      "codeurl": "^baglanti/birim\\-ekle/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 55,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.222012",
+      "modificationDate": "2021-08-31 16:17:26.499784",
+      "kobilid": 1,
+      "name": "Birim Sil",
+      "codename": "delete_unit",
+      "codeurl": "^baglanti/birim\\-sil/$",
+      "group": "Ayarlar",
+      "parent_id": 54
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 56,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.222012",
+      "modificationDate": "2021-08-31 16:17:47.562323",
+      "kobilid": 1,
+      "name": "Birim G\u00fcncelle",
+      "codename": "update_unit",
+      "codeurl": "^baglanti/birim\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Ayarlar",
+      "parent_id": 54
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 57,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.222012",
+      "modificationDate": "2021-08-31 16:17:59.906108",
+      "kobilid": 1,
+      "name": "Baglant\u0131 B\u00f6lgesi Listesi",
+      "codename": "view_region",
+      "codeurl": "^baglanti/bolge\\-ekle/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 58,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.222012",
+      "modificationDate": "2021-08-31 16:18:09.718621",
+      "kobilid": 1,
+      "name": "Baglant\u0131 B\u00f6lgesi Sil",
+      "codename": "delete_region",
+      "codeurl": "^baglanti/b\u00f6lge\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 59,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.237653",
+      "modificationDate": "2021-08-31 16:18:19.406139",
+      "kobilid": 1,
+      "name": "Baglant\u0131 B\u00f6lgesi G\u00fcncelle",
+      "codename": "update_region",
+      "codeurl": "^baglanti/bolge\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 60,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.237653",
+      "modificationDate": "2021-07-12 13:07:21.237653",
+      "kobilid": 1,
+      "name": "view_capacity",
+      "codename": "view_capacity",
+      "codeurl": "^baglanti/kapasite\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 61,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.237653",
+      "modificationDate": "2021-07-12 13:07:21.237653",
+      "kobilid": 1,
+      "name": "update-region-capacity",
+      "codename": "update-region-capacity",
+      "codeurl": "^baglanti/kapasite\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 62,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.237653",
+      "modificationDate": "2021-07-12 13:07:21.237653",
+      "kobilid": 1,
+      "name": "delete_capacity",
+      "codename": "delete_capacity",
+      "codeurl": "^baglanti/kapasite\\-sil/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 63,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.253267",
+      "modificationDate": "2021-08-05 22:34:04.105936",
+      "kobilid": 1,
+      "name": "Yeka Listesi",
+      "codename": "view_yeka",
+      "codeurl": "^yeka/yeka\\-listesi/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 64,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.253267",
+      "modificationDate": "2021-08-31 16:18:45.999938",
+      "kobilid": 1,
+      "name": "Yeka Ekle",
+      "codename": "add_yeka",
+      "codeurl": "^yeka/yeka\\-ekle/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 65,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.253267",
+      "modificationDate": "2021-08-31 16:18:55.312457",
+      "kobilid": 1,
+      "name": "Yeka Sil",
+      "codename": "delete_yeka",
+      "codeurl": "^yeka/yeka\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 66,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.253267",
+      "modificationDate": "2021-08-31 16:19:05.624978",
+      "kobilid": 1,
+      "name": "Yeka G\u00fcncelle",
+      "codename": "change_yeka",
+      "codeurl": "^yeka/yeka\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 67,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.268892",
+      "modificationDate": "2021-08-31 21:40:20.912670",
+      "kobilid": 1,
+      "name": "Yeka i\u015f Plan\u0131 Listesi(Timeline)",
+      "codename": "view_yekabusinessBlog",
+      "codeurl": "^yeka/yeka\\-is\\-bloklari\\-list/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 68,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.268892",
+      "modificationDate": "2021-08-31 16:19:38.968790",
+      "kobilid": 1,
+      "name": "\u0130\u015f Blogu G\u00fcncelle",
+      "codename": "change_yekabusinessBlog",
+      "codeurl": "^yeka/yeka\\-is\\-bloklari\\-ekle/(?P<yeka>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yekabusiness>[0-9]+)/(?P<business>[0-9]+)/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 69,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.268892",
+      "modificationDate": "2021-07-12 13:07:21.268892",
+      "kobilid": 1,
+      "name": "add_sub_yeka",
+      "codename": "add_sub_yeka",
+      "codeurl": "^yeka/alt\\-yeka\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 70,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.268892",
+      "modificationDate": "2021-08-31 16:20:39.062655",
+      "kobilid": 1,
+      "name": "Yeka Personel Listesi",
+      "codename": "view_yeka_personel",
+      "codeurl": "^yeka/yeka\\-personeller/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 71,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.284512",
+      "modificationDate": "2021-07-12 13:07:21.284512",
+      "kobilid": 1,
+      "name": "yeka-personel-ata",
+      "codename": "yeka-personel-ata",
+      "codeurl": "^yeka/personel\\-ata/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 72,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.284512",
+      "modificationDate": "2021-07-12 13:07:21.284512",
+      "kobilid": 1,
+      "name": "yeka-personel-kaldir",
+      "codename": "yeka-personel-kaldir",
+      "codeurl": "^yeka/personel\\-cikar/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 73,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.284512",
+      "modificationDate": "2021-08-31 16:21:05.265837",
+      "kobilid": 1,
+      "name": "\u0130\u015f Plan\u0131 Ekle",
+      "codename": "add_yekabusiness",
+      "codeurl": "^yekaIsBlogu/yeka\\-IsBlogu\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 74,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.284512",
+      "modificationDate": "2021-08-31 16:21:38.844029",
+      "kobilid": 1,
+      "name": "Yeka \u0130\u015f Plan\u0131 G\u00fcncelle",
+      "codename": "change_yekabusiness",
+      "codeurl": "^yekaIsBlogu/yeka\\-IsBlogu\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 75,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.300144",
+      "modificationDate": "2021-08-31 16:22:25.672242",
+      "kobilid": 1,
+      "name": "Yeka \u0130\u015f Plan\u0131 Sil",
+      "codename": "delete_yekabusiness",
+      "codeurl": "^yekaIsBlogu/yekaIsBlogu\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 76,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.300144",
+      "modificationDate": "2021-08-31 16:23:54.797414",
+      "kobilid": 1,
+      "name": "\u0130\u015f Bloglar\u0131 Listesi",
+      "codename": "view_businessBlog",
+      "codeurl": "^isBlogu/isBlogu\\-listesi/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 77,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.300144",
+      "modificationDate": "2021-08-31 16:24:09.922449",
+      "kobilid": 1,
+      "name": "\u0130\u015f Blogu Ekle",
+      "codename": "add_businessBlog",
+      "codeurl": "^isBlogu/isBlogu\\-ekle/$",
+      "group": "Yeka",
+      "parent_id": 76
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 78,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.300144",
+      "modificationDate": "2021-08-31 16:24:36.438120",
+      "kobilid": 1,
+      "name": "\u0130\u015f Blogu G\u00fcncelle",
+      "codename": "change_businessBlog",
+      "codeurl": "^isBlogu/isBlogu\\-guncelleme/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 76
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 79,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.315769",
+      "modificationDate": "2021-08-31 16:24:45.485026",
+      "kobilid": 1,
+      "name": "\u0130\u015f blogu Sil",
+      "codename": "delete_businessBlog",
+      "codeurl": "^isBlogu/isBlogu\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 76
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 80,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.315769",
+      "modificationDate": "2021-08-05 22:31:09.052999",
+      "kobilid": 1,
+      "name": "\u0130\u015f Blogu Parametre Ekle",
+      "codename": "add_businessBlogParametre",
+      "codeurl": "^isBlogu/parametre\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 81,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.315769",
+      "modificationDate": "2021-08-05 22:30:31.756482",
+      "kobilid": 1,
+      "name": "\u0130\u015f Blogu Parametre G\u00fcncelle",
+      "codename": "change_businessBlogParametre",
+      "codeurl": "^isBlogu/parametre\\-guncelleme/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<uuidparametre>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 82,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-12 13:07:21.315769",
+      "modificationDate": "2021-08-05 22:29:58.303284",
+      "kobilid": 1,
+      "name": "\u0130\u015f Blogu Parametre Sil",
+      "codename": "delete_businessBlogParametre",
+      "codeurl": "^isBlogu/parametre\\-sil/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 83,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.216828",
+      "modificationDate": "2021-08-31 16:46:44.253218",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Yar\u0131\u015fma Firma Ekle",
+      "codename": "add_yekabusinessblog_company",
+      "codeurl": "^yeka/yeka\\-is\\-bloklari\\-firma\\-ekle/(?P<yeka>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yekabusinessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 84,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.248094",
+      "modificationDate": "2021-07-16 10:21:36.248094",
+      "kobilid": 1,
+      "name": "view_sub_yeka",
+      "codename": "view_sub_yeka",
+      "codeurl": "^yeka/alt\\-yekalar/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 85,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.248094",
+      "modificationDate": "2021-07-16 10:21:36.248094",
+      "kobilid": 1,
+      "name": "change_sub_yeka",
+      "codename": "change_sub_yeka",
+      "codeurl": "^yeka/alt\\-yeka\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 86,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.248094",
+      "modificationDate": "2021-07-16 10:21:36.248094",
+      "kobilid": 1,
+      "name": "yeka_person_assignment",
+      "codename": "yeka_person_assignment",
+      "codeurl": "^yeka/yeka\\-personel\\-ata/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 87,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.248094",
+      "modificationDate": "2021-07-16 10:21:36.248094",
+      "kobilid": 1,
+      "name": "yeka_person_remove",
+      "codename": "yeka_person_remove",
+      "codeurl": "^yeka/yeka\\-personel\\-sil/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 88,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.263705",
+      "modificationDate": "2021-07-16 10:21:36.263705",
+      "kobilid": 1,
+      "name": "view_yeka_company",
+      "codename": "view_yeka_company",
+      "codeurl": "^yeka/yeka\\-firmalar/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 89,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.263705",
+      "modificationDate": "2021-07-16 10:21:36.263705",
+      "kobilid": 1,
+      "name": "yeka_company_assignment",
+      "codename": "yeka_company_assignment",
+      "codeurl": "^yeka/yeka\\-firma\\-ata/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 90,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.263705",
+      "modificationDate": "2021-07-16 10:21:36.263705",
+      "kobilid": 1,
+      "name": "company_remove_yeka",
+      "codename": "company_remove_yeka",
+      "codeurl": "^remove\\-yeka\\-company/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 91,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.294971",
+      "modificationDate": "2021-08-05 22:28:53.102198",
+      "kobilid": 1,
+      "name": "Ekstra Zaman Listesi",
+      "codename": "view_extratime",
+      "codeurl": "^yeka/ekstra/zaman\\-listesi/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 92,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.310586",
+      "modificationDate": "2021-08-05 22:28:35.610162",
+      "kobilid": 1,
+      "name": "Ekstra Zaman Ekle",
+      "codename": "add_extratime",
+      "codeurl": "^yeka/ekstra/zaman\\-ekle/(?P<yeka>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 93,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.310586",
+      "modificationDate": "2021-08-05 22:28:08.003280",
+      "kobilid": 1,
+      "name": "Ekstra Zaman G\u00fcncelle",
+      "codename": "change_extratime",
+      "codeurl": "^yeka/ekstra/zaman\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 94,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-16 10:21:36.310586",
+      "modificationDate": "2021-08-05 22:27:00.995271",
+      "kobilid": 1,
+      "name": "Ekstra Zaman Sil",
+      "codename": "delete_extratime",
+      "codeurl": "^yeka/ekstra/zaman\\-sil/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 95,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-26 10:54:12.056457",
+      "modificationDate": "2021-08-05 22:26:34.536514",
+      "kobilid": 1,
+      "name": "personel-profil-guncelle",
+      "codename": "personel-profil-guncelle",
+      "codeurl": "^personel/personel\\-profil\\-guncelle/$",
+      "group": "Personel",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 96,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-28 10:43:15.454648",
+      "modificationDate": "2021-08-05 22:26:19.692737",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Gant \u015eemas\u0131",
+      "codename": "view_yekabusiness_gant",
+      "codeurl": "^yeka/yeka\\-is\\-bloklari\\-semasi/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 97,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.758991",
+      "modificationDate": "2021-07-29 22:34:05.758991",
+      "kobilid": 1,
+      "name": "view_employee_api",
+      "codename": "view_employee_api",
+      "codeurl": "^api\\-personel\\-listesi/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 98,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.821496",
+      "modificationDate": "2021-08-09 10:03:29.847651",
+      "kobilid": 1,
+      "name": "Konsorsiyum Ekle",
+      "codename": "add_consortium",
+      "codeurl": "^firma/konsorsiyum\\-firma\\-ekle/$",
+      "group": "Firma",
+      "parent_id": 99
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 99,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.837116",
+      "modificationDate": "2021-08-09 10:03:56.925824",
+      "kobilid": 1,
+      "name": "Konsorsiyum Listesi",
+      "codename": "view_consortium",
+      "codeurl": "^firma/konsortium/$",
+      "group": "Firma",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 100,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.837116",
+      "modificationDate": "2021-08-09 10:04:31.348973",
+      "kobilid": 1,
+      "name": "Konsorsiyum G\u00fcncelle",
+      "codename": "change_consortium",
+      "codeurl": "^firma/konsorsiyum\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Firma",
+      "parent_id": 99
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 101,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.837116",
+      "modificationDate": "2021-07-29 22:34:05.837116",
+      "kobilid": 1,
+      "name": "view_company-api",
+      "codename": "view_company-api",
+      "codeurl": "^api\\-firma\\-listesi/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 102,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.899620",
+      "modificationDate": "2021-07-29 22:34:05.899620",
+      "kobilid": 1,
+      "name": "view_yeka-api",
+      "codename": "view_yeka-api",
+      "codeurl": "^yeka/api\\-yeka\\-listesi/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 103,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.915285",
+      "modificationDate": "2021-08-31 14:46:39.926632",
+      "kobilid": 1,
+      "name": "\u0130\u015f Plan\u0131 \u015eemas\u0131 2",
+      "codename": "view_yekabusiness_gant2",
+      "codeurl": "^yeka/yeka\\-is\\-bloklari\\-gant/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 104,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.915285",
+      "modificationDate": "2021-08-31 14:47:32.786105",
+      "kobilid": 1,
+      "name": "Yeka Gant \u015eemas\u0131",
+      "model": "Yeka",
+      "codename": "view_yekabusinessblog_gant",
+      "codeurl": "^yeka/yeka\\-is\\-bloklari\\-incele\\-gant\\-detay/(?P<yeka>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yekabusiness>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 105,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-07-29 22:34:05.993419",
+      "modificationDate": "2021-07-29 22:34:05.993419",
+      "kobilid": 1,
+      "name": "ilce-getir",
+      "codename": "ilce-getir",
+      "codeurl": "^ilce\\-getir/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 106,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:12.993063",
+      "modificationDate": "2021-08-31 14:48:13.489312",
+      "kobilid": 1,
+      "name": "Tatil G\u00fcnleri Listesi",
+      "codename": "vacation_days",
+      "codeurl": "^yeka/tatil\\-gunleri/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 107,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:12.993063",
+      "modificationDate": "2021-08-31 14:49:02.770663",
+      "kobilid": 1,
+      "name": "Tatil G\u00fcn\u00fc Ekle",
+      "model": "VacationDay",
+      "codename": "add_vacation_day",
+      "codeurl": "^yeka/tatil\\-gunu\\-ekle/$",
+      "group": "Ayarlar",
+      "parent_id": 106
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 108,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.008687",
+      "modificationDate": "2021-08-31 14:53:54.974357",
+      "kobilid": 1,
+      "name": "Tatil G\u00fcn\u00fc Sil",
+      "codename": "delete_vacation_day",
+      "codeurl": "^yeka/tatil\\-gunu\\-sil/$",
+      "group": "Ayarlar",
+      "parent_id": 106
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 109,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.008687",
+      "modificationDate": "2021-08-31 14:54:22.927540",
+      "kobilid": 1,
+      "name": "Tatil G\u00fcn\u00fc G\u00fcncelle",
+      "codename": "update_vacation_day",
+      "codeurl": "^yeka/tatil\\-gunu\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Ayarlar",
+      "parent_id": 106
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 110,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.180560",
+      "modificationDate": "2021-08-31 14:55:30.693310",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Listesi",
+      "codename": "view_competition",
+      "codeurl": "^yeka/yeka\\-yarisma\\-listesi/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 111,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.180560",
+      "modificationDate": "2021-08-31 14:55:08.396389",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Ekle",
+      "codename": "add_competition",
+      "codeurl": "^yarisma/yarisma\\-ekle/(?P<region>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 112,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.180560",
+      "modificationDate": "2021-08-31 14:55:50.146461",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Sil",
+      "codename": "delete_competition",
+      "codeurl": "^yarisma/yarisma\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 113,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.196188",
+      "modificationDate": "2021-08-31 14:56:10.365250",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 G\u00fcncelle",
+      "codename": "change_competition",
+      "codeurl": "^yarisma/yarisma\\-guncelle/(?P<region>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<competition>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 114,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.196188",
+      "modificationDate": "2021-08-31 14:53:27.021186",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 i\u015f Plan\u0131 (Timeline)",
+      "model": "YekaCompetition",
+      "codename": "view_competitionbusinessblog",
+      "codeurl": "^yarisma/yarisma\\-is\\-bloklari\\-list/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 115,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.196188",
+      "modificationDate": "2021-08-31 14:59:37.521898",
+      "kobilid": 1,
+      "name": "Yeka \u0130\u015f Plan\u0131 Ekle",
+      "codename": "add_yekacompetitionbusiness",
+      "codeurl": "^yarisma/yarisma\\-IsBlogu\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 116,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.196188",
+      "modificationDate": "2021-08-05 22:20:47.388509",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 \u0130\u015f Plan\u0131 G\u00fcncelle",
+      "codename": "change_yekacompetitionbusiness",
+      "codeurl": "^yarisma/yarisma\\-IsBlogu\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<competition>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 117,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.211810",
+      "modificationDate": "2021-08-31 14:59:54.053184",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 i\u015f Plan\u0131 G\u00fcncelle",
+      "codename": "change_yekacompetitionbusinessBlog",
+      "codeurl": "^yarisma/yarisma\\-is\\-bloklari\\-ekle/(?P<competition>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yekabusiness>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 118,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.211810",
+      "modificationDate": "2021-08-31 15:00:03.615701",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Personel Ekle",
+      "codename": "view_yekacompetition_personel",
+      "codeurl": "^yarisma/yarisma\\-personeller/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 119,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.211810",
+      "modificationDate": "2021-08-31 15:01:13.365835",
+      "kobilid": 1,
+      "name": "Alt Yeka Ekle",
+      "codename": "add_sumcompetition",
+      "codeurl": "^yarisma/alt\\-yeka\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 120,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.227435",
+      "modificationDate": "2021-08-31 15:01:22.506479",
+      "kobilid": 1,
+      "name": "Alt Yeka Listesi",
+      "codename": "view_sub_competition",
+      "codeurl": "^yarisma/alt\\-yeka\\-listesi/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 121,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.227435",
+      "modificationDate": "2021-08-31 15:01:33.881500",
+      "kobilid": 1,
+      "name": "Alt Yeka G\u00fcncelle",
+      "codename": "change_sumcompetition",
+      "codeurl": "^yarisma/alt\\-yeka\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 122,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.227435",
+      "modificationDate": "2021-08-31 15:01:54.459673",
+      "kobilid": 1,
+      "name": "Baglant\u0131 B\u00f6lgesi Ekle",
+      "codename": "add_region",
+      "codeurl": "^baglanti/bolgesi\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 123,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.352438",
+      "modificationDate": "2021-08-05 22:19:19.133790",
+      "kobilid": 1,
+      "name": "Ekstra Zaman Dosya Ekle",
+      "codename": "add_extratimefile",
+      "codeurl": "^yeka/ek\\-sure\\-dosya\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 124,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.352438",
+      "modificationDate": "2021-08-05 22:19:01.852503",
+      "kobilid": 1,
+      "name": "Ekstra Zaman Dosya G\u00fcncelle",
+      "codename": "change_extratimefile",
+      "codeurl": "^yeka/ek\\-sure\\-dosya\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<time>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 125,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-05 20:57:13.352438",
+      "modificationDate": "2021-08-05 22:18:41.098824",
+      "kobilid": 1,
+      "name": "Ekstra Time Zaman Sil",
+      "codename": "delete_extratimefile",
+      "codeurl": "^yeka/ek\\-sure\\-sil/$",
+      "group": "Yeka",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 126,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-11 09:59:56.612303",
+      "modificationDate": "2021-08-31 15:15:00.320587",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Gant \u015eemas\u0131",
+      "codename": "view_yekacompeittion_business_gant",
+      "codeurl": "^yeka/yeka\\-yarismasi\\-is\\-bloklari\\-semasi/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 127,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-11 09:59:56.706062",
+      "modificationDate": "2021-08-31 15:15:25.039377",
+      "kobilid": 1,
+      "name": "Firma Kullan\u0131c\u0131 Listesi",
+      "codename": "view_company_user",
+      "codeurl": "^firma/firma\\-kullanicilari/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Firma",
+      "parent_id": 41
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 128,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-11 09:59:56.706062",
+      "modificationDate": "2021-08-11 10:12:57.486720",
+      "kobilid": 1,
+      "name": "Firma Kullan\u0131c\u0131s\u0131 Ekle",
+      "codename": "add_company_user",
+      "codeurl": "^firma/firma\\-kullanicisi\\-ekle/$",
+      "group": "Firma",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 129,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-11 09:59:56.706062",
+      "modificationDate": "2021-08-31 15:14:13.648621",
+      "kobilid": 1,
+      "name": "Firma Kullan\u0131c\u0131 Listesi",
+      "codename": "company_users",
+      "codeurl": "^firma/firma\\-kullanici\\-listesi/$",
+      "group": "Firma",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 130,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-11 09:59:56.706062",
+      "modificationDate": "2021-08-31 15:03:12.444193",
+      "kobilid": 1,
+      "name": "Firma Kullan\u0131c\u0131s\u0131 G\u00f6revlendir",
+      "codename": "assigment_company_user",
+      "codeurl": "^firma/firma\\-kullanicisi\\-gorevlendir/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Firma",
+      "parent_id": 41
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 131,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.917271",
+      "modificationDate": "2021-08-31 15:13:36.320417",
+      "kobilid": 1,
+      "name": "Yard\u0131m Metni Ekle",
+      "codename": "add_help_text",
+      "codeurl": "^yardim/yardim\\-metni\\-ekle/$",
+      "group": "Ayarlar",
+      "parent_id": 132
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 132,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.917271",
+      "modificationDate": "2021-08-31 16:38:10.205335",
+      "kobilid": 1,
+      "name": "Yard\u0131m Metni Listesi",
+      "codename": "view_help_text",
+      "codeurl": "^yardim/yardim\\-metin\\-listesi/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 133,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.932905",
+      "modificationDate": "2021-08-31 15:04:57.663152",
+      "kobilid": 1,
+      "name": "Yard\u0131m Metni G\u00fcncelle",
+      "codename": "change_help_text",
+      "codeurl": "^yardim/yardim\\-metni\\-duzenle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Ayarlar",
+      "parent_id": 132
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 134,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.932905",
+      "modificationDate": "2021-08-31 15:05:37.913231",
+      "kobilid": 1,
+      "name": "Resmi Gazete Listesi",
+      "codename": "view_newspaper",
+      "codeurl": "^yeka/resim\\-gazete\\-listesi/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 135,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.932905",
+      "modificationDate": "2021-08-31 15:15:49.773806",
+      "kobilid": 1,
+      "name": "Resmi Gazete Ekle",
+      "codename": "add_newspaper",
+      "codeurl": "^yeka/resim\\-gazete\\-ekle/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 136,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.948514",
+      "modificationDate": "2021-08-31 15:16:30.133259",
+      "kobilid": 1,
+      "name": "Resmi Gazete G\u00fcncelle",
+      "codename": "change_newspaper",
+      "codeurl": "^yeka/resim\\-gazete\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 137,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.948514",
+      "modificationDate": "2021-08-31 15:16:53.977077",
+      "kobilid": 1,
+      "name": "Resmi Gazete Sil",
+      "codename": "delete_newspaper",
+      "codeurl": "^yeka/resim\\-gazete\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 138,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.948514",
+      "modificationDate": "2021-08-31 15:17:44.492780",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Dosya \u0130smi Listesi",
+      "codename": "view_yekaapplicationfilename",
+      "codeurl": "^yeka/yeka\\-basvuru\\-dosya\\-isim\\-listesi/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 139,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.948514",
+      "modificationDate": "2021-08-31 15:18:24.618072",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Dosya Tan\u0131m\u0131 Ekle",
+      "codename": "add_yekaapplicationfilename",
+      "codeurl": "^yeka/yeka\\-basvuru\\-dosya\\-isim\\-ekle/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 140,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.964144",
+      "modificationDate": "2021-08-31 15:18:56.305414",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Dosya Tan\u0131m\u0131 G\u00fcncelle",
+      "codename": "change_yekaapplicationfilename",
+      "codeurl": "^yeka/yeka\\-basvuru\\-dosya\\-isim\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 141,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.964144",
+      "modificationDate": "2021-08-31 15:19:31.696108",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Dosya Tan\u0131m\u0131 Sil",
+      "codename": "delete_yekaapplicationfilename",
+      "codeurl": "^yeka/yeka\\-basvuru\\-dosya\\-isim\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 142,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.964144",
+      "modificationDate": "2021-08-31 15:21:09.821300",
+      "kobilid": 1,
+      "name": "Yeka Ba\u015fvuru Ekle",
+      "codename": "add_yekaapplication",
+      "codeurl": "^yeka/basvuru\\-ayarlari\\-ekle/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 143,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.979785",
+      "modificationDate": "2021-08-31 15:21:46.930809",
+      "kobilid": 1,
+      "name": "Yeka  Yar\u0131\u015fmas\u0131 Ba\u015fvuru G\u00fcncelle",
+      "codename": "change_yekaapplication",
+      "codeurl": "^yeka/basvuru\\-ayarlari\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 144,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.979785",
+      "modificationDate": "2021-08-31 15:22:19.774565",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Ba\u015fvuru Listesi",
+      "codename": "view_application",
+      "codeurl": "^yeka/yeka\\-basvuru\\-listesi/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 144
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 145,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.979785",
+      "modificationDate": "2021-08-31 15:22:52.149639",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Ba\u015fvuru Dosya Tan\u0131m\u0131 Listesi",
+      "codename": "view_applicationfile",
+      "codeurl": "^yeka/yeka\\-basvuru\\-dosya\\-ekle/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<applicationfile>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 146,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.979785",
+      "modificationDate": "2021-08-31 15:23:11.071541",
+      "kobilid": 1,
+      "name": "Log Listesi",
+      "codename": "view_log_api",
+      "codeurl": "^log/api\\-log\\-listesi/$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 147,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.995390",
+      "modificationDate": "2021-08-31 16:38:50.299171",
+      "kobilid": 1,
+      "name": "Yeka Kabul Listesi",
+      "codename": "view_yeka_accept",
+      "codeurl": "^yeka/kabul\\-listesi/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 148,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.995390",
+      "modificationDate": "2021-08-31 15:24:00.462264",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Kabul Ekle",
+      "codename": "add_yeka_accept",
+      "codeurl": "^yeka/kabul\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 149,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:29.995390",
+      "modificationDate": "2021-08-20 14:57:29.995390",
+      "kobilid": 1,
+      "name": "change_yeka_accept",
+      "codename": "change_yeka_accept",
+      "codeurl": "^yeka/kabul\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<accept_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 150,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.011016",
+      "modificationDate": "2021-08-31 15:24:37.274836",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Kabul Sil",
+      "codename": "delete_accept",
+      "codeurl": "^yeka/kabul\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 151,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.011016",
+      "modificationDate": "2021-08-31 15:26:22.134421",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131  Yar\u0131\u015fma Firma Ekle",
+      "codename": "add_competition_company",
+      "codeurl": "^yeka/yeka\\-yarisma\\-firma\\-ekle/(?P<competition>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 152,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.011016",
+      "modificationDate": "2021-08-31 15:26:47.571978",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Yar\u0131\u015fma Firma G\u00fcncelle",
+      "codename": "change_competition_company",
+      "codeurl": "^yeka/yeka\\-yarisma\\-firma\\-guncelle/(?P<competition>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 153,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.026639",
+      "modificationDate": "2021-08-31 15:31:07.650597",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fma Firma Sil",
+      "codename": "delete_competition_company",
+      "codeurl": "^yeka/yeka\\-yarisma\\-firma\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 154,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.026639",
+      "modificationDate": "2021-08-31 15:31:32.275643",
+      "kobilid": 1,
+      "name": "Yeka S\u00f6zle\u015fme G\u00fcncelle",
+      "codename": "change_yekacontract",
+      "codeurl": "^yeka/yeka\\-yarisma\\-sozlesme/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 155,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.026639",
+      "modificationDate": "2021-08-31 15:35:25.385475",
+      "kobilid": 1,
+      "name": "Aday Yeka G\u00fcncelle",
+      "codename": "change_yekaproposal",
+      "codeurl": "^yeka/aday\\-yeka/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 156,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.026639",
+      "modificationDate": "2021-08-31 15:36:10.166814",
+      "kobilid": 1,
+      "name": "Aday Yeka Ekle",
+      "codename": "add_proposal",
+      "codeurl": "^yeka/aday\\-yeka\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 157,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.042280",
+      "modificationDate": "2021-08-31 15:36:55.135655",
+      "kobilid": 1,
+      "name": "Aday Yeka G\u00fcncelle",
+      "codename": "change_proposal",
+      "codeurl": "^yeka/aday\\-yeka\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<proposal>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 158,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.042280",
+      "modificationDate": "2021-08-31 15:37:26.901348",
+      "kobilid": 1,
+      "name": "Aday Yeka Sil",
+      "codename": "delete_proposal",
+      "codeurl": "^yeka/aday\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 159,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.042280",
+      "modificationDate": "2021-08-31 15:39:21.807828",
+      "kobilid": 1,
+      "name": "Aday Yeka Kurum G\u00f6r\u00fc\u015fleri G\u00fcncelle",
+      "codename": "change_proposal_active",
+      "codeurl": "^yeka/aday\\-yeka\\-kurum\\-g\u00f6r\u00fcsleri/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 160,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.042280",
+      "modificationDate": "2021-08-31 15:40:13.557918",
+      "kobilid": 1,
+      "name": "Yeka Kurum Listesi",
+      "codename": "view_institution",
+      "codeurl": "^yeka/aday\\-yeka\\-kurum\\-listesi/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 161,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.057887",
+      "modificationDate": "2021-08-31 15:40:46.636105",
+      "kobilid": 1,
+      "name": "Kurum G\u00fcncelle",
+      "codename": "change_institution",
+      "codeurl": "^yeka/aday\\-yeka\\-kurum\\-guncelle/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 162,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.057887",
+      "modificationDate": "2021-08-31 15:41:09.276772",
+      "kobilid": 1,
+      "name": "Kurum Sil",
+      "codename": "delete_institution",
+      "codeurl": "^yeka/aday\\-yeka\\-kurum\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 163,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.057887",
+      "modificationDate": "2021-08-31 15:41:47.417478",
+      "kobilid": 1,
+      "name": "Fabrika Dosya Tan\u0131m\u0131 Ekle",
+      "codename": "add_factory_file_name",
+      "codeurl": "^fabrika/fabrika\\-dokuman\\-ismi\\-ekle/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 164,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.073525",
+      "modificationDate": "2021-08-31 15:42:16.136279",
+      "kobilid": 1,
+      "name": "Fabrika Dosya Tan\u0131m\u0131 Listesi",
+      "codename": "views_factory_file_name",
+      "codeurl": "^fabrika/fabrika\\-dokuman\\-isim\\-listesi/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 165,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.073525",
+      "modificationDate": "2021-08-31 15:42:44.073839",
+      "kobilid": 1,
+      "name": "Fabrika Dosya Tan\u0131m\u0131 G\u00fcncelle",
+      "codename": "change_factory_file_name",
+      "codeurl": "^fabrika/fabrika\\-dokuman\\-isim\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 166,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.073525",
+      "modificationDate": "2021-08-31 15:43:15.620771",
+      "kobilid": 1,
+      "name": "Fabrika Dosya Tan\u0131m\u0131 Sil",
+      "codename": "delete_factory_file_name",
+      "codeurl": "^fabrika/fabrika\\-dokuman\\-isim\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 167,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.073525",
+      "modificationDate": "2021-08-31 15:43:35.136449",
+      "kobilid": 1,
+      "name": "Fabrika Listesi",
+      "codename": "view_yeka_factory",
+      "codeurl": "^yeka/fabrika\\-listesi/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 168,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.089142",
+      "modificationDate": "2021-08-31 15:43:53.933344",
+      "kobilid": 1,
+      "name": "Fabrika Ekle",
+      "codename": "add_factory",
+      "codeurl": "^yeka/fabrika\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 169,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.089142",
+      "modificationDate": "2021-08-31 15:44:10.199001",
+      "kobilid": 1,
+      "name": "Fabrika G\u00fcncelle",
+      "codename": "update_factory",
+      "codeurl": "^yeka/fabrika\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 170,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.089142",
+      "modificationDate": "2021-08-31 15:44:40.245939",
+      "kobilid": 1,
+      "name": "Fabrika Dosya Ekle",
+      "codename": "add_factory_file",
+      "codeurl": "^yeka/fabrika\\-dokuman\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 171,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.089142",
+      "modificationDate": "2021-08-31 15:45:00.527241",
+      "kobilid": 1,
+      "name": "Fabrika Dosya G\u00fcncelle",
+      "codename": "change_factory_file",
+      "codeurl": "^yeka/fabrika\\-dokuman\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<factory_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 172,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.104766",
+      "modificationDate": "2021-08-31 15:45:18.855394",
+      "kobilid": 1,
+      "name": "Fabrika Sil",
+      "codename": "delete_factory",
+      "codeurl": "^fabrika/fabrika\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 173,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-20 14:57:30.104766",
+      "modificationDate": "2021-08-31 15:52:33.012492",
+      "kobilid": 1,
+      "name": "Fabrika Dosyas\u0131 Sil",
+      "codename": "delete_factory_file",
+      "codeurl": "^fabrika/dokuman\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 174,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.279145",
+      "modificationDate": "2021-08-31 15:53:20.559454",
+      "kobilid": 1,
+      "name": "Adaya Yeka Koordinat Ekle",
+      "codename": "add_coordinate",
+      "codeurl": "^aday\\-yeka/koordinat\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_proposal_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 175,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.310388",
+      "modificationDate": "2021-08-31 15:53:46.168884",
+      "kobilid": 1,
+      "name": "Aday Yeka Kordinat G\u00fcncelle",
+      "codename": "change_coordinate",
+      "codeurl": "^aday\\-yeka/koordinat\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_proposal_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 176,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.326173",
+      "modificationDate": "2021-08-31 15:54:07.575177",
+      "kobilid": 1,
+      "name": "Aday Yeka Kordinat Sil",
+      "codename": "delete_coordinate",
+      "codeurl": "^aday\\-yeka/koordinat\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 177,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.326173",
+      "modificationDate": "2021-08-31 15:55:08.934670",
+      "kobilid": 1,
+      "name": "Mahalle Bilgisi",
+      "codename": "get_neighborhood",
+      "codeurl": "^yeka/mahalle\\-getir/$",
+      "group": "Digerleri",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 178,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.326173",
+      "modificationDate": "2021-08-31 15:55:42.950357",
+      "kobilid": 1,
+      "name": "Aday Yeka Lokasyon Ekle",
+      "codename": "add_location",
+      "codeurl": "^aday\\-yeka/konum\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_proposal_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 179,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.326173",
+      "modificationDate": "2021-08-31 15:56:10.309790",
+      "kobilid": 1,
+      "name": "Aday Yeka Lokasyon G\u00fcncelle",
+      "codename": "change_location",
+      "codeurl": "^aday\\-yeka/konum\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_proposal_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 180,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.326173",
+      "modificationDate": "2021-08-31 16:39:14.627341",
+      "kobilid": 1,
+      "name": "Adaya Yeka Location Sil",
+      "codename": "delete_location",
+      "codeurl": "^aday\\-yeka/konum\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 181,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.341638",
+      "modificationDate": "2021-08-31 16:39:42.283644",
+      "kobilid": 1,
+      "name": "Aday Yeka Kurum \u00d6nerileri Listesi",
+      "codename": "view_proposal_institution",
+      "codeurl": "^yeka/aday\\-yeka\\-kurum\\-oneri\\-listesi/(?P<yekaproposal>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 182,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.341638",
+      "modificationDate": "2021-08-31 16:40:15.846222",
+      "kobilid": 1,
+      "name": "Adaya Yeka Kurum \u00d6nerileri G\u00fcncelle",
+      "codename": "change_proposal_institution",
+      "codeurl": "^yeka/aday\\-yeka\\-kurum\\-oneri\\-guncelle/(?P<yekaproposal>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<proposal>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 183,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.341638",
+      "modificationDate": "2021-08-31 16:40:36.424377",
+      "kobilid": 1,
+      "name": "Adaya Yeka Kurum \u00d6nerisi Sil",
+      "codename": "delete_proposal_institution",
+      "codeurl": "^yeka/aday\\-yeka\\-kurum\\-oneri\\-sil$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 184,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.341638",
+      "modificationDate": "2021-08-31 16:41:17.846336",
+      "kobilid": 1,
+      "name": "Yeka Firma Yetkili Listesi",
+      "codename": "view_yeka_user",
+      "codeurl": "^yeka/yeka\\-firma\\-kullanici\\-listesi/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 185,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.341638",
+      "modificationDate": "2021-08-31 16:43:35.471599",
+      "kobilid": 1,
+      "name": "Yeka Firma Yetkilisi Ekle",
+      "codename": "add_yeka_user",
+      "codeurl": "^yeka/yeka\\-firma\\-kullanici\\-ekle/(?P<yekacompany>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 186,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.357263",
+      "modificationDate": "2021-08-31 16:44:04.424780",
+      "kobilid": 1,
+      "name": "Yeka Firma Kullan\u0131c\u0131s\u0131 G\u00fcncelle",
+      "codename": "change_yeka_user",
+      "codeurl": "^yeka/yeka\\-firma\\-kullanici\\-guncelle/(?P<yekacompany>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<companyuser>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 187,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.357263",
+      "modificationDate": "2021-08-31 16:44:27.112328",
+      "kobilid": 1,
+      "name": "Yeka Firma Kullan\u0131c\u0131s\u0131 Sil",
+      "codename": "delete_yeka_user",
+      "codeurl": "^yeka/yeka\\-firma\\-kullanici\\-sil$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 188,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.357263",
+      "modificationDate": "2021-08-24 00:03:46.357263",
+      "kobilid": 1,
+      "name": "view_permission",
+      "codename": "view_permission",
+      "codeurl": "^yeka/izin\\-listesi/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 189,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.357263",
+      "modificationDate": "2021-08-31 16:44:52.956129",
+      "kobilid": 1,
+      "name": "\u0130zinleri G\u00fcncelle",
+      "codename": "change_permission",
+      "codeurl": "^yeka/izin\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "Ayarlar",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 190,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.357263",
+      "modificationDate": "2021-08-31 15:56:51.637993",
+      "kobilid": 1,
+      "name": "Merkez Bankas\u0131 Ufe  T\u00fcfe Listesi",
+      "codename": "view_ufe",
+      "codeurl": "^yeka/ufe\\-tufe/$",
+      "group": "Digerleri",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 191,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.357263",
+      "modificationDate": "2021-08-31 15:57:22.606804",
+      "kobilid": 1,
+      "name": "Merkez Bankas\u0131 Kur Bilgileri",
+      "codename": "view_kur",
+      "codeurl": "^yeka/kur/$",
+      "group": "Digerleri",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 192,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.451022",
+      "modificationDate": "2021-08-31 15:58:11.278769",
+      "kobilid": 1,
+      "name": "\u00d6n Lisans Dosya Ekle",
+      "codename": "add_associate_file_name",
+      "codeurl": "^onlisans/onlisans\\-dokuman\\-ismi\\-ekle/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 193,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.466635",
+      "modificationDate": "2021-08-31 15:58:49.810096",
+      "kobilid": 1,
+      "name": "\u00d6n Lisans Dosya Tan\u0131m\u0131 Listesi",
+      "codename": "view_associate_file_name",
+      "codeurl": "^onlisans/onlisans\\-dokuman\\-isim\\-listesi/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 194,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.466635",
+      "modificationDate": "2021-08-31 15:59:09.778893",
+      "kobilid": 1,
+      "name": "\u00d6n Lisans Dosya Tan\u0131m\u0131 G\u00fcncelle",
+      "codename": "change_associate_file_name",
+      "codeurl": "^onlisans/onlisans\\-dokuman\\-isim\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 195,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.466635",
+      "modificationDate": "2021-08-31 15:59:36.169559",
+      "kobilid": 1,
+      "name": "\u00d6n Lisans Dosya Tan\u0131m\u0131 Sil",
+      "codename": "delete_associate_file_name",
+      "codeurl": "^onlisans/onlisans\\-dokuman\\-isim\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 196,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.482256",
+      "modificationDate": "2021-08-31 16:01:07.607248",
+      "kobilid": 1,
+      "name": "\u00d6n Lisans Belge Listesi",
+      "codename": "view_yeka_associate_degree_file",
+      "codeurl": "^onlisans/onlisans\\-belge\\-listesi/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 197,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.482256",
+      "modificationDate": "2021-08-31 16:00:04.825882",
+      "kobilid": 1,
+      "name": "\u00d6n lisans Dosya Ekle",
+      "codename": "add_yeka_associate_degree_file",
+      "codeurl": "^onlisans/onlisans\\-belge\\-ekle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 198,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.482256",
+      "modificationDate": "2021-08-31 16:01:33.076040",
+      "kobilid": 1,
+      "name": "\u00d6n Lisans Dosya G\u00fcncelle",
+      "codename": "change_associate_file",
+      "codeurl": "^onlisans/onlisans\\-belge\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_associate>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 199,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:03:46.482256",
+      "modificationDate": "2021-08-31 16:02:02.138592",
+      "kobilid": 1,
+      "name": "\u00d6n Lisans Dosya Sil",
+      "codename": "delete_associate_file",
+      "codeurl": "^onlisans/dokuman\\-sil/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 200,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-25 00:25:54.617931",
+      "modificationDate": "2021-08-31 16:04:07.404470",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Ba\u015fvuru G\u00fcncelle",
+      "codename": "change_yekabusinessblog_company",
+      "codeurl": "^yeka/firma\\-basvuru\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yekabusinessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 201,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-27 14:16:05.842812",
+      "modificationDate": "2021-08-27 14:16:05.842812",
+      "kobilid": 1,
+      "name": "test",
+      "codename": "test",
+      "codeurl": "^test/test$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 202,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-27 14:16:05.858441",
+      "modificationDate": "2021-08-31 16:04:53.263956",
+      "kobilid": 1,
+      "name": "Yeka Detay Sayfas\u0131",
+      "codename": "view_yeka_detail",
+      "codeurl": "^yeka/yeka\\-detay/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 203,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-27 14:16:05.858441",
+      "modificationDate": "2021-08-27 14:16:05.858441",
+      "kobilid": 1,
+      "name": "view_competition_api",
+      "codename": "view_competition_api",
+      "codeurl": "^yeka/yarisma\\-listesi/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 204,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-30 23:02:54.621935",
+      "modificationDate": "2021-08-31 16:05:48.795294",
+      "kobilid": 1,
+      "name": "Yeka Yar\u0131\u015fmas\u0131 Detay Sayfas\u0131",
+      "codename": "view_yeka_competition_detail",
+      "codeurl": "^yeka/yeka\\-yarisma\\-detay/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "Yeka",
+      "parent_id": 63
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 205,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-31 16:48:12.925294",
+      "modificationDate": "2021-08-31 16:50:02.269234",
+      "kobilid": 1,
+      "name": "",
+      "codename": "view_dependence",
+      "codeurl": "^yeka/yeka\\-dependese/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 206,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-02 15:12:47.400314",
+      "modificationDate": "2021-09-02 15:12:47.400314",
+      "kobilid": 1,
+      "name": "view_sub_yeka_competition_detail",
+      "codename": "view_sub_yeka_competition_detail",
+      "codeurl": "^yeka/alt\\-yeka\\-detay/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 207,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-03 09:25:55.162356",
+      "modificationDate": "2021-09-03 09:25:55.162356",
+      "kobilid": 1,
+      "name": "add_block",
+      "codename": "add_block",
+      "codeurl": "^yeka/blockAdd/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 208,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-07 16:38:45.706206",
+      "modificationDate": "2021-09-07 16:38:45.706206",
+      "kobilid": 1,
+      "name": "select_report",
+      "codename": "select_report",
+      "codeurl": "^yeka/yeka\\-rapor/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 209,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-07 16:38:45.721833",
+      "modificationDate": "2021-09-07 16:38:45.721833",
+      "kobilid": 1,
+      "name": "api_connection_region_cities",
+      "codename": "api_connection_region_cities",
+      "codeurl": "^yeka/yeka\\-baglant\u0131\\-bolgesi\\-renkleri/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 210,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-07 16:38:45.721833",
+      "modificationDate": "2021-09-07 16:38:45.721833",
+      "kobilid": 1,
+      "name": "api_connection_region_competitions",
+      "codename": "api_connection_region_competitions",
+      "codeurl": "^yeka/yeka\\-baglant\u0131\\-bolgesi\\-yarismalari/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 211,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-07 16:38:45.737457",
+      "modificationDate": "2021-09-07 16:38:45.737457",
+      "kobilid": 1,
+      "name": "view_report",
+      "codename": "view_report",
+      "codeurl": "^yeka/yeka\\-rapor\\-listesi/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 212,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:48:22.395249",
+      "modificationDate": "2021-09-08 01:48:22.395249",
+      "kobilid": 1,
+      "name": "helpmenu",
+      "codename": "helpmenu",
+      "codeurl": "^yeka/helpmenu/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 213,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:48:22.489012",
+      "modificationDate": "2021-09-08 01:48:22.489012",
+      "kobilid": 1,
+      "name": "add_competition_company_select",
+      "codename": "add_competition_company_select",
+      "codeurl": "^yeka/basvuru\\-firma\\-ekle/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 214,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:48:22.489012",
+      "modificationDate": "2021-09-08 01:48:22.489012",
+      "kobilid": 1,
+      "name": "add_competition_company_select_api",
+      "codename": "add_competition_company_select_api",
+      "codeurl": "^yeka/api\\-basvuru/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 215,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:48:22.489012",
+      "modificationDate": "2021-09-08 01:48:22.489012",
+      "kobilid": 1,
+      "name": "bildirim-getir",
+      "codename": "bildirim-getir",
+      "codeurl": "^bildirim/bildirim\\-getir/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 216,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:48:22.504632",
+      "modificationDate": "2021-09-08 01:48:22.504632",
+      "kobilid": 1,
+      "name": "bildirimler",
+      "codename": "bildirimler",
+      "codeurl": "^bildirim/bildirimler/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 217,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:48:22.504632",
+      "modificationDate": "2021-09-08 01:48:22.504632",
+      "kobilid": 1,
+      "name": "bildirim-okundu-yap",
+      "codename": "bildirim-okundu-yap",
+      "codeurl": "^bildirim/bildirim\\-okundu/(?P<id>[0-9]+)$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 218,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.178122",
+      "modificationDate": "2021-09-15 15:11:16.178122",
+      "kobilid": 1,
+      "name": "change_competition_block_",
+      "codename": "change_competition_block_",
+      "codeurl": "^yeka/yeka\\-yarisma/(?P<business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<businessblog>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 219,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.412504",
+      "modificationDate": "2021-09-15 15:11:16.412504",
+      "kobilid": 1,
+      "name": "add_produce_amount",
+      "codename": "add_produce_amount",
+      "codeurl": "^yeka/yarisma\\-uretim\\-miktari\\-ekle/(?P<yeka_business_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_business_block_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 220,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.428125",
+      "modificationDate": "2021-09-15 15:11:16.428125",
+      "kobilid": 1,
+      "name": "change_produce_amount",
+      "codename": "change_produce_amount",
+      "codeurl": "^yeka/yarisma\\-uretim\\-miktari\\-guncelle/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_business_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 221,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.428125",
+      "modificationDate": "2021-09-15 15:11:16.428125",
+      "kobilid": 1,
+      "name": "view_produce_amount",
+      "codename": "view_produce_amount",
+      "codeurl": "^yeka/yarisma\\-uretim\\-miktarlari/(?P<yeka_business_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_business_block_uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 222,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.428125",
+      "modificationDate": "2021-09-15 15:11:16.428125",
+      "kobilid": 1,
+      "name": "delete_produce_amount",
+      "codename": "delete_produce_amount",
+      "codeurl": "^yeka/uretim\\-miktari\\-sil/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 223,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.443752",
+      "modificationDate": "2021-09-15 15:11:16.443752",
+      "kobilid": 1,
+      "name": "proposal_add_sub_yeka",
+      "codename": "proposal_add_sub_yeka",
+      "codeurl": "^yeka/alt\\-yekaya\\-aday\\-yeka\\-belirle/(?P<yeka_business>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/(?P<yeka_business_block>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 224,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.443752",
+      "modificationDate": "2021-09-15 15:11:16.443752",
+      "kobilid": 1,
+      "name": "view_yeka_by_type",
+      "codename": "view_yeka_by_type",
+      "codeurl": "^yeka/kaynak\\-turu\\-yeka/(?P<type>[^/]+)$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 225,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.443752",
+      "modificationDate": "2021-09-15 15:11:16.443752",
+      "kobilid": 1,
+      "name": "get_region",
+      "codename": "get_region",
+      "codeurl": "^yeka/yeka\\-baglanti\\-bolge\\-getir/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 226,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.459374",
+      "modificationDate": "2021-09-15 15:11:16.459374",
+      "kobilid": 1,
+      "name": "get_yeka_competition",
+      "codename": "get_yeka_competition",
+      "codeurl": "^yeka/yeka\\-yarisma\\-getir/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 227,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.459374",
+      "modificationDate": "2021-09-15 15:11:16.459374",
+      "kobilid": 1,
+      "name": "company_aplication",
+      "codename": "company_aplication",
+      "codeurl": "^yeka/yeka\\-firma\\-basvuru/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 228,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.474994",
+      "modificationDate": "2021-09-15 15:11:16.474994",
+      "kobilid": 1,
+      "name": "yeka_make_aplication_company",
+      "codename": "yeka_make_aplication_company",
+      "codeurl": "^yeka/yeka\\-firma\\-basvuru\\-yap/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 229,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-15 15:11:16.474994",
+      "modificationDate": "2021-09-15 15:11:16.474994",
+      "kobilid": 1,
+      "name": "view_application_company",
+      "codename": "view_application_company",
+      "codeurl": "^yeka/basvuru\\-listesi/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 230,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.054195",
+      "modificationDate": "2021-09-22 23:11:46.054195",
+      "kobilid": 1,
+      "name": "get_yeka_company",
+      "codename": "get_yeka_company",
+      "codeurl": "^yeka/yarisma\\-basvurusu\\-getir/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 231,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.069825",
+      "modificationDate": "2021-09-22 23:11:46.069825",
+      "kobilid": 1,
+      "name": "save_company_app_file",
+      "codename": "save_company_app_file",
+      "codeurl": "^yeka/yarisma\\-dosya\\-kaydet/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 232,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.085452",
+      "modificationDate": "2021-09-22 23:11:46.085452",
+      "kobilid": 1,
+      "name": "delete_yeka_company_file",
+      "codename": "delete_yeka_company_file",
+      "codeurl": "^yeka/yeka\\-basvuru\\-dosya\\-sil/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 233,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.085452",
+      "modificationDate": "2021-09-22 23:11:46.085452",
+      "kobilid": 1,
+      "name": "eskalasyon_hesapla",
+      "codename": "eskalasyon_hesapla",
+      "codeurl": "^yeka/yeka\\-eskalasyon/(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 234,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.085452",
+      "modificationDate": "2021-09-22 23:11:46.085452",
+      "kobilid": 1,
+      "name": "second_month_value_tufe",
+      "codename": "second_month_value_tufe",
+      "codeurl": "^yeka/yeka\\-tufe\\-second\\-month/(?P<date>[^/]+)/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 235,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.101075",
+      "modificationDate": "2021-09-22 23:11:46.101075",
+      "kobilid": 1,
+      "name": "yeka_competition_eskalasyon",
+      "codename": "yeka_competition_eskalasyon",
+      "codeurl": "^yeka/yeka\\-eskalasyon\\-hesapla/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 236,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.101075",
+      "modificationDate": "2021-09-22 23:11:46.101075",
+      "kobilid": 1,
+      "name": "yeka_report",
+      "codename": "yeka_report",
+      "codeurl": "^yeka/yeka\\-yarisma\\-rapor/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 237,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.101075",
+      "modificationDate": "2021-09-22 23:11:46.101075",
+      "kobilid": 1,
+      "name": "get_yeka_competition_company",
+      "codename": "get_yeka_competition_company",
+      "codeurl": "^yeka/yeka\\-yarisma\\-firma\\-getir/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 238,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.116696",
+      "modificationDate": "2021-09-22 23:11:46.116696",
+      "kobilid": 1,
+      "name": "get_yeka_competition_proposal",
+      "codename": "get_yeka_competition_proposal",
+      "codeurl": "^yeka/yeka\\-yarisma\\-aday\\-yeka\\-getir/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 239,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-22 23:11:46.116696",
+      "modificationDate": "2021-09-22 23:11:46.116696",
+      "kobilid": 1,
+      "name": "get_yeka_competition_eskalasyon",
+      "codename": "get_yeka_competition_eskalasyon",
+      "codeurl": "^yeka/yeka\\-yarisma\\-guncel\\-fiyat/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 240,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-10-06 15:17:33.338495",
+      "modificationDate": "2021-10-06 15:17:33.338495",
+      "kobilid": 1,
+      "name": "general_reporting",
+      "codename": "general_reporting",
+      "codeurl": "^yeka/genel\\-raporlama$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 241,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-10-26 12:35:52.461706",
+      "modificationDate": "2021-10-26 12:35:52.461706",
+      "kobilid": 1,
+      "name": "bildirim-okundu-isaretle",
+      "codename": "bildirim-okundu-isaretle",
+      "codeurl": "^bildirim/okundu\\-isaretle/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 242,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-10-26 12:35:52.549012",
+      "modificationDate": "2021-10-26 12:35:52.549012",
+      "kobilid": 1,
+      "name": "api_yeka_by_type",
+      "codename": "api_yeka_by_type",
+      "codeurl": "^yeka/butun\\-yekalar/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 243,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-10-26 12:35:52.560582",
+      "modificationDate": "2021-10-26 12:35:52.560582",
+      "kobilid": 1,
+      "name": "add_setting_data",
+      "codename": "add_setting_data",
+      "codeurl": "^yeka/initial_data/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 244,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-10-26 12:35:52.573793",
+      "modificationDate": "2021-10-26 12:35:52.573793",
+      "kobilid": 1,
+      "name": "initial_data_success_page",
+      "codename": "initial_data_success_page",
+      "codeurl": "^yeka/initial_data_success/$",
+      "group": "",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.permission",
+    "pk": 245,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-10-26 12:59:24.898788",
+      "modificationDate": "2021-10-26 12:59:24.898788",
+      "kobilid": 1,
+      "name": "initial_data_error_page",
+      "codename": "initial_data_error_page",
+      "codeurl": "^yeka/initial_data_error/$",
+      "group": "",
+      "parent_id": null
+    }
+  }
+]
