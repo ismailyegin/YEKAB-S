@@ -76,6 +76,7 @@ TEMPLATES = [
                 'ekabis.services.general_methods.getMenu',
                 'ekabis.services.general_methods.getProfileImage',
                 'ekabis.services.general_methods.get_notification',
+                'ekabis.services.general_methods.get_help_text',
 
                 # "education.services.general_methods.append_privileges",
             ],
@@ -88,9 +89,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
 
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+
 
 }
 
