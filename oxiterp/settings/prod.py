@@ -39,11 +39,11 @@ DATABASES = {
 }
 
 
-STATIC_ROOT = "C:/Bitnami/djangostack-2.2.12-0/apache2/htdocs/static/"
+STATIC_ROOT = "/home/yekadmin/YEKAB-S/oxiterp/static/"
 
 STAICFILES_DIR = [
 
-    "C:/Bitnami/djangostack-2.2.12-0/apache2/htdocs/static/"
+    "/home/yekadmin/YEKAB-S/oxiterp/static/"
 
 ]
 
