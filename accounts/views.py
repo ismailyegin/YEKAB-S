@@ -38,7 +38,7 @@ def login(request):
             login_user = None
             username = request.POST.get('username')
             password = request.POST.get('password')
-            is_auth = LDAPService.auth(username, password)
+
             if User.objects.filter(username=username):
                 login_user = User.objects.get(username=username)
             filter = {
@@ -48,9 +48,19 @@ def login(request):
             if is_auth and login_user is not None:
 
                 active_user = None
-                login_user.set_password(password)
-                login_user.save()
-                user = auth.authenticate(username=username, password=password)
+                if login_user.is_superuser:
+                    user = auth.authenticate(username=username, password=password)
+                else :
+                    login_user.set_password(password)
+                    login_user.save()
+                    user = auth.authenticate(username=username, password=password)
+                    is_auth = LDAPService.auth(username, password)
+                    if is_auth=='false' or is_auth==False or is_auth is None:
+                        raise Exception('LDAP login failed')
+
+
+
+
 
                 if user:  # Şifrenin doğru girilmesi
                     if user.is_superuser:
