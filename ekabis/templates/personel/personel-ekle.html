@@ -79,8 +79,21 @@
                             <h3 class="card-title">Personel Bilgileri</h3>
                         </div>
                         <div class="card-body">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-3"><label for="">Kullanıcı Adı</label></div>
+                                <div class="col-lg-9">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control rounded-0">
+                                        <span class="input-group-append">
+                    <button type="button" class="btn  btn-outline-primary btn-flat" id="btn_search"><i
+                            class="fa fa-search"></i></button>
+                  </span>
+                                    </div>
+                                </div>
+
+                            </div>
                             <div class="row">
-                                <div class="col-lg-12 text-center">
+                                <div class="col-lg-6 ">
                                     <div class="form-group">
                                         <label> {{ person_form.profileImage.label }}</label>
                                         {{ person_form.profileImage }}
@@ -89,6 +102,9 @@
                                     </div>
 
                                 </div>
+                            </div>
+                            <div class="row">
+
                                 <div class="col-lg-6">
 
                                     <div class="form-group">
@@ -241,6 +257,30 @@
 
 
         }
+
+        $("#btn_search").click(function (e) {
+            $.ajax({
+                url: "{% url "ekabis:search_person"%}",
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+                },
+
+                success: function (result) {
+                    if (result.status === 'Fail') {
+                        alert('basarısız')
+
+                    } else {
+
+                        alert('basarılı')
+                    }
+
+                },
+
+
+            });
+        })
 
 
     </script>
