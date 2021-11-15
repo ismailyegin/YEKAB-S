@@ -76,6 +76,7 @@ TEMPLATES = [
                 'ekabis.services.general_methods.getMenu',
                 'ekabis.services.general_methods.getProfileImage',
                 'ekabis.services.general_methods.get_notification',
+                'ekabis.services.general_methods.get_help_text',
 
                 # "education.services.general_methods.append_privileges",
             ],
@@ -87,10 +88,6 @@ TEMPLATES = [
 REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
-
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
 
 }
 
@@ -174,3 +171,8 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+LDAP_URL = 'https://api.enerji.gov.tr/apigateway/merkezi-ldap-api'
+LDAP_USERNAME = 'yekabis_user'
+LDAP_PASSWORD = 'YeC@38c47c15!!'
+LDAP_SECRET = 'deneme'

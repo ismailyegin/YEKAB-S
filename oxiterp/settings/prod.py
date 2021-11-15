@@ -3,7 +3,7 @@ from oxiterp.settings.base import *
 # Override base.py settings here
 
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 # DATABASES = {
@@ -39,13 +39,13 @@ DATABASES = {
 }
 
 
-STATIC_ROOT = "/home/yekadmin/YEKAB-S/oxiterp/static/"
+STATIC_URL = '/static/'
+STATIC_ROOT = '/home/yekadmin/static/'
+LDAP_URL = 'https://api.enerji.gov.tr/apigateway/merkezi-ldap-api'
+LDAP_USERNAME = 'yekabis_user'
+LDAP_PASSWORD = 'YeC@38c47c15!!'
+LDAP_SECRET = 'deneme'
 
-STAICFILES_DIR = [
-
-    "/home/yekadmin/YEKAB-S/oxiterp/static/"
-
-]
 
 try:
     from oxiterp.settings.local import *

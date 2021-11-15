@@ -1,0 +1,610 @@
+[
+  {
+    "model": "ekabis.menu",
+    "pk": 1,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-12 13:50:11.398915",
+    "modificationDate": "2021-07-12 13:50:11.398915",
+    "name": "Anasayfa",
+    "url": null,
+    "is_parent": 1,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+   "parent_id": null
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 2,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-12 13:50:27.258320",
+    "modificationDate": "2021-07-12 13:50:27.258320",
+    "name": "Yeka",
+    "url": null,
+    "is_parent": 1,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 2,
+   "parent_id": null
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 3,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-12 13:50:43.648976",
+    "modificationDate": "2021-07-12 13:50:43.648976",
+    "name": "Personel",
+    "url": null,
+    "is_parent": 1,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 3,
+   "parent_id": null
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 4,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 13:51:07.039648",
+    "modificationDate": "2021-07-12 13:51:07.039648",
+    "name": "Firma",
+    "url": null,
+    "is_parent": 1,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 4,
+   "parent_id": null
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 5,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-12 13:51:31.336573",
+    "modificationDate": "2021-07-29 12:18:49.604527",
+    "name": "Kullanıcılar",
+    "url": null,
+    "is_parent": 1,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 5,
+   "parent_id": null
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 7,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 13:52:04.211651",
+    "modificationDate": "2021-07-12 13:52:04.211651",
+    "name": "Destek ve Talep",
+    "url": null,
+    "is_parent": 1,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 7,
+   "parent_id": null
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 8,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 14:09:18.229278",
+    "modificationDate": "2021-07-12 14:10:19.245028",
+    "name": "Anasayfa Admin",
+    "url": "ekabis:view_admin",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+    "parent_id": 1
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 9,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 14:11:24.667024",
+    "modificationDate": "2021-07-12 14:11:24.667024",
+    "name": "Personel Anasayfa",
+    "url": "ekabis:view_personel",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 2,
+    "parent_id": 1
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 13,
+    "fields": {
+        "isDeleted": 0,
+    "creationDate": "2021-07-12 14:42:18.186277",
+    "modificationDate": "2021-07-12 14:42:18.186277",
+    "name": "Yeka Listesi",
+    "url": "ekabis:view_yeka",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+    "parent_id": 2
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 14,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 14:43:59.842725",
+    "modificationDate": "2021-07-29 12:19:34.698038",
+    "name": "İş Blokları Listesi",
+    "url": "ekabis:view_businessBlog",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 2,
+    "parent_id": 2
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 17,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 18:42:52.602215",
+    "modificationDate": "2021-07-12 18:42:52.602215",
+    "name": "Personel Listesi",
+    "url": "ekabis:view_employee",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+    "parent_id": 3
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 18,
+    "fields": {
+
+     "isDeleted": 0,
+    "creationDate": "2021-07-12 18:43:43.805434",
+    "modificationDate": "2021-07-12 18:43:43.805434",
+    "name": "Ünvan Listesi",
+    "url": "ekabis:view_categoryitem",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 2,
+    "parent_id": 3}
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 19,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 18:44:51.727437",
+    "modificationDate": "2021-07-12 18:44:51.727437",
+    "name": "Firma Listesi",
+    "url": "ekabis:view_company",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+    "parent_id": 4
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 20,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 18:46:42.727656",
+    "modificationDate": "2021-09-08 03:26:25.457853",
+    "name": "Firma Dosya Tanım Listesi",
+    "url": "ekabis:view_companyfilename",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+    "parent_id": 47
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 21,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-12 18:49:49.259272",
+    "modificationDate": "2021-07-12 18:49:49.259272",
+    "name": "Kullanıcı Listesi",
+    "url": "ekabis:view_user",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+    "parent_id": 5
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 22,
+    "fields": {
+   "isDeleted": 0,
+    "creationDate": "2021-07-12 18:50:29.524973",
+    "modificationDate": "2021-07-12 19:17:22.000078",
+    "name": "Grup Listesi",
+    "url": "ekabis:view_group",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 2,
+    "parent_id": 5 }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 23,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-12 18:51:25.650078",
+    "modificationDate": "2021-08-05 23:52:27.063932",
+    "name": "Log Listesi",
+    "url": "ekabis:view_logs",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 2,
+    "parent_id": 32
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 27,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-12 18:55:57.384991",
+    "modificationDate": "2021-07-12 18:55:57.384991",
+    "name": "Destek ve Talep Listesi",
+    "url": "ekabis:view_claim",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+    "parent_id": 7
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 28,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-12 18:56:26.338175",
+    "modificationDate": "2021-07-12 18:56:26.338175",
+    "name": "İletişim",
+    "url": "ekabis:view_help",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 2,
+    "parent_id": 7
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 29,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-12 18:59:44.229190",
+    "modificationDate": "2021-07-12 18:59:44.229190",
+    "name": "Not Ekle",
+    "url": "ekabis:add_calendarName",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 4,
+    "parent_id": 1
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 30,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-07-26 15:34:40.761250",
+    "modificationDate": "2021-07-26 15:35:28.605089",
+    "name": "Ek Zaman Listesi",
+    "url": "ekabis:view_extratime",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 4,
+    "parent_id": 2
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 31,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-07-29 22:31:16.086785",
+    "modificationDate": "2021-07-29 22:34:34.759047",
+    "name": "Konsorsiyum Listesi",
+    "url": "ekabis:view_consortium",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 2,
+    "parent_id": 4
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 32,
+    "fields": {
+       "isDeleted": 0,
+    "creationDate": "2021-08-05 23:51:01.949891",
+    "modificationDate": "2021-08-05 23:51:01.949891",
+    "name": "Ayarlar",
+    "url": null,
+    "is_parent": 1,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 5,
+   "parent_id": null
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 33,
+    "fields": {
+      "isDeleted": 0,
+    "creationDate": "2021-08-05 23:56:45.696940",
+    "modificationDate": "2021-08-05 23:57:51.115370",
+    "name": "Tatil Günleri",
+    "url": "ekabis:vacation_days",
+    "is_parent": 0,
+    "is_show": 1,
+    "fa_icon": null,
+    "sorting": 1,
+    "parent_id": 32
+    }
+
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 35,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-11 10:20:44.501659",
+      "modificationDate": "2021-08-11 10:23:07.783728",
+      "name": "Firma Kullanıcıları",
+      "url": "ekabis:company_users",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 2,
+      "parent_id": 4
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 38,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:13:49.155320",
+      "modificationDate": "2021-08-24 00:13:49.155320",
+      "name": "İzin Listesi",
+      "url": "ekabis:view_permission",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 3,
+      "parent_id": 32
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 39,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 00:15:30.858638",
+      "modificationDate": "2021-08-24 00:15:30.858638",
+      "name": "Sistem Ayarları",
+      "url": "ekabis:view_settings",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 4,
+      "parent_id": 32
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 40,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-24 17:03:44.008660",
+      "modificationDate": "2021-08-24 17:03:44.008660",
+      "name": "Birim Listesi",
+      "url": "ekabis:view_units",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 5,
+      "parent_id": 32
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 41,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-25 00:20:47.570454",
+      "modificationDate": "2021-09-08 03:28:28.848717",
+      "name": "Onlisans Dosya Tanım Listesi",
+      "url": "ekabis:view_associate_file_name",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 3,
+      "parent_id": 47
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 42,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-30 10:58:07.421887",
+      "modificationDate": "2021-09-08 03:26:40.301624",
+      "name": "Başvuru Dosya Tanım Listesi",
+      "url": "ekabis:view_yekaapplicationfilename",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 2,
+      "parent_id": 47
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 43,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-08-30 23:59:48.167834",
+      "modificationDate": "2021-08-30 23:59:48.167834",
+      "name": "Yardım Metni Listesi",
+      "url": "ekabis:view_help_text",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 5,
+      "parent_id": 32
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 44,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:54:40.146303",
+      "modificationDate": "2021-09-08 01:54:40.146303",
+      "name": "Raporlar",
+      "url": null,
+      "is_parent": 1,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 5,
+     "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 45,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:56:21.755858",
+      "modificationDate": "2021-09-08 01:56:21.755858",
+      "name": "Rapor Listesi",
+      "url": "ekabis:view_report",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 1,
+      "parent_id": 44
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 46,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 01:59:58.251147",
+      "modificationDate": "2021-09-15 15:32:07.011264",
+      "name": "Başvuru Ekle",
+      "url": "ekabis:company_aplication",
+      "is_parent": 0,
+      "is_show": 1,
+      "fa_icon": null,
+      "sorting": 7,
+      "parent_id": 2
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 47,
+    "fields": {
+      "isDeleted": 0,
+      "creationDate": "2021-09-08 03:25:43.770260",
+      "modificationDate": "2021-09-08 03:25:43.770260",
+      "name": "Dosya Tanımı",
+      "url": null,
+      "is_parent": 1,
+      "is_show": 1,
+      "sorting": 5,
+     "parent_id": null
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 48,
+    "fields": {
+      "creationDate": "2021-09-22 17:15:38.844760",
+      "modificationDate": "2021-09-22 17:18:30.032592",
+      "name": "Fabrika Dosya Tanımı",
+      "url": "ekabis:views_factory_file_name",
+      "is_parent": 0,
+      "is_show": 1,
+      "sorting": 5,
+      "parent_id": 47
+    }
+  },
+  {
+    "model": "ekabis.menu",
+    "pk": 49,
+    "fields": {
+      "creationDate": "2021-10-21 16:18:02.958013",
+      "modificationDate": "2021-10-21 16:19:51.768857",
+      "name": "Genel Raporlama",
+      "url": "ekabis:general_reporting",
+      "is_parent": 0,
+      "is_show": 1,
+      "sorting": 1,
+      "parent_id": 44
+    }
+  }
+]

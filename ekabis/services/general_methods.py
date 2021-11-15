@@ -111,14 +111,19 @@ def control_access(request):
         aktifgroup = ActiveGroupGetService(request, groupfilter).group
         for perm in PermissionGroup.objects.filter(group=aktifgroup, is_active=True):
             if request.resolver_match.url_name == perm.permissions.codename:
-                print('Okey')
+                print('Okay')
                 is_exist = True
     else:
-        aktifgroup = ActiveGroup(
-            user=request.user,
-            group=request.user.groups.all()[0]
-        )
-        aktifgroup.save()
+        if request.user.groups.all():
+            aktifgroup = ActiveGroup(
+                user=request.user,
+                group=request.user.groups.all()[0]
+            )
+            aktifgroup.save()
+        else:
+            logout(request)
+            return is_exist
+
     if request.user.groups.filter(name="Admin"):
         is_exist = True
     return is_exist
@@ -136,9 +141,14 @@ def aktif(request):
         aktifgroup = None
 
         if not (ActiveGroupService(request, activfilter)):
-            aktifgroup = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
-            aktifgroup.save()
-            aktif = aktifgroup.group.name
+            if request.user.groups.all():
+                aktifgroup = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
+                aktifgroup.save()
+                aktif = aktifgroup.group.name
+            else:
+                logout(request)
+                return redirect('accounts:login')
+
         else:
             activfilter = {
                 'user': request.user
@@ -174,9 +184,13 @@ def controlGroup(request):
             'user': request.user
         }
         if not (ActiveGroupService(request, activfilter)):
-            aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
-            aktive.save()
-            active = request.user.groups.all()[0].name
+            if request.user.groups.all():
+                aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
+                aktive.save()
+                active = request.user.groups.all()[0].name
+            else:
+                logout(request)
+                return redirect('accounts:login')
 
         else:
             activfilter = {
@@ -487,48 +501,30 @@ def add_block(request):
         return redirect('ekabis:view_admin')
 
 
-@api_view(http_method_names=['GET'])
 def initial_data(request):
-    if request.method == 'GET':
-        perm = control_access(request)
-        if not perm:
-            logout(request)
-            return redirect('accounts:login')
-        try:
-            user = request.user
-            if user.is_superuser:
-                settings = Settings.objects.all()
-                if not settings:
-                    setting = Settings(key='maintenance', value=False)
-                    setting.save()
-                    setting = Settings(key='mail_companyuser', value=False)
-                    setting.save()
-                    setting = Settings(key='mail_person', value=False)
-                    setting.save()
-                    setting = Settings(key='mail_company_user', value=False)
-                    setting.save()
-                    setting = Settings(key='failed_login', value=2, label='Başarısız Giriş Sayısı')
-                    setting.save()
-                    setting = Settings(key='failed_time', value=2, label='Başarısız Giriş Bekleme Süresi')
-                    setting.save()
-                    setting = Settings(key='logout_time', value=60, label='Oturum Açık Kalma Süresi')
-                    setting.save()
+    try:
+        settings = Settings.objects.all()
+        if not settings:
+            setting = Settings(key='maintenance', value=False)
+            setting.save()
+            setting = Settings(key='mail_companyuser', value=False)
+            setting.save()
+            setting = Settings(key='mail_person', value=False)
+            setting.save()
+            setting = Settings(key='mail_company_user', value=False)
+            setting.save()
+            setting = Settings(key='failed_login', value=2, label='Başarısız Giriş Sayısı')
+            setting.save()
+            setting = Settings(key='failed_time', value=2, label='Başarısız Giriş Bekleme Süresi')
+            setting.save()
+            setting = Settings(key='logout_time', value=60, label='Oturum Açık Kalma Süresi')
+            setting.save()
+            return redirect('ekabis:initial_data_success_page')
+        else:
+            return redirect('ekabis:initial_data_error_page')
+    except Exception as e:
+        traceback.print_exc()
+        return redirect('ekabis:initial_data_error_page')
 
-                    if not Group.objects.all():
-                        group = Group(name='Admin')
-                        group.save()
-                        group = Group(name='Personel')
-                        group.save()
-                        group = Group(name='Firma')
-                        group.save()
-                    if not user.groups.filter(name='Admin'):
-                        group = Group.objects.get('Admin')
-                        group.user_set.add(user)
-                        active = ActiveGroup(user=user, group=group)
-                        active.save()
 
-                    return redirect('ekabis:initial_data_success_page')
-                return redirect('ekabis:initial_data_error_page')
-        except Exception as e:
-            traceback.print_exc()
-            return redirect('ekabis:view_admin')
+
