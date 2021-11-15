@@ -51,6 +51,13 @@ def add_employee(request):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
+        user_form.fields['email'].widget.attrs['disabled'] = True
+        person_form.fields['tc'].widget.attrs['disabled'] = True
+        user_form.fields['first_name'].widget.attrs['disabled'] = True
+        user_form.fields['last_name'].widget.attrs['disabled'] = True
+        communication_form.fields['phoneNumber'].widget.attrs['disabled'] = True
+
+
         with transaction.atomic():
             if request.method == 'POST':
                 user_form = UserForm(request.POST)
@@ -495,3 +502,21 @@ def updateRefereeProfile(request):
                   {'user_form': user_form, 'communication_form': communication_form,
                    'person_form': person_form, 'password_form': password_form, 'error_messages': '', 'urls': urls,
                    'current_url': current_url, 'url_name': url_name})
+@login_required
+def search_person(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                print('basarılı')
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except Exception as e:
+        return JsonResponse({'status': 'Fail', 'msg': e})
