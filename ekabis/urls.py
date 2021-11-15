@@ -519,5 +519,6 @@ urlpatterns = [
 
     path('yeka/initial_data_success/', DashboardViews.success_initial_data, name='initial_data_success_page'),
     path('yeka/initial_data_error/', DashboardViews.error_initial_data, name='initial_data_error_page'),
+    path('yeka/search_person/', EmployeeViews.search_person, name='search_person'),
 
 ]
