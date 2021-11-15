@@ -39,6 +39,11 @@ DATABASES = {
 }
 
 
+LDAP_URL = 'https://api.enerji.gov.tr/apigateway/merkezi-ldap-api'
+LDAP_USERNAME = 'yekabis_user'
+LDAP_PASSWORD = 'YeC@38c47c15!!'
+LDAP_SECRET = 'deneme'
+
 STATIC_ROOT = "C:/Bitnami/djangostack-2.2.12-0/apache2/htdocs/static/"
 
 STAICFILES_DIR = [

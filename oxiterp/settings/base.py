@@ -89,8 +89,6 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
 
-
-
 }
 
 WSGI_APPLICATION = 'oxiterp.wsgi.application'
@@ -173,3 +171,8 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+LDAP_URL = 'https://api.enerji.gov.tr/apigateway/merkezi-ldap-api'
+LDAP_USERNAME = 'yekabis_user'
+LDAP_PASSWORD = 'YeC@38c47c15!!'
+LDAP_SECRET = 'deneme'
