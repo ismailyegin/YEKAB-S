@@ -51,11 +51,11 @@ def add_employee(request):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
-        user_form.fields['email'].widget.attrs['disabled'] = True
-        person_form.fields['tc'].widget.attrs['disabled'] = True
-        user_form.fields['first_name'].widget.attrs['disabled'] = True
-        user_form.fields['last_name'].widget.attrs['disabled'] = True
-        communication_form.fields['phoneNumber'].widget.attrs['disabled'] = True
+        # user_form.fields['email'].widget.attrs['disabled'] = True
+        #person_form.fields['tc'].widget.attrs['disabled'] = True
+        #user_form.fields['first_name'].widget.attrs['disabled'] = True
+        #user_form.fields['last_name'].widget.attrs['disabled'] = True
+        #communication_form.fields['phoneNumber'].widget.attrs['disabled'] = True
 
 
         with transaction.atomic():

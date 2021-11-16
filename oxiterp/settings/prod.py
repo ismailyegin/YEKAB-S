@@ -33,15 +33,16 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'sp000dbo-scan/kdstdw',
-        'USER': 'yekabis',
-        'PASSWORD': 'Yebis1759Ka',        
+        'USER': 'ekabis',
+        'PASSWORD': 'qwerty1234',        
     }
 }
 
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/home/yekadmin/static/'
-LDAP_URL = 'https://api.enerji.gov.tr/apigateway/merkezi-ldap-api'
+#LDAP_URL = 'https://api.enerji.gov.tr/apigateway/merkezi-ldap-api'
+LDAP_URL = 'https://servisetkb.enerji.gov.tr/etkb/servis/epassport-gateway'
 LDAP_USERNAME = 'yekabis_user'
 LDAP_PASSWORD = 'YeC@38c47c15!!'
 LDAP_SECRET = 'deneme'

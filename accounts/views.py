@@ -45,7 +45,7 @@ def login(request):
                 'user': login_user
             }
 
-            if is_auth and login_user is not None:
+            if login_user is not None:
 
                 active_user = None
                 if login_user.is_superuser:

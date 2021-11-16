@@ -73,7 +73,7 @@ def auth(username, password):
     base64_string = base64_bytes.decode("ascii")
 
     headers = {'Authorization': 'Basic ' + auth_header, 'user_username': username, 'user_password': base64_string}
-    response = requests.post(settings.LDAP_URL + '/api/kullanici/authanticate', headers=headers)
+    response = requests.post(settings.LDAP_URL + '/api/kullanici/authenticate', headers=headers)
 
     response_data = response.json()
     is_auth = response_data.get('basariliMi')
