@@ -14,7 +14,7 @@ from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import last_urls, HelpMenuGetService
 
-
+# Add help text for each page
 @login_required
 def help_text_add(request):
     perm = general_methods.control_access(request)

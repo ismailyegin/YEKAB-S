@@ -14,7 +14,7 @@ from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import GroupService, PermissionService, PermissionGroupService, GroupGetService, last_urls
 
-
+# add a group to the system
 @login_required
 def add_group(request):
     perm = general_methods.control_access(request)
@@ -77,7 +77,7 @@ def return_list_group(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_group')
 
-
+# group update to system
 @login_required
 def return_update_group(request, pk):
     perm = general_methods.control_access(request)
@@ -117,7 +117,7 @@ def return_update_group(request, pk):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
-
+# group permission update
 def change_groupPermission(request, pk):
     perm = general_methods.control_access(request)
     active = general_methods.controlGroup(request)

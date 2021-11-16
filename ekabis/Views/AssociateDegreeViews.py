@@ -22,7 +22,7 @@ from ekabis.services.general_methods import get_error_messages, get_client_ip
 from ekabis.services.services import last_urls, AssociateFileNameService, AssociateFileNameGetService, \
     AssociateFileGetService
 
-
+# Adding the document name of the associate degree business plan
 @login_required
 def add_associate_file_name(request):
     perm = general_methods.control_access(request)
@@ -60,7 +60,7 @@ def add_associate_file_name(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_associate_file_name')
 
-
+# Listing the document name of the associate degree business plan
 @login_required
 def view_associate_file_name(request):
     urls = last_urls(request)
@@ -69,8 +69,7 @@ def view_associate_file_name(request):
     file_names = AssociateFileNameService(request, None)
     return render(request, 'AssociateDegree/view_associate_filename.html',
                   {'file_names': file_names, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
-
-
+# update document name of factory business block
 @login_required
 def change_factory_file_name(request, uuid):
     perm = general_methods.control_access(request)
@@ -112,7 +111,7 @@ def change_factory_file_name(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_associate_file_name')
 
-
+# deleting the document name of the associate degree business plan
 @login_required
 def delete_associate_file_name(request):
     perm = general_methods.control_access(request)
@@ -147,7 +146,7 @@ def delete_associate_file_name(request):
 
         return redirect('ekabis:view_associate_file_name')
 
-
+# YEKA's associate degree work block information
 @login_required
 def view_yeka_associate_degree(request, business, businessblog):
     perm = general_methods.control_access(request)
@@ -184,7 +183,7 @@ def view_yeka_associate_degree(request, business, businessblog):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-
+# add document to associate degree business block
 @login_required
 def add_associate_file(request, uuid):
     perm = general_methods.control_access(request)
@@ -235,7 +234,7 @@ def add_associate_file(request, uuid):
         return redirect('ekabis:view_yeka_associate_degree_file', yeka_associate.business.uuid,
                         yeka_associate.yekabusinessblog.uuid)
 
-
+# change document to associate degree business block
 @login_required
 def change_associate_file(request, uuid, yeka_associate):
     perm = general_methods.control_access(request)
@@ -282,7 +281,7 @@ def change_associate_file(request, uuid, yeka_associate):
         return redirect('ekabis:view_yeka_associate_degree_file', yeka_associate.business.uuid,
                         yeka_associate.yekabusinessblog.uuid)
 
-
+# delete document to associate degree business block
 @login_required
 def delete_associate_file(request):
     perm = general_methods.control_access(request)

@@ -6,7 +6,7 @@ from ekabis.models.District import District
 from ekabis.serializers.DistrictSerializer import DistrictSerializer
 from ekabis.serializers.NeighborhoodSerializer import NeighborhoodSerializer
 
-
+# Fetch county by city id
 @api_view(http_method_names=['POST'])
 def get_districts(request):
     if request.POST:
@@ -31,7 +31,7 @@ def get_districts(request):
         except Exception as e:
 
             return JsonResponse({'status': 'Fail', 'msg': e})
-
+# Fetch neighborhood by county id
 @api_view(http_method_names=['POST'])
 def get_neighborhood(request):
     if request.POST:

@@ -23,7 +23,7 @@ from ekabis.services import general_methods
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaBusinessGetService, last_urls
 
-
+# Creating a YEKA business plan
 @login_required
 def add_yekabusiness(request, uuid):
     business = BusinessBlog.objects.filter(isDeleted=False)
@@ -45,12 +45,13 @@ def add_yekabusiness(request, uuid):
                         blogs = request.POST.get('businessblog').split("-")
                         parent = YekaBusinessBlog.objects.none()
                         blog = None
+                        # dependencies are created according to the order added when adding the block
                         for i in range(len(blogs)):
                             if i == 0:
                                 blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
                                                         sorting=i + 1)
                                 blog.save()
-                                parent = blog
+                                parent = blog # the state of being connected to each other
 
 
                             else:
@@ -93,7 +94,7 @@ def add_yekabusiness(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yekabusiness')
 
-
+# delete parameter of block
 @login_required
 def delete_businessBlogParametre(request):
     perm = general_methods.control_access(request)
@@ -121,7 +122,7 @@ def delete_businessBlogParametre(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_businessBlog')
 
-
+#delete business block
 @login_required
 def delete_businessBlog(request):
     perm = general_methods.control_access(request)
@@ -155,7 +156,7 @@ def delete_businessBlog(request):
 
         return redirect('ekabis:view_businessBlog')
 
-
+# add a parameter to the block
 @login_required
 def add_businessBlogParametre(request, uuid):
     business_form = BusinessBlogParametreForm()
@@ -205,7 +206,7 @@ def view_businessBlog(request):
     return render(request, 'Yeka/businessBlogList.html',
                   {'business_blog': business_blog, 'urls': urls, 'current_url': current_url, 'url_name': url_name.name})
 
-
+# add business block
 @login_required
 def add_businessBlog(request):
     business_form = BusinessBlogForm()
@@ -239,7 +240,7 @@ def add_businessBlog(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_businessBlog')
 
-
+# business block update
 @login_required
 def change_businessBlog(request, uuid):
     business = BusinessBlog.objects.get(uuid=uuid)
@@ -290,7 +291,7 @@ def change_businessBlog(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_businessBlog')
 
-
+# parameter update of business block
 @login_required
 def change_businessBlogParametre(request, uuid, uuidparametre):
     parametre = BusinessBlogParametreType.objects.get(uuid=uuidparametre)
@@ -324,7 +325,7 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_businessBlog')
 
-
+# business plan update
 @login_required
 def change_yekabusiness(request, uuid, yeka):
     try:

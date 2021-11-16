@@ -20,9 +20,9 @@ from ekabis.services.services import last_urls, YekaBusinessBlogGetService, Busi
     YekaBusinessGetService
 
 
+# Add Production Quantity where Purchase Guarantee is "Quantity"
 @login_required
 def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
-    # Alım Garantisinin "Miktar" olduğu durumlarda Üretim Miktarı ekleme
     form = ProduceAmountForm()
     try:
         urls = last_urls(request)
@@ -84,7 +84,7 @@ def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-
+# added production quantities for the work block
 @login_required
 def view_business_block_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
     perm = general_methods.control_access(request)
@@ -124,7 +124,7 @@ def view_business_block_produce_amount(request, yeka_business_uuid, yeka_busines
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-
+# update the production quantities added for the work block
 @login_required
 def change_produce_amount(request, uuid, yeka_business_uuid):
     try:
@@ -175,7 +175,7 @@ def change_produce_amount(request, uuid, yeka_business_uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-
+# deletion of production quantity
 @login_required
 def delete_produce_amount(request):
     perm = general_methods.control_access(request)

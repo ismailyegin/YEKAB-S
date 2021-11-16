@@ -50,6 +50,7 @@ def change_permission(request,uuid):
         # Bu alan sistem çalışmasından sonra silinecegi icin kod düzenlemsinde cast edilmesinde önem verilmedi
         urls = []
         from ekabis.urls import urlpatterns
+        view_url=""
         for urlpattern in urlpatterns:
             if urlpattern.name==permission.codename:
                 view_url=urlpattern.lookup_str
