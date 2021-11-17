@@ -50,6 +50,10 @@ def add_neighborhood():
             neighborhood_name = value[0].split(';')[3].split('->')[0]
             district_name = value[0].split(';')[5].split('->')[1].split(' ')[1]
             city_name = value[0].split(';')[5].split('->')[0]
+            print(city_name)
+            print(district_name)
+            print(neighborhood_name)
+          
             city = City.objects.get(name=city_name)
             district = District.objects.filter(city=city, name=district_name)
             if district:
