@@ -8,7 +8,7 @@ class ConnectionRegionForm(BaseForm):
         model = ConnectionRegion
         fields = ('name', 'capacity',)
 
-        labels = {'name': 'Bağlantı Bölgesi *','capacity':'Kapasite (MWe) *',}
+        labels = {'name': 'Bağlantı Bölgesi *','capacity':'Kapasite (MWe) *'}
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),
             'capacity': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),

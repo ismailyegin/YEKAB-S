@@ -220,7 +220,7 @@ def add_connectionRegion(request,uuid):
 
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
 
 
@@ -341,4 +341,6 @@ def update_region(request, uuid,yeka):
                           {'region_form': region_form, 'error_messages': '', 'units': '','urls': urls, 'current_url': current_url, 'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, e)
+        return redirect('ekabis:view_yeka')
+
