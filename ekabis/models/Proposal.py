@@ -17,7 +17,7 @@ class Proposal(BaseModel):
     location = models.ManyToManyField(Location)
     farm_form = models.FileField(null=True, blank=True)
     status = models.BooleanField(default=False)
-    name = models.TextField(blank=False, null=False, verbose_name='Aday Yeka')
+    name = models.CharField(max_length=250,blank=False, null=False, verbose_name='Aday Yeka')
     # Kurum önerileri
     institution = models.ManyToManyField(ProposalInstitution)
     kml_file = models.FileField(null=True, blank=True, verbose_name='KML Dosyası', upload_to="aday_yeka/",

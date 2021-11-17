@@ -8,7 +8,7 @@ from ekabis.models.BaseModel import BaseModel
 
 
 class YekaCompetition(BaseModel):
-    name = models.TextField(blank=False, null=False, verbose_name='Yeka Yarışması')
+    name = models.CharField(max_length=250,blank=False, null=False, verbose_name='Yeka Yarışması')
     capacity = models.IntegerField(null=False, blank=False, verbose_name='Kapasite')
     date = models.DateField(blank=True, null=True)
     city = models.ManyToManyField(City)
