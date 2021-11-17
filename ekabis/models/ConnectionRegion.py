@@ -6,7 +6,7 @@ from ekabis.models.YekaCompetition import YekaCompetition
 from ekabis.models.City import City
 
 class ConnectionRegion(BaseModel):
-    name = models.TextField(blank=False, null=False, verbose_name='Bağlantı Bölgesi')
+    name = models.CharField(blank=False, null=False, max_length=255 verbose_name='Bağlantı Bölgesi')
     capacity = models.IntegerField(null=False, blank=False, verbose_name='Kapasite')
     cities=models.ManyToManyField(City)
     yekacompetition=models.ManyToManyField(YekaCompetition,related_name='competition_regions')
