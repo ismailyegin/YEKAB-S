@@ -520,11 +520,11 @@ urlpatterns = [
     path('yeka/initial_data_success/', DashboardViews.success_initial_data, name='initial_data_success_page'),
     path('yeka/initial_data_error/', DashboardViews.error_initial_data, name='initial_data_error_page'),
     path('yeka/search_person/', EmployeeViews.search_person, name='search_person'),
-    path('yeka/il/', CityViews.add_city, name='city_add'),
-    path('yeka/ilce/', CityViews.add_district, name='´district_add'),
-    path('yeka/mahalle/', CityViews.add_neighborhood, name='neighborhood_add'),
-    path('yeka/is-bloklari/', BusinessBlogViews.data_business_blog, name='business_block_add'),
-    path('yeka/is-blok-parametre/', BusinessBlogViews.data_parameter, name='data_business_block_parameter'),
-    path('yeka/is-blok-parametre-id/', BusinessBlogViews.data_parameter_block_id, name='data_block_parameter_id'),
+    # path('yeka/il/', CityViews.add_city, name='city_add'),
+    # path('yeka/ilce/', CityViews.add_district, name='´district_add'),
+    # path('yeka/mahalle/', CityViews.add_neighborhood, name='neighborhood_add'),
+    # path('yeka/is-bloklari/', BusinessBlogViews.data_business_blog, name='business_block_add'),
+    # path('yeka/is-blok-parametre/', BusinessBlogViews.data_parameter, name='data_business_block_parameter'),
+    # path('yeka/is-blok-parametre-id/', BusinessBlogViews.data_parameter_block_id, name='data_block_parameter_id'),
 
 ]
