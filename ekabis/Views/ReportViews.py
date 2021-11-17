@@ -162,7 +162,7 @@ def view_report(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-
+# reporting the information of YEKA in the system with a general table
 def general_reporting(request):
     try:
         with connection.cursor() as cursor:
@@ -272,6 +272,7 @@ def general_reporting(request):
                     competititon = YekaCompetition.objects.get(pk=result['yarisma_id'])
                     for parameter in parameters:
                         parameter_dict[parameter.title] = None
+                    # We delete the column names that do not want to appear in the table.
                     result.pop('blok_id')
                     result.pop('yarisma_id')
                     result.pop('yeka_business_block_id')
@@ -295,7 +296,7 @@ def general_reporting(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-
+# will return all matching records in ** dictionary list** format with key, value
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
     columns = [col[0] for col in cursor.description]
@@ -304,7 +305,7 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
-
+# making column naming of general reporting
 def table_column_name(results):
     try:
         key_array = []
@@ -436,11 +437,6 @@ def table_column_name(results):
         result_dict['results'] = new_result
         result_dict['key_array'] = key_array
         return result_dict
-
-
-
-
-
 
     except Exception as e:
 

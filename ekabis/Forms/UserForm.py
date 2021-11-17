@@ -11,17 +11,22 @@ from ekabis.Forms.BaseForm import BaseForm
 class UserForm(BaseForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'is_active')
-        labels = {'first_name': 'İsim *', 'last_name': 'Soyisim *', 'email': 'Email *'}
+        fields = ('first_name', 'last_name', 'email', 'is_active', 'username')
+        labels = {'first_name': 'İsim *', 'last_name': 'Soyisim *', 'email': 'Email *', 'username': 'Kullanıcı Adı*'}
         widgets = {
             'first_name': forms.TextInput(
-                attrs={'class': 'form-control ', 'value': '', "style": "text-transform:uppercase",'required': 'required'
+                attrs={'class': 'form-control ', 'value': '', "style": "text-transform:uppercase",
+                       'required': 'required'
                        }),
             'last_name': forms.TextInput(
-                attrs={'class': 'form-control ',  "style": "text-transform:uppercase",'required': 'required'}),
+                attrs={'class': 'form-control ', "style": "text-transform:uppercase", 'required': 'required'}),
             'email': forms.EmailInput(attrs={'class': 'form-control ', 'required': 'required'}),
 
             'is_active': forms.CheckboxInput(attrs={'class': 'iCheck-helper'}),
+            'username': forms.TextInput(
+                attrs={'class': 'form-control ', 'value': '',
+                       'required': 'required', 'placeholder': 'kullanıcıadı@enerji.local'
+                       }),
 
         }
 

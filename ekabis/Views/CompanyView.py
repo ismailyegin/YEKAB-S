@@ -43,8 +43,9 @@ def return_add_Company(request):
         with transaction.atomic():
             if request.method == 'POST':
 
-                company_form = CompanyFormDinamik(request.POST, request.FILES)
-                communication_form = CommunicationForm(request.POST, request.FILES)
+                company_form = CompanyFormDinamik(request.POST,
+                                                  request.FILES)  # Dynamically added file form of the company
+                communication_form = CommunicationForm(request.POST, request.FILES)  # Company contact information form
                 if company_form.is_valid() and communication_form.is_valid():
                     communication = communication_form.save(request, commit=False)
                     communication.save()
@@ -62,6 +63,7 @@ def return_add_Company(request):
                     messages.success(request, 'Firma Kayıt Edilmiştir.')
                     return redirect('ekabis:view_company')
                 else:
+                    # Error messages returned from the form
                     error_message_company = get_error_messages(company_form)
                     error_messages_communication = get_error_messages(communication_form)
 
@@ -248,6 +250,7 @@ def add_company_user(request):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_company')
+
 
 @login_required
 # user is assigned to the company in the system

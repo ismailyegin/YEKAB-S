@@ -85,15 +85,15 @@ def login(request):
                             return redirect('ekabis:view_admin')
                     person = Person.objects.get(user=login_user)
 
-                    if datetime.datetime.now() - person.failed_time < datetime.timedelta(
-                            minutes=int(Settings.objects.get(key='failed_time').value)):
-                        messages.warning(request, 'Çok Fazla Hatalı Girişten Dolayı ' + str(
-                            datetime.datetime.now() - person.failed_time) + ' dk beklemelisiniz.')
-
-                        return render(request, 'registration/login.html')
-                    else:
-                        person.failed_login = 0
-                        person.save()
+                    # if datetime.datetime.now() - person.failed_time < datetime.timedelta(
+                    #         minutes=int(Settings.objects.get(key='failed_time').value)):
+                    #     messages.warning(request, 'Çok Fazla Hatalı Girişten Dolayı ' + str(
+                    #         datetime.datetime.now() - person.failed_time) + ' dk beklemelisiniz.')
+                    #
+                    #     return render(request, 'registration/login.html')
+                    # else:
+                    #     person.failed_login = 0
+                    #     person.save()
                     active = ActiveGroupGetService(request, filter)
                     if not active:
                         if login_user.groups.all():

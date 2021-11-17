@@ -21,6 +21,7 @@ from ekabis.services.general_methods import get_error_messages, log, log_model, 
 from ekabis.services.services import VacationDayService, VacationDayGetService, last_urls
 
 
+# Adding holidays to be used in the system
 @login_required
 def add_vacation_day(request):
     perm = general_methods.control_access(request)
@@ -106,6 +107,7 @@ def return_vacation_day(request):
                   {'days': days, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
 
 
+# Added holiday deletion
 @login_required
 def delete_vacation_date(request):
     perm = general_methods.control_access(request)
@@ -139,6 +141,7 @@ def delete_vacation_date(request):
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
 
 
+# Added holiday update
 @login_required
 def update_vacation_date(request, uuid):
     perm = general_methods.control_access(request)
@@ -166,7 +169,7 @@ def update_vacation_date(request, uuid):
                     day.definition = vacation_form.cleaned_data['definition']
                     day.date = vacation_form.cleaned_data['date']
                     day.save()
-                    data_as_json_next = serializers.serialize('json',  VacationDay.objects.filter(pk=day.pk))
+                    data_as_json_next = serializers.serialize('json', VacationDay.objects.filter(pk=day.pk))
                     log = log_model(request, day_as_json_pre, data_as_json_next)
                     messages.success(request, 'Tatil Günü Güncellenmiştir')
                     return redirect('ekabis:vacation_days')
@@ -187,8 +190,7 @@ def update_vacation_date(request, uuid):
         return redirect('ekabis:vacation_days')
 
 
-
-
+# Query whether the incoming date is a holiday
 def is_vacation_day(date):
     vacation_date = VacationDay.objects.filter(isDeleted=False)
     vacation_date_array = []
