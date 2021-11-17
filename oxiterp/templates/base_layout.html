@@ -109,7 +109,7 @@
 
     <!-- Preloader -->
     <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="{% static 'images/yekabis-logo.png' %}" alt="YEKABİS" height="60"
+        <img class="animation__shake" src="{% static 'yekabis-logo.png' %}" alt="YEKABİS" height="60"
              width="60" style="display: none">
     </div>
     <!-- Navbar -->
@@ -263,7 +263,7 @@
                     {% if person.profileImage %}
 
                         <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"
-                             src="/yekabis/media/{{ person.profileImage }}">
+                             src="{% static 'dist/img/user_logo.png' %}">
 
                     {% else %}
                         <img alt="İmage" style="height: 30px; width: 30px;" class="rounded-circle"
@@ -276,7 +276,7 @@
                         {% if person.profileImage %}
 
                             <img alt="İmage" style="height: 100px; width: 100px;" class="rounded-circle"
-                                 src="/yekabis/media/{{ person.profileImage }}">
+                                src="{% static 'dist/img/user_logo.png' %}">
 
                         {% else %}
                             <img alt="İmage" style="height: 100px; width: 100px;" class="rounded-circle"
@@ -351,7 +351,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="#" class="brand-link">
-            <img src="{% static 'images/yekabis-logo.png' %}" alt="Yekabis"
+            <img src="{% static 'yekabis-logo.png' %}" alt="Yekabis"
                  class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">YEKABİS</span>
         </a>
@@ -428,7 +428,7 @@
 
                     {% if aktif == 'Admin' %}
                         <div class="modal-footer">
-                          
+
                         </div>
 
 
@@ -569,6 +569,14 @@
         console.log(text)
 
     }
+
+    $('#valid').on('click', function () {
+
+        const ans = captcha.valid($('input[name="code"]').val());
+
+
+    })
+
 
     $(function () {
 
