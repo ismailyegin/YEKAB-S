@@ -199,7 +199,7 @@ def add_businessBlogParametre(request, uuid):
 
 @login_required
 def view_businessBlog(request):
-    business_blog = BusinessBlog.objects.filter(isDeleted=False)
+    business_blog = BusinessBlog.objects.filter(isDeleted=False).order_by('id')
     urls = last_urls(request)
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
@@ -451,51 +451,3 @@ def delete_yekabusiness(request):
         return redirect('ekabis:view_businessBlog')
 
 
-def data_business_blog(request):
-    import pandas
-    try:
-
-        df = pandas.read_csv('business_blocks.csv')
-        for value in df.values:
-            name = value[0]
-            block=BusinessBlog(name=name)
-            block.save()
-        return redirect('ekabis:initial_data_success_page')
-
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-def data_parameter(request):
-    import pandas
-    try:
-
-        df = pandas.read_csv('parameter.csv')
-        for value in df.values:
-            data = value[0].split(';')
-            block=BusinessBlogParametreType(title=data[0],type=data[1].split('"')[1])
-            block.save()
-        return redirect('ekabis:initial_data_success_page')
-
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:initial_data_error_page')
-
-
-def data_parameter_block_id(request):
-    import pandas
-    try:
-
-        df = pandas.read_csv('block_parametre_id.csv')
-        for value in df.values:
-            data = value[0].split(';')
-            block=BusinessBlog.objects.get(pk=int(data[0]))
-            parametre=BusinessBlogParametreType.objects.get(pk=int(data[1]))
-            block.parametre.add(parametre)
-            block.save()
-        return redirect('ekabis:initial_data_success_page')
-
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:initial_data_error_page')
