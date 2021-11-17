@@ -49,7 +49,7 @@ def add_neighborhood():
         for value in df.values:
             neighborhood_name = value[0].split(';')[3].split('->')[0]
             district_name = value[0].split(';')[5].split('->')[1].split(' ')[1]
-            city_name = value[0].split(';')[5].split('->')[0]
+            city_name = value[0].split(';')[5].split('->')[0].strip()
             print(city_name)
             print(district_name)
             print(neighborhood_name)
