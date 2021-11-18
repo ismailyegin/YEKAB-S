@@ -853,53 +853,55 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                     yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 if yekabussiness.completion_date:
-                    dependence_block = YekaBusinessBlog.objects.get(dependence_parent=yekabussiness)
-                    x = YekaBusiness.objects.get(businessblogs=dependence_block)
-                    list=x.businessblogs.filter(sorting__gte=dependence_block.sorting)
-                    i = 0
-                    while dependence_block:
-                        if i == 0:
-                            start_date = yekabussiness.completion_date.date()
-                            for block in list:
-                                block.startDate = start_date
-                                if block.time_type == 'is_gunu':
-                                    time = block.businessTime
-                                    add_time = time
+                    dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
+                    if dependence_block:
+                        dependence_block = YekaBusinessBlog.objects.get(dependence_parent=yekabussiness)
+                        x = YekaBusiness.objects.get(businessblogs=dependence_block)
+                        list=x.businessblogs.filter(sorting__gte=dependence_block.sorting)
+                        i = 0
+                        while dependence_block:
+                            if i == 0:
+                                start_date = yekabussiness.completion_date.date()
+                                for block in list:
+                                    block.startDate = start_date
+                                    if block.time_type == 'is_gunu':
+                                        time = block.businessTime
+                                        add_time = time
 
-                                    count = 0
-                                    while add_time > 1:
-                                        start_date = start_date + datetime.timedelta(days=1)
-                                        count = count + 1
-                                        is_vacation = is_vacation_day(start_date)
-                                        if not is_vacation:
-                                            add_time = add_time - 1
-                                else:
-                                    start_date = start_date + datetime.timedelta(days=time)
-                                block.finisDate = start_date
-                                block.save()
-                                dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
-                                i = i + 1
-                                start_date = block.finisDate
-                        else:
+                                        count = 0
+                                        while add_time > 1:
+                                            start_date = start_date + datetime.timedelta(days=1)
+                                            count = count + 1
+                                            is_vacation = is_vacation_day(start_date)
+                                            if not is_vacation:
+                                                add_time = add_time - 1
+                                    else:
+                                        start_date = start_date + datetime.timedelta(days=time)
+                                    block.finisDate = start_date
+                                    block.save()
+                                    dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
+                                    i = i + 1
+                                    start_date = block.finisDate
+                            else:
 
-                            for block in dependence_block:
-                                block.startDate = start_date
-                                if block.time_type == 'is_gunu':
-                                    time = block.businessTime
-                                    add_time = time
-                                    count = 0
-                                    while add_time > 1:
-                                        start_date = start_date + datetime.timedelta(days=1)
-                                        count = count + 1
-                                        is_vacation = is_vacation_day(start_date)
-                                        if not is_vacation:
-                                            add_time = add_time - 1
-                                else:
-                                    start_date = start_date + datetime.timedelta(days=time)
-                                block.finisDate = start_date
-                                block.save()
-                                dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
-                                i = i + 1
+                                for block in dependence_block:
+                                    block.startDate = start_date
+                                    if block.time_type == 'is_gunu':
+                                        time = block.businessTime
+                                        add_time = time
+                                        count = 0
+                                        while add_time > 1:
+                                            start_date = start_date + datetime.timedelta(days=1)
+                                            count = count + 1
+                                            is_vacation = is_vacation_day(start_date)
+                                            if not is_vacation:
+                                                add_time = add_time - 1
+                                    else:
+                                        start_date = start_date + datetime.timedelta(days=time)
+                                    block.finisDate = start_date
+                                    block.save()
+                                    dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
+                                    i = i + 1
                 url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
                 html = '<a style="" href="' + url + '"> ID: ' + str(
                     yekabussiness.pk) +'-'+ str(yekabussiness.businessblog.name) + ' </a> adlı iş bloğu güncellendi.'
