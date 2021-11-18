@@ -3,7 +3,7 @@ from ekabis.models.BaseModel import BaseModel
 
 
 class City(BaseModel):
-    name = models.TextField(blank=True, null=True, verbose_name='Şehir')
+    name = models.CharField(max_length=255,blank=True, null=True, verbose_name='Şehir')
     plateNo = models.CharField(blank=True, null=True, max_length=100)
 
     def __str__(self):

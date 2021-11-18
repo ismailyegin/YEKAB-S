@@ -1120,6 +1120,8 @@ def change_proposal_active(request, business, businessblog):
                         traceback.print_exc()
                 pro_active = ProposalActive.objects.filter(business=yekabusiness)
 
+                return redirect('ekabis:change_yekaproposal', business,businessblog)
+
             return render(request, 'Proposal/change_proposal_active.html',
                           {'pro_active': pro_active,
                            'yekabusiness': yekabusiness, 'businessblog': businessblog, 'business': business,

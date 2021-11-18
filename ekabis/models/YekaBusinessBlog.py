@@ -22,7 +22,7 @@ class YekaBusinessBlog(BaseModel):
     companies = models.ManyToManyField(Company)
     parameter = models.ManyToManyField(YekaBusinessBlogParemetre, null=True, blank=True) #dinamik parametre bilgileri
     indefinite = models.BooleanField(default=False, choices=INDEFINETE_CHOICES)
-    explanation = models.TextField(null=True, blank=True)
+    explanation = models.CharField(max_length=250,null=True, blank=True)
     dependence_parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='depence_parent', null=True,
                                           blank=True)
     completion_date = models.DateTimeField(null=True, blank=True, verbose_name='Tamamlanma Tarihi')
