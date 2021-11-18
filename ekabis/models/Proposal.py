@@ -22,3 +22,6 @@ class Proposal(BaseModel):
     institution = models.ManyToManyField(ProposalInstitution)
     kml_file = models.FileField(null=True, blank=True, verbose_name='KML Dosyası', upload_to="aday_yeka/",
                                 validators=[validate_file_extension])
+
+    def __str__(self):
+        return '%s' % self.name

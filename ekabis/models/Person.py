@@ -53,3 +53,6 @@ class Person(BaseModel):
 
     class Meta:
         default_permissions = ()
+
+    def __str__(self):
+        return '%s' % self.user.get_full_name()

@@ -9,3 +9,5 @@ class YekaBusiness(BaseModel): #Yekaya ya da yarısmaya ait iş planı
     # kazanan firma
     company=models.ForeignKey(Company,on_delete=models.CASCADE,null=True,blank=True)
 
+    def __str__(self):
+        return '%s' % self.name

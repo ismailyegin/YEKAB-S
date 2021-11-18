@@ -13,6 +13,8 @@ class Employee(BaseModel):
     person = models.OneToOneField(Person, on_delete=models.CASCADE, db_column='person', null=False, blank=False)
     communication = models.OneToOneField(Communication, on_delete=models.CASCADE, db_column='communication')
 
+    def __str__(self):
+        return '%s' % self.person.user.get_full_name()
 
     class Meta:
         ordering = ['pk']

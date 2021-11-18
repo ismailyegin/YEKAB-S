@@ -34,3 +34,6 @@ class BusinessBlogParametreType(BaseModel):  # dinamik oluşturulan parametreler
     company_necessary = models.BooleanField(default=False, choices=COMPANY_CHOICES)
     is_change = models.BooleanField(null=True, blank=True, choices=CHANGE_CHOICES)
     visibility_in_yeka = models.BooleanField(null=True, blank=True,default=True)
+
+    def __str__(self):
+        return '%s' % self.title
