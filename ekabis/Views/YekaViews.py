@@ -1787,7 +1787,8 @@ def company_application(request):
             urls = last_urls(request)
             current_url = resolve(request.path_info)
             url_name = Permission.objects.get(codename=current_url.url_name)
-            yekas = YekaService(request, None)
+
+            yekas = YekaService(request, None).order_by('-creationDate')
 
             return render(request, 'Application/make_company_application.html',
                           {'error_messages': '', 'urls': urls, 'current_url': current_url, 'yekas': yekas,
