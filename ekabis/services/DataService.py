@@ -116,6 +116,7 @@ def data_parameter_block_id():
         df = pandas.read_csv('block_parametre_id.csv')
         for value in df.values:
             data = value[0].split(';')
+            print(data)
             block = BusinessBlog.objects.get(pk=int(data[0]))
             parametre = BusinessBlogParametreType.objects.get(pk=int(data[1]))
             block.parametre.add(parametre)
