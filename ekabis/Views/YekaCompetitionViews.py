@@ -268,6 +268,7 @@ def update_competition(request, region, competition):
             'uuid': competition,
             'isDeleted': False,
         }
+        competition = YekaCompetitionGetService(request, competition_filter)
         filter = {
             'user': user
         }
@@ -276,15 +277,12 @@ def update_competition(request, region, competition):
         employee = Employee.objects.filter(person__user=user)
         if employee:
             employee = Employee.objects.filter(person__user=user)
-            filter_yeka = {
-                'employee': employee
-            }
-            yeka_persons = YekaPersonService(request, filter_yeka)
+            yeka_persons = YekaPerson.objects.filter(employee__in=employee).filter(yeka__connection_region__yekacompetition=competition)
         else:
             yeka_persons = None
 
         active = ActiveGroupGetService(request, filter)
-        competition = YekaCompetitionGetService(request, competition_filter)
+
         name = general_methods.yekaname(competition.business)
 
         if active.group.name == 'Admin':
@@ -349,7 +347,7 @@ def update_competition(request, region, competition):
 
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
 
 

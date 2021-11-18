@@ -914,7 +914,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
     except Exception as e:
 
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
 
 
@@ -1403,7 +1403,7 @@ def view_yeka_detail(request, uuid):
     except Exception as e:
 
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
 
 
