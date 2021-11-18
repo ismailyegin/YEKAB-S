@@ -5,3 +5,6 @@ class CompanyFiles(BaseModel):
 
     filename=models.ForeignKey(CompanyFileNames,on_delete=models.CASCADE)
     file = models.FileField(upload_to='company/', null=True, blank=True,verbose_name='company_files')
+
+    def __str__(self):
+        return '%s' % self.filename

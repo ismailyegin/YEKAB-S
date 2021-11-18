@@ -9,3 +9,5 @@ class BusinessBlog(BaseModel): #Sabit tanımlanan iş bloğu isim ve parametrele
     start_notification=models.IntegerField(null=True,blank=True)
     finish_notification=models.IntegerField(null=True,blank=True)
 
+    def __str__(self):
+        return '%s' % self.name
