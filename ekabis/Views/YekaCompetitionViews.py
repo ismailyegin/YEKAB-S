@@ -31,7 +31,8 @@ from ekabis.services.NotificationServices import notification
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import YekaGetService, ConnectionRegionGetService, YekaCompetitionGetService, \
     YekaBusinessGetService, YekaBusinessBlogGetService, BusinessBlogGetService, YekaCompetitionPersonService, \
-    EmployeeGetService, last_urls, ExtraTimeService, YekaCompetitionService, YekaService, ActiveGroupGetService
+    EmployeeGetService, last_urls, ExtraTimeService, YekaCompetitionService, YekaService, ActiveGroupGetService, \
+    YekaPersonService
 import datetime
 from django.db.models import Sum
 from django.core import serializers
@@ -255,7 +256,6 @@ def update_competition(request, region, competition):
         return redirect('accounts:login')
     try:
         user = request.user
-
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
@@ -268,77 +268,86 @@ def update_competition(request, region, competition):
             'uuid': competition,
             'isDeleted': False,
         }
+        competition = YekaCompetitionGetService(request, competition_filter)
         filter = {
             'user': user
         }
+        make_change = False
+
+        employee = Employee.objects.filter(person__user=user)
+        if employee:
+            employee = Employee.objects.filter(person__user=user)
+            yeka_persons = YekaPerson.objects.filter(employee__in=employee).filter(yeka__connection_region__yekacompetition=competition)
+        else:
+            yeka_persons = None
+
         active = ActiveGroupGetService(request, filter)
-        competition = YekaCompetitionGetService(request, competition_filter)
-        if YekaCompetitionPerson.objects.filter(
-                competition=competition) or active.group.name == 'Admin':  # personel atanmama durumunu kontrol etme atanmamıs ise admin olma ihtimali
-            person_competition = YekaCompetitionPerson.objects.get(competition=competition)
-            if person_competition.employee.person.user == user or active.group.name == 'Admin':  # yarışmaya  personel atanmıs. Request user bu atanan kullanıcı ya da admin mı ?
-                competition_form = YekaCompetitionForm(request.POST or None, instance=competition)
-                with transaction.atomic():
-                    if request.method == 'POST':
-                        if competition_form.is_valid():
-                            competition = competition_form.save(request, commit=False)
 
-                            total = int(
-                                region.yekacompetition.all().exclude(id=competition.id).distinct().aggregate(
-                                    Sum('capacity'))['capacity__sum'] or 0)
-                            total += competition.capacity
+        name = general_methods.yekaname(competition.business)
 
-                            if total > region.capacity:
-                                messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
-                                return render(request, 'YekaCompetition/change_competition.html',
-                                              {'competition_form': competition_form, 'region': region, 'urls': urls,
-                                               'current_url': current_url, 'url_name': url_name,
-                                               'competition': competition,
-                                               })
-                            competition.save()
-                            url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
-                            html = '<a style="" href="' + url + '"> ID : ' + str(
-                                competition.pk) + ' - ' + competition.name + ' </a>  YEKA yarışması güncellendi.'
-                            notification(request, html, competition.uuid, 'yeka_competition')
-                            for item in region.cities.all():
-                                competition.city.add(item)
-                                competition.save()
-                            region.yekacompetition.add(competition)
-                            region.save()
+        if active.group.name == 'Admin':
+            make_change = True
+        elif yeka_persons:
+            make_change = True
+        if make_change:
+            competition_form = YekaCompetitionForm(request.POST or None, instance=competition)
+            with transaction.atomic():
+                if request.method == 'POST':
+                    if competition_form.is_valid():
+                        competition = competition_form.save(request, commit=False)
 
-                            messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
-                            if competition.parent:
-                                return redirect('ekabis:view_yeka_competition_detail', competition.parent.uuid)
-                            else:
-                                return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                        total = int(
+                            region.yekacompetition.all().exclude(id=competition.id).distinct().aggregate(
+                                Sum('capacity'))['capacity__sum'] or 0)
+                        total += competition.capacity
 
-                        else:
-                            error_message_region = get_error_messages(competition_form)
-
+                        if total > region.capacity:
+                            messages.warning(request, 'Yeka Yarışmalarının toplam Kapasitesi Bölgeden Büyük Olamaz')
                             return render(request, 'YekaCompetition/change_competition.html',
-                                          {'competition_form': competition_form, 'region': region,
-                                           'error_messages': error_message_region, 'urls': urls,
-                                           'current_url': current_url,
-                                           'url_name': url_name, 'competition': competition, })
-                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
-                    html = '<a style="" href="' + url + '"> ID: ' + str(
-                        competition.pk) + ' - ' + competition.name + '</a> YEKA yarışması güncellendi.'
-                    notification(request, html, competition.uuid, 'yeka_competition')
-                    return render(request, 'YekaCompetition/change_competition.html',
-                                  {'competition_form': competition_form, 'error_messages': '', 'urls': urls,
-                                   'current_url': current_url, 'url_name': url_name, 'competition': competition,
-                                   'region': region})
-            else:
-                messages.warning(request, 'İşlem yapma yetkiniz yoktur.')
-                return HttpResponseRedirect(urls[0]['last'])
+                                          {'competition_form': competition_form, 'region': region, 'urls': urls,
+                                           'current_url': current_url, 'url_name': url_name,
+                                           'competition': competition,
+                                           })
+                        competition.save()
+                        url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                        html = '<a style="" href="' + url + '"> ID : ' + str(
+                            competition.pk) + ' - ' + competition.name + ' </a>  YEKA yarışması güncellendi.'
+                        notification(request, html, competition.uuid, 'yeka_competition')
+                        for item in region.cities.all():
+                            competition.city.add(item)
+                            competition.save()
+                        region.yekacompetition.add(competition)
+                        region.save()
 
+                        messages.success(request, 'Yeka Yarışması Kayıt Edilmiştir.')
+                        if competition.parent:
+                            return redirect('ekabis:view_yeka_competition_detail', competition.parent.uuid)
+                        else:
+                            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+
+                    else:
+                        error_message_region = get_error_messages(competition_form)
+
+                        return render(request, 'YekaCompetition/change_competition.html',
+                                      {'competition_form': competition_form, 'region': region,
+                                       'error_messages': error_message_region, 'urls': urls,
+                                       'current_url': current_url,'name':name,
+                                       'url_name': url_name, 'competition': competition, })
+                url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                html = '<a style="" href="' + url + '"> ID: ' + str(
+                    competition.pk) + ' - ' + competition.name + '</a> YEKA yarışması güncellendi.'
+                notification(request, html, competition.uuid, 'yeka_competition')
+                return render(request, 'YekaCompetition/change_competition.html',
+                              {'competition_form': competition_form, 'error_messages': '', 'urls': urls,
+                               'current_url': current_url, 'url_name': url_name, 'competition': competition,
+                               'region': region,'name':name})
         else:
             messages.warning(request, 'İşlem yapma yetkiniz yoktur.')
             return HttpResponseRedirect(urls[0]['last'])
 
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
 
 

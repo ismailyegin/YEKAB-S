@@ -13,9 +13,9 @@ import datetime
 
 CHOICES = (('is_gunu', 'İş Günü'), ('takvim_gunu', 'Takvim Günü'),)
 TRUE_FALSE_CHOICES = (
-    ('2', 'Tamamlanmadı'),
-    ('1', 'Tamamlandı'),
     ('3', 'Devam Ediyor'),
+    ('1', 'Tamamlandı'),
+    ('2', 'Tamamlanmadı'),
 
 )
 
@@ -34,7 +34,6 @@ class YekaBusinessBlogForm(ModelForm):
             'status',
             'completion_date',
 
-
         )
         labels = {
             'startDate': 'Başlama Tarihi',
@@ -52,16 +51,17 @@ class YekaBusinessBlogForm(ModelForm):
             'time_type': forms.Select(choices=CHOICES, attrs={'class': 'form-control select2 select2-hidden-accessible',
                                                               'style': 'width: 100%; ', }),
 
-            'status': forms.Select(choices=TRUE_FALSE_CHOICES,attrs={'class': 'form-control select2 select2-hidden-accessible',
-                                          'style': 'width: 100%;', 'value':''}),
+            'status': forms.Select(choices=TRUE_FALSE_CHOICES,
+                                   attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                          'style': 'width: 100%;', 'value': ''}),
             'indefinite': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                               'style': 'width: 100%; '}),
             'startDate': forms.DateInput(
-                attrs={'class': 'form-control  pull-right ','id':'datepicker4', 'autocomplete': 'off',
+                attrs={'class': 'form-control  pull-right ', 'id': 'datepicker4', 'autocomplete': 'off',
                        'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
                        "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
-            'completion_date':forms.DateInput(
-                attrs={'class': 'form-control  pull-right datepicker6','id':'datepicker', 'autocomplete': 'off',
+            'completion_date': forms.DateInput(
+                attrs={'class': 'form-control  pull-right datepicker6', 'id': 'datepicker', 'autocomplete': 'off',
                        'onkeydown': 'return true', "data-inputmask-alias": "datetime",
                        "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
             'explanation': forms.TextInput(

@@ -145,27 +145,28 @@
                                     </thead>
                                     <tbody>
 
-                                    {% for proposal in yekaproposal.proposal.all %}
-                                        <tr>
+                                    {% for proposal in proposal_list %}
+
+                                        <tr style="background: {{ proposal.status }}">
                                             <td>{{ forloop.counter }} </td>
-                                        <td>{{ proposal.name }}</td>
-                                            <td>{{ proposal.date }}</td>
-                                            <td>{{ proposal.capacity }}</td>
+                                        <td>{{ proposal.proposal.name }}</td>
+                                            <td>{{ proposal.proposal.date }}</td>
+                                            <td>{{ proposal.proposal.capacity }}</td>
                                             <td>
-                                                {% if proposal.farm_form %}
+                                                {% if proposal.proposal.farm_form %}
                                                     <a target="_blank"
-                                                       href="{{ MEDIA_URL }}{{ proposal.farm_form.url }}"
-                                                       download="">{{ proposal.farm_form }}</a>
+                                                       href="{{ MEDIA_URL }}{{ proposal.proposal.farm_form.url }}"
+                                                       download="">{{ proposal.proposal.farm_form }}</a>
                                                 {% endif %}
                                             </td>
-                                            <td>{% if proposal.information_form %}
+                                            <td>{% if proposal.proposal.information_form %}
                                                 <a target="_blank"
-                                                   href="{{ MEDIA_URL }}{{ proposal.information_form.url }}"
-                                                   download="">{{ proposal.information_form }}</a>
+                                                   href="{{ MEDIA_URL }}{{ proposal.proposal.information_form.url }}"
+                                                   download="">{{ proposal.proposal.information_form }}</a>
                                             {% endif %}</td>
-                                            <td>{% if proposal.kml_file %}
-                                                <a target="_blank" href="{{ MEDIA_URL }}{{ proposal.kml_file.url }}"
-                                                   download="">{{ proposal.kml_file }}</a></td>
+                                            <td>{% if proposal.proposal.kml_file %}
+                                                <a target="_blank" href="{{ MEDIA_URL }}{{ proposal.proposal.kml_file.url }}"
+                                                   download="">{{ proposal.proposal.kml_file }}</a></td>
                                             {% endif %}
                                             <td>
                                                 <div class="btn-group">
@@ -177,21 +178,21 @@
 
                                                         {% for item in perm %}
                                                             {% if item == 'view_proposal_institution' %}
-                                                                <a href="{% url 'ekabis:view_proposal_institution' yekaproposal.uuid  proposal.uuid %}"
+                                                                <a href="{% url 'ekabis:view_proposal_institution' yekaproposal.uuid  proposal.proposal.uuid %}"
                                                                    class="dropdown-item"> <i
                                                                         class="fa fa-list" title="Kurum Görüşleri"></i>Kurum
                                                                     Görüşleri
                                                                 </a>
 
                                                             {% elif item == 'change_proposal' %}
-                                                                <a href="{% url 'ekabis:change_proposal' yekaproposal.uuid  proposal.uuid %}"
+                                                                <a href="{% url 'ekabis:change_proposal' yekaproposal.uuid  proposal.proposal.uuid %}"
                                                                    class="dropdown-item"> <i
                                                                         class="fa fa-edit" title="Düzenle"></i> Düzenle
                                                                 </a>
 
 
                                                             {% elif item == 'add_coordinate' %}
-                                                                <a href="{% url 'ekabis:add_coordinate' proposal.uuid  yekaproposal.uuid %}"
+                                                                <a href="{% url 'ekabis:add_coordinate' proposal.proposal.uuid  yekaproposal.uuid %}"
                                                                    class="dropdown-item"> <i
                                                                         class="fa fa-search-location"
                                                                         title="Koordinat Listesi"></i>
@@ -200,7 +201,7 @@
 
 
                                                             {% elif item == 'add_location' %}
-                                                                <a href="{% url 'ekabis:add_location' proposal.uuid  yekaproposal.uuid %}"
+                                                                <a href="{% url 'ekabis:add_location' proposal.proposal.uuid  yekaproposal.uuid %}"
                                                                    class="dropdown-item"> <i
                                                                         class="fa fa-location-arrow"
                                                                         title="Konum Listesi"></i>
@@ -212,7 +213,7 @@
 
                                                                 <a class="dropdown-item" href=""
                                                                    data-toggle="modal"
-                                                                   onclick=deleteExtraTime('{{ proposal.uuid }}')><i
+                                                                   onclick=deleteExtraTime('{{ proposal.proposal.uuid }}')><i
                                                                         class="fa fa-trash"></i>Sil</a>
                                                             {% endif %}
 

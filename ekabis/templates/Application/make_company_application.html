@@ -748,9 +748,9 @@
             $('#loading').show();
 
             var e = document.getElementById("select_region");
-            var region_id = e.options[e.selectedIndex].value;
-
-            $.ajax({
+            if(e.options[e.selectedIndex]){
+                var  region_id= e.options[e.selectedIndex].value;
+                $.ajax({
                 url: "{% url 'ekabis:get_yeka_competition' %}",
                 type: "post", // or "get"
                 async: true,
@@ -782,6 +782,14 @@
 
                 }
             });
+            }
+            else {
+                $('#loading').hide();
+            }
+
+
+
+
         }
 
 

@@ -85,7 +85,7 @@ def add_newspaper(request, business, businessblog):
                     newspaper.yekabusinessblog = yekabussinessblog
                     newspaper.business = yekabusiness
                     newspaper.save()
-                    messages.success(request, 'Resmi Gazete Eklenmiştir Edilmiştir.')
+                    messages.success(request, 'Resmi Gazete Eklenmiştir.')
                     return redirect('ekabis:add_newspaper', business, businessblog)
                 else:
                     error_messages = get_error_messages(newspaper_form)
@@ -104,7 +104,7 @@ def add_newspaper(request, business, businessblog):
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-        return redirect('ekabis:view_yekabusinessBlog', yekabusiness.uuid)
+        return redirect('ekabis:view_yeka')
 
 
 @login_required
@@ -904,6 +904,25 @@ def change_yekaproposal(request, business, businessblog):
                 business=yekabusiness
             )
             yekaproposal.save()
+        proposals=yekaproposal.proposal.all()
+
+
+        array_proposal=[]
+        for proposal in proposals:
+            proposal_dict = dict()
+            proposal_dict['status'] = '##ffffff'
+            olumsuz=proposal.institution.filter(status='Olumsuz')
+            sonuclanmadi = proposal.institution.filter(status='Sonuclanmadi')
+            if olumsuz:
+                proposal_dict['status']='#ff3a3a'
+                proposal_dict['proposal']=proposal
+            elif sonuclanmadi:
+                proposal_dict['status'] = '#ffff6e'
+                proposal_dict['proposal'] = proposal
+            else:
+                proposal_dict['status'] = '#8cff8c'
+                proposal_dict['proposal'] = proposal
+            array_proposal.append(proposal_dict)
 
         name = general_methods.yekaname(yekabusiness)
         url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
@@ -913,7 +932,7 @@ def change_yekaproposal(request, business, businessblog):
         notification(request, html, competition.uuid, 'yeka_competition')
 
         return render(request, 'Proposal/change_yekaproposal.html',
-                      {'yekaproposal': yekaproposal,
+                      {'yekaproposal': yekaproposal,'proposal_list':array_proposal,
                        'business': business,
                        'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
                        'url_name': url_name, 'name': name,
