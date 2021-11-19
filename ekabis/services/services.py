@@ -1150,10 +1150,10 @@ def last_urls(request):
             if request.META.get('HTTP_REFERER'):
                 urlpath = urlparse(request.META.get('HTTP_REFERER')).path
                 hostname=urlparse(request.META.get('HTTP_REFERER')).hostname
-                if hostname == 'kobiltek.com':
-                    url = urlpath.split('/yekabis/yekabis/')[1]
-                else:
-                    url = urlpath.split('/yekabis/')[1]
+                # if hostname == 'kobiltek.com':
+                #     url = urlpath.split('/yekabis/yekabis/')[1]
+                # else:
+                url = urlpath.split('/yekabis/')[1]
                 for urlpattern in urlpatterns:
 
                     if str("/".join(str(urlpattern.pattern).split("/", 3)[:2])) == str(

@@ -242,7 +242,7 @@
 
             </li>
             <li class="nav-item">
-                <a class="nav-link" onclick="help_text('deneme')" role="button">
+                <a class="nav-link" onclick="help_text()" role="button">
                     <i class="fas fa-question"></i>
                 </a>
             </li>
@@ -428,7 +428,9 @@
 
                     {% if aktif == 'Admin' %}
                         <div class="modal-footer">
-
+                          <a class="btn btn-outline-primary" type="button" href="{% url "ekabis:change_help_text" help_url %}"
+                                        style="float:right">Düzenle
+                                </a>
                         </div>
 
 
@@ -784,7 +786,7 @@
 
     $(document).ready(function () {
         debugger;
-        $('.toast').delay(3000).fadeOut(2000);
+        $('.toast').delay(4000).fadeOut(3000);
 
         setInterval();
 

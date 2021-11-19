@@ -436,8 +436,8 @@
 
                                             <tbody>
 
-                                            {% if yeka.connection_region.all %}
-                                                {% for region in yeka.connection_region.all %}
+                                            {% if connection_regions %}
+                                                {% for region in connection_regions %}
                                                     <tr id="hover">
                                                         <td>{{ forloop.counter }} </td>
                                                         <td onclick="view_competition('{{ region.uuid }}')">{{ region.name }}</td>
