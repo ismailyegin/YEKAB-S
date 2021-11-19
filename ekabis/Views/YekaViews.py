@@ -1394,13 +1394,13 @@ def view_yeka_detail(request, uuid):
                 bloc_dict['businessblog'] = blok.businessblog.uuid
                 bloc_dict['yeka'] = yeka.uuid
                 blocks.append(bloc_dict)
-
+        connection_regions=yeka.connection_region.order_by('name')
         employees = YekaPersonService(request, employe_filter)
         return render(request, 'Yeka/yekaDetail.html',
                       {'urls': urls, 'current_url': current_url,
                        'url_name': url_name, 'name': name, 'blocks': blocks,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
-                       'employees': employees,
+                       'employees': employees,'connection_regions':connection_regions
                        })
     except Exception as e:
 
