@@ -76,7 +76,7 @@ def return_yeka(request):
                            'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
 
 
