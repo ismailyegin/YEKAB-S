@@ -2,9 +2,13 @@ import traceback
 
 from django.shortcuts import redirect
 
-from ekabis.models import City, Neighborhood, BusinessBlog, BusinessBlogParametreType
+from ekabis.models import City, Neighborhood, BusinessBlog, BusinessBlogParametreType, YekaBusinessBlogParemetre, \
+    YekaBusinessBlog, ConnectionRegion, YekaPerson, Yeka, Company, ExtraTime
 from ekabis.models.District import District
 import pandas
+
+from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
+
 
 def add_city():
     try:
@@ -126,3 +130,14 @@ def data_parameter_block_id():
     except Exception as e:
         traceback.print_exc()
         return redirect('ekabis:initial_data_error_page')
+
+def delete():
+    YekaBusinessBlogParemetre.objects.all().delete()
+    YekaBusinessBlog.objects.all().delete()
+    YekaCompetitionPerson.objects.all().delete()
+    ConnectionRegion.objects.all().delete()
+    YekaPerson.objects.all().delete()
+    Yeka.objects.all().delete()
+    Company.objects.all().delete()
+    ExtraTime.objects.all().delete()
+    return redirect('ekabis:view_yeka')

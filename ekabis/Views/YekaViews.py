@@ -2066,13 +2066,3 @@ def yeka_report(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
-def delete(request):
-    YekaBusinessBlogParemetre.objects.all().delete()
-    YekaBusinessBlog.objects.all().delete()
-    YekaCompetitionPerson.objects.all().delete()
-    ConnectionRegion.objects.all().delete()
-    YekaPerson.objects.all().delete()
-    Yeka.objects.all().delete()
-    Company.objects.all().delete()
-    ExtraTime.objects.all().delete()
-    return redirect('ekabis:view_yeka')
