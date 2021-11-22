@@ -20,7 +20,8 @@ from ekabis.Forms.YekaCompanyForm import YekaCompanyForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import ExtraTime, \
-    Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension, YekaCompetitionEskalasyon, YekaBusiness
+    Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension, YekaCompetitionEskalasyon, YekaBusiness, \
+    YekaBusinessBlogParemetre
 
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
@@ -31,6 +32,7 @@ from ekabis.models.YekaApplicationFile import YekaApplicationFile
 from ekabis.models.YekaApplicationFileName import YekaApplicationFileName
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaCompany import YekaCompany
+from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.YekaPersonHistory import YekaPersonHistory
 from ekabis.models.YekaProposal import YekaProposal
@@ -808,9 +810,9 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         yekaBusinessBlogo_form.fields['child_block'].queryset = yeka.business.businessblogs.exclude(
             uuid=yekabussiness.uuid).filter(isDeleted=False)
 
-        if yekaBusinessBlogo_form['dependence_parent'].initial != None:
-            yekaBusinessBlogo_form.fields['startDate'].widget.attrs['disabled'] = True
-        yekaBusinessBlogo_form.fields['status'].widget.attrs['disabled'] = True
+        # if yekaBusinessBlogo_form['dependence_parent'].initial != None:
+        #     yekaBusinessBlogo_form.fields['startDate'].widget.attrs['disabled'] = True
+        # yekaBusinessBlogo_form.fields['status'].widget.attrs['disabled'] = True
         name = general_methods.yekaname(yeka.business)
         for item in yekabussiness.parameter.all():
 
@@ -831,96 +833,28 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                                                           request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
-                finish_date = ''
-                start_date = ''
+                if yekaBusinessBlogo_form['child_block'].data == yekaBusinessBlogo_form['dependence_parent'].data:
+                    messages.warning(request, 'Bir önceki iş bloğu ile bir sonraki iş bloğu aynı olamaz.')
+                    return render(request, 'Yeka/YekabussinesBlogUpdate.html',
+                                  {
+                                      'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
+                                      'yeka': yeka, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                                      'name': name
+                                  })
 
-                time = 0
-                if not yekaBusinessBlogo_form.cleaned_data['indefinite']:
-                    time = (yekaBusinessBlogo_form.cleaned_data['businessTime']) - 1
-                    time_type = yekaBusinessBlogo_form.cleaned_data['time_type']
-                    startDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                    if time_type == 'is_gunu':
-                        time = yekaBusinessBlogo_form.cleaned_data['businessTime']
-                        add_time = time
-                        start_date = startDate.date()
-                        count = 0
-                        while add_time > 1:
-                            start_date = start_date + datetime.timedelta(days=1)
-                            count = count + 1
-                            is_vacation = is_vacation_day(start_date)
-                            if not is_vacation:
-                                add_time = add_time - 1
-                    else:
-
-                        start_date = startDate.date() + datetime.timedelta(days=time)
-                    yekabussiness.startDate = startDate
-                    yekabussiness.finisDate = start_date
-                    yekabussiness.save()
-                else:
-                    yekabussiness.businessTime = 0
-                    yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
-                    yekabussiness.save()
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
-
-                dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
-
-                if dependence_block:
-                    dependence_block = YekaBusinessBlog.objects.get(dependence_parent=yekabussiness)
-                    start_date = yekabussiness.startDate.date()
-                    if yekabussiness.businessTime:
-                        time = yekabussiness.businessTime
-                    else:
-                        return redirect('ekabis:view_yeka_detail', yeka.uuid)
-
-
-                    if yekabussiness.time_type == 'is_gunu':
-                        add_time = time
-
-                        count = 0
-                        while add_time > 1:
-                            start_date = start_date + datetime.timedelta(days=1)
-                            count = count + 1
-                            is_vacation = is_vacation_day(start_date)
-                            if not is_vacation:
-                                add_time = add_time - 1
-                    else:
-                        start_date = start_date + datetime.timedelta(days=time)
-                    dependence_block.startDate = start_date
-                    dependence_block.save()
+                childblock = yekabussiness.child_block
+                if  childblock:
+                    childblock.parent = yekabussiness
+                    childblock.dependence_parent=yekabussiness
+                    childblock.save()
+                if not yekabussiness.indefinite:
+                    dependence_blocks = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
+                    for dependence_block in dependence_blocks:
+                            add_time_next(yekabussiness.pk,dependence_block.pk,yeka)
 
 
-                    dependence_block = YekaBusinessBlog.objects.get(dependence_parent=dependence_block)
-                    x = YekaBusiness.objects.get(businessblogs=dependence_block)
-                    list = x.businessblogs.filter(sorting__gte=dependence_block.sorting)
-                    i = 0
 
-                    while dependence_block:
-
-                        start_date = dependence_block.startDate
-                        for block in list:
-                            if block.businessTime:
-                                time = block.businessTime
-
-                            else:
-                                dependence_block = None
-                                break
-
-                            if block.time_type == 'is_gunu':
-                                add_time = time
-
-                                count = 0
-                                while add_time > 1:
-                                    start_date = start_date + datetime.timedelta(days=1)
-                                    count = count + 1
-                                    is_vacation = is_vacation_day(start_date)
-                                    if not is_vacation:
-                                        add_time = add_time - 1
-                            else:
-                                start_date = start_date + datetime.timedelta(days=time)
-                            block.startDate = start_date
-                            block.save()
-                            dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
-                            start_date = block.startDate
 
                 url = redirect('ekabis:view_yeka_detail', yeka.uuid).url
                 html = '<a style="" href="' + url + '"> ID: ' + str(
@@ -938,6 +872,36 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         traceback.print_exc()
         messages.warning(request, e)
         return redirect('ekabis:view_yeka')
+def add_time_next(parent_id,current_id,yeka):
+    parent_block=YekaBusinessBlog.objects.get(pk=parent_id)
+    current_block = YekaBusinessBlog.objects.get(pk=current_id)
+    if parent_block.completion_date:
+        start_date = parent_block.completion_date
+    else:
+        start_date = parent_block.startDate
+    if parent_block.businessTime:
+        time = parent_block.businessTime
+    else:
+        return redirect('ekabis:view_yeka_detail', yeka.uuid)
+    time_type=parent_block.time_type
+    if time_type == 'is_gunu':
+        add_time = time
+        count = 0
+        while add_time > 1:
+            start_date = start_date + datetime.timedelta(days=1)
+            count = count + 1
+            is_vacation = is_vacation_day(start_date)
+            if not is_vacation:
+                add_time = add_time - 1
+    else:
+        start_date = start_date + datetime.timedelta(days=time) - datetime.timedelta(days=1)
+    current_block.startDate=start_date
+    current_block.save()
+    dependence_blocks = YekaBusinessBlog.objects.filter(dependence_parent=current_block)
+    for dependence_block in dependence_blocks:
+        add_time_next(current_block.pk,dependence_block.pk,yeka)
+
+
 
 
 def add_yekabusinessblog_company(request, business, yekabusinessblog):
@@ -1197,22 +1161,24 @@ def view_yekabusinessblog_gant(request, yeka, yekabusiness):
             'uuid': yeka
         }
 
-        yeka = YekaGetService(request, yeka_filter)
+
         yeka_yekabusiness_filter_ = {
             'uuid': yekabusiness
         }
 
         yekabussiness = YekaBusinessBlogGetService(request, yeka_yekabusiness_filter_)
+        yeka = YekaCompetition.objects.get(uuid=yeka)
+        region = ConnectionRegion.objects.filter(yekacompetition__in=yeka)
         extrafilter = {
             'yekabusinessblog': yekabussiness
         }
         extratime = ExtraTimeService(request, extrafilter)
-        name = general_methods.yekaname(yeka.business)
+        # name = general_methods.yekaname(yeka.business)
 
         return render(request, 'Yeka/yekabussinessblog_detail.html',
                       {
                           'yeka': yeka,
-                          'yekabusinessblok': yekabussiness, 'name': name,
+                          'yekabusinessblok': yekabussiness,
                           'ekstratimes': extratime, 'urls': urls, 'current_url': current_url, 'url_name': url_name
                       })
     except Exception as e:
@@ -1394,7 +1360,13 @@ def view_yeka_detail(request, uuid):
         yeka_filter = {
             'uuid': uuid
         }
+        user=request.user
+        employee=None
         yeka = YekaGetService(request, yeka_filter)
+
+        if YekaPerson.objects.filter(employee__person__user=user,yeka=yeka,isDeleted=False):
+            employee=YekaPerson.objects.get(employee__person__user=user,yeka=yeka,isDeleted=False)
+
         employe_filter = {
             'yeka': yeka
         }
@@ -1414,11 +1386,11 @@ def view_yeka_detail(request, uuid):
                 bloc_dict['businessblog'] = blok.businessblog.uuid
                 bloc_dict['yeka'] = yeka.uuid
                 blocks.append(bloc_dict)
-        connection_regions = yeka.connection_region.order_by('name')
+        connection_regions = yeka.connection_region.filter(isDeleted=False).order_by('name')
         employees = YekaPersonService(request, employe_filter)
         return render(request, 'Yeka/yekaDetail.html',
-                      {'urls': urls, 'current_url': current_url,
-                       'url_name': url_name, 'name': name, 'blocks': blocks,
+                      {'urls': urls, 'current_url': current_url,'employee':employee,
+                       'url_name': url_name, 'name': name, 'blocks': blocks,'user':user,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
                        'employees': employees, 'connection_regions': connection_regions
                        })
@@ -2093,3 +2065,14 @@ def yeka_report(request):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+def delete(request):
+    YekaBusinessBlogParemetre.objects.all().delete()
+    YekaBusinessBlog.objects.all().delete()
+    YekaCompetitionPerson.objects.all().delete()
+    ConnectionRegion.objects.all().delete()
+    YekaPerson.objects.all().delete()
+    Yeka.objects.all().delete()
+    Company.objects.all().delete()
+    ExtraTime.objects.all().delete()
+    return redirect('ekabis:view_yeka')

@@ -169,7 +169,7 @@
                     data: {
 
                         id: '{{ block.yekabusinessblog.id }}',
-                        name: '{{ block.yekabusinessblog.businessblog.name }}' + ' ' + '{% if block.yekabusinessblog.completion_date %}{{ block.yekabusinessblog.completion_date.date }}{% else %}{{ block.yekabusinessblog.startDate.date }}{% endif %}',
+                        name: '{{ block.yekabusinessblog.businessblog.name }}' + ' ' + '{% if block.yekabusinessblog.completion_date %}{{ block.yekabusinessblog.completion_date.date | date:'d/m/y' }}{% else %}{{ block.yekabusinessblog.startDate.date | date:'d/m/y' }}{% endif %}',
                         yeka: '{{ block.yeka }}',
                         business: '{{ yeka.business.uuid }}',
                         yekabusinessblog: '{{ block.yekabusinessblog.uuid }}',
@@ -286,7 +286,7 @@
 
             {#cy.nodes().ungrabify()#} {# node hareket ettirmeyi kapatma  #}
 
-
+            {% if aktif == 'Admin' or  employee in competition_persons %}
             cy.cxtmenu({
                 ready: function () {
 
@@ -449,34 +449,11 @@
 
                 ]
             });
+            {% endif %}
 
-
-            var layout = cy.layout({
+         var layout = cy.layout({
                 name: 'grid',
-                rows: 4,
-                padding: '7px',
-                margin: 5
-            });
-
-
-            cy.cxtmenu({
-                selector: 'core',
-
-                commands: [
-                    {
-                        content: 'bg1',
-                        select: function () {
-                            console.log('bg1');
-                        }
-                    },
-
-                    {
-                        content: 'bg2',
-                        select: function () {
-                            console.log('bg2');
-                        }
-                    }
-                ]
+                rows: 2
             });
 
             layout.run();
@@ -651,8 +628,9 @@
                                 <div class="card card-default card-outline">
                                     <div class="card-header with-border">
                                         <h3 class="card-title">YEKA Yarışma Bilgileri</h3>
+                                    {% if aktif != 'Admin' %}
                                         {% for item in perm %}
-                                            {% if item == 'change_competition' %}
+                                            {% if item == 'change_competition' and employee in competition_persons %}
                                                 <a href="{% url "ekabis:change_competition" region.uuid yeka.uuid %}"
                                                    title="Yeka Düzenle"
                                                    type="button" class="btn btn-outline-primary btn-sm"
@@ -661,6 +639,14 @@
                                                 </a>
                                             {% endif %}
                                         {% endfor %}
+                                        {% else %}
+                                        <a href="{% url "ekabis:change_competition" region.uuid yeka.uuid %}"
+                                                   title="Yeka Düzenle"
+                                                   type="button" class="btn btn-outline-primary btn-sm"
+                                                   style="float: right"><i
+                                                        class="fa fa-edit"></i>
+                                                </a>
+                                    {% endif %}
 
                                     </div>
 
@@ -680,8 +666,9 @@
                                 <div class="card card-default card-outline">
                                     <div class="card-header with-border">
                                         <h3 class="card-title">Görevli Personel Listesi</h3>
+                                    {% if aktif != 'Admin' %}
                                         {% for item in perm %}
-                                            {% if item == 'view_yekacompetition_personel' %}
+                                            {% if item == 'view_yekacompetition_personel'  and employee in employees%}
                                                 <a href="{% url "ekabis:view_yekacompetition_personel" yeka.uuid %}"
                                                    title="Personel Ekle"
                                                    type="button" class="btn btn-outline-primary btn-sm"
@@ -690,6 +677,14 @@
                                                 </a>
                                             {% endif %}
                                         {% endfor %}
+                                        {% else %}
+                                         <a href="{% url "ekabis:view_yekacompetition_personel" yeka.uuid %}"
+                                                   title="Personel Ekle"
+                                                   type="button" class="btn btn-outline-primary btn-sm"
+                                                   style="float: right"><i
+                                                        class="fa fa-plus"></i>
+                                                </a>
+                                    {% endif %}
                                     </div>
 
 
@@ -731,8 +726,9 @@
 
                                             <div class="card-header with-border">
                                                 <h3 class="card-title">Aday Yeka Listesi </h3>
+                                            {% if aktif != 'Admin' %}
                                                 {% for item in perm %}
-                                                    {% if item == 'add_proposal' %}
+                                                    {% if item == 'add_proposal' and employee in employees%}
 
                                                         <a href="{% url "ekabis:add_proposal" yekaproposal.uuid %}"
                                                            type="button" class="btn btn-outline-primary btn-sm"
@@ -742,6 +738,13 @@
 
                                                     {% endif %}
                                                 {% endfor %}
+                                                {% else %}
+                                                <a href="{% url "ekabis:add_proposal" yekaproposal.uuid %}"
+                                                           type="button" class="btn btn-outline-primary btn-sm"
+                                                           style="float: right"><i
+                                                                class="fa fa-plus" title="Aday Yeka Ekle"></i>
+                                                        </a>
+                                                {% endif %}
                                             </div>
 
                                             <div class="card-body">
@@ -792,6 +795,7 @@
                                                                 </td>
                                                             {% endif %}
                                                             <td>
+                                                            {% if aktif == 'Admin' or employee in employees %}
                                                                 <div class="btn-group">
                                                                     <button type="button"
                                                                             class="btn btn-default dropdown-toggle dropdown-icon"
@@ -849,7 +853,7 @@
                                                                     </div>
 
                                                                 </div>
-
+                                                            {% endif %}
 
                                                             </td>
 
@@ -884,8 +888,9 @@
             <section class="col-lg-12 ">
                 <div class="card card-default card-outline">
                     <div class="card-header with-border"><h3 class="card-title">İş Planı</h3>
+                    {% if aktif != 'Admin' %}
                         {% for item in perm %}
-                            {% if item == 'add_yekabusiness' %}
+                            {% if item == 'add_yekabusiness' and employee in competition_persons %}
 
                                 {% if not blocks %}
 
@@ -899,7 +904,7 @@
                                 {% endif %}
 
                             {% endif %}
-                            {% if item == 'change_yekabusiness' %}
+                            {% if item == 'change_yekabusiness' and employee in employees %}
                                 {% if  yekabusinessbloks %}
 
                                     <a href="{% url 'ekabis:change_yekacompetitionbusiness'  yeka.business.uuid  yeka.uuid %}"
@@ -911,7 +916,29 @@
 
                                 {% endif %}
                             {% endif %}
-                        {% endfor %}</div>
+                        {% endfor %}
+                        {% else %}
+                        {% if not blocks %}
+
+                                    <a href="{% url 'ekabis:add_yekacompetitionbusiness'  yeka.uuid %}"
+                                       title="İş Planı Ekle"
+                                       type="button" class="btn btn-outline-primary btn-sm"
+                                       style="float: right"><i
+                                            class="fa fa-plus"></i>
+                                    </a>
+
+                                {% endif %}
+                        {% if  yekabusinessbloks %}
+
+                                    <a href="{% url 'ekabis:change_yekacompetitionbusiness'  yeka.business.uuid  yeka.uuid %}"
+                                       title="İş Planı Ekle"
+                                       type="button" class="btn btn-outline-primary btn-sm"
+                                       style="float: right"><i
+                                            class="fa fa-edit"></i>
+                                    </a>
+
+                                {% endif %}
+                    {% endif %}</div>
                     <div class="card-body" style="height: 800px">
                         <div id="cy"></div>
 

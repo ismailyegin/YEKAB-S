@@ -201,7 +201,7 @@
                 <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-header">
-                            <h4 class="card-title">YEKA Yarışma Listesi</h4>
+                            <h4 class="card-title">Görevli Olunan YEKA Yarışma Listesi</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -284,7 +284,98 @@
                                 </div>
 
 
-                                {#personel Listesi#}
+                                    <div class="col-lg-12">
+                                        <div class="card card-primary card-outline">
+                                            <div class="card-header">
+                                                <h4 class="card-title">YEKA Listesi</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <table id="region" class="table table-bordered table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>Tanım</th>
+                                                                <th>Kapasite</th>
+                                                                <th>İşlemler</th>
+
+                                                            </tr>
+                                                            </thead>
+
+                                                            <tbody>
+
+
+                                                            {% for yeka in yeka %}
+                                                                <tr id="hover">
+                                                                    <td>{{ forloop.counter }} </td>
+
+                                                                    <td class='clickable-row'
+                                                                        data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.definition }}</td>
+                                                                    <td class='clickable-row'
+                                                                        data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.capacity }}
+                                                                        MW
+                                                                    </td>
+                                                                    <td>
+
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                                    data-toggle="dropdown"> İşlemler
+                                                                            </button>
+                                                                            <div class="dropdown-menu" role="menu">
+                                                                                {% for item in perm %}
+                                                                                    {% if item == 'change_yeka' %}
+
+                                                                                        <a href="{% url "ekabis:change_yeka" yeka.uuid %}"
+                                                                                           class="dropdown-item"
+                                                                                           title="Düzenle "
+                                                                                           type="button"><i
+                                                                                                class="fa fa-edit"></i>Düzenle
+                                                                                        </a>
+                                                                                    {% elif item == 'view_yeka_detail' %}
+                                                                                        <a href="{% url "ekabis:view_yeka_detail" yeka.uuid %}"
+                                                                                           class="dropdown-item"
+                                                                                           title="Detay"
+                                                                                           type="button"><i
+                                                                                                class="fa fa-search"></i>Detay
+                                                                                        </a>
+                                                                                    {% elif item == 'delete_yeka' %}
+                                                                                        <a onclick="deleteYeka('{{ yeka.uuid }}')"
+                                                                                           class="dropdown-item"
+                                                                                           title="Sil"
+                                                                                           type="button"><i
+                                                                                                class="fa fa-edit"></i>Sil</a>
+
+
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+
+
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                </tr>
+
+                                                            {% endfor %}
+
+
+                                                            </tbody>
+                                                        </table>
+
+
+                                                    </div>
+
+                                                    {#personel Listesi#}
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
 
                             </div>
 
@@ -352,7 +443,18 @@
                 <div class="sticky-top mb-3">
                     <div class="card card-primary card-outline">
                         <div class="card-header">
-                            <h4 class="card-title">İşaretler</h4>
+                            <h4 class="card-title">Notlar </h4>
+                            {% for item in perm %}
+                                                {% if item == 'add_calendarName' %}
+
+                                                    <a href="{% url "ekabis:add_calendarName" %}"
+                                                       type="button" class="btn btn-outline-primary btn-sm"
+                                                       style="float: right"><i
+                                                            class="fa fa-plus" title="Not Ekle"></i>
+                                                    </a>
+
+                                                {% endif %}
+                                            {% endfor %}
                         </div>
                         <div class="card-body">
                             <!-- the events -->
@@ -459,6 +561,21 @@
             });
 
             var calendar = new Calendar(calendarEl, {
+                 monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                monthNamesShort: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                dayNames: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+                dayNamesShort: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+                buttonText: {
+                    today: 'Bugün',
+                    month: 'Ay',
+                    week: 'Hafta',
+                    day: 'Gün',
+                    list: 'Liste',
+                    listMonth: 'Aylık Liste',
+                    listYear: 'Yıllık Liste',
+                    listWeek: 'Haftalık Liste',
+                    listDay: 'Günlük Liste'
+                },
                 locale: 'tr',
                 headerToolbar: {
                     left: 'prev,next today',

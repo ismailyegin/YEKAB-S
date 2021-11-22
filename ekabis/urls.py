@@ -7,7 +7,7 @@ from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpVi
     VacationDayViews, ExtraTimeViews, CityViews, VacationDayViews, YekaCompetitionViews, HelpMenuViews, \
     YekaBussinessBlogStaticView, FactoryViews, PermissionView, AssociateDegreeViews, ReportViews, NotificationViews, \
     ProduceAmountViews, EskalasyonViews
-from ekabis.services import general_methods, NotificationServices
+from ekabis.services import general_methods, NotificationServices, DataService
 from ekabis.services.general_methods import add_block
 
 app_name = 'ekabis'
@@ -526,5 +526,6 @@ urlpatterns = [
     # path('yeka/is-bloklari/', BusinessBlogViews.data_business_blog, name='business_block_add'),
     # path('yeka/is-blok-parametre/', BusinessBlogViews.data_parameter, name='data_business_block_parameter'),
     # path('yeka/is-blok-parametre-id/', BusinessBlogViews.data_parameter_block_id, name='data_block_parameter_id'),
+    path('yeka/delete/', YekaViews.delete, name='delete_yeka_new'),
 
 ]

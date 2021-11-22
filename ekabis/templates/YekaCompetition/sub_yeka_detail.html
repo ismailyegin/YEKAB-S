@@ -227,7 +227,7 @@
 
                     data: {
                         id: '{{ blok.yekabusinessblog.id }}',
-                        name: '{{ blok.yekabusinessblog.businessblog.name }}' + ' ' + '{{ blok.yekabusinessblog.startDate.date }}',
+                        name: '{{ blok.yekabusinessblog.businessblog.name }}' + ' ' + '{{ blok.yekabusinessblog.startDate.date | date:'d/m/y' }}',
                         yeka: '{{ blok.yeka }}',
                         business: '{{ yeka.business.uuid }}',
                         yekabusinessblog: '{{ blok.yekabusinessblog.uuid }}',
@@ -339,7 +339,7 @@
                 }
             });
             console.log(cy)
-
+            {% if aktif == 'Admin' or employe in employees %}
             cy.cxtmenu({
                 selector: 'node, edge',
 
@@ -496,26 +496,8 @@
                     }
                 ]
             });
+            {% endif %}
 
-            cy.cxtmenu({
-                selector: 'core',
-
-                commands: [
-                    {
-                        content: 'bg1',
-                        select: function () {
-                            console.log('bg1');
-                        }
-                    },
-
-                    {
-                        content: 'bg2',
-                        select: function () {
-                            console.log('bg2');
-                        }
-                    }
-                ]
-            });
     {#        cy.nodeHtmlLabel([#}
     {##}
     {#            {#}
@@ -579,8 +561,9 @@
                                 <div class="card card-default card-outline">
                                     <div class="card-header with-border">
                                         <h3 class="card-title">Görevli Personel Listesi</h3>
+                                    {% if aktif != 'Admin' %}
                                         {% for item in perm %}
-                                            {% if item == 'view_yekacompetition_personel' %}
+                                            {% if item == 'view_yekacompetition_personel' and employe in employees%}
                                                 <a href="{% url "ekabis:view_yekacompetition_personel" yeka.uuid %}"
                                                    title="Personel Ekle"
                                                    type="button" class="btn btn-outline-primary btn-sm"
@@ -589,6 +572,14 @@
                                                 </a>
                                             {% endif %}
                                         {% endfor %}
+                                        {% else %}
+                                         <a href="{% url "ekabis:view_yekacompetition_personel" yeka.uuid %}"
+                                                   title="Personel Ekle"
+                                                   type="button" class="btn btn-outline-primary btn-sm"
+                                                   style="float: right"><i
+                                                        class="fa fa-plus"></i>
+                                                </a>
+                                    {% endif %}
                                     </div>
 
 
@@ -659,7 +650,7 @@
                                                             </button>
                                                             <div class="dropdown-menu" role="menu">
                                                                 {% for item in perm %}
-                                                                    {% if item == 'change_coordinate' %}
+                                                                    {% if item == 'change_coordinate' and employe in employees%}
                                                                         <a href="{% url 'ekabis:change_coordinate' coordinate.uuid yeka_proposal.uuid %}"
                                                                            class="dropdown-item"> <i
                                                                                 class="fa fa-edit" title="Düzenle"></i>
@@ -668,7 +659,7 @@
                                                                     {% endif %}
                                                                 {% endfor %}
                                                                 {% for item in perm %}
-                                                                    {% if item == 'delete_coordinate' %}
+                                                                    {% if item == 'delete_coordinate' and employe in employees%}
                                                                         <a class="dropdown-item" href=""
                                                                            data-toggle="modal"
                                                                            onclick="deleteCoordinate('{{ coordinate.uuid }}')"><i
@@ -720,6 +711,7 @@
                                                     <td> {{ location.district.name }} </td>
                                                     <td> {{ location.neighborhood.name }}</td>
                                                     <td>
+                                                    {% if aktif == 'Admin' or employe in employees %}
                                                         <div class="btn-group">
                                                             <button type="button"
                                                                     class="btn btn-default dropdown-toggle dropdown-icon"
@@ -749,7 +741,7 @@
                                                             </div>
                                                         </div>
 
-
+                                                    {% endif %}
                                                     </td>
                                                 </tr>
 
@@ -787,6 +779,7 @@
             <section class="col-lg-12 ">
                 <div class="card card-default card-outline">
                     <div class="card-header with-border"><h3 class="card-title">İş Planı</h3>
+                    {% if aktif != 'Admin' %}
                     {% for item in perm %}
                             {% if item == 'add_yekabusiness' %}
 
@@ -814,7 +807,29 @@
 
                                 {% endif %}
                             {% endif %}
-                        {% endfor %}</div>
+                        {% endfor %}
+                        {% else %}
+                        {% if not blocks %}
+
+                                    <a href="{% url 'ekabis:add_yekacompetitionbusiness'  yeka.uuid %}"
+                                       title="İş Planı Ekle"
+                                       type="button" class="btn btn-outline-primary btn-sm"
+                                       style="float: right"><i
+                                            class="fa fa-plus"></i>
+                                    </a>
+
+                        {% endif %}
+                        {% if  yekabusinessbloks %}
+
+                                    <a href="{% url 'ekabis:change_yekacompetitionbusiness'  yeka.business.uuid  yeka.uuid %}"
+                                       title="İş Planı Ekle"
+                                       type="button" class="btn btn-outline-primary btn-sm"
+                                       style="float: right"><i
+                                            class="fa fa-edit"></i>
+                                    </a>
+
+                        {% endif %}
+                    {% endif %}</div>
                     <div class="card-body" style="height: 500px">
                         <div id="cy"></div>
 
@@ -860,7 +875,7 @@
                                 start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
                                 {%  if not  yekabusinessblok.indefinite %}
                                     end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",  {% endif %}
-                                url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
+                                {#url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",#}
                                 className: 'red'
                             },
                         {% else %}
@@ -870,7 +885,7 @@
                                 start: "{{ yekabusinessblok.startDate| date:"Y-m-d" }}",
                                 {%  if not  yekabusinessblok.indefinite %}
                                     end: "{{ yekabusinessblok.finisDate| date:"Y-m-d" }}",  {% endif %}
-                                url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",
+                                {#url: "{% url "ekabis:view_yekabusinessblog_gant" yeka.uuid yekabusinessblok.uuid %}",#}
                                 className: 'green',
                             },
                         {% endif %}
