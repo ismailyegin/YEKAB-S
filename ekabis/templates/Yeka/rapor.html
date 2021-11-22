@@ -418,7 +418,7 @@
             $('#loading').show();
 
             var e = document.getElementById("select_region");
-            if (e.options[e.selectedIndex].value) {
+            if (e.options[e.selectedIndex]) {
                 var region_id = e.options[e.selectedIndex].value;
 
                 $.ajax({
