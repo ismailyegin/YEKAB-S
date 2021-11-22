@@ -25,6 +25,8 @@ class YekaBusinessBlog(BaseModel):
     explanation = models.CharField(max_length=250,null=True, blank=True)
     dependence_parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='depence_parent', null=True,
                                           blank=True)
+    child_block = models.ForeignKey('self', on_delete=models.CASCADE, related_name='business_child', null=True, blank=True)
+
     completion_date = models.DateTimeField(null=True, blank=True, verbose_name='Tamamlanma Tarihi')
 
     def __str__(self):

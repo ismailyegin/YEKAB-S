@@ -176,6 +176,10 @@ def add_competition(request, region):
                                                 businessblog=yeka_dependence_parent.businessblog, isDeleted=False)[0]
                                             fcom.save()
 
+                                            x = fcom.dependence_parent
+                                            x.child_block = fcom  # bir sonraki iş bloğu oluşturuldu
+                                            x.save()
+
                     log = " Yeka Yarışması  eklendi"
                     log = general_methods.logwrite(request, request.user, log)
                     url = redirect('ekabis:view_yeka_competition_detail', yeka.uuid).url
@@ -277,7 +281,8 @@ def update_competition(request, region, competition):
         employee = Employee.objects.filter(person__user=user)
         if employee:
             employee = Employee.objects.filter(person__user=user)
-            yeka_persons = YekaPerson.objects.filter(employee__in=employee).filter(yeka__connection_region__yekacompetition=competition)
+            yeka_persons = YekaPerson.objects.filter(employee__in=employee).filter(
+                yeka__connection_region__yekacompetition=competition)
         else:
             yeka_persons = None
 
@@ -331,7 +336,7 @@ def update_competition(request, region, competition):
                         return render(request, 'YekaCompetition/change_competition.html',
                                       {'competition_form': competition_form, 'region': region,
                                        'error_messages': error_message_region, 'urls': urls,
-                                       'current_url': current_url,'name':name,
+                                       'current_url': current_url, 'name': name,
                                        'url_name': url_name, 'competition': competition, })
                 url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
                 html = '<a style="" href="' + url + '"> ID: ' + str(
@@ -340,7 +345,7 @@ def update_competition(request, region, competition):
                 return render(request, 'YekaCompetition/change_competition.html',
                               {'competition_form': competition_form, 'error_messages': '', 'urls': urls,
                                'current_url': current_url, 'url_name': url_name, 'competition': competition,
-                               'region': region,'name':name})
+                               'region': region, 'name': name})
         else:
             messages.warning(request, 'İşlem yapma yetkiniz yoktur.')
             return HttpResponseRedirect(urls[0]['last'])
@@ -433,7 +438,8 @@ def add_yekacompetitionbusiness(request, uuid):
                                                     sorting=i + 1
                                                     )
                             blog.save()
-                            blog.dependence_parent = parent
+                            parent.child_block = blog
+                            parent.save()
                             parent = blog
                         yekabusiness.businessblogs.add(blog)
                         yekabusiness.save()
@@ -529,6 +535,8 @@ def change_yekacompetitionbusiness(request, uuid, competition):
                                                         sorting=i + 1
                                                         )
                                 blog.save()
+                                parent.child_block = blog
+                                parent.save()
                                 parent = blog
                             yekabusiness.businessblogs.add(blog)
                             yekabusiness.save()
@@ -590,6 +598,10 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         business = BusinessBlogGetService(request, yeka_business_filter_)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
 
+        # if yekaBusinessBlogo_form['dependence_parent'].initial !=None:
+        #     yekaBusinessBlogo_form.fields['startDate'].widget.attrs['readonly'] = True
+
+
         if business.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
             contract = None
             if YekaContract.objects.filter(business=competition.business):
@@ -619,6 +631,9 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         name = general_methods.yekaname(competition.business)
 
         yekaBusinessBlogo_form.fields['dependence_parent'].queryset = competition.business.businessblogs.exclude(
+            uuid=yekabussiness.uuid).filter(isDeleted=False)
+
+        yekaBusinessBlogo_form.fields['child_block'].queryset = competition.business.businessblogs.exclude(
             uuid=yekabussiness.uuid).filter(isDeleted=False)
 
         for item in yekabussiness.parameter.all():
@@ -683,19 +698,33 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     yekabussiness.businessTime = 0
                     yekabussiness.finisDate = yekaBusinessBlogo_form.cleaned_data['startDate']
                     yekabussiness.save()
-                yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
+                yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk, commit=False)
+                if yekaBusinessBlogo_form['child_block'].data == yekaBusinessBlogo_form['dependence_parent'].data:
+                    messages.warning(request, 'Bir önceki iş bloğu ile bir sonraki iş bloğu aynı olamaz.')
+                    return render(request, 'Yeka/YekabussinesBlogUpdate.html',
+                                  {
+                                      'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
+                                      'competition': competition, 'urls': urls,
+                                      'current_url': current_url, 'contract_form': form_contract,
+                                      'purchase_guarantee_form': purchase_guarantee_form,
+                                      'url_name': url_name,
+                                      'name': name
+                                  })
+                else:
+                    yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
+
                 if yekabussiness.completion_date:
+
                     dependence_block = YekaBusinessBlog.objects.get(dependence_parent=yekabussiness)
                     x = YekaBusiness.objects.get(businessblogs=dependence_block)
                     list = x.businessblogs.filter(sorting__gte=dependence_block.sorting)
                     i = 0
                     while dependence_block:
-                        if i == 0:
+
                             start_date = yekabussiness.completion_date.date()
                             for block in list:
-                                block.startDate = start_date
-                                if block.time_type == 'is_gunu':
-                                    time = block.businessTime
+                                if yekabussiness.time_type == 'is_gunu':
+                                    time = yekabussiness.businessTime
                                     add_time = time
 
                                     count = 0
@@ -707,18 +736,56 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                                             add_time = add_time - 1
                                 else:
                                     start_date = start_date + datetime.timedelta(days=time)
-                                block.finisDate = start_date
+                                block.startDate = start_date
                                 block.save()
                                 dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
                                 i = i + 1
                                 start_date = block.finisDate
-                        else:
+                else:
+                    dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
 
-                            for block in dependence_block:
-                                block.startDate = start_date
-                                if block.time_type == 'is_gunu':
+                    if dependence_block:
+                        dependence_block = YekaBusinessBlog.objects.get(dependence_parent=yekabussiness)
+                        start_date = yekabussiness.startDate.date()
+                        if yekabussiness.businessTime:
+                            time = yekabussiness.businessTime
+                        else:
+                            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+
+                        if yekabussiness.time_type == 'is_gunu':
+                            add_time = time
+
+                            count = 0
+                            while add_time > 1:
+                                start_date = start_date + datetime.timedelta(days=1)
+                                count = count + 1
+                                is_vacation = is_vacation_day(start_date)
+                                if not is_vacation:
+                                    add_time = add_time - 1
+                        else:
+                            start_date = start_date + datetime.timedelta(days=time)
+                        dependence_block.startDate = start_date
+                        dependence_block.save()
+
+                        dependence_block = YekaBusinessBlog.objects.get(dependence_parent=dependence_block)
+                        x = YekaBusiness.objects.get(businessblogs=dependence_block)
+                        list = x.businessblogs.filter(sorting__gte=dependence_block.sorting)
+                        i = 0
+
+                        while dependence_block:
+
+                            start_date = dependence_block.startDate
+                            for block in list:
+                                if block.businessTime:
                                     time = block.businessTime
+
+                                else:
+                                    dependence_block = None
+                                    break
+
+                                if block.time_type == 'is_gunu':
                                     add_time = time
+
                                     count = 0
                                     while add_time > 1:
                                         start_date = start_date + datetime.timedelta(days=1)
@@ -728,10 +795,10 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                                             add_time = add_time - 1
                                 else:
                                     start_date = start_date + datetime.timedelta(days=time)
-                                block.finisDate = start_date
+                                block.startDate = start_date
                                 block.save()
                                 dependence_block = YekaBusinessBlog.objects.filter(dependence_parent=block)
-                                i = i + 1
+                                start_date = block.startDate
                 messages.success(request, 'Basarıyla Kayıt Edilmiştir.')
                 url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
                 html = '<a style="" href="' + url + '"> ID : ' + str(business.pk) + ' - ' + str(
@@ -1133,12 +1200,34 @@ def view_yeka_competition_detail(request, uuid):
             blocks.append(bloc_dict)
 
         employees = YekaCompetitionPersonService(request, employe_filter)
+        array_proposal=[]
+        yekaproposal=None
+        if YekaProposal.objects.filter(business=yeka.business):
+            yekaproposal = YekaProposal.objects.get(business=yeka.business)
+
+            proposals=yekaproposal.proposal.all()
+            array_proposal=[]
+            for proposal in proposals:
+                proposal_dict = {}
+                proposal_dict['status'] = '##ffffff'
+                olumsuz=proposal.institution.filter(status='Olumsuz')
+                sonuclanmadi = proposal.institution.filter(status='Sonuclanmadi')
+                if olumsuz:
+                    proposal_dict['status']='#ff3a3a'
+                    proposal_dict['proposal']=proposal
+                elif sonuclanmadi:
+                    proposal_dict['status'] = '#ffff6e'
+                    proposal_dict['proposal'] = proposal
+                else:
+                    proposal_dict['status'] = '#8cff8c'
+                    proposal_dict['proposal'] = proposal
+                array_proposal.append(proposal_dict)
 
         return render(request, 'Yeka/yeka_competition_detail.html',
                       {'urls': urls, 'current_url': current_url, 'proposal_sub_yeka': proposal_sub_yeka,
                        'url_name': url_name, 'name': name, 'blocks': blocks, 'definition': definiton_yeka,
-                       'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
-                       'employees': employees, 'competitions': competitions, 'region': region
+                       'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,'array_proposal':array_proposal,
+                       'employees': employees, 'competitions': competitions, 'region': region,'yekaproposal':yekaproposal
 
                        })
 

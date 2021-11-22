@@ -154,19 +154,19 @@
                                             <td>{{ proposal.proposal.capacity }}</td>
                                             <td>
                                                 {% if proposal.proposal.farm_form %}
-                                                    <a target="_blank"
+                                                    <a target="_blank" title="{{ proposal.proposal.farm_form }}"
                                                        href="{{ MEDIA_URL }}{{ proposal.proposal.farm_form.url }}"
-                                                       download="">{{ proposal.proposal.farm_form }}</a>
+                                                       download="">{{ proposal.proposal.farm_form  | truncatechars:15}}</a>
                                                 {% endif %}
                                             </td>
                                             <td>{% if proposal.proposal.information_form %}
-                                                <a target="_blank"
+                                                <a target="_blank" title="{{ proposal.proposal.information_form }}"
                                                    href="{{ MEDIA_URL }}{{ proposal.proposal.information_form.url }}"
-                                                   download="">{{ proposal.proposal.information_form }}</a>
+                                                   download="">{{ proposal.proposal.information_form  | truncatechars:15}}</a>
                                             {% endif %}</td>
                                             <td>{% if proposal.proposal.kml_file %}
-                                                <a target="_blank" href="{{ MEDIA_URL }}{{ proposal.proposal.kml_file.url }}"
-                                                   download="">{{ proposal.proposal.kml_file }}</a></td>
+                                                <a target="_blank" title="{{ proposal.proposal.kml_file  }}" href="{{ MEDIA_URL }}{{ proposal.proposal.kml_file.url }}"
+                                                   download="">{{ proposal.proposal.kml_file | truncatechars:15}}</a></td>
                                             {% endif %}
                                             <td>
                                                 <div class="btn-group">
