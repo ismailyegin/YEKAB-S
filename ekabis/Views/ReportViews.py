@@ -252,7 +252,7 @@ def general_reporting(request):
                 sql2 += " group by yeka_business_block.id "
 
             sql_join = "SELECT * FROM ( " + sql + " ) A  LEFT JOIN  (" + sql2 + ") B ON A.yarisma_id=B.yarisma_id group by  B.yarisma_id "
-
+            print(sql_join)
             yeka = YekaService(request, None)
             regions = ConnectionRegionService(request, None)
             competitions = YekaCompetitionService(request, None)

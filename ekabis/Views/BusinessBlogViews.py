@@ -365,7 +365,7 @@ def change_yekabusiness(request, uuid, yeka):
                             i.isDeleted = True
                             i.save()
 
-                    # olmayanı ekle sıralması degileni kaydet
+                    # olmayanı ekle sıralaması degişeni kaydet
                     for i in range(len(blogs)):
 
                         # is blogu varsa
@@ -375,6 +375,7 @@ def change_yekabusiness(request, uuid, yeka):
                                 if blog.isDeleted:
                                     blog.isDeleted = False
                                 blog.parent = None
+                                blog.dependence_parent = None
                                 blog.sorting = i + 1
                                 blog.save()
                                 parent = blog
@@ -390,6 +391,7 @@ def change_yekabusiness(request, uuid, yeka):
                                 blog.save()
                                 parent.child_block = blog
                                 parent.save()
+
                                 parent = blog
 
                         # is blogu yoksa
