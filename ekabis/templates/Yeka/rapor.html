@@ -461,10 +461,17 @@
 
 
             var e = document.getElementById("select_competition");
-            var id = e.options[e.selectedIndex].value;
-
+            var id = ''
+            if (e.options[e.selectedIndex]) {
+                id = e.options[e.selectedIndex].value;
+            }
             var x = document.getElementById('select_item');
-            var value = x.options[x.selectedIndex].value;
+            var value = ''
+            if (x.options[x.selectedIndex]) {
+                value = x.options[x.selectedIndex].value;
+            }
+
+
             let html = '';
 
             if (value === 'Firmalar') {
