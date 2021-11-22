@@ -10,3 +10,7 @@ class ProposalInstitution(BaseModel):
     file = models.FileField(upload_to='KurumGorus/', null=True, blank=True, verbose_name='Kurum Görüsleri')
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     date = models.DateField(null=True, blank=True)
+    number = models.IntegerField(null=True, blank=True, verbose_name='Kurum Görüşü Öneri Sayısı')
+
+    def __str__(self):
+        return '%s' % (self.institution.name)

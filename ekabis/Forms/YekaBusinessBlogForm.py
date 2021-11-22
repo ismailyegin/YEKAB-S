@@ -13,6 +13,7 @@ import datetime
 
 CHOICES = (('is_gunu', 'İş Günü'), ('takvim_gunu', 'Takvim Günü'),)
 TRUE_FALSE_CHOICES = (
+    ('4', 'Başlanmadı'),
     ('3', 'Devam Ediyor'),
     ('1', 'Tamamlandı'),
     ('2', 'Tamamlanmadı'),
@@ -27,6 +28,7 @@ class YekaBusinessBlogForm(ModelForm):
             'indefinite',
 
             'dependence_parent',
+            'child_block',
             'time_type',
             'businessTime',
             'startDate',
@@ -36,13 +38,14 @@ class YekaBusinessBlogForm(ModelForm):
 
         )
         labels = {
-            'startDate': 'Başlama Tarihi',
+            'startDate': 'İşin Yapılma Tarihi',
             # 'finisDate': 'Bitiş Tarihi',
             'businessTime': 'Süresi(Gün)',
             'status': 'Durumu',
             'indefinite': 'Süre Durumu',
             'time_type': 'Süre Türü',
-            'dependence_parent': 'Bağlı Olduğu İş Bloğu',
+            'dependence_parent': 'Bir Önceki İş Bloğu',
+            'child_block': 'Bir Sonraki İş Bloğu',
             'explanation': 'Açıklama ',
         }
         widgets = {
@@ -58,7 +61,7 @@ class YekaBusinessBlogForm(ModelForm):
                                               'style': 'width: 100%; '}),
             'startDate': forms.DateInput(
                 attrs={'class': 'form-control  pull-right ', 'id': 'datepicker4', 'autocomplete': 'off',
-                       'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
+                       'onkeydown': 'return true', "data-inputmask-alias": "datetime",
                        "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
             'completion_date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'id': 'datepicker', 'autocomplete': 'off',
@@ -68,6 +71,8 @@ class YekaBusinessBlogForm(ModelForm):
                 attrs={'class': 'form-control', 'rows': '3'}),
             'dependence_parent': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                                      'style': 'width: 100%; '}),
+            'child_block': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
+                                               'style': 'width: 100%; '}),
             # 'finisDate': forms.DateInput(
             #     attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
             #            'onkeydown': 'return false', 'required': 'required'}),
@@ -76,15 +81,17 @@ class YekaBusinessBlogForm(ModelForm):
 
     def __init__(self, business, yekabussiness, *args, **kwargs):
         super(YekaBusinessBlogForm, self).__init__(*args, **kwargs)
-        if yekabussiness.parent:
-            if yekabussiness.parent.finisDate:
-                self.fields['startDate'].label = 'Başlama Tarihi   (' + str(
-                    yekabussiness.parent.businessblog.name) + ' bitiş Tarihi:' + str(
-                    yekabussiness.parent.finisDate.strftime("%d-%m-%Y")) + ')'
+        # if yekabussiness.parent:
+        #     if yekabussiness.parent.finisDate:
+        #         self.fields['startDate'].label = 'İşin Yapılma Tarihi   (' + str(
+        #             yekabussiness.parent.businessblog.name) + ' bitiş Tarihi:' + str(
+        #             yekabussiness.parent.finisDate.strftime("%d-%m-%Y")) + ')'
         business_filter = {
             'pk': business
         }
         tbussiness = BusinessBlogGetService(self, business_filter)
+
+
 
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.type == 'string':
@@ -123,8 +130,10 @@ class YekaBusinessBlogForm(ModelForm):
                     self.fields[item.title].widget.attrs = {'class': 'form-control', }
 
     def save(self, yekabusiness, business, *args, **kwargs):
+
         tbussiness = BusinessBlog.objects.get(pk=business)
         tyekabusinessblog = YekaBusinessBlog.objects.get(pk=yekabusiness)
+
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.type == 'file':
                 if tyekabusinessblog.parameter.filter(parametre=item, isDeleted=False):

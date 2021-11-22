@@ -696,6 +696,7 @@
 
 
         function view_competition(id) {
+            $(document).scrollTop($('#region').height())
             let url = '{% url 'ekabis:add_competition'  '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}';
             url = url.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', id)
             $("#add_yarisma").attr("href", url)

@@ -21,10 +21,7 @@ from ekabis.services.services import EmployeeService, YekaService, LogsService, 
 class GetCompany(APIView):
 
     def post(self, request, format=None):
-        perm = general_methods.control_access(request)
-        if not perm:
-            logout(request)
-            return redirect('accounts:login')
+
         draw = request.data['draw']
         start = request.data['start']
         length = request.data['length']
@@ -56,10 +53,7 @@ class GetCompany(APIView):
 class GetEmployee(APIView):
 
     def post(self, request, format=None):
-        perm = general_methods.control_access(request)
-        if not perm:
-            logout(request)
-            return redirect('accounts:login')
+
         draw = request.data['draw']
         start = request.data['start']
         length = request.data['length']
@@ -94,10 +88,7 @@ class GetEmployee(APIView):
 class GetYeka(APIView):
 
     def post(self, request, format=None):
-        perm = general_methods.control_access(request)
-        if not perm:
-            logout(request)
-            return redirect('accounts:login')
+
         draw = request.data['draw']
         start = request.data['start']
         length = request.data['length']
@@ -131,10 +122,7 @@ class GetYeka(APIView):
 class GetSubYeka(APIView):
 
     def post(self, request, format=None):
-        perm = general_methods.control_access(request)
-        if not perm:
-            logout(request)
-            return redirect('accounts:login')
+
         draw = request.data['draw']
         start = request.data['start']
         length = request.data['length']
@@ -171,10 +159,7 @@ class GetSubYeka(APIView):
 class GetLog(APIView):
 
     def post(self, request, format=None):
-        perm = general_methods.control_access(request)
-        if not perm:
-            logout(request)
-            return redirect('accounts:login')
+
         draw = request.data['draw']
         start = request.data['start']
         length = request.data['length']
@@ -209,10 +194,7 @@ class GetLog(APIView):
 class GetYekaCompetition(APIView):
 
     def post(self, request, format=None):
-        perm = general_methods.control_access(request)
-        if not perm:
-            logout(request)
-            return redirect('accounts:login')
+
         draw = request.data['draw']
         start = request.data['start']
         length = request.data['length']
@@ -255,10 +237,6 @@ class GetYekaCompetition(APIView):
 class GetApplicationCompany(APIView):
 
     def post(self, request, format=None):
-        perm = general_methods.control_access(request)
-        if not perm:
-            logout(request)
-            return redirect('accounts:login')
 
         draw = request.data['draw']
         start = request.data['start']

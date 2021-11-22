@@ -63,6 +63,8 @@ def add_yekabusiness(request, uuid):
                                                         sorting=i + 1
                                                         )
                                 blog.save()
+                                parent.child_block = blog
+                                parent.save()
                                 parent = blog
                             yekabusiness.businessblogs.add(blog)
                             yekabusiness.save()
@@ -77,7 +79,7 @@ def add_yekabusiness(request, uuid):
                         return redirect('ekabis:view_yeka_detail', uuid)
                 else:
                     error_messages = get_error_messages(form)
-                    return render(request, 'Yeka/yekabusinessAdd.html', {'business_form': form,'business': business,
+                    return render(request, 'Yeka/yekabusinessAdd.html', {'business_form': form, 'business': business,
                                                                          'error_messages': error_messages, 'urls': urls,
                                                                          'current_url': current_url,
                                                                          'url_name': url_name.name, 'yeka': yeka,
@@ -184,12 +186,15 @@ def add_businessBlogParametre(request, uuid):
                     error_messages = get_error_messages(business_form)
                     return render(request, 'Yeka/parametreAdd.html', {'business_form': business_form,
                                                                       'error_messages': error_messages, 'urls': urls,
-                                                                      'current_url': current_url, 'url_name': url_name.name,'business_blog':business
+                                                                      'current_url': current_url,
+                                                                      'url_name': url_name.name,
+                                                                      'business_blog': business
                                                                       })
 
         return render(request, 'Yeka/parametreAdd.html', {'business_form': business_form,
                                                           'error_messages': '', 'urls': urls,
-                                                          'current_url': current_url, 'url_name': url_name.name,'business_blog':business
+                                                          'current_url': current_url, 'url_name': url_name.name,
+                                                          'business_blog': business
                                                           })
     except Exception as e:
         traceback.print_exc()
@@ -291,6 +296,7 @@ def change_businessBlog(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_businessBlog')
 
+
 # parameter update of business block
 @login_required
 def change_businessBlogParametre(request, uuid, uuidparametre):
@@ -324,6 +330,7 @@ def change_businessBlogParametre(request, uuid, uuidparametre):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_businessBlog')
+
 
 # business plan update
 @login_required
@@ -379,8 +386,12 @@ def change_yekabusiness(request, uuid, yeka):
                                     blog.isDeleted = False
                                 blog.parent = parent
                                 blog.sorting = i + 1
+                                blog.dependence_parent = parent
                                 blog.save()
+                                parent.child_block = blog
+                                parent.save()
                                 parent = blog
+
                         # is blogu yoksa
                         else:
                             if i == 0:
@@ -392,10 +403,12 @@ def change_yekabusiness(request, uuid, yeka):
 
                             else:
                                 blog = YekaBusinessBlog(businessblog=BusinessBlog.objects.get(pk=blogs[i]),
-                                                        parent=parent,
+                                                        parent=parent, dependence_parent=parent,
                                                         sorting=i + 1
                                                         )
                                 blog.save()
+                                parent.child_block = blog
+                                parent.save()
                                 parent = blog
                             yekabusiness.businessblogs.add(blog)
                             yekabusiness.save()
