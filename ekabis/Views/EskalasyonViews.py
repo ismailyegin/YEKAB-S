@@ -23,7 +23,7 @@ from ekabis.services.NotificationServices import notification
 from ekabis.services.services import YekaCompetitionService
 
 
-def EskalasyonCalculation(request,uuid):
+def EskalasyonCalculation(request, uuid):
     try:
         with transaction.atomic():
 
@@ -46,102 +46,108 @@ def EskalasyonCalculation(request,uuid):
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması"):
                 yeka_business = YekaBusiness.objects.get(pk=competition.business.pk).businessblogs.get(
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması")
-                if yeka_business.parameter.filter(parametre__title='Tavan Fiyatı (USD)'):
-                    peak_value = yeka_business.parameter.get(
-                        parametre__title='Tavan Fiyatı (USD)').value  # Sözleşme iş bloğunda girilen eskalasyon pik değeri (USD)
-                    startDate = 'startDate=' + str(datetime.today().date().strftime('%d-%m-%Y')) + '&'
-                    endDate = 'endDate=' + str(datetime.today().date().strftime('%d-%m-%Y'))
-                    date = startDate + endDate
-                    url = 'https://evds2.tcmb.gov.tr/service/evds/series=TP.DK.USD.S.YTL&' + date + '&type=json&key=cakxFSu6Oh&aggregationTypes=max&formulas=0&frequency=1'
-                    payload = {}
-                    headers = {
-                        'Cookie': 'TS01ab7d04=015d31d69177a668a8501cee5acf4e7218ddba7c5142b3bd18702be96d61d829a97551ffd1193c8ce196ebe26d8d3a618ea6f63f1c'
-                    }
-                    response = requests.request("GET", url, headers=headers, data=payload)
-                    x = json.loads(response.text)  # Pik değerini hesaplamak için günlük dolar ortalaması
-                    peak_value = float(peak_value.replace(',', '.')) * float(
-                        x['items'][0]['TP_DK_USD_S_YTL'])  # eskalasyon pik değeri( TL )
-                    if competition.is_calculation:  # pik değerine ulaşmış yarışmaların hesaplaması yapılmaz
-                        yeka_competition_eskalasyon = YekaCompetitionEskalasyon(competition=competition,
-                                                                                pre_result=current_energy_price)
-                        yeka_competition_eskalasyon.save()
+                if YekaContract.objects.get(business=competition.business).unit == '1':
+                    if yeka_business.parameter.filter(parametre__title='Tavan Fiyatı (USD)'):
+                        peak_value = yeka_business.parameter.get(
+                            parametre__title='Tavan Fiyatı (USD)').value  # Sözleşme iş bloğunda girilen eskalasyon pik değeri (USD)
+                        startDate = 'startDate=' + str(datetime.today().date().strftime('%d-%m-%Y')) + '&'
+                        endDate = 'endDate=' + str(datetime.today().date().strftime('%d-%m-%Y'))
+                        date = startDate + endDate
+                        url = 'https://evds2.tcmb.gov.tr/service/evds/series=TP.DK.USD.S.YTL&' + date + '&type=json&key=cakxFSu6Oh&aggregationTypes=max&formulas=0&frequency=1'
+                        payload = {}
+                        headers = {
+                            'Cookie': 'TS01ab7d04=015d31d69177a668a8501cee5acf4e7218ddba7c5142b3bd18702be96d61d829a97551ffd1193c8ce196ebe26d8d3a618ea6f63f1c'
+                        }
+                        response = requests.request("GET", url, headers=headers, data=payload)
+                        x = json.loads(response.text)  # Pik değerini hesaplamak için günlük dolar ortalaması
+                        peak_value = float(peak_value.replace(',', '.')) * float(
+                            x['items'][0]['TP_DK_USD_S_YTL'])  # eskalasyon pik değeri( TL )
+                        if competition.is_calculation:  # pik değerine ulaşmış yarışmaların hesaplaması yapılmaz
+                            yeka_competition_eskalasyon = YekaCompetitionEskalasyon(competition=competition,
+                                                                                    pre_result=current_energy_price)
+                            yeka_competition_eskalasyon.save()
 
-                        month_name = calendar.month_name[(datetime.today().month)]
-                        current_date = datetime.today().date()
+                            month_name = calendar.month_name[(datetime.today().month)]
+                            current_date = datetime.today().date()
 
-                        # 3 aylık dönemin ilk ayından önceki 2. aya ait UFE-TUFE
-                        date_second = (current_date - relativedelta(months=2)).strftime("%d-%m-%Y")
-                        date_second = str(date_second).split('-', 1)[1]
-                        ufe_tufe_second = month_value_tufe_ufe(date_second, '2')
-                        eskalasyon_ufe = Eskalasyon.objects.get(uuid=ufe_tufe_second['eskalasyon_ufe'])
-                        eskalasyon_tufe = Eskalasyon.objects.get(uuid=ufe_tufe_second['eskalasyon_tufe'])
-                        YekaCompetitionEskalasyon_eskalasyon(
-                            yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                            eskalasyon_info=eskalasyon_tufe).save()
-                        YekaCompetitionEskalasyon_eskalasyon(
-                            yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                            eskalasyon_info=eskalasyon_ufe).save()
+                            # 3 aylık dönemin ilk ayından önceki 2. aya ait UFE-TUFE
+                            date_second = (current_date - relativedelta(months=2)).strftime("%d-%m-%Y")
+                            date_second = str(date_second).split('-', 1)[1]
+                            ufe_tufe_second = month_value_tufe_ufe(date_second, '2')
+                            eskalasyon_ufe = Eskalasyon.objects.get(uuid=ufe_tufe_second['eskalasyon_ufe'])
+                            eskalasyon_tufe = Eskalasyon.objects.get(uuid=ufe_tufe_second['eskalasyon_tufe'])
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon_tufe).save()
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon_ufe).save()
 
-                        # 3 aylık dönemin ilk ayından önceki 5. aya ait UFE-TUFE
-                        date_fifth = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
-                        date_fifth = str(date_fifth).split('-', 1)[1]
-                        ufe_tufe_fifth = month_value_tufe_ufe(date_fifth, '5')
-                        eskalasyon_ufe = Eskalasyon.objects.get(uuid=ufe_tufe_fifth['eskalasyon_ufe'])
-                        eskalasyon_tufe = Eskalasyon.objects.get(uuid=ufe_tufe_fifth['eskalasyon_tufe'])
-                        YekaCompetitionEskalasyon_eskalasyon(
-                            yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                            eskalasyon_info=eskalasyon_tufe).save()
-                        YekaCompetitionEskalasyon_eskalasyon(
-                            yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                            eskalasyon_info=eskalasyon_ufe).save()
+                            # 3 aylık dönemin ilk ayından önceki 5. aya ait UFE-TUFE
+                            date_fifth = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
+                            date_fifth = str(date_fifth).split('-', 1)[1]
+                            ufe_tufe_fifth = month_value_tufe_ufe(date_fifth, '5')
+                            eskalasyon_ufe = Eskalasyon.objects.get(uuid=ufe_tufe_fifth['eskalasyon_ufe'])
+                            eskalasyon_tufe = Eskalasyon.objects.get(uuid=ufe_tufe_fifth['eskalasyon_tufe'])
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon_tufe).save()
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon_ufe).save()
 
-                        # 3 aylık dönemin ilk ayından önceki 2. 3. 4. ayların USD ortalaması
-                        endDate = (current_date - relativedelta(months=2)).strftime("%d-%m-%Y")
-                        startDate = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
-                        second_usd_avg = usd_euro_exchange_rate(startDate, endDate, '2-3-4', 'TP.DK.USD.S.YTL')
-                        eskalasyon = Eskalasyon.objects.get(uuid=second_usd_avg['eskalasyon_uuid'])
-                        YekaCompetitionEskalasyon_eskalasyon(
-                            yeka_competition_eskalasyon=yeka_competition_eskalasyon, eskalasyon_info=eskalasyon).save()
+                            # 3 aylık dönemin ilk ayından önceki 2. 3. 4. ayların USD ortalaması
+                            endDate = (current_date - relativedelta(months=2)).strftime("%d-%m-%Y")
+                            startDate = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
+                            second_usd_avg = usd_euro_exchange_rate(startDate, endDate, '2-3-4', 'TP.DK.USD.S.YTL')
+                            eskalasyon = Eskalasyon.objects.get(uuid=second_usd_avg['eskalasyon_uuid'])
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon).save()
 
-                        # 3 aylık dönemin ilk ayından önceki 2. 3. 4. ayların EURO ortalaması
-                        second_euro_avg = usd_euro_exchange_rate(startDate, endDate, '2-3-4', 'TP.DK.EUR.S.YTL')
-                        eskalasyon = Eskalasyon.objects.get(uuid=second_euro_avg['eskalasyon_uuid'])
-                        YekaCompetitionEskalasyon_eskalasyon(
-                            yeka_competition_eskalasyon=yeka_competition_eskalasyon, eskalasyon_info=eskalasyon).save()
+                            # 3 aylık dönemin ilk ayından önceki 2. 3. 4. ayların EURO ortalaması
+                            second_euro_avg = usd_euro_exchange_rate(startDate, endDate, '2-3-4', 'TP.DK.EUR.S.YTL')
+                            eskalasyon = Eskalasyon.objects.get(uuid=second_euro_avg['eskalasyon_uuid'])
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon).save()
 
-                        # 3 aylık dönemin ilk ayından önceki 5. 6. 7. ayların EURO ortalaması
-                        endDate = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
-                        startDate = (current_date - relativedelta(months=7)).strftime("%d-%m-%Y")
-                        fifth_euro_avg = usd_euro_exchange_rate(startDate, endDate, '5-6-7', 'TP.DK.EUR.S.YTL')
-                        eskalasyon = Eskalasyon.objects.get(uuid=fifth_euro_avg['eskalasyon_uuid'])
-                        YekaCompetitionEskalasyon_eskalasyon(
-                            yeka_competition_eskalasyon=yeka_competition_eskalasyon, eskalasyon_info=eskalasyon).save()
+                            # 3 aylık dönemin ilk ayından önceki 5. 6. 7. ayların EURO ortalaması
+                            endDate = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
+                            startDate = (current_date - relativedelta(months=7)).strftime("%d-%m-%Y")
+                            fifth_euro_avg = usd_euro_exchange_rate(startDate, endDate, '5-6-7', 'TP.DK.EUR.S.YTL')
+                            eskalasyon = Eskalasyon.objects.get(uuid=fifth_euro_avg['eskalasyon_uuid'])
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon).save()
 
-                        # 3 aylık dönemin ilk ayından önceki 5. 6. 7. ayların USD ortalaması
-                        fifth_usd_avg = usd_euro_exchange_rate(startDate, endDate, '5-6-7', 'TP.DK.USD.S.YTL')
-                        eskalasyon = Eskalasyon.objects.get(uuid=fifth_usd_avg['eskalasyon_uuid'])
-                        YekaCompetitionEskalasyon_eskalasyon(yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                                                             eskalasyon_info=eskalasyon).save()
+                            # 3 aylık dönemin ilk ayından önceki 5. 6. 7. ayların USD ortalaması
+                            fifth_usd_avg = usd_euro_exchange_rate(startDate, endDate, '5-6-7', 'TP.DK.USD.S.YTL')
+                            eskalasyon = Eskalasyon.objects.get(uuid=fifth_usd_avg['eskalasyon_uuid'])
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon).save()
 
-                        # SONUÇ
-                        ufe_result = 0.26 * float(ufe_tufe_second['ufe']) / float(ufe_tufe_fifth['ufe'])
-                        tufe_result = 0.26 * float(ufe_tufe_second['tufe']) / float(ufe_tufe_fifth['tufe'])
-                        usd_result = 0.24 * float(second_usd_avg['result']) / float(fifth_usd_avg['result'])
-                        euro_result = 0.24 * float(second_euro_avg['result']) / float(fifth_euro_avg['result'])
-                        result = float(current_energy_price) * (ufe_result + tufe_result + usd_result + euro_result)
+                            # SONUÇ
+                            ufe_result = 0.26 * float(ufe_tufe_second['ufe']) / float(ufe_tufe_fifth['ufe'])
+                            tufe_result = 0.26 * float(ufe_tufe_second['tufe']) / float(ufe_tufe_fifth['tufe'])
+                            usd_result = 0.24 * float(second_usd_avg['result']) / float(fifth_usd_avg['result'])
+                            euro_result = 0.24 * float(second_euro_avg['result']) / float(fifth_euro_avg['result'])
+                            result = float(current_energy_price) * (ufe_result + tufe_result + usd_result + euro_result)
 
-                        if result >= peak_value:
-                            result = peak_value
-                            competition.is_calculation = False
-                            competition.save()
+                            if result >= peak_value:
+                                result = peak_value
+                                competition.is_calculation = False
+                                competition.save()
 
-                        yeka_competition_eskalasyon.result = result
-                        yeka_competition_eskalasyon.save()
-                        url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
-                        html = '<a style="color:black;" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
-                            competition.name) + '</a> adlı yarışmanın eskalasyon hesabı yapıldı.'
-                        notification(request, html, competition.uuid, 'yeka_competition')
-                        return result
+                            yeka_competition_eskalasyon.result = result
+                            yeka_competition_eskalasyon.save()
+                            url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                            html = '<a style="color:black;" href="' + url + '"> ID : ' + str(
+                                competition.pk) + ' - ' + str(
+                                competition.name) + '</a> adlı yarışmanın eskalasyon hesabı yapıldı.'
+                            notification(request, html, competition.uuid, 'yeka_competition')
+                            return result
 
     except Exception as e:
         traceback.print_exc()
@@ -252,7 +258,7 @@ def yeka_competition_eskalasyon(request):
         }
         yeka_competitions = YekaCompetitionService(request, filter)
         for competition in yeka_competitions:
-            EskalasyonCalculation(request,competition.uuid)
+            EskalasyonCalculation(request, competition.uuid)
         return redirect('ekabis:yeka_report')
     except Exception as e:
         traceback.print_exc()

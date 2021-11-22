@@ -21,7 +21,7 @@ from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models.Proposal import Proposal
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
-    YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka
+    YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka, YekaCompetitionEskalasyon
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -1158,6 +1158,7 @@ def view_yeka_competition_detail(request, uuid):
             'uuid': uuid
         }
         yeka = YekaCompetitionGetService(request, yeka_filter)
+        eskalasyon=YekaCompetitionEskalasyon.objects.filter(competition=yeka)
         name = general_methods.yekaname(yeka.business)
         competitions = YekaCompetition.objects.filter(parent=yeka, isDeleted=False)
         proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka__parent=yeka, isDeleted=False)
@@ -1227,6 +1228,7 @@ def view_yeka_competition_detail(request, uuid):
                       {'urls': urls, 'current_url': current_url, 'proposal_sub_yeka': proposal_sub_yeka,
                        'url_name': url_name, 'name': name, 'blocks': blocks, 'definition': definiton_yeka,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,'array_proposal':array_proposal,
+                       'yeka_eskalasyon':eskalasyon,
                        'employees': employees, 'competitions': competitions, 'region': region,'yekaproposal':yekaproposal
 
                        })

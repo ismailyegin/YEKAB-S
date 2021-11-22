@@ -600,6 +600,51 @@
 
                                     </div>
                                 </div>
+                                <div class="card card-default card-outline">
+                                    <div class="card-header with-border">
+                                        <h3 class="card-title">Eskalasyon Bilgileri</h3>
+                                    </div>
+
+
+                                    <div class="card-body">
+
+                                        <table id="region" class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tarih</th>
+                                                <th>Fiyat</th>
+                                                <th>Önceki Fiyat</th>
+
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            {% for eskalasyon in yeka_eskalasyon %}
+                                                {% if forloop.counter  == 1 %}
+                                                    <tr id="hover" style="background: #dee2e6">
+                                                        {% else %}
+                                                    <tr id="hover">
+                                                {% endif %}
+                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ eskalasyon.creationDate.date }}</td>
+                                            <td>{{ eskalasyon.result }}</td>
+                                            <td>{{ eskalasyon.pre_result }}</td>
+                                            <td></td>
+
+
+                                            </tr>
+
+                                            {% endfor %}
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
 
                             </div>
                             <div class="col-lg-4">
@@ -678,147 +723,153 @@
                                     </div>
                                 </div>
                             </div>
-                        {% if array_proposal %}
-                            <div class="col-lg-12">
-                                                        <div class="col-md-12">
-                                <div class="card card-primary card-outline">
+                            {% if array_proposal %}
+                                <div class="col-lg-12">
+                                    <div class="col-md-12">
+                                        <div class="card card-primary card-outline">
 
 
-                                    <div class="card-header with-border">
-                                        <h3 class="card-title">Aday Yeka Listesi </h3>
-                                        {% for item in perm %}
-                                            {% if item == 'add_proposal' %}
+                                            <div class="card-header with-border">
+                                                <h3 class="card-title">Aday Yeka Listesi </h3>
+                                                {% for item in perm %}
+                                                    {% if item == 'add_proposal' %}
 
-                                                <a href="{% url "ekabis:add_proposal" yekaproposal.uuid %}"
-                                                   type="button" class="btn btn-outline-primary btn-sm"
-                                                   style="float: right"><i
-                                                        class="fa fa-plus" title="Aday Yeka Ekle"></i>
-                                                </a>
+                                                        <a href="{% url "ekabis:add_proposal" yekaproposal.uuid %}"
+                                                           type="button" class="btn btn-outline-primary btn-sm"
+                                                           style="float: right"><i
+                                                                class="fa fa-plus" title="Aday Yeka Ekle"></i>
+                                                        </a>
 
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-
-                                    <div class="card-body">
-                                        <table id="region" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-
-                                                <th>#</th>
-                                                <th>Aday YEKA</th>
-                                                <th>Basvuru Tarihi</th>
-                                                <th>Kapasite</th>
-                                                <th>Tarım Yazısı</th>
-                                                <th>Bilgi Formu</th>
-                                                <th>KML Dosyası</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-
-                                            {% for proposal in array_proposal %}
-
-                                                <tr style="background: {{ proposal.status }}">
-                                                    <td>{{ forloop.counter }} </td>
-                                                    <td>{{ proposal.proposal.name }}</td>
-                                                    <td>{{ proposal.proposal.date }}</td>
-                                                    <td>{{ proposal.proposal.capacity }}</td>
-                                                    <td>
-                                                        {% if proposal.proposal.farm_form %}
-                                                            <a target="_blank" title="{{ proposal.proposal.farm_form }}"
-                                                               href="
-                                                                       {{ MEDIA_URL }}{{ proposal.proposal.farm_form.url }}"
-                                                               download="">{{ proposal.proposal.farm_form | truncatechars:15 }}</a>
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>{% if proposal.proposal.information_form %}
-                                                        <a target="_blank"
-                                                           href="
-                                                                   {{ MEDIA_URL }}{{ proposal.proposal.information_form.url }}"
-                                                           download="">{{ proposal.proposal.information_form | truncatechars:15 }}</a>
-                                                    {% endif %}</td>
-                                                    <td>{% if proposal.proposal.kml_file %}
-                                                        <a target="_blank"
-                                                           href="{{ MEDIA_URL }}{{ proposal.proposal.kml_file.url }}"
-                                                           download="">{{ proposal.proposal.kml_file | truncatechars:15 }}</a></td>
                                                     {% endif %}
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <button type="button"
-                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                    data-toggle="dropdown">İşlemler
-                                                            </button>
-                                                            <div class="dropdown-menu" role="menu">
+                                                {% endfor %}
+                                            </div>
 
-                                                                {% for item in perm %}
-                                                                    {% if item == 'view_proposal_institution' %}
-                                                                        <a href="{% url 'ekabis:view_proposal_institution' yekaproposal.uuid  proposal.proposal.uuid %}"
-                                                                           class="dropdown-item"> <i
-                                                                                class="fa fa-list"
-                                                                                title="Kurum Görüşleri"></i>Kurum
-                                                                            Görüşleri
-                                                                        </a>
+                                            <div class="card-body">
+                                                <table id="region" class="table table-bordered table-hover">
+                                                    <thead>
+                                                    <tr>
 
-                                                                    {% elif item == 'change_proposal' %}
-                                                                        <a href="{% url 'ekabis:change_proposal' yekaproposal.uuid  proposal.proposal.uuid %}"
-                                                                           class="dropdown-item"> <i
-                                                                                class="fa fa-edit" title="Düzenle"></i>
-                                                                            Düzenle
-                                                                        </a>
+                                                        <th>#</th>
+                                                        <th>Aday YEKA</th>
+                                                        <th>Basvuru Tarihi</th>
+                                                        <th>Kapasite</th>
+                                                        <th>Tarım Yazısı</th>
+                                                        <th>Bilgi Formu</th>
+                                                        <th>KML Dosyası</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    {% for proposal in array_proposal %}
+
+                                                        <tr style="background: {{ proposal.status }}">
+                                                            <td>{{ forloop.counter }} </td>
+                                                            <td>{{ proposal.proposal.name }}</td>
+                                                            <td>{{ proposal.proposal.date }}</td>
+                                                            <td>{{ proposal.proposal.capacity }}</td>
+                                                            <td>
+                                                                {% if proposal.proposal.farm_form %}
+                                                                    <a target="_blank"
+                                                                       title="{{ proposal.proposal.farm_form }}"
+                                                                       href="
+
+                                                                               {{ MEDIA_URL }}{{ proposal.proposal.farm_form.url }}"
+                                                                       download="">{{ proposal.proposal.farm_form | truncatechars:15 }}</a>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>{% if proposal.proposal.information_form %}
+                                                                <a target="_blank"
+                                                                   href="
+
+                                                                           {{ MEDIA_URL }}{{ proposal.proposal.information_form.url }}"
+                                                                   download="">{{ proposal.proposal.information_form | truncatechars:15 }}</a>
+                                                            {% endif %}</td>
+                                                            <td>{% if proposal.proposal.kml_file %}
+                                                                <a target="_blank"
+                                                                   href="
+                                                                           {{ MEDIA_URL }}{{ proposal.proposal.kml_file.url }}"
+                                                                   download="">{{ proposal.proposal.kml_file | truncatechars:15 }}</a>
+                                                                </td>
+                                                            {% endif %}
+                                                            <td>
+                                                                <div class="btn-group">
+                                                                    <button type="button"
+                                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                            data-toggle="dropdown">İşlemler
+                                                                    </button>
+                                                                    <div class="dropdown-menu" role="menu">
+
+                                                                        {% for item in perm %}
+                                                                            {% if item == 'view_proposal_institution' %}
+                                                                                <a href="{% url 'ekabis:view_proposal_institution' yekaproposal.uuid  proposal.proposal.uuid %}"
+                                                                                   class="dropdown-item"> <i
+                                                                                        class="fa fa-list"
+                                                                                        title="Kurum Görüşleri"></i>Kurum
+                                                                                    Görüşleri
+                                                                                </a>
+
+                                                                            {% elif item == 'change_proposal' %}
+                                                                                <a href="{% url 'ekabis:change_proposal' yekaproposal.uuid  proposal.proposal.uuid %}"
+                                                                                   class="dropdown-item"> <i
+                                                                                        class="fa fa-edit"
+                                                                                        title="Düzenle"></i>
+                                                                                    Düzenle
+                                                                                </a>
 
 
-                                                                    {% elif item == 'add_coordinate' %}
-                                                                        <a href="{% url 'ekabis:add_coordinate' proposal.proposal.uuid  yekaproposal.uuid %}"
-                                                                           class="dropdown-item"> <i
-                                                                                class="fa fa-search-location"
-                                                                                title="Koordinat Listesi"></i>
-                                                                            Koordinat Listesi
-                                                                        </a>
+                                                                            {% elif item == 'add_coordinate' %}
+                                                                                <a href="{% url 'ekabis:add_coordinate' proposal.proposal.uuid  yekaproposal.uuid %}"
+                                                                                   class="dropdown-item"> <i
+                                                                                        class="fa fa-search-location"
+                                                                                        title="Koordinat Listesi"></i>
+                                                                                    Koordinat Listesi
+                                                                                </a>
 
 
-                                                                    {% elif item == 'add_location' %}
-                                                                        <a href="{% url 'ekabis:add_location' proposal.proposal.uuid  yekaproposal.uuid %}"
-                                                                           class="dropdown-item"> <i
-                                                                                class="fa fa-location-arrow"
-                                                                                title="Konum Listesi"></i>
-                                                                            Konum Listesi
-                                                                        </a>
+                                                                            {% elif item == 'add_location' %}
+                                                                                <a href="{% url 'ekabis:add_location' proposal.proposal.uuid  yekaproposal.uuid %}"
+                                                                                   class="dropdown-item"> <i
+                                                                                        class="fa fa-location-arrow"
+                                                                                        title="Konum Listesi"></i>
+                                                                                    Konum Listesi
+                                                                                </a>
 
 
-                                                                    {% elif item == 'delete_proposal' %}
+                                                                            {% elif item == 'delete_proposal' %}
 
-                                                                        <a class="dropdown-item" href=""
-                                                                           data-toggle="modal"
-                                                                           onclick=deleteExtraTime('{{ proposal.proposal.uuid }}')><i
-                                                                                class="fa fa-trash"></i>Sil</a>
-                                                                    {% endif %}
+                                                                                <a class="dropdown-item" href=""
+                                                                                   data-toggle="modal"
+                                                                                   onclick=deleteExtraTime('{{ proposal.proposal.uuid }}')><i
+                                                                                        class="fa fa-trash"></i>Sil</a>
+                                                                            {% endif %}
 
-                                                                {% endfor %}
-
-
-                                                            </div>
-
-                                                        </div>
+                                                                        {% endfor %}
 
 
-                                                    </td>
+                                                                    </div>
 
-                                                </tr>
-
-                                            {% endfor %}
+                                                                </div>
 
 
-                                            </tbody>
-                                        </table>
+                                                            </td>
 
+                                                        </tr>
+
+                                                    {% endfor %}
+
+
+                                                    </tbody>
+                                                </table>
+
+
+                                            </div>
+
+                                        </div>
 
                                     </div>
 
                                 </div>
-
-                            </div>
-
-                            </div>
-{% endif %}
+                            {% endif %}
                             {#personel Listesi#}
 
                         </div>
