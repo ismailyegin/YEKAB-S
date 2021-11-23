@@ -217,7 +217,7 @@ def general_reporting(request):
             sql = '  SELECT  "yeka_business.id" AS "blok_id","yeka_business_block.id" AS "yeka_business_block_id", "baglanti_bol.name" AS "baglanti_bolgesi", "yeka.definition" AS "yeka" ,"yarisma.id" AS "yarisma_id" , '
             sql += '  "firma.name" AS "firma" , "firma.taxnumber" AS "vergi_no" , "firma.taxOffice" AS "vergi_dairesi" , '
             sql += '  "firma.mail" AS "firma_mail"  , "yarisma.name" AS "yarisma" , "sozlesme.price" AS "sozlesme_fiyat" , '
-            sql += '  "sozlesme.date" AS "sozlesme_tarih" ," business_block.name" AS "is_blogu" ,"yeka_business_block.status" AS "is_blok_durumu" , '
+            sql += '  "sozlesme.date" AS "sozlesme_tarih" ,"business_block.name" AS "is_blogu" ,"yeka_business_block.status" AS "is_blok_durumu" , '
             sql += '  "eskalasyon.result" AS "guncel_fiyat" , "location.parcel" AS "ada_parse"l , "yeka_business_block.startDate" AS "baslangic_tarihi" , '
             sql += ' "yeka_business_block.finisDate" AS "bitis_tarihi" '
             sql += ' FROM "ekabis_yekacompetition" "yarisma" '
