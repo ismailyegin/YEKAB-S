@@ -225,7 +225,7 @@ def general_reporting(request):
             sql += ' LEFT JOIN "ekabis_connectionregion" "baglanti_bol" ON "baglanti_bol.id"="x.connectionregion_id" '
             sql += ' LEFT JOIN "ekabis_yeka_connection_region" "y" ON "y.yeka_id"="x.connectionregion_id" '
             sql += ' LEFT JOIN "ekabis_yeka yeka" ON "yeka.id"="y.yeka_id" '  # y.yeka_id
-            sql += ' LEFT JOIN "ekabis_yekacompany"  "yeka_compan"y ON "yeka_company.competition_id"="yarisma.id" '  # yarisma.id
+            sql += ' LEFT JOIN "ekabis_yekacompany"  "yeka_company" ON "yeka_company.competition_id"="yarisma.id" '  # yarisma.id
             sql += ' LEFT JOIN "ekabis_company firma" ON "firma.id"="yeka_company.company_id" '
             sql += ' LEFT JOIN "ekabis_yekacontract" "sozlesme" ON "sozlesme.business_id"="yarisma.business_id" '
             sql += ' LEFT JOIN "ekabis_yekabusiness" "yeka_business" ON "yeka_business.id"="yarisma.business_id" '
