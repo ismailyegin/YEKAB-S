@@ -239,7 +239,7 @@ def general_reporting(request):
             sql += '  LEFT JOIN "ekabis_yekacompetitioneskalasyon" "yeka_eskalasyon" ON "yeka_eskalasyon.competition_id"="yarisma.id" '
             sql += '  LEFT JOIN "ekabis_yekacompetitioneskalasyon_eskalasyon" "e" ON "e.yeka_competition_eskalasyon_id"="yeka_eskalasyon.id" '
             sql += '  LEFT JOIN "ekabis_eskalasyon" "eskalasyon" ON "eskalasyon.id"="e.eskalasyon_info_id" '
-            sql += '  LEFT JOIN "ekabis_yekaproposal" "yeka_proposa"l ON "yeka_proposal.business_id"="yeka_business.id" '
+            sql += '  LEFT JOIN "ekabis_yekaproposal" "yeka_proposal" ON "yeka_proposal.business_id"="yeka_business.id" '
             sql += '  LEFT JOIN "ekabis_yekaproposal_proposal" "yekaproposal_proposal" ON "yekaproposal_proposal.yekaproposal_id"="yeka_proposal.id" '
             sql += '  LEFT JOIN "ekabis_proposal_location" "proposal_location" ON "proposal_location.proposal_id"="yekaproposal_proposal.proposal_id" '
             sql += '  LEFT JOIN "ekabis_location" "location" ON "location.id"="proposal_location.location_id" '
