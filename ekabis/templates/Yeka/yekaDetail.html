@@ -443,6 +443,7 @@
                                                                         data-toggle="dropdown"> İşlemler
                                                                 </button>
                                                                 <div class="dropdown-menu" role="menu">
+                                                                {% if aktif != 'Admin' %}
                                                                     {% for item in perm %}
                                                                         {% if item == 'view_competition' and employee in employees %}
                                                                             <a onclick="view_competition('{{ region.uuid }}')"
@@ -450,21 +451,15 @@
                                                                                type="button"><i
                                                                                     class="fa fa-edit"></i>Yeka Yarışma
                                                                                 Listesi</a>
-                                                                        {% endif %}
 
-                                                                    {% endfor %}
-                                                                    {% for item in perm %}
-                                                                        {% if item == 'delete_region' and employee in employees%}
+                                                                        {% elif item == 'delete_region' and employee in employees%}
 
                                                                             <a onclick="deleteRegion('{{ region.uuid }}')"
                                                                                class="dropdown-item" title="Sil"
                                                                                type="button"><i
                                                                                     class="fa fa-edit"></i>Sil</a>
-                                                                        {% endif %}
 
-                                                                    {% endfor %}
-                                                                    {% for item in perm %}
-                                                                        {% if item == 'update_region' and employee in employees%}
+                                                                        {% elif item == 'update_region' and employee in employees%}
                                                                             <a href="{% url "ekabis:update_region" region.uuid yeka.uuid %}"
                                                                                class="dropdown-item" title="Düzenle"
                                                                                type="button"><i
@@ -475,7 +470,21 @@
                                                                         {% endif %}
 
                                                                     {% endfor %}
-
+                                                                    {% else %}
+                                                                    <a onclick="view_competition('{{ region.uuid }}')"
+                                                                               class="dropdown-item" title="Yarışma"
+                                                                               type="button"><i
+                                                                                    class="fa fa-edit"></i>Yeka Yarışma
+                                                                                Listesi</a>
+                                                                       <a onclick="deleteRegion('{{ region.uuid }}')"
+                                                                               class="dropdown-item" title="Sil"
+                                                                               type="button"><i
+                                                                                    class="fa fa-edit"></i>Sil</a>
+                                                                      <a href="{% url "ekabis:update_region" region.uuid yeka.uuid %}"
+                                                                               class="dropdown-item" title="Düzenle"
+                                                                               type="button"><i
+                                                                                    class="fa fa-edit"></i>Düzenle</a>
+                                                                    {% endif %}
 
                                                     </tr>
 
