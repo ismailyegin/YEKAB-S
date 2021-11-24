@@ -103,30 +103,29 @@
                                         <a class="nav-link" id="vert-3" data-toggle="pill" href="#tab-3" role="tab"
                                            aria-controls="tab-3" aria-selected="false">Kabulde Ulaşılan Güçe Göre
                                             Yarışmalar</a>
-{#                                        <a class="nav-link" id="vert-4" data-toggle="pill" href="#tab-4" role="tab"#}
-{#                                           aria-controls="tab-4" aria-selected="false">İllere Göre Ulaşılan Güçler</a>#}
+                                        <a class="nav-link" id="vert-4" data-toggle="pill" href="#tab-4" role="tab"
+                                           aria-controls="tab-4" aria-selected="false">Yeka Bazında Yarışmalar</a>
 {#                                        <a class="nav-link" id="vert-5" data-toggle="pill" href="#tab-5" role="tab"#}
-{#                                           aria-controls="tab-5" aria-selected="false">İllere Göre Yapılan#}
-{#                                            Yarışmalar</a>#}
-{#                                        <a class="nav-link" id="vert-6" data-toggle="pill" href="#tab-6" role="tab"#}
-{#                                           aria-controls="tab-6" aria-selected="false">İllere Göre Ulaşılan Güçler</a>#}
-{#                                        <a class="nav-link" id="vert-7" data-toggle="pill" href="#tab-7" role="tab"#}
-{#                                           aria-controls="tab-7" aria-selected="false">İl Bazında Ulaşılan Kurulu#}
-{#                                            Güç</a>#}
-{#                                        <a class="nav-link" id="vert-8" data-toggle="pill" href="#tab-8" role="tab"#}
-{#                                           aria-controls="tab-8" aria-selected="false">İl ve Kaynak Türü Bazında#}
-{#                                            Ulaşılan Kurulu Güç</a>#}
-{#                                        <a class="nav-link" id="vert-9" data-toggle="pill" href="#tab-9" role="tab"#}
-{#                                           aria-controls="tab-9" aria-selected="false">İl Bazında Öenerilen Aday#}
-{#                                            Yekalar</a>#}
-{#                                        <a class="nav-link" id="vert-10" data-toggle="pill" href="#tab-10" role="tab"#}
-{#                                           aria-controls="tab-10" aria-selected="false">Firmalar Hangi Yekaya#}
-{#                                            Başvurmuş</a>#}
-{#                                        <a class="nav-link" id="vert-11" data-toggle="pill" href="#tab-11" role="tab"#}
-{#                                           aria-controls="tab-11" aria-selected="false">Yeka Bazında yarışmaların#}
-{#                                            Listenmesi</a>#}
-{#                                        <a class="nav-link" id="vert-12" data-toggle="pill" href="#tab-12" role="tab"#}
-{#                                           aria-controls="tab-12" aria-selected="false">Yarışma Raporları</a>#}
+{#                                           aria-controls="tab-5" aria-selected="false">İl Bazında Ulaşılan Güç</a>#}
+                                        {#                                        <a class="nav-link" id="vert-6" data-toggle="pill" href="#tab-6" role="tab"#}
+                                        {#                                           aria-controls="tab-6" aria-selected="false">İllere Göre Ulaşılan Güçler</a>#}
+                                        {#                                        <a class="nav-link" id="vert-7" data-toggle="pill" href="#tab-7" role="tab"#}
+                                        {#                                           aria-controls="tab-7" aria-selected="false">İl Bazında Ulaşılan Kurulu#}
+                                        {#                                            Güç</a>#}
+                                        {#                                        <a class="nav-link" id="vert-8" data-toggle="pill" href="#tab-8" role="tab"#}
+                                        {#                                           aria-controls="tab-8" aria-selected="false">İl ve Kaynak Türü Bazında#}
+                                        {#                                            Ulaşılan Kurulu Güç</a>#}
+                                        {#                                        <a class="nav-link" id="vert-9" data-toggle="pill" href="#tab-9" role="tab"#}
+                                        {#                                           aria-controls="tab-9" aria-selected="false">İl Bazında Öenerilen Aday#}
+                                        {#                                            Yekalar</a>#}
+                                        {#                                        <a class="nav-link" id="vert-10" data-toggle="pill" href="#tab-10" role="tab"#}
+                                        {#                                           aria-controls="tab-10" aria-selected="false">Firmalar Hangi Yekaya#}
+                                        {#                                            Başvurmuş</a>#}
+                                        {#                                        <a class="nav-link" id="vert-11" data-toggle="pill" href="#tab-11" role="tab"#}
+                                        {#                                           aria-controls="tab-11" aria-selected="false">Yeka Bazında yarışmaların#}
+                                        {#                                            Listenmesi</a>#}
+                                        {#                                        <a class="nav-link" id="vert-12" data-toggle="pill" href="#tab-12" role="tab"#}
+                                        {#                                           aria-controls="tab-12" aria-selected="false">Yarışma Raporları</a>#}
                                     </div>
                                 </div>
                                 <div class="col-7 col-sm-9">
@@ -139,7 +138,7 @@
                                                 <div class="card-body">
 
 
-                                                    <form methot="POST">
+                                                    <form method="POST">
                                                         {% csrf_token %}
                                                         <input type="hidden" name='business' value="">
 
@@ -168,7 +167,8 @@
 
                                                     {% if selectblog %}
 
-                                                        <table id="selectblog" class="table table-bordered table-hover">
+                                                        <table style="width: 100%" id="selectblog"
+                                                               class="table table-bordered table-hover">
                                                             <thead>
                                                             <tr>
                                                                 <th>#</th>
@@ -237,7 +237,8 @@
 
                                                 <div class="card-body">
 
-                                                    <table id="prelicense" class="table table-bordered table-hover">
+                                                    <table style="width: 100%" id="prelicense"
+                                                           class="table table-bordered table-hover">
                                                         <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -293,7 +294,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <div class="tab-pane fade" id="tab-1" role="tabpanel"
+                                        <div class="tab-pane fade" id="tab-2" role="tabpanel"
                                              aria-labelledby="vert-1">
 
 
@@ -301,7 +302,8 @@
 
                                                 <div class="card-body">
 
-                                                    <table id="prelicense" class="table table-bordered table-hover">
+                                                    <table style="width: 100%" id="license"
+                                                           class="table table-bordered table-hover">
                                                         <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -320,7 +322,7 @@
 
                                                         <tbody>
 
-                                                        {% for item in prelicense %}
+                                                        {% for item in license %}
                                                             <tr>
                                                                 <td>{{ item.forloop }}</td>
                                                                 <td>{{ item.name }}</td>
@@ -364,7 +366,8 @@
 
                                                 <div class="card-body">
 
-                                                    <table id="accept" class="table table-bordered table-hover">
+                                                    <table style="width: 100%" id="accept"
+                                                           class="table table-bordered table-hover">
                                                         <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -372,7 +375,6 @@
                                                             <th>Firma</th>
                                                             <th>İşletmedeki Mekanik Güç (MW<sub>m</sub>)</th>
                                                             <th>İşletmedeki Elektriksel Güç (MW<sub>e</sub>)</th>
-
 
 
                                                         </tr>
@@ -386,9 +388,8 @@
                                                                 <td>{{ item.forloop }}</td>
                                                                 <td>{{ item.competition.name }}</td>
                                                                 <td>{{ item.company.name }}</td>
-                                                                <td>{{ item.mechanical_power  }}</td>
+                                                                <td>{{ item.mechanical_power }}</td>
                                                                 <td>{{ item.electrical_power }}</td>
-
 
 
                                                             </tr>
@@ -401,22 +402,23 @@
                                                 </div>
                                             </div>
                                         </div>
-                                      <div class="tab-pane fade" id="tab-4" role="tabpanel"
+                                        <div class="tab-pane fade" id="tab-4" role="tabpanel"
                                              aria-labelledby="vert-2">
 
                                             <div class=" card card-primary card-outline">
 
                                                 <div class="card-body">
 
-                                                    <table id="accept" class="table table-bordered table-hover">
+                                                    <table style="width: 100%" id="yeka"
+                                                           class="table table-bordered table-hover">
                                                         <thead>
                                                         <tr>
                                                             <th>#</th>
+                                                            <th>Yeka</th>
+                                                            <th>Yeka Kapasite</th>
                                                             <th>Yarışma</th>
-                                                            <th>Firma</th>
-                                                            <th>İşletmedeki Mekanik Güç (MW<sub>m</sub>)</th>
-                                                            <th>İşletmedeki Elektriksel Güç (MW<sub>e</sub>)</th>
-
+                                                            <th>Yarışma Kapasite</th>
+                                                            <th>Bağlantı Bölgesi</th>
 
 
                                                         </tr>
@@ -424,15 +426,15 @@
 
                                                         <tbody>
 
-                                                        {% for item in accept_array %}
+                                                        {% for item in yeka_list %}
                                                             <tr>
 
                                                                 <td>{{ item.forloop }}</td>
+                                                                <td>{{ item.yeka.definition }}</td>
+                                                                <td>{{ item.yeka.capacity }}</td>
                                                                 <td>{{ item.competition.name }}</td>
-                                                                <td>{{ item.company.name }}</td>
-                                                                <td>{{ item.mechanical_power  }}</td>
-                                                                <td>{{ item.electrical_power }}</td>
-
+                                                                <td>{{ item.competition.capacity }}</td>
+                                                                <td>{{ item.region.name }}</td>
 
 
                                                             </tr>
@@ -446,119 +448,85 @@
                                             </div>
                                         </div>
 
-{#                                        <div class="tab-pane fade" id="tab-3" role="tabpanel"#}
-{#                                             aria-labelledby="vert-3">#}
-{#                                            afsdf Morbi turpis dolor, vulputate vitae felis non, tincidunt#}
-{#                                            congue mauris. Phasellus volutpat augue id mi placerat mollis.#}
-{#                                            Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem,#}
-{#                                            ac tristique nulla. Integer vestibulum orci odio. Cras nec augue#}
-{#                                            ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada#}
-{#                                            nunc. Curabitur eleifend facilisis velit finibus tristique. Nam#}
-{#                                            vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit#}
-{#                                            amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae#}
-{#                                            gravida fermentum, lectus ipsum gravida arcu, id fermentum metus#}
-{#                                            arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac#}
-{#                                            ornare magna.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-4" role="tabpanel"#}
-{#                                             aria-labelledby="vert-4">#}
-{#                                            324123 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-5" role="tabpanel"#}
-{#                                             aria-labelledby="vert-5">#}
-{#                                            24123412 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-6" role="tabpanel"#}
-{#                                             aria-labelledby="vert-6">#}
-{#                                            1234123 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-7" role="tabpanel"#}
-{#                                             aria-labelledby="vert-7">#}
-{#                                            1234123 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-8" role="tabpanel"#}
-{#                                             aria-labelledby="vert-8">#}
-{#                                            231234 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-9" role="tabpanel"#}
-{#                                             aria-labelledby="vert-9">#}
-{#                                            234234 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-10" role="tabpanel"#}
-{#                                             aria-labelledby="vert-10">#}
-{#                                            2342 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-11" role="tabpanel"#}
-{#                                             aria-labelledby="vert-11">#}
-{#                                            43234 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
-{#                                        <div class="tab-pane fade" id="tab-12" role="tabpanel"#}
-{#                                             aria-labelledby="vert-12">#}
-{#                                            3241234 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
-{#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
-{#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
-{#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
-{#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
-{#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
-{#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
-{#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
-{#                                        </div>#}
+
+
+                                        {#                                        <div class="tab-pane fade" id="tab-6" role="tabpanel"#}
+                                        {#                                             aria-labelledby="vert-6">#}
+                                        {#                                            1234123 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
+                                        {#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
+                                        {#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
+                                        {#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
+                                        {#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
+                                        {#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
+                                        {#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
+                                        {#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="tab-pane fade" id="tab-7" role="tabpanel"#}
+                                        {#                                             aria-labelledby="vert-7">#}
+                                        {#                                            1234123 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
+                                        {#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
+                                        {#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
+                                        {#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
+                                        {#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
+                                        {#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
+                                        {#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
+                                        {#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="tab-pane fade" id="tab-8" role="tabpanel"#}
+                                        {#                                             aria-labelledby="vert-8">#}
+                                        {#                                            231234 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
+                                        {#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
+                                        {#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
+                                        {#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
+                                        {#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
+                                        {#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
+                                        {#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
+                                        {#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="tab-pane fade" id="tab-9" role="tabpanel"#}
+                                        {#                                             aria-labelledby="vert-9">#}
+                                        {#                                            234234 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
+                                        {#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
+                                        {#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
+                                        {#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
+                                        {#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
+                                        {#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
+                                        {#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
+                                        {#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="tab-pane fade" id="tab-10" role="tabpanel"#}
+                                        {#                                             aria-labelledby="vert-10">#}
+                                        {#                                            2342 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
+                                        {#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
+                                        {#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
+                                        {#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
+                                        {#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
+                                        {#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
+                                        {#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
+                                        {#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="tab-pane fade" id="tab-11" role="tabpanel"#}
+                                        {#                                             aria-labelledby="vert-11">#}
+                                        {#                                            43234 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
+                                        {#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
+                                        {#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
+                                        {#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
+                                        {#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
+                                        {#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
+                                        {#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
+                                        {#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="tab-pane fade" id="tab-12" role="tabpanel"#}
+                                        {#                                             aria-labelledby="vert-12">#}
+                                        {#                                            3241234 Pellentesque vestibulum commodo nibh nec blandit. Maecenas#}
+                                        {#                                            neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris#}
+                                        {#                                            eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi#}
+                                        {#                                            euismod molestie tristique. Vestibulum consectetur dolor a#}
+                                        {#                                            vestibulum pharetra. Donec interdum placerat urna nec pharetra.#}
+                                        {#                                            Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam.#}
+                                        {#                                            Nunc et felis ut nisl commodo dignissim. In hac habitasse platea#}
+                                        {#                                            dictumst. Praesent imperdiet accumsan ex sit amet facilisis.#}
+                                        {#                                        </div>#}
 
                                     </div>
                                 </div>
@@ -643,7 +611,193 @@
                 'responsive': true,
                 'select': true,
             })
+            $('#yeka').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Yeka',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
+            $('#accept_by_city').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Yeka',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
             $('#license').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Yeka',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+                'select': true,
+            })
+            $('#accept').DataTable({
                 dom: 'Bfrtip',
 
 
