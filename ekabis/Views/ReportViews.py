@@ -267,7 +267,7 @@ def general_reporting_orcl(request):
             sql += " LEFT JOIN  EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID "
             sql += " LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID "
             sql += " LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID "
-            sql += " WHERE yeka_business_block.STATUS= %s  and yeka.isDeleted=%s"
+            sql += " WHERE yeka_business_block.STATUS= 3  and yeka.isDeleted=FALSE"
 
             sql2 = " SELECT SUM(accept.CURRENTPOWER) AS total_elektriksel_guc , SUM(accept.INSTALLEDPOWER) AS total_mekanik_guc ,yarisma.ID AS yarisma_id "
             sql2 += " FROM EKABIS_YEKACOMPETITION yarisma "
@@ -281,7 +281,7 @@ def general_reporting_orcl(request):
             sql2 += " LEFT JOIN  EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID "
             sql2 += " LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID "
             sql2 += " LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID "
-            sql2 += " WHERE business_block.name=%s  "
+            sql2 += " WHERE business_block.name='Kabuller'  "
 
             params = ["3","False"]
             params2 = ["Kabuller"]
@@ -321,7 +321,7 @@ def general_reporting_orcl(request):
             competitions = YekaCompetitionService(request, None)
             companies = CompanyService(request, None)
 
-            cursor.execute(sql_join, params + params2)
+            cursor.execute(sql_join)
             results = dictfetchall(cursor)
             keys = results
 
