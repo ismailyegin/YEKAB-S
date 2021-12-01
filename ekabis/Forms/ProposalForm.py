@@ -13,16 +13,10 @@ class ProposalForm(BaseForm):
                   'name':'Aday Yeka Adı*',
                   }
         widgets = {
-            'farm_form': forms.FileInput(attrs={'class': '',
-                                        'style': 'width: 100%;'}),
-            'kml_file': forms.FileInput(attrs={'class': '',
-                                                'style': 'width: 100%;'}),
             'date':forms.DateInput(
                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
                        'onkeydown': 'return true', 'required': 'required', "data-inputmask-alias": "datetime",
                        "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
-            'information_form': forms.FileInput(attrs={'class': '',
-                                        'style': 'width: 100%;',}),
             'capacity':forms.NumberInput(
                 attrs={'class': 'form-control ','required': 'required'}),
             'name': forms.TextInput(attrs={'class': 'form-control ', 'required': 'required'}),

@@ -1,6 +1,7 @@
 {% extends 'base_layout.html' %}
 
 {% block content %}
+    {% load static %}
 
 
     <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
@@ -196,7 +197,7 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ item.date }}</td>
                                         <td>
-                                            <a target="_blank" href="/media/{{ item.report }}">{{ item.report }}</a>
+                                            <a download="{{ item.report }}"  target="_blank" href="{{MEDIA_URL}}{{ item.report }}">{{ item.report }}</a>
                                         </td>
                                         <td>
                                             {{ item.installedPower }}

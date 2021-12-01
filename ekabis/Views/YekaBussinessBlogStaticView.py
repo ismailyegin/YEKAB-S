@@ -27,6 +27,7 @@ from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
     YekaCompany
 from ekabis.models.Competition import Competition
+from ekabis.models.Settings import Settings
 from ekabis.models.CompetitionCompany import CompetitionCompany
 from ekabis.models.Institution import Institution
 from ekabis.models.Newspaper import Newspaper
@@ -893,7 +894,7 @@ def change_yekaproposal(request, business, businessblog):
 
         yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
         yekabusiness = YekaBusiness.objects.get(uuid=business)
-        competition=YekaCompetition.objects.get(business=yekabusiness)
+        competition = YekaCompetition.objects.get(business=yekabusiness)
 
         yekaproposal = None
         if YekaProposal.objects.filter(business=yekabusiness):
@@ -904,18 +905,17 @@ def change_yekaproposal(request, business, businessblog):
                 business=yekabusiness
             )
             yekaproposal.save()
-        proposals=yekaproposal.proposal.all()
+        proposals = yekaproposal.proposal.all()
 
-
-        array_proposal=[]
+        array_proposal = []
         for proposal in proposals:
             proposal_dict = dict()
             proposal_dict['status'] = '##ffffff'
-            olumsuz=proposal.institution.filter(status='Olumsuz')
+            olumsuz = proposal.institution.filter(status='Olumsuz')
             sonuclanmadi = proposal.institution.filter(status='Sonuclanmadi')
             if olumsuz:
-                proposal_dict['status']='#ff3a3a'
-                proposal_dict['proposal']=proposal
+                proposal_dict['status'] = '#ff3a3a'
+                proposal_dict['proposal'] = proposal
             elif sonuclanmadi:
                 proposal_dict['status'] = '#ffff6e'
                 proposal_dict['proposal'] = proposal
@@ -932,7 +932,7 @@ def change_yekaproposal(request, business, businessblog):
         notification(request, html, competition.uuid, 'yeka_competition')
 
         return render(request, 'Proposal/change_yekaproposal.html',
-                      {'yekaproposal': yekaproposal,'proposal_list':array_proposal,
+                      {'yekaproposal': yekaproposal, 'proposal_list': array_proposal,
                        'business': business,
                        'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
                        'url_name': url_name, 'name': name,
@@ -1013,21 +1013,46 @@ def change_proposal(request, uuid, proposal):
         proposal = Proposal.objects.get(uuid=proposal)
         proposal_form = ProposalForm(request.POST or None, request.FILES or None, instance=proposal)
 
+
+        # proposal_form.fields['farm_form'].initial = proposal.farm_form
+        # proposal_form.fields['information_form'].initial = proposal.information_form
+        # proposal_form.fields['kml_file'].initial = proposal.kml_file
+        #
+        #
+
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
 
             if request.method == 'POST':
+                proposal_form = ProposalForm(request.POST or None, request.FILES or None)
 
                 if proposal_form.is_valid():
                     company = proposal_form.save(request, commit=False)
-                    company.save()
+                    proposal.name=proposal_form.cleaned_data['name']
+                    proposal.capacity=proposal_form.cleaned_data['capacity']
+                    proposal.date=proposal_form.cleaned_data['date']
+                    for filename, file in request.FILES.items():
+                        if filename == 'farm_form':
+                            proposal.farm_form=file
+                        elif filename == 'kml_file':
+                            proposal.kml_file=file
+                        elif filename == 'information_form':
+                            proposal.information_form=file
+
+                    proposal.save()
 
                     messages.success(request, 'Aday Yeka Güncellenmiştir.')
-                    return redirect('ekabis:change_yekaproposal', yeka_proposal.business.uuid,
-                                    yeka_proposal.yekabusinessblog.uuid)
+                    return render(request, 'Proposal/change_proposal.html',
+                                  {
+                                      'urls': urls,
+                                      'current_url': current_url,
+                                      'url_name': url_name,
+                                      'proposal_form': proposal_form
+                                  })
                 else:
+                    proposal_form = ProposalForm(request.POST , request.FILES)
                     error_messages = get_error_messages(proposal_form)
                     return render(request, 'Proposal/change_proposal.html',
                                   {
@@ -1067,7 +1092,7 @@ def delete_proposal(request):
                 log = str(obj.pk) + " - aday yeka silindi."
                 logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
                 logs.save()
-                yeka_proposal=YekaProposal.objects.get(proposal=obj)
+                yeka_proposal = YekaProposal.objects.get(proposal=obj)
                 competition = YekaCompetition.objects.get(business=yeka_proposal.business)
 
                 url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
@@ -1139,7 +1164,7 @@ def change_proposal_active(request, business, businessblog):
                         traceback.print_exc()
                 pro_active = ProposalActive.objects.filter(business=yekabusiness)
 
-                return redirect('ekabis:change_yekaproposal', business,businessblog)
+                return redirect('ekabis:change_yekaproposal', business, businessblog)
 
             return render(request, 'Proposal/change_proposal_active.html',
                           {'pro_active': pro_active,

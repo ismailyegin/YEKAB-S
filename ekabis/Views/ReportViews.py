@@ -10,7 +10,9 @@ from django.db import transaction, connection
 from django.db.models import Q, Sum, Count
 from django.http import JsonResponse, Http404, HttpResponse, FileResponse
 from django.shortcuts import redirect, render
+from django.templatetags.static import static
 from django.urls import resolve
+from django.utils.safestring import mark_safe
 
 from ekabis.models import City, YekaBusinessBlog, YekaCompetition, BusinessBlog, Yeka, YekaBusiness, ConnectionRegion, \
     YekaBusinessBlogParemetre, BusinessBlogParametreType, YekaCompetitionEskalasyon, YekaAccept
@@ -20,6 +22,7 @@ from ekabis.services.services import last_urls, YekaService, ConnectionRegionSer
     CompanyService
 
 from ekabis.models.Permission import Permission
+from oxiterp.settings.base import MEDIA_URL
 
 
 @login_required()
@@ -221,64 +224,64 @@ def view_report(request):
         return redirect('ekabis:view_yeka')
 
 
-# reporting the information of YEKA in the system with a general table
-def general_reporting(request):
+# reporting the information of YEKA in the system with a general table -ORACLE-
+def general_reporting_orcl(request):
     try:
         with connection.cursor() as cursor:
             urls = last_urls(request)
             current_url = resolve(request.path_info)
             url_name = Permission.objects.get(codename=current_url.url_name)
-            sql = '  SELECT  "yeka_business.ID" AS "blok_id","yeka_business_block.ID" AS "yeka_business_block_id", "baglanti_bol.name" AS "baglanti_bolgesi", "yeka.definition" AS "yeka" ,"yarisma.ID" AS "yarisma_id" , '
-            sql += '  "firma.NAME" AS "firma" , "firma.TAXNUMBER" AS "vergi_no" , "firma.TAXOFFICE" AS "vergi_dairesi" , '
-            sql += '  "firma.MAIL" AS "firma_mail"  , "yarisma.NAME" AS "yarisma" , "sozlesme.PRICE" AS "sozlesme_FIYAT" , '
-            sql += '  "sozlesme.DATE" AS "sozlesme_tarih" ,"business_block.NAME" AS "is_blogu" ,"yeka_business_block.STATUS" AS "is_blok_durumu" , '
-            sql += '  "eskalasyon.RESULT" AS "guncel_fiyat" , "location.PARCEL" AS "ada_parsel" , "yeka_business_block.STARTDATE" AS "baslangic_tarihi" , '
-            sql += ' "yeka_business_block.FINISDATE" AS "bitis_tarihi" '
-            sql += ' FROM "EKABIS_YEKACOMPETITION" "yarisma" '
-            sql += ' LEFT JOIN "EKABIS_CONNECTIONREGION_YE1C75" "x" ON "x.YEKACOMPETITION_ID"="yarisma.ID" '  # yarisma.id
-            sql += ' LEFT JOIN "EKABIS_CONNECTIONREGION" "baglanti_bol" ON "baglanti_bol.ID"="x.CONNECTIONREGION_ID" '
-            sql += ' LEFT JOIN "EKABIS_YEKA_CONNECTION_REGION" "y" ON "y.YEKA_ID"="x.CONNECTIONREGION_ID" '
-            sql += ' LEFT JOIN "EKABIS_YEKA" "yeka" ON "yeka.ID"="y.YEKA_ID" '  # y.yeka_id
-            sql += ' LEFT JOIN "EKABIS_YEKACOMPANY"  "yeka_company" ON "yeka_company.COMPETITION_ID"="yarisma.ID" '  # yarisma.id
-            sql += ' LEFT JOIN "EKABIS_COMPANY" "firma" ON "firma.ID"="yeka_company.COMPANY_ID" '
-            sql += ' LEFT JOIN "EKABIS_YEKACONTRACT" "sozlesme" ON "sozlesme.BUSINESS_ID"="yarisma.BUSINESS_ID" '
-            sql += ' LEFT JOIN "EKABIS_YEKABUSINESS" "yeka_business" ON "yeka_business.ID"="yarisma.BUSINESS_ID" '
-            sql += ' LEFT JOIN "EKABIS_YEKABUSINESS_BUSINE12FF" "ybb" ON "ybb.YEKABUSINESS_ID"="yeka_business.ID" '
-            sql += '  LEFT JOIN "EKABIS_YEKABUSINESSBLOG" "yeka_business_block" ON "yeka_business_block.ID"="ybb.YEKABUSINESSBLOG_ID" '
-            sql += '  LEFT JOIN "EKABIS_BUSINESSBLOG" "business_block" ON "business_block.ID"="yeka_business_block.BUSINESSBLOG_ID" '
-            sql += '  left JOIN "EKABIS_BUSINESSBLOG_PARAMETRE" "business_parametre" ON "business_parametre.BUSINESSBLOG_ID"="business_block.ID" '
-            sql += '  left JOIN "EKABIS_BUSINESSBLOGPARAMET80EE" "parametre_type" ON "parametre_type.ID"="business_parametre.BUSINESSBLOGPARAMETRETYPE_ID"'
-            sql += '  left JOIN "EKABIS_YEKABUSINESSBLOGPAR118F" "yeka_blok_parametre" ON "yeka_blok_parametre.PARAMETRE_ID"="parametre_type.ID" '
-            sql += '  LEFT JOIN "EKABIS_YEKACONNECTIONREGION" "y_con" ON "y_con.YEKA_ID"="yeka.ID" '  # yeka.id
-            sql += '  LEFT JOIN "EKABIS_YEKACOMPETITIONESKA02C8" "yeka_eskalasyon" ON "yeka_eskalasyon.competition_id"="yarisma.id" '
-            sql += '  LEFT JOIN "EKABIS_YEKACOMPETITIONESKAC10D" "e" ON "e.YEKA_COMPETITION_ESKALASYON_ID"="yeka_eskalasyon.ID" '
-            sql += '  LEFT JOIN "EKABIS_ESKALASYON" "eskalasyon" ON "eskalasyon.ID"="e.ESKALASYON_INFO_ID" '
-            sql += '  LEFT JOIN "EKABIS_YEKAPROPOSAL" "yeka_proposal" ON "yeka_proposal.BUSINESS_ID"="yeka_business.ID" '
-            sql += '  LEFT JOIN "EKABIS_YEKAPROPOSAL_PROPOSAL" "yekaproposal_proposal" ON "yekaproposal_proposal.YEKAPROPOSAL_ID"="yeka_proposal.ID" '
-            sql += '  LEFT JOIN "EKABIS_PROPOSAL_LOCATION" "proposal_location" ON "proposal_location.PROPOSAL_ID"="yekaproposal_proposal.PROPOSAL_ID" '
-            sql += '  LEFT JOIN "EKABIS_LOCATION" "location" ON "location.ID"="proposal_location.LOCATION_ID" '
-            sql += '  LEFT JOIN  "EKABIS_YEKAACCEPT" "yeka_accept" ON "yeka_accept.BUSINESS_ID"="yeka_business.ID" '
-            sql += '  LEFT JOIN "EKABIS_YEKAACCEPT_ACCEPT" "yeka_yekaaccept" ON "yeka_yekaaccept.YEKAACCEPT_ID"="yeka_accept.ID" '
-            sql += '  LEFT JOIN "EKABIS_ACCEPT" "accept" ON "accept.ID"="yeka_yekaaccept.ACCEPT_ID" '
-            sql += '  where  "yeka.ID" is  not null and "yeka_business_block.STATUS"= %s '
+            sql = " SELECT  yeka_business.ID AS blok_id,yeka_business_block.ID AS yeka_business_block_id,"
+            sql += " firma.TAXNUMBER AS vergi_no , firma.TAXOFFICE AS vergi_dairesi ,sozlesme.contract_date as sozlesme_tarih, baglanti_bol.NAME AS baglanti_bolgesi, yeka.DEFINITION AS yeka ,yarisma.ID AS yarisma_id ,firma.NAME AS firma , "
+            sql += " firma.MAIL AS firma_mail  , yarisma.NAME AS yarisma , sozlesme.PRICE AS sozlesme_fiyat, "
+            sql += " ,business_block.NAME AS is_blogu ,yeka_business_block.STATUS AS is_blok_durumu, yeka_business_block.STARTDATE AS baslangic_tarihi ,city.name as sehir ,district.name as ilce,neighborhood.name as mah,"
+            sql += " yeka_eskalasyon.RESULT as guncel_fiyat,location.PARCEL AS ada_parsel,"
+            sql += " yeka_business_block.FINISDATE AS bitis_tarihi "
+            sql += " FROM EKABIS_YEKACOMPETITION yarisma "
+            sql += " LEFT JOIN EKABIS_CONNECTIONREGION_YE1C75 x ON x.YEKACOMPETITION_ID = yarisma.ID "
+            sql += " LEFT JOIN EKABIS_CONNECTIONREGION baglanti_bol ON baglanti_bol.ID=x.CONNECTIONREGION_ID "
+            sql += " LEFT JOIN EKABIS_YEKA_CONNECTION_REGION y ON y.CONNECTIONREGION_ID=baglanti_bol.ID "
+            sql += " LEFT JOIN EKABIS_YEKA yeka ON yeka.ID=y.YEKA_ID"
+            sql += " LEFT JOIN EKABIS_YEKACOMPANY  yeka_company ON yarisma.ID=yeka_company.COMPETITION_ID "
+            sql += " LEFT JOIN EKABIS_COMPANY firma ON firma.ID=yeka_company.COMPANY_ID"
+            sql += " LEFT JOIN EKABIS_YEKACONTRACT sozlesme ON sozlesme.BUSINESS_ID=yarisma.BUSINESS_ID "
+            sql += " LEFT JOIN EKABIS_YEKABUSINESS yeka_business ON yeka_business.ID=yarisma.BUSINESS_ID "
+            sql += " LEFT JOIN EKABIS_YEKABUSINESS_BUSINE12FF ybb ON ybb.YEKABUSINESS_ID=yeka_business.ID "
+            sql += " LEFT JOIN EKABIS_YEKABUSINESSBLOG yeka_business_block ON yeka_business_block.ID=ybb.YEKABUSINESSBLOG_ID "
+            sql += " LEFT JOIN EKABIS_BUSINESSBLOG business_block ON business_block.ID=yeka_business_block.BUSINESSBLOG_ID "
+            sql += " LEFT JOIN EKABIS_BUSINESSBLOG_PARAMETRE business_parametre ON business_parametre.BUSINESSBLOG_ID=business_block.ID "
+            sql += " LEFT JOIN EKABIS_BUSINESSBLOGPARAMET80EE parametre_type ON parametre_type.ID=business_parametre.BUSINESSBLOGPARAMETRETYPE_ID "
+            sql += " LEFT JOIN EKABIS_YEKABUSINESSBLOGPAR118F yeka_blok_parametre ON yeka_blok_parametre.PARAMETRE_ID=parametre_type.ID "
+            sql += " LEFT JOIN EKABIS_YEKACOMPETITIONESKA02C8 yeka_eskalasyon ON yeka_eskalasyon.competition_id=yarisma.ID "
+            sql += " LEFT JOIN EKABIS_YEKACOMPETITIONESKAC10D e ON e.YEKA_COMPETITION_ESKALASYON_ID=yeka_eskalasyon.ID "
+            sql += " LEFT JOIN EKABIS_ESKALASYON eskalasyon ON eskalasyon.ID=e.ESKALASYON_INFO_ID "
+            sql += " LEFT JOIN EKABIS_YEKACOMPETITIONESKA02C8 yeka_eskalasyon ON yeka_eskalasyon.competition_id=yarisma.ID "
+            sql += " LEFT JOIN EKABIS_YEKACOMPETITIONESKAC10D e ON e.YEKA_COMPETITION_ESKALASYON_ID=yeka_eskalasyon.ID "
+            sql += " LEFT JOIN EKABIS_YEKAPROPOSAL yeka_proposal ON yeka_proposal.BUSINESS_ID=yeka_business.ID "
+            sql += " LEFT JOIN EKABIS_YEKAPROPOSAL_PROPOSAL yekaproposal_proposal ON yekaproposal_proposal.YEKAPROPOSAL_ID=yeka_proposal.ID "
+            sql += " LEFT JOIN EKABIS_PROPOSAL_LOCATION proposal_location ON proposal_location.PROPOSAL_ID=yekaproposal_proposal.PROPOSAL_ID "
+            sql += " LEFT JOIN EKABIS_LOCATION location ON location.ID=proposal_location.LOCATION_ID "
+            sql += " LEFT JOIN EKABIS_CITY city ON city.ID=location.city "
+            sql += " LEFT JOIN EKABIS_DISTRICT district ON district.ID=location.DISTRICT_ID "
+            sql += " LEFT JOIN EKABIS_NEIGHBORHOOD neighborhood  ON neighborhood.ID=location.NEIGHBORHOOD_ID "
+            sql += " LEFT JOIN  EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID "
+            sql += " LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID "
+            sql += " LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID "
+            sql += " WHERE yeka_business_block.STATUS= %s "
 
-            # f = open("sql-2.txt", "r")
-            # sql2 = f.read()
-            # f.close()
-
-            sql2 = ' SELECT SUM("accept.CURRENTPOWER") AS "total_elektriksel_guc" , SUM("accept.INSTALLEDPOWER") AS "total_mekanik_guc" , "yarisma.ID" AS "yarisma_id" '
-            sql2 += ' FROM "EKABIS_YEKACOMPETITION" "yarisma" '
-            sql2 += ' left JOIN "EKABIS_YEKABUSINESS" "yeka_business" ON "yeka_business.ID"="yarisma.BUSINESS_ID" '
-            sql2 += ' left JOIN "EKABIS_YEKABUSINESS_BUSINE12FF" "ybb" ON "ybb.YEKABUSINESS_ID"="yeka_business.ID" '
-            sql2 += ' left JOIN "EKABIS_YEKABUSINESSBLOG" "yeka_business_block" ON "yeka_business_block.ID"="ybb.YEKABUSINESSBLOG_ID" '
-            sql2 += ' left JOIN "EKABIS_BUSINESSBLOG" "business_block" ON "business_block.ID"="yeka_business_block.BUSINESSBLOG_ID" '
-            sql2 += ' left JOIN "EKABIS_BUSINESSBLOG_PARAMETRE" "business_parametre" ON "business_parametre.BUSINESSBLOG_ID"="business_block.ID" '
-            sql2 += ' left JOIN "EKABIS_BUSINESSBLOGPARAMET80EE"  "parametre_type" ON "parametre_type.ID"="business_parametre.BUSINESSBLOGPARAMETRETYPE_ID" '
-            sql2 += ' left JOIN "EKABIS_YEKABUSINESSBLOGPAR118F" "yeka_blok_parametre" ON "yeka_blok_parametre.PARAMETRE_ID"="parametre_type.ID" '
-            sql2 += ' LEFT JOIN  "EKABIS_YEKAACCEPT" "yeka_accept" ON "yeka_accept.BUSINESS_ID"="yeka_business.ID" '
-            sql2 += ' LEFT JOIN "EKABIS_YEKAACCEPT_ACCEPT" "yeka_yekaaccept" ON "yeka_yekaaccept.YEKAACCEPT_ID"="yeka_accept.ID" '
-            sql2 += ' LEFT JOIN "EKABIS_ACCEPT" "accept" ON "accept.ID"="yeka_yekaaccept.ACCEPT_ID" '
-            sql2 += ' where "business_block.NAME"= %s '
+            sql2 = " SELECT SUM(accept.CURRENTPOWER) AS total_elektriksel_guc , SUM(accept.INSTALLEDPOWER) AS total_mekanik_guc ,yarisma.ID AS yarisma_id "
+            sql2 += " FROM EKABIS_YEKACOMPETITION yarisma "
+            sql2 += " LEFT JOIN EKABIS_YEKABUSINESS yeka_business ON yeka_business.ID=yarisma.BUSINESS_ID "
+            sql2 += " LEFT JOIN EKABIS_YEKABUSINESS_BUSINE12FF ybb ON ybb.YEKABUSINESS_ID=yeka_business.ID "
+            sql2 += " LEFT JOIN EKABIS_YEKABUSINESSBLOG yeka_business_block ON yeka_business_block.ID=ybb.YEKABUSINESSBLOG_ID "
+            sql2 += " LEFT JOIN EKABIS_BUSINESSBLOG business_block ON business_block.ID=yeka_business_block.BUSINESSBLOG_ID "
+            sql2 += " LEFT JOIN EKABIS_BUSINESSBLOG_PARAMETRE business_parametre ON business_parametre.BUSINESSBLOG_ID=business_block.ID "
+            sql2 += " LEFT JOIN EKABIS_BUSINESSBLOGPARAMET80EE  parametre_type ON parametre_type.ID=business_parametre.BUSINESSBLOGPARAMETRETYPE_ID "
+            sql2 += " LEFT JOIN EKABIS_YEKABUSINESSBLOGPAR118F yeka_blok_parametre ON yeka_blok_parametre.PARAMETRE_ID=parametre_type.ID "
+            sql2 += " LEFT JOIN  EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID "
+            sql2 += " LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID "
+            sql2 += " LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID "
+            sql2 += " WHERE business_block.name=%s "
 
             params = ["3"]
             params2 = ["Kabuller"]
@@ -286,31 +289,31 @@ def general_reporting(request):
 
             if request.method == 'POST':
                 if not request.POST['select_yeka'] == 'not_matter':
-                    sql += ' and "yeka.ID"= %s '
+                    sql += ' and yeka.ID= %s '
                     yeka_id = request.POST['select_yeka']
                     params.append(yeka_id)
                 if not request.POST['select_region'] == 'not_matter':
                     region_id = request.POST['select_region']
-                    sql += ' and "baglanti_bol.ID"= %s '
+                    sql += ' and baglanti_bol.ID= %s '
                     params.append(region_id)
                 if not request.POST['select_competition'] == 'not_matter':
                     competition_id = request.POST['select_competition']
-                    sql += ' and "yarisma.ID"= %s '
-                    sql2 += ' and "yarisma.ID"= %s '
+                    sql += ' and yarisma.ID= %s '
+                    sql2 += ' and yarisma.ID= %s '
                     params.append(competition_id)
                     params2.append(competition_id)
                 if not request.POST['select_company'] == 'not_matter':
                     company_id = request.POST['select_company']
-                    sql += ' and "firma.ID" = %s '
+                    sql += ' and firma.ID = %s '
                     params.append(company_id)
-                sql += ' group by "yeka_business_block.ID"'
-                sql2 += ' group by "yeka_business_block.ID"'
+
+                sql2 += ' group by yarisma.ID '
 
             else:
-                sql += ' group by "yeka_business_block.ID" '
-                sql2 += ' group by "yeka_business_block.ID" '
-
-            sql_join = 'SELECT * FROM ( ' + sql + ' ) A  LEFT JOIN  (' + sql2 + ') "B" ON "A.yarisma_id"="B.yarisma_id" group by  "B.yarisma_id" '
+                sql2 += ' group by yarisma.ID '
+            join_select = 'B.yarisma_id,blok_id,yeka_business_block_id ,yeka_business_block_id,vergi_no,is_blogu,vergi_dairesi,baglanti_bolgesi,yeka,A.yarisma_id,A.firma,A.firma_mail,yarisma,A.sozlesme_fiyat,A.is_blok_durumu,A.bitis_tarihi,A.baslangic_tarihi, A.guncel_fiyat,A.ada_parsel,A.sehir,A.ilce,A.mah,A.sozlesme_tarih'
+            select_sql = 'B.yarisma_id ,A.blok_id, A.yeka_business_block_id, A.yeka_business_block_id ,A.vergi_no ,A.vergi_dairesi, A.is_blogu ,A.baglanti_bolgesi,A.yeka,A.yarisma_id ,A.sozlesme_tarih,A.firma,A.firma_mail,A.yarisma,A.sozlesme_fiyat,A.is_blok_durumu,A.bitis_tarihi,A.baslangic_tarihi,A.guncel_fiyat,A.ada_parsel,A.sehir,A.ilce,A.mah'
+            sql_join = 'SELECT ' + select_sql + ' FROM ( ' + sql + ' ) A  LEFT JOIN  (' + sql2 + ') B ON A.yarisma_id=B.yarisma_id group by  ' + join_select + ' '
             print(sql_join)
             yeka = YekaService(request, None)
             regions = ConnectionRegionService(request, None)
@@ -340,7 +343,108 @@ def general_reporting(request):
                     for blog in competititon.business.businessblogs.all():
                         for blog_parameter in blog.parameter.all():
                             print(blog.businessblog.name + ' - ' + blog_parameter.parametre.title)
-                            parameter_dict[blog_parameter.parametre.title] = blog_parameter.value
+                            if blog_parameter.parametre.type == 'file':
+                                path = MEDIA_URL + blog_parameter.file.name
+                                parameter_dict[blog_parameter.parametre.title] = mark_safe(
+                                    '<a download="' + blog_parameter.file.name + '" href="' + path + '">' + blog_parameter.file.name + '</a>')
+                            else:
+                                parameter_dict[blog_parameter.parametre.title] = blog_parameter.value
+                    end_result.append(parameter_dict)
+
+                results = result_array['results']
+            return render(request, 'Yeka/general_report.html',
+                          {'block_results': end_result,
+                           'keys': result_array['key_array'], 'yekas': yeka, 'regions': regions, 'companies': companies,
+                           'competitions': competitions, 'urls': urls, 'current_url': current_url,
+                           'url_name': url_name.name})
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, e)
+        return redirect('ekabis:view_yeka')
+
+
+# reporting the information of YEKA in the system with a general table -MYSQL-
+def general_reporting(request):
+    try:
+        with connection.cursor() as cursor:
+            urls = last_urls(request)
+            current_url = resolve(request.path_info)
+            url_name = Permission.objects.get(codename=current_url.url_name)
+            f = open("sql-1.txt", "r")
+            sql = f.read()
+            f.close()
+
+            f = open("sql-2.txt", "r")
+            sql2 = f.read()
+            f.close()
+
+            params = ["3"]
+            params2 = ["Kabuller"]
+            competition_id = None
+
+            if request.method == 'POST':
+                if not request.POST['select_yeka'] == 'not_matter':
+                    sql += ' and yeka.ID= %s '
+                    yeka_id = request.POST['select_yeka']
+                    params.append(yeka_id)
+                if not request.POST['select_region'] == 'not_matter':
+                    region_id = request.POST['select_region']
+                    sql += ' and baglanti_bol.ID= %s '
+                    params.append(region_id)
+                if not request.POST['select_competition'] == 'not_matter':
+                    competition_id = request.POST['select_competition']
+                    sql += ' and yarisma.ID= %s '
+                    sql2 += ' and yarisma.ID= %s '
+                    params.append(competition_id)
+                    params2.append(competition_id)
+                if not request.POST['select_company'] == 'not_matter':
+                    company_id = request.POST['select_company']
+                    sql += ' and firma.ID = %s '
+                    params.append(company_id)
+
+                sql2 += ' group by yarisma.ID '
+
+            else:
+                sql2 += ' group by yarisma.ID '
+            join_select = 'B.yarisma_id,blok_id,yeka_business_block_id ,yeka_business_block_id,vergi_no,is_blogu,vergi_dairesi,baglanti_bolgesi,yeka,A.yarisma_id,A.firma,A.firma_mail,yarisma,A.sozlesme_fiyat,A.is_blok_durumu,A.bitis_tarihi,A.baslangic_tarihi, A.guncel_fiyat,A.ada_parsel,A.sehir,A.ilce,A.mah,A.sozlesme_tarih'
+            select_sql = 'B.yarisma_id ,A.blok_id, A.yeka_business_block_id, A.yeka_business_block_id ,A.vergi_no ,A.vergi_dairesi, A.is_blogu ,A.baglanti_bolgesi,A.yeka,A.yarisma_id ,A.sozlesme_tarih,A.firma,A.firma_mail,A.yarisma,A.sozlesme_fiyat,A.is_blok_durumu,A.bitis_tarihi,A.baslangic_tarihi,A.guncel_fiyat,A.ada_parsel,A.sehir,A.ilce,A.mah'
+            sql_join = 'SELECT ' + select_sql + ' FROM ( ' + sql + ' ) A  LEFT JOIN  (' + sql2 + ') B ON A.yarisma_id=B.yarisma_id group by  ' + join_select + ' '
+            print(sql_join)
+            yeka = YekaService(request, None)
+            regions = ConnectionRegionService(request, None)
+            competitions = YekaCompetitionService(request, None)
+            companies = CompanyService(request, None)
+
+            cursor.execute(sql_join, params + params2)
+            results = dictfetchall(cursor)
+            keys = results
+
+            result_array = table_column_name(keys)
+            parameters = BusinessBlogParametreType.objects.filter(isDeleted=False)
+
+            end_result = []
+            for i, result in enumerate(results):
+                parameter_dict = dict()
+                if YekaCompetition.objects.filter(pk=result['yarisma_id']):
+                    competititon = YekaCompetition.objects.get(pk=result['yarisma_id'])
+                    for parameter in parameters:
+                        parameter_dict[parameter.title] = None
+                    # We delete the column names that do not want to appear in the table.
+                    result.pop('blok_id')
+                    result.pop('yarisma_id')
+                    result.pop('yeka_business_block_id')
+                    result.pop('is_blok_durumu')
+                    parameter_dict['result'] = result
+                    for blog in competititon.business.businessblogs.all():
+                        for blog_parameter in blog.parameter.all():
+                            print(blog.businessblog.name + ' - ' + blog_parameter.parametre.title)
+                            if blog_parameter.parametre.type == 'file':
+                                path = MEDIA_URL + blog_parameter.file.name
+                                parameter_dict[blog_parameter.parametre.title] = mark_safe(
+                                    '<a download="' + blog_parameter.file.name + '" href="' + path + '">' + blog_parameter.file.name + '</a>')
+                            else:
+                                parameter_dict[blog_parameter.parametre.title] = blog_parameter.value
                     end_result.append(parameter_dict)
 
                 results = result_array['results']
@@ -452,6 +556,22 @@ def table_column_name(results):
                     if key not in column_name:
                         key_array.append('Ada-Parsel')
                     x['key'] = 'Ada-Parsel'
+                    params.append(value)
+
+                elif key == 'sehir':
+                    if key not in column_name:
+                        key_array.append('İl')
+                    x['key'] = 'İl'
+                    params.append(value)
+                elif key == 'ilce':
+                    if key not in column_name:
+                        key_array.append('İlçe')
+                    x['key'] = 'İlçe'
+                    params.append(value)
+                elif key == 'mah':
+                    if key not in column_name:
+                        key_array.append('Mahalle')
+                    x['key'] = 'Mahalle'
                     params.append(value)
 
                 elif key == 'baslangic_tarihi':

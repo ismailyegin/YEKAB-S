@@ -1,13 +1,25 @@
-SELECT SUM(accept.currentPower) as total_elektriksel_guc , SUM(accept.installedPower) as total_mekanik_guc , yarisma.id as yarisma_id
-FROM ekabis_yekacompetition as yarisma
-left JOIN ekabis_yekabusiness as yeka_business ON yeka_business.id=yarisma.business_id
-left JOIN ekabis_yekabusiness_businessblogs as ybb ON ybb.yekabusiness_id=yeka_business.id
-left JOIN ekabis_yekabusinessblog as yeka_business_block ON yeka_business_block.id=ybb.yekabusinessblog_id
-left JOIN ekabis_businessblog as business_block ON business_block.id=yeka_business_block.businessblog_id
-left JOIN ekabis_businessblog_parametre as business_parametre ON business_parametre.businessblog_id=business_block.id
-left JOIN ekabis_businessblogparametretype as  parametre_type ON parametre_type.id=business_parametre.businessblogparametretype_id
-left JOIN ekabis_yekabusinessblogparemetre as yeka_blok_parametre ON yeka_blok_parametre.parametre_id=parametre_type.id
-LEFT JOIN  ekabis_yekaaccept as yeka_accept ON yeka_accept.business_id=yeka_business.id
-LEFT JOIN ekabis_yekaaccept_accept as yeka_yekaaccept ON yeka_yekaaccept.yekaaccept_id=yeka_accept.id
-LEFT JOIN ekabis_accept as accept ON accept.id=yeka_yekaaccept.accept_id
-where business_block.name= %s
+SELECT SUM(accept.CURRENTPOWER) AS total_elektriksel_guc , SUM(accept.INSTALLEDPOWER) AS total_mekanik_guc ,yarisma.ID AS yarisma_id
+
+FROM EKABIS_YEKACOMPETITION yarisma
+
+LEFT JOIN EKABIS_YEKABUSINESS yeka_business ON yeka_business.ID=yarisma.BUSINESS_ID
+
+LEFT JOIN ekabis_yekabusiness_businessblogs ybb ON ybb.YEKABUSINESS_ID=yeka_business.ID
+
+LEFT JOIN EKABIS_YEKABUSINESSBLOG yeka_business_block ON yeka_business_block.ID=ybb.YEKABUSINESSBLOG_ID
+
+LEFT JOIN EKABIS_BUSINESSBLOG business_block ON business_block.ID=yeka_business_block.BUSINESSBLOG_ID
+
+LEFT JOIN EKABIS_BUSINESSBLOG_PARAMETRE business_parametre ON business_parametre.BUSINESSBLOG_ID=business_block.ID
+
+LEFT JOIN ekabis_businessblogparametretype  parametre_type ON parametre_type.ID=business_parametre.BUSINESSBLOGPARAMETRETYPE_ID
+
+LEFT JOIN ekabis_yekabusinessblogparemetre yeka_blok_parametre ON yeka_blok_parametre.PARAMETRE_ID=parametre_type.ID
+
+ LEFT JOIN  EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID
+
+ LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID
+
+ LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID
+
+WHERE business_block.name=%s

@@ -143,11 +143,11 @@
                         </div>
                         <div class="card-body">
                             <form method="post" role="form"  enctype="multipart/form-data">
+                             {% csrf_token %}
                                 <div class="card-body">
-                                    {% csrf_token %}
 
                                     {% for item in proposal_form %}
-                                        <div class="form-group row">
+                                        <div class="form-group ">
                                             <label> {{ item.label }}</label>
                                             {{ item }}
                                             <label for="" id="label_{{ item.name }}"></label>

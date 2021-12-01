@@ -1516,7 +1516,18 @@ def AssociateFileGetService(request, filter):
 def validate_file_extension(value):  #Aday YEKA eklerken sadece kml ve kmz dosyalarını kayıt etmek
     import os
     from django.core.exceptions import ValidationError
+    file_size = 0
+    if Settings.objects.filter(key='file_size'):
+        file_size = Settings.objects.get(key='file_size').value
     ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
     valid_extensions = ['.kml','.kmz']
-    if not ext.lower() in valid_extensions:
-        raise ValidationError('Sadece .kml ve .kmz uzantılı dosya yükleyebilirsiniz.')
+    if not ext.lower() in valid_extensions and value.size > float(file_size)*1024*1024:
+        raise ValidationError('Sadece .kml ve .kmz uzantılı dosya yükleyebilirsiniz.Maksimum yüklenmesi gereken dosya boyutu: '+file_size+' MB')
+
+def validate_file_size(value):  # dosya boyutu kontrolü
+    from django.core.exceptions import ValidationError
+    file_size = 0
+    if Settings.objects.filter(key='file_size'):
+        file_size = Settings.objects.get(key='file_size').value
+    if value.size > float(file_size)*1024*1024:
+        raise ValidationError('Dosya Boyutu Büyük.(Maksimum yüklenmesi gereken dosya boyutu: '+file_size+' MB')

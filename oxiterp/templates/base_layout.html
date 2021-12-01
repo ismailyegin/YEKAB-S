@@ -16,12 +16,12 @@
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+          href="{% static 'source_sans/source_sans_pro.css' %}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fullcalendar/main.css' %}">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{% static 'ionicon/ionicons.min.css' %}">
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet"
           href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
@@ -276,7 +276,7 @@
                         {% if person.profileImage %}
 
                             <img alt="İmage" style="height: 100px; width: 100px;" class="rounded-circle"
-                                src="{% static 'dist/img/user_logo.png' %}">
+                                 src="{% static 'dist/img/user_logo.png' %}">
 
                         {% else %}
                             <img alt="İmage" style="height: 100px; width: 100px;" class="rounded-circle"
@@ -428,9 +428,10 @@
 
                     {% if aktif == 'Admin' %}
                         <div class="modal-footer">
-                          <a class="btn btn-outline-primary" type="button" href="{% url "ekabis:change_help_text" help_url %}"
-                                        style="float:right">Düzenle
-                                </a>
+                            <a class="btn btn-outline-primary" type="button"
+                               href="{% url "ekabis:change_help_text" help_url %}"
+                               style="float:right">Düzenle
+                            </a>
                         </div>
 
 
@@ -787,6 +788,8 @@
     $(document).ready(function () {
         debugger;
         $('.toast').delay(4000).fadeOut(3000);
+        debugger;
+
 
         setInterval();
 
