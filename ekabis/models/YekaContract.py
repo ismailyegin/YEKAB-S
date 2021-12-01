@@ -17,7 +17,7 @@ class YekaContract(BaseModel):
     )
     business = models.OneToOneField(YekaBusiness, on_delete=models.CASCADE)
     yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.CASCADE)
-    date=models.DateField(null=True,blank=True)
+    contract_tarih=models.DateField(null=True,blank=True)
     contract=models.FileField(null=True,blank=True)
     price=models.DecimalField(null=True,blank=True,max_digits=20,decimal_places=2)
     unit=models.ForeignKey(ConnectionUnit,on_delete=models.CASCADE,null=True,blank=True)
