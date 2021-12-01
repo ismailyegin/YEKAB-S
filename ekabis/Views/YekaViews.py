@@ -172,6 +172,7 @@ def delete_yeka(request):
                     'uuid': uuid
                 }
                 obj = YekaService(request, yekafilter).first()
+
                 parent_filter = {
                     'isDeleted': False,
                     'yekaParent__uuid': obj.uuid
@@ -183,6 +184,7 @@ def delete_yeka(request):
                     data_as_json_pre = serializers.serialize('json', Yeka.objects.filter(uuid=uuid))
                     obj.isDeleted = True
                     obj.save()
+
                     url = redirect('ekabis:view_yeka').url
                     html = '<a style="" href="' + url + '">ID: ' + str(
                         obj.pk) + ' - ' + obj.definition + '</a> YEKA  silindi.'

@@ -12,7 +12,7 @@ from ekabis.models.BaseModel import BaseModel
 
 class Company(BaseModel):
     name = models.CharField(blank=False, null=False, max_length=120, verbose_name='İsim')
-    communication = models.OneToOneField(Communication, on_delete=models.CASCADE, db_column='communication', null=True,
+    communication = models.OneToOneField(Communication, on_delete=models.DO_NOTHING, db_column='communication', null=True,
                                          blank=True)
     degree = models.CharField(blank=True, null=True, max_length=120, verbose_name='Unvan')
     taxOffice = models.CharField(blank=True, null=True, max_length=120, verbose_name='Vergi Dairesi ')

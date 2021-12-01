@@ -10,8 +10,8 @@ class CompetitionApplication(BaseModel):
         (True, 'Evet '),
         (False, 'Hayır')
     )
-    business = models.OneToOneField(YekaBusiness, on_delete=models.CASCADE)
-    yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.CASCADE,null=True,blank=True)
+    business = models.OneToOneField(YekaBusiness, on_delete=models.DO_NOTHING)
+    yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.DO_NOTHING,null=True,blank=True)
     startDate = models.DateField(null=True, blank=True)
     finishDate = models.DateField(null=True, blank=True)
     preRegistration = models.BooleanField(choices=necesssary_choices, default=False)

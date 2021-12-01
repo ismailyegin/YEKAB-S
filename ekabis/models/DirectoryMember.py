@@ -9,12 +9,12 @@ from ekabis.models.BaseModel import BaseModel
 
 
 class DirectoryMember(BaseModel):
-    person = models.OneToOneField(Person, on_delete=models.CASCADE)
-    communication = models.OneToOneField(Communication, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    person = models.OneToOneField(Person, on_delete=models.DO_NOTHING)
+    communication = models.OneToOneField(Communication, on_delete=models.DO_NOTHING)
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
     creationDate = models.DateTimeField(auto_now_add=True)
     modificationDate = models.DateTimeField(auto_now=True)
-    role = models.ForeignKey(DirectoryMemberRole, on_delete=models.CASCADE, verbose_name='Üye Rolü')
+    role = models.ForeignKey(DirectoryMemberRole, on_delete=models.DO_NOTHING, verbose_name='Üye Rolü')
     commission = models.ForeignKey(DirectoryCommission, on_delete=models.DO_NOTHING, verbose_name='Kurulu')
 
 

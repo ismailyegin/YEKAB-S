@@ -3,7 +3,7 @@ from ekabis.models.BaseModel import BaseModel
 from ekabis.models.CompanyFileNames import CompanyFileNames
 class CompanyFiles(BaseModel):
 
-    filename=models.ForeignKey(CompanyFileNames,on_delete=models.CASCADE)
+    filename=models.ForeignKey(CompanyFileNames,on_delete=models.DO_NOTHING)
     file = models.FileField(upload_to='company/', null=True, blank=True,verbose_name='company_files')
 
     def __str__(self):

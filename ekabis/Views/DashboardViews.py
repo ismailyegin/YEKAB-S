@@ -104,8 +104,11 @@ def return_admin_dashboard(request):
     biyo_count = yeka.filter(type='Biyokütle').count()
     jeo_count = yeka.filter(type='Jeotermal').count()
 
+
+
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
+
     # region_json = serializers.serialize("json", ConnectionRegion.objects.all(), cls=DjangoJSONEncoder)
     # yeka_json = serializers.serialize("json",yeka, cls=DjangoJSONEncoder)
     # list_yeka=list(yeka)

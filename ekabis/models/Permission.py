@@ -23,7 +23,7 @@ class Permission(BaseModel):
     model = models.CharField( max_length=100,blank=True,null=True)
     codename = models.CharField( max_length=300,blank=False,null=False)
     codeurl = models.CharField( max_length=300,blank=False,null=False)
-    parent=models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    parent=models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
     group=models.CharField(max_length=100,blank=True,null=True,choices=Type)
     def __str__(self):
         return '%s ' % self.name +'('+self.codename+')'

@@ -12,7 +12,7 @@ class YekaCompetition(BaseModel):
     capacity = models.IntegerField(null=False, blank=False, verbose_name='Kapasite')
     date = models.DateField(blank=True, null=True)
     city = models.ManyToManyField(City)
-    business = models.OneToOneField(YekaBusiness, on_delete=models.CASCADE, null=True, blank=True)
+    business = models.OneToOneField(YekaBusiness, on_delete=models.DO_NOTHING, null=True, blank=True)
     company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, null=True, blank=True)
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.DO_NOTHING)
     eskalasyon_first_date = models.CharField(null=True, blank=True,max_length=100)

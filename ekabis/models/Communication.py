@@ -13,8 +13,8 @@ class Communication(BaseModel):
     address = models.CharField(max_length=250,blank=True, null=True, verbose_name='Adres')
     addressHome = models.CharField(max_length=250,blank=True, null=True, verbose_name='AdresHome')
     addressJop = models.CharField(max_length=250,blank=True, null=True, verbose_name='AdresJop')
-    city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name='İl', db_column='city', null=True, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Ülke', db_column='country', null=True,
+    city = models.ForeignKey(City, on_delete=models.DO_NOTHING, verbose_name='İl', db_column='city', null=True, blank=True)
+    country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, verbose_name='Ülke', db_column='country', null=True,
                                 blank=True)
 
     town = models.CharField(max_length=120, null=True, blank=True)
