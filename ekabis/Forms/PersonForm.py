@@ -14,7 +14,7 @@ class PersonForm(BaseForm):
         labels = {'tc': 'T.C. *', 'profileImage': 'Profil Resmi'}
 
         widgets = {
-            'profileImage': forms.FileInput(),
+
 
             'tc': forms.TextInput(
                 attrs={'class': 'form-control ', 'required': 'required', 'maxlength': '11', 'minlength': '11',

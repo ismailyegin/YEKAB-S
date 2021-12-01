@@ -1,8 +1,10 @@
 from datetime import timedelta
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
+from ekabis.models.Settings import Settings
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaBusinessBlogParemetre import YekaBusinessBlogParemetre
@@ -91,8 +93,6 @@ class YekaBusinessBlogForm(ModelForm):
         }
         tbussiness = BusinessBlogGetService(self, business_filter)
 
-
-
         for item in tbussiness.parametre.filter(isDeleted=False):
             if item.type == 'string':
                 self.fields[item.title] = forms.CharField(max_length=250)
@@ -125,9 +125,10 @@ class YekaBusinessBlogForm(ModelForm):
             elif item.type == 'file':
                 self.fields[item.title] = forms.FileField(required=False)
                 if item.necessary:
-                    self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control', }
+                    self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control',
+                                                            'type': 'file',}
                 else:
-                    self.fields[item.title].widget.attrs = {'class': 'form-control', }
+                    self.fields[item.title].widget.attrs = {'class': 'form-control', 'type': 'file',}
 
     def save(self, yekabusiness, business, *args, **kwargs):
 
@@ -185,3 +186,11 @@ def update(self, yekabusiness, business, *args, **kwargs):
         test.value = str(self.data[item.title])
         test.save()
     return
+
+
+def file_size_control(value):  # add this to some file where you can import it from
+    file_size = 0
+    if Settings.objects.filter(key='file_size'):
+        file_size = Settings.objects.get(key='file_size').value
+    if value.size > float(file_size)*1024*1024:
+        raise ValidationError('Dosya Boyutu Büyük.(Maksimum yüklenmesi gereken dosya boyutu: ' + file_size + ' MB')

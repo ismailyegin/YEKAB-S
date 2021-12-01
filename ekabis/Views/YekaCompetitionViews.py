@@ -589,7 +589,7 @@ def change_yekacompetitionbusiness(request, uuid, competition):
 
 
 @login_required()
-def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, business):  # yeka iş bloğu düzenleme
+def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, business):  # yarisma iş bloğu düzenleme
     perm = general_methods.control_access(request)
     if not perm:
         logout(request)
@@ -616,7 +616,9 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         purchase_guarantee_form = None
 
         business = BusinessBlogGetService(request, yeka_business_filter_)
-        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, instance=yekabussiness)
+        yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, request.POST or None,
+                                                          request.FILES or None,
+                                                          instance=yekabussiness)
 
         # if yekaBusinessBlogo_form['dependence_parent'].initial !=None:
         #     yekaBusinessBlogo_form.fields['startDate'].widget.attrs['readonly'] = True
@@ -655,30 +657,23 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         yekaBusinessBlogo_form.fields['child_block'].queryset = competition.business.businessblogs.exclude(
             uuid=yekabussiness.uuid).filter(isDeleted=False)
 
-        for item in yekabussiness.parameter.all():
-            if item.parametre.type == 'file':
-                yekaBusinessBlogo_form.fields[item.parametre.title].required = False
-                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
-            else:
-                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
-
         if request.POST:
 
-            for item in yekabussiness.parameter.all():
-                if item.parametre.type == 'file' and item.file == None:
-                    messages.warning(request, 'khghbmb.')
-                    return render(request, 'Yeka/YekabussinesBlogUpdate.html',
-                                  {
-                                      'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
-                                      'competition': competition, 'urls': urls,
-                                      'current_url': current_url, 'contract_form': form_contract,
-                                      'purchase_guarantee_form': purchase_guarantee_form,
-                                      'url_name': url_name,
-                                      'name': name
-                                  })
+            # for item in yekabussiness.parameter.all():
+            #     if item.parametre.type == 'file' and item.file == None:
+            #         messages.warning(request, 'khghbmb.')
+            #         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
+            #                       {
+            #                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
+            #                           'competition': competition, 'urls': urls,
+            #                           'current_url': current_url, 'contract_form': form_contract,
+            #                           'purchase_guarantee_form': purchase_guarantee_form,
+            #                           'url_name': url_name,
+            #                           'name': name
+            #                       })
 
             yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, request.POST or None,
-                                                          request.FILES or None,
+                                                          request.FILES,
                                                           instance=yekabussiness)
 
             if form_contract:
@@ -702,7 +697,6 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                         purchase_guarantee.save()
 
             if yekaBusinessBlogo_form.is_valid():
-
 
                 if yekaBusinessBlogo_form['child_block'].data == yekaBusinessBlogo_form['dependence_parent'].data:
                     messages.warning(request, 'Bir önceki iş bloğu ile bir sonraki iş bloğu aynı olamaz.')
@@ -734,6 +728,18 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     business.name) + '</a> adlı iş bloğu guncellendi.'
                 notification(request, html, competition.uuid, 'yeka_competition')
                 return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+        else:
+            for item in yekabussiness.parameter.all():
+                if item.parametre.type == 'file':
+                    if item.file:
+                        yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+                        yekaBusinessBlogo_form.fields[item.parametre.title].widget.attrs = {'class': 'form-control'}
+
+                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+                else:
+                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+
+
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
@@ -997,6 +1003,15 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                                 yeka_business.save()
                                 yeka_business.businessblogs.add(yeka_businessblog)
                                 yeka_business.save()
+
+                                for param in item.parameter.all():
+                                    new_param = YekaBusinessBlogParemetre(value=param.value, file=param.file,
+                                                                          title=param.title,
+                                                                          parametre=param.parametre)
+                                    new_param.save()
+                                    yeka_businessblog.parameter.add(new_param)
+                                    yeka_businessblog.save()
+
                             competition.business = yeka_business
                             competition.save()
 
@@ -1014,6 +1029,10 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                                             fcom.dependence_parent = competition.business.businessblogs.filter(
                                                 businessblog=yeka_dependence_parent.businessblog, isDeleted=False)[0]
                                             fcom.save()
+                                            x = fcom.dependence_parent
+                                            x.child_block = fcom  # bir sonraki iş bloğu oluşturuldu
+                                            x.save()
+
                     url = redirect('ekabis:view_sub_yeka_competition_detail', competition.uuid).url
                     html = '<a style="" href="' + url + '"> ' + str(
                         competition.pk) + ' - ' + str(
