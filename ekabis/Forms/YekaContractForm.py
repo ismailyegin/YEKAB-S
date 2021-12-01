@@ -7,17 +7,17 @@ from ekabis.models.YekaContract import YekaContract
 class YekaContractForm(BaseForm):
     class Meta:
         model = YekaContract
-        fields = ('price', 'unit', 'contractDate', 'company', 'contract',)
+        fields = ('price', 'unit', 'date', 'company', 'contract',)
         labels = {
             'price': 'Fiyat',
             'contract': 'Kullanım Hakkı Sözleşmesi',
-            'contractDate': 'Sözleşme İmza Tarihi',
+            'date': 'Sözleşme İmza Tarihi',
             'unit': 'Birimi',
             'company': 'Kazanan Firma', }
         widgets = {
             'unit': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                         'style': 'width: 100%;'}),
-            'contractDate': forms.DateInput(
+            'date': forms.DateInput(
                 attrs={'class': 'form-control  pull-right datepicker6', 'autocomplete': 'off',
                        'onkeydown': 'return true', "data-inputmask-alias": "datetime",
                        "data-inputmask-inputformat": "dd/mm/yyyy", "data-mask": "", "inputmode": "numeric"}),
