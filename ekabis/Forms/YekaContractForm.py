@@ -11,16 +11,16 @@ class YekaContractForm(BaseForm):
         fields = ('price', 'unit', 'company', 'contract','contract_date')
         labels = {
             'price': 'Fiyat',
-            'contract_date': 'Kullanım Hakkı Sözleşmesi',
+            'contract': 'Kullanım Hakkı Sözleşmesi',
+            'contract_date':'Sözleşme Tarihi',
             'unit': 'Birimi',
             'company': 'Kazanan Firma', }
         widgets = {
             'unit': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
                                         'style': 'width: 100%;'}),
-            'contract_date':forms.DateInput(
-                 attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
-                        'onkeydown': 'return false', 'required': 'required'}),
-
+            'contract_date': forms.DateInput(
+                attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',
+                       'onkeydown': 'return false', 'required': 'required'}),
             'price': forms.NumberInput(
                 attrs={'class': 'form-control '}),
             'company': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
