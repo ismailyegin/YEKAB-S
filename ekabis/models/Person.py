@@ -34,7 +34,7 @@ class Person(BaseModel):
     )
 
     tc = models.CharField(max_length=120, null=True, blank=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, db_column='user', null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, db_column='user', null=True, blank=True)
     phoneNumber = models.CharField(max_length=11, null=False, blank=False)
     address = models.CharField(max_length=250,blank=True, null=True, verbose_name='Adres')
     height = models.CharField(max_length=120, null=True, blank=True)

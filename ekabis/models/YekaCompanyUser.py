@@ -7,7 +7,7 @@ from ekabis.models.YekaUser import YekaUser
 
 class YekaCompanyUser(BaseModel):
 
-    business = models.OneToOneField(YekaBusiness, on_delete=models.CASCADE)
-    yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.CASCADE)
+    business = models.OneToOneField(YekaBusiness, on_delete=models.DO_NOTHING)
+    yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.DO_NOTHING)
     companyuser=models.ManyToManyField(YekaUser)
 

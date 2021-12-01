@@ -12,6 +12,6 @@ from ekabis.models.BaseModel import BaseModel
 
 class YekaPersonHistory(BaseModel):
 
-    yeka = models.ForeignKey(Yeka, on_delete=models.CASCADE, verbose_name='yeka')
+    yeka = models.ForeignKey(Yeka, on_delete=models.DO_NOTHING, verbose_name='yeka')
     person = models.ForeignKey(Employee, on_delete=models.DO_NOTHING, verbose_name='personel')
     is_active = models.BooleanField(default=False)

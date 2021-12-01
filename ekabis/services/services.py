@@ -130,11 +130,12 @@ def ConnectionRegionService(request, filter):
         if filter:
             if type(filter) != type(Q()):
                 filter['isDeleted'] = False
+                filter['yeka__isDeleted'] = False
                 return ConnectionRegion.objects.filter(**filter)
             else:
-                return ConnectionRegion.objects.filter(filter, isDeleted=False)
+                return ConnectionRegion.objects.filter(filter, isDeleted=False, yeka__isDeleted=False)
         else:
-            return ConnectionRegion.objects.filter(isDeleted=False)
+            return ConnectionRegion.objects.filter(isDeleted=False, yeka__isDeleted=False)
     except ConnectionRegion.DoesNotExist:
         return None
     except Exception as e:
@@ -1149,7 +1150,7 @@ def last_urls(request):
         with transaction.atomic():
             if request.META.get('HTTP_REFERER'):
                 urlpath = urlparse(request.META.get('HTTP_REFERER')).path
-                hostname=urlparse(request.META.get('HTTP_REFERER')).hostname
+                hostname = urlparse(request.META.get('HTTP_REFERER')).hostname
                 # if hostname == 'kobiltek.com':
                 #     url = urlpath.split('/yekabis/yekabis/')[1]
                 # else:
@@ -1385,6 +1386,7 @@ def FactoryFileNameGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
 
+
 def FactoryGetService(request, filter):
     try:
         if filter:
@@ -1416,6 +1418,7 @@ def FactoryService(request, filter):
     except Exception as e:
         traceback.print_exc()
 
+
 def FactoryFileService(request, filter):
     try:
         if filter:
@@ -1431,6 +1434,7 @@ def FactoryFileService(request, filter):
     except Exception as e:
         traceback.print_exc()
 
+
 def FactoryFileGetService(request, filter):
     try:
         if filter:
@@ -1445,7 +1449,6 @@ def FactoryFileGetService(request, filter):
         return None
     except Exception as e:
         traceback.print_exc()
-
 
 
 def AssociateFileNameService(request, filter):
@@ -1480,8 +1483,6 @@ def AssociateFileNameGetService(request, filter):
         traceback.print_exc()
 
 
-
-
 def AssociateFileService(request, filter):
     try:
         if filter:
@@ -1513,21 +1514,24 @@ def AssociateFileGetService(request, filter):
     except Exception as e:
         traceback.print_exc()
 
-def validate_file_extension(value):  #Aday YEKA eklerken sadece kml ve kmz dosyalarını kayıt etmek
+
+def validate_file_extension(value):  # Aday YEKA eklerken sadece kml ve kmz dosyalarını kayıt etmek
     import os
     from django.core.exceptions import ValidationError
     file_size = 0
     if Settings.objects.filter(key='file_size'):
         file_size = Settings.objects.get(key='file_size').value
     ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
-    valid_extensions = ['.kml','.kmz']
-    if not ext.lower() in valid_extensions and value.size > float(file_size)*1024*1024:
-        raise ValidationError('Sadece .kml ve .kmz uzantılı dosya yükleyebilirsiniz.Maksimum yüklenmesi gereken dosya boyutu: '+file_size+' MB')
+    valid_extensions = ['.kml', '.kmz']
+    if not ext.lower() in valid_extensions and value.size > float(file_size) * 1024 * 1024:
+        raise ValidationError(
+            'Sadece .kml ve .kmz uzantılı dosya yükleyebilirsiniz.Maksimum yüklenmesi gereken dosya boyutu: ' + file_size + ' MB')
+
 
 def validate_file_size(value):  # dosya boyutu kontrolü
     from django.core.exceptions import ValidationError
     file_size = 0
     if Settings.objects.filter(key='file_size'):
         file_size = Settings.objects.get(key='file_size').value
-    if value.size > float(file_size)*1024*1024:
-        raise ValidationError('Dosya Boyutu Büyük.(Maksimum yüklenmesi gereken dosya boyutu: '+file_size+' MB')
+    if value.size > float(file_size) * 1024 * 1024:
+        raise ValidationError('Dosya Boyutu Büyük.(Maksimum yüklenmesi gereken dosya boyutu: ' + file_size + ' MB')

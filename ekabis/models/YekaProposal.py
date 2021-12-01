@@ -9,8 +9,8 @@ from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 
 class YekaProposal(BaseModel):
 
-    business = models.OneToOneField(YekaBusiness, on_delete=models.CASCADE)
-    yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.CASCADE)
+    business = models.OneToOneField(YekaBusiness, on_delete=models.DO_NOTHING)
+    yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.DO_NOTHING)
     proposal=models.ManyToManyField(Proposal)
 
 

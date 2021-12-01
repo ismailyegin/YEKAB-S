@@ -10,8 +10,8 @@ from ekabis.models.CategoryItem import CategoryItem
 
 
 class Employee(BaseModel):
-    person = models.OneToOneField(Person, on_delete=models.CASCADE, db_column='person', null=False, blank=False)
-    communication = models.OneToOneField(Communication, on_delete=models.CASCADE, db_column='communication')
+    person = models.OneToOneField(Person, on_delete=models.DO_NOTHING, db_column='person', null=False, blank=False)
+    communication = models.OneToOneField(Communication, on_delete=models.DO_NOTHING, db_column='communication')
 
     def __str__(self):
         return '%s' % self.person.user.get_full_name()

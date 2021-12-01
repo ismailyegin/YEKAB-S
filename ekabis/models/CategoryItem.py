@@ -7,7 +7,7 @@ from ekabis.models.BaseModel import BaseModel
 class CategoryItem(BaseModel):
     name = models.CharField(blank=False, null=False, max_length=255)
     forWhichClazz = models.CharField(blank=False, null=False, max_length=255)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    parent = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
     branch = models.CharField(max_length=128, choices=EnumFields.BRANCH.value, null=True, blank=True,
                               verbose_name='Seçiniz')
     isFirst = models.BooleanField(null=True, blank=True)

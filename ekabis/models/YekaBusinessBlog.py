@@ -11,8 +11,8 @@ class YekaBusinessBlog(BaseModel):
         (True, 'Süresiz '),
         (False, 'Süreli')
     )
-    businessblog = models.ForeignKey(BusinessBlog, on_delete=models.CASCADE, null=True, blank=True) #iş planında bulunan bir bloğun sabit bilgileri
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='business_parent', null=True, blank=True)
+    businessblog = models.ForeignKey(BusinessBlog, on_delete=models.DO_NOTHING, null=True, blank=True) #iş planında bulunan bir bloğun sabit bilgileri
+    parent = models.ForeignKey('self', on_delete=models.DO_NOTHING, related_name='business_parent', null=True, blank=True)
     startDate = models.DateTimeField(null=True, blank=True)
     finisDate = models.DateTimeField(null=True, blank=True)
     businessTime = models.IntegerField(null=True, blank=True)
@@ -23,9 +23,9 @@ class YekaBusinessBlog(BaseModel):
     parameter = models.ManyToManyField(YekaBusinessBlogParemetre, null=True, blank=True) #dinamik parametre bilgileri
     indefinite = models.BooleanField(default=False, choices=INDEFINETE_CHOICES)
     explanation = models.CharField(max_length=250,null=True, blank=True)
-    dependence_parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='depence_parent', null=True,
+    dependence_parent = models.ForeignKey('self', on_delete=models.DO_NOTHING, related_name='depence_parent', null=True,
                                           blank=True)
-    child_block = models.ForeignKey('self', on_delete=models.CASCADE, related_name='business_child', null=True, blank=True)
+    child_block = models.ForeignKey('self', on_delete=models.DO_NOTHING, related_name='business_child', null=True, blank=True)
 
     completion_date = models.DateTimeField(null=True, blank=True, verbose_name='Tamamlanma Tarihi')
 
