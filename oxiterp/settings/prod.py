@@ -4,7 +4,7 @@ from oxiterp.settings.base import *
 
 
 DEBUG = False
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['yekabis.enerji.gov.tr']
 
 # DATABASES = {
 #   'default': {
