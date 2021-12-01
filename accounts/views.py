@@ -141,7 +141,7 @@ def login(request):
         return render(request, 'registration/login.html')
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, 'Mail Adresi Ve Şifre Uyumsuzluğu')
         return redirect('accounts:login')
 
 
