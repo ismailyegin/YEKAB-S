@@ -232,7 +232,7 @@ def general_reporting_orcl(request):
             current_url = resolve(request.path_info)
             url_name = Permission.objects.get(codename=current_url.url_name)
             sql = " SELECT  yeka_business.ID AS blok_id,yeka_business_block.ID AS yeka_business_block_id,"
-            sql += " firma.TAXNUMBER AS vergi_no , firma.TAXOFFICE AS vergi_dairesi ,sozlesme.contract_date as sozlesme_tarih, baglanti_bol.NAME AS baglanti_bolgesi, yeka.DEFINITION AS yeka ,yarisma.ID AS yarisma_id ,firma.NAME AS firma , "
+            sql += " firma.TAXNUMBER AS vergi_no , firma.TAXOFFICE AS vergi_dairesi ,sozlesme.contract_tarih as sozlesme_tarih, baglanti_bol.NAME AS baglanti_bolgesi, yeka.DEFINITION AS yeka ,yarisma.ID AS yarisma_id ,firma.NAME AS firma , "
             sql += " firma.MAIL AS firma_mail  , yarisma.NAME AS yarisma , sozlesme.PRICE AS sozlesme_fiyat, "
             sql += " ,business_block.NAME AS is_blogu ,yeka_business_block.STATUS AS is_blok_durumu, yeka_business_block.STARTDATE AS baslangic_tarihi ,city.name as sehir ,district.name as ilce,neighborhood.name as mah,"
             sql += " yeka_eskalasyon.RESULT as guncel_fiyat,location.PARCEL AS ada_parsel,"
@@ -267,7 +267,7 @@ def general_reporting_orcl(request):
             sql += " LEFT JOIN  EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID "
             sql += " LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID "
             sql += " LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID "
-            sql += " WHERE yeka_business_block.STATUS= %s "
+            sql += " WHERE yeka_business_block.STATUS= %s  and yeka.isDeleted=%s"
 
             sql2 = " SELECT SUM(accept.CURRENTPOWER) AS total_elektriksel_guc , SUM(accept.INSTALLEDPOWER) AS total_mekanik_guc ,yarisma.ID AS yarisma_id "
             sql2 += " FROM EKABIS_YEKACOMPETITION yarisma "
@@ -281,10 +281,11 @@ def general_reporting_orcl(request):
             sql2 += " LEFT JOIN  EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID "
             sql2 += " LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID "
             sql2 += " LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID "
-            sql2 += " WHERE business_block.name=%s "
+            sql2 += " WHERE business_block.name=%s  "
 
-            params = ["3"]
+            params = ["3","False"]
             params2 = ["Kabuller"]
+
             competition_id = None
 
             if request.method == 'POST':
@@ -379,7 +380,7 @@ def general_reporting(request):
             sql2 = f.read()
             f.close()
 
-            params = ["3"]
+            params = ["3","False"]
             params2 = ["Kabuller"]
             competition_id = None
 
