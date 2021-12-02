@@ -690,6 +690,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                         contract.contract_date = yekabussiness.startDate
                     else:
                         contract.contract_date=None
+                    contract.save()
             if purchase_guarantee_form:
                 if purchase_guarantee_form.is_valid():
                     if purchase_guarantee_form.cleaned_data['type'] == 'Süre':
