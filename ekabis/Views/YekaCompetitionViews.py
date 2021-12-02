@@ -18,11 +18,12 @@ from ekabis.Forms.YekaCompetitionForm import YekaCompetitionForm
 from ekabis.Forms.YekaContractForm import YekaContractForm
 from ekabis.Forms.YekaForm import YekaForm
 from ekabis.Views.VacationDayViews import is_vacation_day
+from ekabis.models.Competition import Competition
 from ekabis.models.Proposal import Proposal
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka, YekaCompetitionEskalasyon, \
-    YekaBusinessBlogParemetre, BusinessBlogParametreType
+    YekaBusinessBlogParemetre, BusinessBlogParametreType, Company
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -103,7 +104,7 @@ def add_competition(request, region):
                     competition = competition_form.save(request, commit=False)
 
                     total = int(
-                        region.yekacompetition.all().exclude(id=competition.id).distinct().aggregate(Sum('capacity'))[
+                        region.yekacompetition.filter(isDeleted=False).exclude(id=competition.id).distinct().aggregate(Sum('capacity'))[
                             'capacity__sum'] or 0)
                     total += competition.capacity
 
@@ -625,8 +626,14 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         # if yekaBusinessBlogo_form['dependence_parent'].initial !=None:
         #     yekaBusinessBlogo_form.fields['startDate'].widget.attrs['readonly'] = True
         contract = None
+        companies=None
         if business.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
             contract = None
+
+            if Competition.objects.filter(yekabusinessblog__businessblog__name='Yarışmanın Yapılması') :
+                companies = Competition.objects.get(yekabusinessblog__businessblog__name='Yarışmanın Yapılması').company.all()
+
+
             if YekaContract.objects.filter(business=competition.business):
                 contract = YekaContract.objects.get(business=competition.business)
             else:
@@ -678,6 +685,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                                                           request.FILES,
                                                           instance=yekabussiness)
 
+
             if form_contract:
                 if form_contract.is_valid():
                     contract_form = form_contract.save(request, commit=False)
@@ -693,6 +701,11 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     else:
                         contract.contract_date=None
                     contract.save()
+                    # if request.POST['company']:
+                    #     company=request.POST['company']
+                    #     contract.company=Company.objects.get(uuid=company)
+                    #     contract.save()
+
 
             if purchase_guarantee_form:
                 if purchase_guarantee_form.is_valid():
@@ -718,7 +731,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                                       'competition': competition, 'urls': urls,
                                       'current_url': current_url, 'contract_form': form_contract,
                                       'purchase_guarantee_form': purchase_guarantee_form,
-                                      'url_name': url_name,
+                                      'url_name': url_name,'companies':companies,
                                       'name': name
                                   })
 
@@ -759,7 +772,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                           'competition': competition, 'urls': urls,
                           'current_url': current_url, 'contract_form': form_contract,
                           'purchase_guarantee_form': purchase_guarantee_form,
-                          'url_name': url_name,
+                          'url_name': url_name,'companies':companies,
                           'name': name
                       })
     except Exception as e:

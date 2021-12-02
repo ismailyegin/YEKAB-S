@@ -625,6 +625,7 @@ def change_competition(request, business, businessblog):
             competition = Competition(
                 business=yekabusiness,
                 yekabusinessblog=yekabusinessblog,
+                date=yekabusinessblog.startDate
             )
             competition.save()
         else:
@@ -639,6 +640,7 @@ def change_competition(request, business, businessblog):
         with transaction.atomic():
             if request.method == 'POST':
                 if competition_form.is_valid():
+
                     competition_form.save(request)
                     messages.success(request, 'Yarışma Güncellenmiştir')
                     return redirect('ekabis:change_competition_block_', competition.business.uuid,
