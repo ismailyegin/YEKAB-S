@@ -227,7 +227,7 @@
 
                     data: {
                         id: '{{ blok.yekabusinessblog.id }}',
-                        name: '{{ blok.yekabusinessblog.businessblog.name }}' + ' ' + '{{ blok.yekabusinessblog.startDate.date | date:'d/m/y' }}',
+                        name: '{{ block.yekabusinessblog.businessblog.name }}' + ' ' + '{% if block.yekabusinessblog.completion_date %}{{ block.yekabusinessblog.completion_date.date | date:'d/m/y' }}{% else %}{{ block.yekabusinessblog.startDate.date | date:'d/m/y' }}{% endif %}',
                         yeka: '{{ blok.yeka }}',
                         business: '{{ yeka.business.uuid }}',
                         yekabusinessblog: '{{ blok.yekabusinessblog.uuid }}',

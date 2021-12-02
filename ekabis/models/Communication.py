@@ -6,7 +6,7 @@ from ekabis.models.BaseModel import BaseModel
 
 class Communication(BaseModel):
     postalCode = models.CharField(max_length=120, null=True, blank=True)
-    phoneNumber = models.CharField(max_length=11, null=False, blank=False)
+    phoneNumber = models.CharField(max_length=11, null=True, blank=True)
     phoneNumber2 = models.CharField(max_length=11, null=True, blank=True)
     phoneHome = models.CharField(max_length=120, null=True, blank=True)
     phoneJop = models.CharField(max_length=120, null=True, blank=True)

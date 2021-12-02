@@ -818,13 +818,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         #     yekaBusinessBlogo_form.fields['startDate'].widget.attrs['disabled'] = True
         # yekaBusinessBlogo_form.fields['status'].widget.attrs['disabled'] = True
         name = general_methods.yekaname(yeka.business)
-        for item in yekabussiness.parameter.all():
-            if item.parametre.type == 'file':
-                if not item.file:
-                    yekaBusinessBlogo_form.fields[item.parametre.title].widget.attrs['required'] = 'required'
-                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
-            else:
-                yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+
 
         if request.POST:
 
@@ -832,14 +826,14 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                                                           request.FILES or None,
                                                           instance=yekabussiness)
             if yekaBusinessBlogo_form.is_valid():
-                if yekaBusinessBlogo_form['child_block'].data == yekaBusinessBlogo_form['dependence_parent'].data:
-                    messages.warning(request, 'Bir önceki iş bloğu ile bir sonraki iş bloğu aynı olamaz.')
-                    return render(request, 'Yeka/YekabussinesBlogUpdate.html',
-                                  {
-                                      'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
-                                      'yeka': yeka, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
-                                      'name': name
-                                  })
+                # if yekaBusinessBlogo_form['child_block'].data == yekaBusinessBlogo_form['dependence_parent'].data:
+                #     messages.warning(request, 'Bir önceki iş bloğu ile bir sonraki iş bloğu aynı olamaz.')
+                #     return render(request, 'Yeka/YekabussinesBlogUpdate.html',
+                #                   {
+                #                       'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
+                #                       'yeka': yeka, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
+                #                       'name': name
+                #                   })
 
                 yekaBusinessBlogo_form.save(yekabussiness.pk, business.pk)
                 childblock = yekabussiness.child_block
@@ -847,7 +841,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                     childblock.parent = yekabussiness
                     childblock.dependence_parent=yekabussiness
                     childblock.save()
-                if not yekabussiness.indefinite:
+                if not yekabussiness.indefinite and yekabussiness.startDate:
                     dependence_blocks = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
                     for dependence_block in dependence_blocks:
                             add_time_next(yekabussiness.pk,dependence_block.pk,yeka)
@@ -860,6 +854,14 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                     yekabussiness.pk) + '-' + str(yekabussiness.businessblog.name) + ' </a> adlı iş bloğu güncellendi.'
                 notification(request, html, yeka.uuid, 'yeka')
                 return redirect('ekabis:view_yeka_detail', yeka.uuid)
+        else:
+            for item in yekabussiness.parameter.filter(parametre__visibility_in_yeka=True):
+                if item.parametre.type == 'file':
+                    if not item.file:
+                        yekaBusinessBlogo_form.fields[item.parametre.title].widget.attrs['required'] = 'required'
+                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+                else:
+                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,

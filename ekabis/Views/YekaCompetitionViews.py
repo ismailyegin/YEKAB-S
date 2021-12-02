@@ -717,7 +717,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     childblock.parent = yekabussiness
                     childblock.dependence_parent = yekabussiness
                     childblock.save()
-                if not yekabussiness.indefinite:
+                if not yekabussiness.indefinite and yekabussiness.startDate:
                     dependence_blocks = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
                     for dependence_block in dependence_blocks:
                         add_time_next(yekabussiness.pk, dependence_block.pk, competition)

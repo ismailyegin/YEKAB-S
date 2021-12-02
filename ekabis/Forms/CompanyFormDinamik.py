@@ -42,9 +42,11 @@ class CompanyFormDinamik(ModelForm):
 
             if item.is_active:
                 self.fields['file' + str(item.pk)].required = True
-                self.fields['file' + str(item.pk)].label = item.name + " (Zorunlu Alan)"
+                self.fields['file' + str(item.pk)].label = item.name + "*"
             else:
                 self.fields['file' + str(item.pk)].required = False
+                self.fields['file' + str(item.pk)].label = item.name
+
 
     def save(self, request, communication):
         with transaction.atomic():
