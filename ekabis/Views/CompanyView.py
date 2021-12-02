@@ -190,7 +190,7 @@ def add_company_user(request):
                 communication_form = CommunicationForm(request.POST)
                 company_user_form = CompanyUserForm(request.POST)
 
-                if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and company_user_form:
+                if user_form.is_valid() and person_form.is_valid() and communication_form.is_valid() and company_user_form.is_valid():
                     user = User()
                     user.username = user_form.cleaned_data['email']
                     user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
@@ -205,14 +205,14 @@ def add_company_user(request):
                     person.save()
                     communication.save()
 
-                    user = CompanyUser(
+                    company_user = CompanyUser(
                         person=person, communication=communication,
                         authorization_period_start=company_user_form.cleaned_data['authorization_period_start'],
                         authorization_period_finish=company_user_form.cleaned_data['authorization_period_finish']
                     )
-                    user.save()
+                    company_user.save()
                     data_as_json_pre = 'Yok'
-                    data_as_json_next = serializers.serialize('json', CompanyUser.objects.filter(uuid=user.uuid))
+                    data_as_json_next = serializers.serialize('json', CompanyUser.objects.filter(uuid=company_user.uuid))
                     log = log_model(request, data_as_json_pre, data_as_json_next)
 
                     user.person.user.groups.add(Group.objects.get(name='Firma'))
@@ -220,7 +220,7 @@ def add_company_user(request):
 
                     if Settings.objects.filter(key='mail_company_user'):
                         if Settings.objects.get(key='mail_company_user').value == 'True':
-                            general_methods.sendmail(request, user.user)
+                            general_methods.sendmail(request, company_user.user)
                     else:
                         set = Settings(key='mail_company_user')
                         set.value = 'False'
