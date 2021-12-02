@@ -136,6 +136,7 @@ def add_competition(request, region):
                                     yeka_businessblog = YekaBusinessBlog(
                                         finisDate=item.finisDate,
                                         startDate=item.startDate,
+                                        completion_date=item.completion_date,
                                         sorting=item.sorting,
                                         businessTime=item.businessTime,
                                         status=item.status,
@@ -145,6 +146,7 @@ def add_competition(request, region):
                                     parent_yeka_business_blog = yeka_businessblog
                                     yeka_businessblog.save()
                                     for param in item.parameter.all():
+
                                         new_param = YekaBusinessBlogParemetre(value=param.value, file=param.file,
                                                                               title=param.title,
                                                                               parametre=param.parametre)
@@ -622,7 +624,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
 
         # if yekaBusinessBlogo_form['dependence_parent'].initial !=None:
         #     yekaBusinessBlogo_form.fields['startDate'].widget.attrs['readonly'] = True
-
+        contract = None
         if business.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
             contract = None
             if YekaContract.objects.filter(business=competition.business):
@@ -678,10 +680,16 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
 
             if form_contract:
                 if form_contract.is_valid():
-                    contract = form_contract.save(request, commit=False)
-                    contract.save()
-                    competition.business.company = contract.company
+                    contract_form = form_contract.save(request, commit=False)
+                    contract_form.save()
+                    competition.business.company = contract_form.company
                     competition.save()
+                    if yekabussiness.completion_date:
+                        contract.contract_date = yekabussiness.completion_date
+                    elif yekabussiness.startDate:
+                        contract.contract_date = yekabussiness.startDate
+                    else:
+                        contract.contract_date=None
             if purchase_guarantee_form:
                 if purchase_guarantee_form.is_valid():
                     if purchase_guarantee_form.cleaned_data['type'] == 'Süre':
@@ -734,10 +742,11 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     if item.file:
                         yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
                         yekaBusinessBlogo_form.fields[item.parametre.title].widget.attrs = {'class': 'form-control'}
-
-                    yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+                    else:
+                        yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
                 else:
                     yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
+
 
 
         return render(request, 'Yeka/YekabussinesBlogUpdate.html',
