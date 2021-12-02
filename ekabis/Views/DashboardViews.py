@@ -104,8 +104,6 @@ def return_admin_dashboard(request):
     biyo_count = yeka.filter(type='Biyokütle').count()
     jeo_count = yeka.filter(type='Jeotermal').count()
 
-
-
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
 
@@ -118,20 +116,20 @@ def return_admin_dashboard(request):
     installedPower_array = []
     currentPower_array = []
     yeka_capacity_array = []
-    company_array=[]
+    company_array = []
 
     calendar_filter = {
         'isDeleted': False,
         'user': request.user
     }
-
+    total_capacity = 0
     calendarNames = CalendarNameService(request, calendar_filter)
     for yeka_accept in yeka_acccepts:
         accept_dict = dict()
         currentPower_dict = dict()
         yeka_capacity_dict = dict()
-        company_dict=dict()
-        competition=YekaCompetition.objects.get(business=yeka_accept.business)
+        company_dict = dict()
+        competition = YekaCompetition.objects.get(business=yeka_accept.business)
         accept_dict['label'] = competition.name
         total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
         currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
@@ -141,44 +139,46 @@ def return_admin_dashboard(request):
             currentPower['currentPower__sum'] = 0
         accept_dict['power'] = total['installedPower__sum']
         currentPower_dict['power'] = currentPower['currentPower__sum']
-        currentPower_dict['label'] =competition.name
-        total_capacity = int(total['installedPower__sum']) + int(currentPower['currentPower__sum'])
+        currentPower_dict['label'] = competition.name
+        if total['installedPower__sum'] != 0:
+            total_capacity += int(total['installedPower__sum'])
+        if currentPower['currentPower__sum'] != 0:
+            total_capacity += int(currentPower['currentPower__sum'])
+
         if Yeka.objects.filter(connection_region__yekacompetition=competition):
             current_yeka = Yeka.objects.get(connection_region__yekacompetition=competition)
             yeka_capacity_dict['label'] = current_yeka.definition
             yeka_capacity_dict['remaining_capacity'] = current_yeka.capacity - total_capacity
-            yeka_capacity_dict['total']=current_yeka.capacity
-            yeka_capacity_dict['capacity']=total_capacity
+            yeka_capacity_dict['total'] = current_yeka.capacity
+            yeka_capacity_dict['capacity'] = total_capacity
             yeka_capacity_array.append(yeka_capacity_dict)
         currentPower_array.append(currentPower_dict)
         installedPower_array.append(accept_dict)
-        accept_company=competition.company
-        company_dict['electrical_power']=currentPower['currentPower__sum']
-        contract=YekaContract.objects.filter(business=competition.business)
+        accept_company = competition.company
+        company_dict['electrical_power'] = currentPower['currentPower__sum']
+        contract = YekaContract.objects.filter(business=competition.business)
         if contract:
             if contract[0].company:
-                company_dict['contract']=YekaContract.objects.get(business=competition.business)
+                company_dict['contract'] = YekaContract.objects.get(business=competition.business)
             else:
-                company_dict['contract']=None
+                company_dict['contract'] = None
         else:
             company_dict['contract'] = None
-        company_dict['mechanical_power']=total['installedPower__sum']
-        company_dict['competition']=competition
+        company_dict['mechanical_power'] = total['installedPower__sum']
+        company_dict['competition'] = competition
         if YekaCompetitionEskalasyon.objects.filter(competition=competition):
-            company_dict['price']=YekaCompetitionEskalasyon.objects.get(competition=competition)
+            company_dict['price'] = YekaCompetitionEskalasyon.objects.get(competition=competition)
         else:
-            company_dict['price']=None
+            company_dict['price'] = None
         company_array.append(company_dict)
-
-
 
     return render(request, 'anasayfa/admin.html', {
         'yeka': yeka,
         # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
-        'res_count': res_count, 'accepts': installedPower_array,'yeka_capacity':yeka_capacity_array,
+        'res_count': res_count, 'accepts': installedPower_array, 'yeka_capacity': yeka_capacity_array,
         'ges_count': ges_count, 'current_power': currentPower_array,
-        'jeo_count': jeo_count, 'calendarNames': calendarNames,'company_accepts':company_array,
+        'jeo_count': jeo_count, 'calendarNames': calendarNames, 'company_accepts': company_array,
         'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
 
@@ -358,5 +358,7 @@ def api_connection_region_competitions(request):
 
 def success_initial_data(request):
     return render(request, 'anasayfa/initial_data_success.html')
+
+
 def error_initial_data(request):
     return render(request, 'anasayfa/initial_data_error.html')

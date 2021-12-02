@@ -35,6 +35,8 @@ def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
         filter = {
             'uuid': yeka_business_block_uuid
         }
+        name = general_methods.yekaname(yeka_business)
+
         yeka_business_block = YekaBusinessBlogGetService(request, filter)
         yeka_produce_amount = YekaProduceAmount.objects.get(yekabusinessblog=yeka_business_block)
         total = 0
@@ -45,39 +47,47 @@ def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
         else:
             purchase_guarantee = 0
         competition = YekaCompetition.objects.get(business=yeka_business)
+        if YekaPurchaseGuarantee.objects.get(business=yeka_business).type=='Süre' or YekaPurchaseGuarantee.objects.get(business=yeka_business).type ==None:
+            messages.warning(request, 'Alım garantisi süre seçilmiştir.')
+            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         if request.method == 'POST':
             with transaction.atomic():
                 form = ProduceAmountForm(request.POST)
                 if not purchase_guarantee ==0:
-                    if total<purchase_guarantee.total_quantity:
-                        if form.is_valid():
-                            produce_amount = form.save(request, commit=False)
-                            produce_amount.save()
-                            yeka_produce_amount.save()
-                            yeka_produce_amount.amount.add(produce_amount)
-                            yeka_produce_amount.save()
+                    if purchase_guarantee.total_quantity:
+                        if total<purchase_guarantee.total_quantity:
+                            if form.is_valid():
+                                produce_amount = form.save(request, commit=False)
+                                produce_amount.save()
+                                yeka_produce_amount.save()
+                                yeka_produce_amount.amount.add(produce_amount)
+                                yeka_produce_amount.save()
 
-                            url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
-                            html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
-                                competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(yeka_produce_amount.pk) + ' id li üretim miktarı bilgileri eklendi.'
-                            notification(request, html, competition.uuid, 'yeka_competition')
+                                url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                                html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                                    competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(yeka_produce_amount.pk) + ' id li üretim miktarı bilgileri eklendi.'
+                                notification(request, html, competition.uuid, 'yeka_competition')
 
-                            messages.success(request, 'Üretim Miktarı Başarıyla  Eklenmiştir.')
-                            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                                messages.success(request, 'Üretim Miktarı Başarıyla  Eklenmiştir.')
+                                return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                            else:
+                                error_messages = get_error_messages(form)
+                                return render(request, 'ProduceAmount/add_produce_amount.html', {'form': form,
+                                                                                                 'error_messages': error_messages,
+                                                                                                 'urls': urls,
+                                                                                                 'current_url': current_url,
+                                                                                                 'url_name': url_name
+                                                                                                 })
                         else:
-                            error_messages = get_error_messages(form)
-                            return render(request, 'ProduceAmount/add_produce_amount.html', {'form': form,
-                                                                                             'error_messages': error_messages,
-                                                                                             'urls': urls,
-                                                                                             'current_url': current_url,
-                                                                                             'url_name': url_name
-                                                                                             })
-                    messages.success(request, 'Toplam üretim miktarına ulaşıldığı için yeni bir miktar eklenememektedir.')
-                    return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                            messages.success(request, 'Toplam üretim miktarına ulaşıldığı için yeni bir miktar eklenememektedir.')
+                            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                    else:
+                        messages.warning(request, 'Üretim miktarı girilmemiştir.')
+                        return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         return render(request, 'ProduceAmount/add_produce_amount.html', {'form': form,
                                                                          'error_messages': '', 'urls': urls,
                                                                          'current_url': current_url,
-                                                                         'url_name': url_name
+                                                                         'url_name': url_name,'competition':name,
                                                                          })
     except Exception as e:
         traceback.print_exc()
@@ -103,7 +113,11 @@ def view_business_block_produce_amount(request, yeka_business_uuid, yeka_busines
             'uuid': yeka_business_block_uuid
         }
 
+
         yeka_business_block = YekaBusinessBlogGetService(request, filter)
+        competition=YekaCompetition.objects.get(business=yeka_business)
+        name = general_methods.yekaname(yeka_business)
+
         if YekaProduceAmount.objects.filter(yekabusinessblog=yeka_business_block):
             produce_amount = YekaProduceAmount.objects.get(business=yeka_business).amount.filter(
                 isDeleted=False)
@@ -116,7 +130,7 @@ def view_business_block_produce_amount(request, yeka_business_uuid, yeka_busines
         return render(request, 'ProduceAmount/view_produce_amount.html',
                       {'produce_amounts': produce_amount, 'yeka_business_uuid': yeka_business.uuid,
                        'yeka_business_block_uuid': yeka_business_block.uuid,
-                       'urls': urls,
+                       'urls': urls,'competition':name,
                        'current_url': current_url,
                        'url_name': url_name})
     except Exception as e:

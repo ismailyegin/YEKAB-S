@@ -9,6 +9,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve
 from unicode_tr import unicode_tr
+
+from ekabis.Forms.UserFormCompany import UserFormCompany
 from ekabis.Forms.CommunicationForm import CommunicationForm
 from ekabis.Forms.CompanyFileNameForm import CompanyFileNameForm
 from ekabis.Forms.CompanyForm import CompanyForm
@@ -161,6 +163,8 @@ def company_users(request):
                   {'urls': urls, 'current_url': current_url, 'url_name': url_name.name, 'company': company})
 
 
+
+
 @login_required
 # company user is added to the system
 def add_company_user(request):
@@ -170,7 +174,7 @@ def add_company_user(request):
         logout(request)
         return redirect('accounts:login')
 
-    user_form = UserForm()
+    user_form = UserFormCompany
     person_form = PersonForm()
     communication_form = CommunicationForm()
     company_user_form = CompanyUserForm()
@@ -181,7 +185,7 @@ def add_company_user(request):
         url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
             if request.method == 'POST':
-                user_form = UserForm(request.POST)
+                user_form = UserFormCompany(request.POST)
                 person_form = PersonForm(request.POST, request.FILES)
                 communication_form = CommunicationForm(request.POST)
                 company_user_form = CompanyUserForm(request.POST)
