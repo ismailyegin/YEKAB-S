@@ -141,9 +141,9 @@ def return_admin_dashboard(request):
         currentPower_dict['power'] = currentPower['currentPower__sum']
         currentPower_dict['label'] = competition.name
         if total['installedPower__sum'] != None:
-            total_capacity += int(total['installedPower__sum'])
+            total_capacity += float(total['installedPower__sum'])
         if currentPower['currentPower__sum'] != None:
-            total_capacity += int(currentPower['currentPower__sum'])
+            total_capacity += float(currentPower['currentPower__sum'])
 
         if Yeka.objects.filter(connection_region__yekacompetition=competition):
             current_yeka = Yeka.objects.get(connection_region__yekacompetition=competition)
