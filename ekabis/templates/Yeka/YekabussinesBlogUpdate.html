@@ -100,13 +100,31 @@
                                         </div>
                                     {% endfor %}
 
+{#                                    <div class="col-lg-6" id="control-company">#}
+{#                                        <label class="upper_case">Kazanan Firma</label>#}
+{#                                        <select name="company" class="form-control select2 select2-hidden-accessible"#}
+{#                                                style="width: 100%;" maxlength="100" id="id_company"#}
+{#                                                data-select2-id="id_type"#}
+{#                                                tabindex="-1" aria-hidden="true">#}
+{##}
+{#                                                {% for company in companies %}#}
+{#                                                    sdsaz#}
+{#                                                    <option value={{ company.company.pk }} data-select2-id="12">{{ company.company.name }}</option>#}
+{#                                                {% endfor %}#}
+{##}
+{##}
+{##}
+{##}
+{#                                        </select>#}
+{#                                    </div>#}
+
 
                                 {% elif purchase_guarantee_form %}
 
                                     {% for item in purchase_guarantee_form %}
                                         <div class="col-lg-6" id="control-{{ item.name }}">
                                             <div class="form-group">
-                                                <label  class="upper_case">{{ item.label }}</label>
+                                                <label class="upper_case">{{ item.label }}</label>
                                                 {{ item }}
                                                 <label for="" id="label_{{ item.name }}"></label>
                                             </div>
