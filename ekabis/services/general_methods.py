@@ -228,11 +228,13 @@ def getProfileImage(request):
 def get_notification(request):
     notifications = None
     date = None
+    notification_count=0
     if request.user.id:
         user = request.user
         notifications = NotificationUser.objects.filter(is_read=False, user=user).order_by('-creationDate')[:10]
+        notification_count = NotificationUser.objects.filter(is_read=False, user=user).order_by('-creationDate').count()
         date = datetime.now().date()
-    return {'notifications': notifications, 'date': date}
+    return {'notifications': notifications, 'date': date,'notification_count':notification_count}
 
 
 def get_error_messages(form):

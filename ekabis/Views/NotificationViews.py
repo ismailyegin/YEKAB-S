@@ -36,6 +36,23 @@ def get_notification(request):
 
         return JsonResponse({'status': 'Fail', 'msg': e})
 
+def read_notification_all(request):
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        user = request.user
+        notifications = NotificationUser.objects.filter(is_read=False, user=user).order_by('-creationDate')
+        for notification in notifications:
+            notification.is_read = True
+            notification.read_date = datetime.date.today()
+            notification.save()
+        return redirect('ekabis:bildirimler')
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
 
 def view_notification(request):
     try:
@@ -50,6 +67,8 @@ def view_notification(request):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
 
 
 def is_read(request,id):
