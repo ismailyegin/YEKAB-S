@@ -47,12 +47,13 @@ def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
         else:
             purchase_guarantee = 0
         competition = YekaCompetition.objects.get(business=yeka_business)
-        if YekaPurchaseGuarantee.objects.get(business=yeka_business).type=='Süre':
-            messages.warning(request, 'Alım garantisi türü süre seçilmiştir.')
-            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
-        elif not YekaPurchaseGuarantee.objects.get(business=yeka_business).type:
-            messages.warning(request, 'Alım garantisi türü seçilmemiştir.')
-            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+        if YekaPurchaseGuarantee.objects.filter(business=yeka_business):
+            if YekaPurchaseGuarantee.objects.get(business=yeka_business).type == 'Süre':
+                messages.warning(request, 'Alım garantisi türü süre seçilmiştir.')
+                return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+            elif not YekaPurchaseGuarantee.objects.get(business=yeka_business).type:
+                messages.warning(request, 'Alım garantisi türü seçilmemiştir.')
+                return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
 
         if request.method == 'POST':
             with transaction.atomic():
