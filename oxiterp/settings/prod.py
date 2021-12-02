@@ -3,7 +3,7 @@ from oxiterp.settings.base import *
 # Override base.py settings here
 
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['yekabis.enerji.gov.tr']
 
 # DATABASES = {
