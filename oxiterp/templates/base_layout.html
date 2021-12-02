@@ -220,7 +220,7 @@
             <li class="nav-item dropdown show">
                 <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
                     <i class="far fa-bell"></i>
-                    <span class="badge badge-warning navbar-badge">{{ notifications | length }}</span>
+                    <span class="badge badge-warning navbar-badge">{{ notification_count }}</span>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right " style="left: inherit; right: 0px;">
@@ -235,8 +235,10 @@
                         </a>
                         <div class="dropdown-divider"></div>
                     {% endfor %}
-                    <a href="{% url 'ekabis:bildirimler' %}" class="dropdown-item dropdown-footer">Tüm Bildirimleri
-                        Gör</a>
+                <div class="col-lg-12"> <a href="{% url 'ekabis:bildirimler' %}" class="dropdown-item dropdown-footer">Tüm Bildirimleri
+                        Gör</a></div>
+                  <div class="col-lg-12"> <a href="{% url 'ekabis:read_notification_all' %}" class="dropdown-item dropdown-footer">Tümünü Okundu Yap</a></div>
+
 
                 </div>
 
@@ -775,7 +777,7 @@
                         subtitle: result.notifications[i].notification.creationDate.date,
                         icon: 'fas fa-bell fa-lg',
                         class: 'bg-success',
-                        delay:4000,
+
 
                     })
 
@@ -788,7 +790,7 @@
 
     $(document).ready(function () {
         $('.toast').delay(4000).fadeOut(3000);
-        setInterval();
+        {#setInterval();#}
 
 
     });
