@@ -1454,9 +1454,10 @@ def view_yeka_user(request, business, businessblog):
         else:
             yekacompany = YekaCompanyUser.objects.get(business=yekabusiness)
         if not yekabusiness.company:
-            messages.warning(request, 'Sözleşme İmzanmadan firma Kullanıcı atanamaz.')
+            messages.warning(request, 'Kazanan firma belirlenmeden yetkili atanamaz.')
             test = request.META.get('HTTP_REFERER')
             # önceki sayfaya yönlendirilecek
+            return redirect('ekabis:view_yeka')
         company_user = yekacompany.companyuser.filter(isDeleted=False)
         with transaction.atomic():
             return render(request, 'CompanyUser/view_companyuser.html',

@@ -841,7 +841,7 @@
                             let detail = "{% url 'ekabis:view_yeka_competition_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             detail = detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
                             let html = ''
-                            html = '<a style="color: black" href="' + detail + '">' + full.name + '</a>'
+                            html = '<a href="' + detail + '">' + full.name + '</a>'
                             return html;
 
                         }

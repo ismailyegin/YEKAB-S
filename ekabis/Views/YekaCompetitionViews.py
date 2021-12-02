@@ -683,6 +683,8 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     contract_form = form_contract.save(request, commit=False)
                     contract_form.save()
                     competition.business.company = contract_form.company
+                    competition.business.company=contract_form.company
+                    competition.business.save()
                     competition.save()
                     if yekabussiness.completion_date:
                         contract.contract_date = yekabussiness.completion_date
@@ -691,6 +693,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     else:
                         contract.contract_date=None
                     contract.save()
+
             if purchase_guarantee_form:
                 if purchase_guarantee_form.is_valid():
                     if purchase_guarantee_form.cleaned_data['type'] == 'Süre':
