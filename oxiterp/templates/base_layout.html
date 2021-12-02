@@ -775,6 +775,7 @@
                         subtitle: result.notifications[i].notification.creationDate.date,
                         icon: 'fas fa-bell fa-lg',
                         class: 'bg-success',
+                        delay:4000,
 
                     })
 
@@ -786,7 +787,7 @@
     }, 50000);
 
     $(document).ready(function () {
-        $('.toast').delay(40000).fadeOut(30000);
+        $('.toast').delay(4000).fadeOut(3000);
         setInterval();
 
 
