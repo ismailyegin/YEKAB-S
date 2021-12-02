@@ -1,6 +1,6 @@
 SELECT  yeka_business.ID AS blok_id,yeka_business_block.ID AS yeka_business_block_id,
 
-firma.TAXNUMBER AS vergi_no , firma.TAXOFFICE AS vergi_dairesi ,sozlesme.contract_tarih as sozlesme_tarih,
+firma.TAXNUMBER AS vergi_no , firma.TAXOFFICE AS vergi_dairesi ,sozlesme.contract_date as sozlesme_tarih,
 
 baglanti_bol.NAME AS baglanti_bolgesi, yeka.DEFINITION AS yeka ,yarisma.ID AS yarisma_id ,firma.NAME AS firma ,
 

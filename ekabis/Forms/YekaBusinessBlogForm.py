@@ -93,20 +93,24 @@ class YekaBusinessBlogForm(ModelForm):
         }
         tbussiness = BusinessBlogGetService(self, business_filter)
 
-        for item in tbussiness.parametre.filter(isDeleted=False):
+        for item in tbussiness.parametre.filter(isDeleted=False,visibility_in_yeka=True):
             if item.type == 'string':
                 self.fields[item.title] = forms.CharField(max_length=250)
                 if item.necessary:
                     self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control', }
                 else:
                     self.fields[item.title].widget.attrs = {'class': 'form-control', }
+                    self.fields[item.title].required = False
+
             elif item.type == 'date':
                 self.fields[item.title] = forms.CharField(max_length=50)
                 if item.necessary:
                     self.fields[item.title].widget.attrs = {'required': 'required',
                                                             'class': 'form-control datepicker6', }
                 else:
-                    self.fields[item.title].widget.attrs = {'class': 'form-control datepicker6', }
+                    self.fields[item.title].widget.attrs = {'class': 'form-control','type':'date', }
+                    self.fields[item.title].required = False
+
 
             elif item.type == 'number':
 
@@ -116,12 +120,16 @@ class YekaBusinessBlogForm(ModelForm):
                     self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control', }
                 else:
                     self.fields[item.title].widget.attrs = {'class': 'form-control', }
+                    self.fields[item.title].required = False
+
             elif item.type == 'year':
                 self.fields[item.title] = forms.CharField(max_length=50)
                 if item.necessary:
                     self.fields[item.title].widget.attrs = {'required': 'required', 'class': 'form-control dateyear', }
                 else:
                     self.fields[item.title].widget.attrs = {'class': 'form-control dateyear', }
+                    self.fields[item.title].required = False
+
             elif item.type == 'file':
                 self.fields[item.title] = forms.FileField(required=False)
                 if item.necessary:
@@ -129,6 +137,8 @@ class YekaBusinessBlogForm(ModelForm):
                                                             'type': 'file',}
                 else:
                     self.fields[item.title].widget.attrs = {'class': 'form-control', 'type': 'file',}
+                    self.fields[item.title].required = False
+
 
     def save(self, yekabusiness, business, *args, **kwargs):
 
