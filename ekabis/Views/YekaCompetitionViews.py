@@ -660,18 +660,18 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
             purchase_guarantee_form = PurchaseGuaranteeForm(request.POST or None, request.FILES or None,
                                                             instance=purchase_guarantee)
 
-        elif business.name == 'Yarışmanın Yapılması':
-
-            if YekaHoldingCompetition.objects.filter(business=competition.business):
-                holding_competition = YekaHoldingCompetition.objects.get(business=competition.business)
-            else:
-                holding_competition = YekaHoldingCompetition(
-                    yekabusinessblog=yekabussiness,
-                    business=competition.business
-                )
-                holding_competition.save()
-            holding_competition_form = YekaHoldingCompetitionForm(request.POST or None,
-                                                            instance=holding_competition)
+        # elif business.name == 'Yarışmanın Yapılması':
+        #
+        #     if YekaHoldingCompetition.objects.filter(business=competition.business):
+        #         holding_competition = YekaHoldingCompetition.objects.get(business=competition.business)
+        #     else:
+        #         holding_competition = YekaHoldingCompetition(
+        #             yekabusinessblog=yekabussiness,
+        #             business=competition.business
+        #         )
+        #         holding_competition.save()
+        #     holding_competition_form = YekaHoldingCompetitionForm(request.POST or None,
+        #                                                     instance=holding_competition)
 
         name = general_methods.yekaname(competition.business)
 
