@@ -17,13 +17,14 @@ from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
 from ekabis.Forms.YekaCompetitionForm import YekaCompetitionForm
 from ekabis.Forms.YekaContractForm import YekaContractForm
 from ekabis.Forms.YekaForm import YekaForm
+from ekabis.Forms.YekaHoldingCompetitionForm import YekaHoldingCompetitionForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models.Competition import Competition
 from ekabis.models.Proposal import Proposal
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka, YekaCompetitionEskalasyon, \
-    YekaBusinessBlogParemetre, BusinessBlogParametreType, Company
+    YekaBusinessBlogParemetre, BusinessBlogParametreType, Company, YekaHoldingCompetition
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -617,6 +618,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         }
         form_contract = None
         purchase_guarantee_form = None
+        holding_competition_form=None
 
         business = BusinessBlogGetService(request, yeka_business_filter_)
         yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, request.POST or None,
@@ -657,6 +659,19 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                 purchase_guarantee.save()
             purchase_guarantee_form = PurchaseGuaranteeForm(request.POST or None, request.FILES or None,
                                                             instance=purchase_guarantee)
+
+        elif business.name == 'Yarışmanın Yapılması':
+
+            if YekaHoldingCompetition.objects.filter(business=competition.business):
+                holding_competition = YekaHoldingCompetition.objects.get(business=competition.business)
+            else:
+                holding_competition = YekaHoldingCompetition(
+                    yekabusinessblog=yekabussiness,
+                    business=competition.business
+                )
+                holding_competition.save()
+            holding_competition_form = YekaHoldingCompetitionForm(request.POST or None,
+                                                            instance=holding_competition)
 
         name = general_methods.yekaname(competition.business)
 
