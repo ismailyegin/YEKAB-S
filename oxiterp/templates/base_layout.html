@@ -763,30 +763,30 @@
     }
 
 
-    const interval = setInterval(function () {
-
-        $.ajax({
-            url: "{% url "ekabis:bildirim-getir" %}",
-            type: "GET",
-            success: function (result) {
-                for (let i = 0; i < result.notifications.length; i++) {
-
-                    $(document).Toasts('create', {
-                        body: result.notifications[i].notification.description,
-                        title: result.notifications[i].notification.title,
-                        subtitle: result.notifications[i].notification.creationDate.date,
-                        icon: 'fas fa-bell fa-lg',
-                        class: 'bg-success',
-
-
-                    })
-
-                }
-
-
-            }
-        });
-    }, 50000);
+    {#const interval = setInterval(function () {#}
+    {##}
+    {#    $.ajax({#}
+    {#        url: "{% url "ekabis:bildirim-getir" %}",#}
+    {#        type: "GET",#}
+    {#        success: function (result) {#}
+    {#            for (let i = 0; i < result.notifications.length; i++) {#}
+    {##}
+    {#                $(document).Toasts('create', {#}
+    {#                    body: result.notifications[i].notification.description,#}
+    {#                    title: result.notifications[i].notification.title,#}
+    {#                    subtitle: result.notifications[i].notification.creationDate.date,#}
+    {#                    icon: 'fas fa-bell fa-lg',#}
+    {#                    class: 'bg-success',#}
+    {##}
+    {##}
+    {#                })#}
+    {##}
+    {#            }#}
+    {##}
+    {##}
+    {#        }#}
+    {#    });#}
+    {#, 50000);#}
 
     $(document).ready(function () {
         $('.toast').delay(4000).fadeOut(3000);
