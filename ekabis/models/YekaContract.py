@@ -22,4 +22,5 @@ class YekaContract(BaseModel):
     price=models.DecimalField(null=True,blank=True,max_digits=20,decimal_places=2)
     unit=models.ForeignKey(ConnectionUnit,on_delete=models.DO_NOTHING,null=True,blank=True)
     company=models.ForeignKey(Company,on_delete=models.DO_NOTHING, null=True,blank=True)
+    eskalasyonMaxPrice=models.DecimalField(null=True,blank=True,max_digits=20,decimal_places=2)
 

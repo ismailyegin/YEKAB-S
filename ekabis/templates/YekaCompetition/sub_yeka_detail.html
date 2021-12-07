@@ -227,7 +227,7 @@
 
                     data: {
                         id: '{{ blok.yekabusinessblog.id }}',
-                        name: '{{ block.yekabusinessblog.businessblog.name }}' + ' ' + '{% if block.yekabusinessblog.completion_date %}{{ block.yekabusinessblog.completion_date.date | date:'d/m/y' }}{% else %}{{ block.yekabusinessblog.startDate.date | date:'d/m/y' }}{% endif %}',
+                        name: '{{ blok.yekabusinessblog.businessblog.name }}' + ' ' + '{% if blok.yekabusinessblog.completion_date %}{{ blok.yekabusinessblog.completion_date.date | date:'d/m/y' }}{% else %}{{ blok.yekabusinessblog.startDate.date | date:'d/m/y' }}{% endif %}',
                         yeka: '{{ blok.yeka }}',
                         business: '{{ yeka.business.uuid }}',
                         yekabusinessblog: '{{ blok.yekabusinessblog.uuid }}',

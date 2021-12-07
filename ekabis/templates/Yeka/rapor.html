@@ -372,13 +372,13 @@
         $(document).ready(function () {
             $('#loading').show()
             get_region();
-            get_yeka_competition();
+
 
         });
 
 
         function get_region() {
-            debugger;
+
             var e = document.getElementById("select_yeka");
             if (e.options[e.selectedIndex]) {
                 var yeka_id = e.options[e.selectedIndex].value;
@@ -391,7 +391,7 @@
                     },
 
                     success: function (result) {
-                        debugger;
+
 
                         let select = document.getElementById("select_region");
 
@@ -402,6 +402,7 @@
                         for (let i = 0; i < result.region.length; i++) {
                             select.options[select.options.length] = new Option(result.region[i].name, result.region[i].id);
                         }
+                        get_yeka_competition();
 
                     }
                 });
@@ -414,7 +415,7 @@
 
 
         function get_yeka_competition() {
-            debugger;
+
             $('#loading').show();
 
             var e = document.getElementById("select_region");
@@ -430,7 +431,7 @@
 
                     },
                     success: function (result) {
-                        debugger;
+
 
                         let select = document.getElementById("select_competition");
 
@@ -456,7 +457,7 @@
         }
 
         function get_yeka_competition_company() {
-            debugger;
+
             $('#loading').show();
 
 

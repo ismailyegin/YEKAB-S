@@ -47,9 +47,8 @@ def EskalasyonCalculation(request, uuid):
                 yeka_business = YekaBusiness.objects.get(pk=competition.business.pk).businessblogs.get(
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması")
                 if YekaContract.objects.get(business=competition.business).unit.name=='TL':
-                    if yeka_business.parameter.filter(parametre__title='Eskalasyon Tavan Fiyatı (USD)'):
-                        peak_value = yeka_business.parameter.get(
-                            parametre__title='Eskalasyon Tavan Fiyatı (USD)').value  # Sözleşme iş bloğunda girilen eskalasyon pik değeri (USD)
+                    if YekaContract.objects.get(business=competition.business).eskalasyonMaxPrice:
+                        peak_value = YekaContract.objects.get(business=competition.business).eskalasyonMaxPrice  # Sözleşme iş bloğunda girilen eskalasyon pik değeri (USD)
                         startDate = 'startDate=' + str(datetime.today().date().strftime('%d-%m-%Y')) + '&'
                         endDate = 'endDate=' + str(datetime.today().date().strftime('%d-%m-%Y'))
                         date = startDate + endDate
@@ -60,7 +59,7 @@ def EskalasyonCalculation(request, uuid):
                         }
                         response = requests.request("GET", url, headers=headers, data=payload)
                         x = json.loads(response.text)  # Pik değerini hesaplamak için günlük dolar ortalaması
-                        peak_value = float(peak_value.replace(',', '.')) * float(
+                        peak_value = float(peak_value) * float(
                             x['items'][0]['TP_DK_USD_S_YTL'])  # eskalasyon pik değeri( TL )
                         if competition.is_calculation:  # pik değerine ulaşmış yarışmaların hesaplaması yapılmaz
                             yeka_competition_eskalasyon = YekaCompetitionEskalasyon(competition=competition,
@@ -255,7 +254,9 @@ def yeka_competition_eskalasyon(request):
 
         filter = {
             'is_calculation': True,
+             'isDeleted':False
         }
+
         yeka_competitions = YekaCompetitionService(request, filter)
         for competition in yeka_competitions:
             EskalasyonCalculation(request, competition.uuid)

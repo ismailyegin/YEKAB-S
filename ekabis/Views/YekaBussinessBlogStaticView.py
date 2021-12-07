@@ -1340,10 +1340,17 @@ def view_proposal_institution(request, yekaproposal, uuid):
                 proposal.save()
 
         proposal_institution = proposal.institution.filter(isDeleted=False)
+        negative=proposal.institution.filter(status='Olumsuz').count()
+        positive=proposal.institution.filter(status='Olumlu').count()
+        not_result=proposal.institution.filter(status='Sonuçlanmadı').count()
+
+
+
         with transaction.atomic():
             return render(request, 'Proposal/view_proposal_institution.html',
                           {'proposal_institution': proposal_institution,
-                           'yekabusiness': yekabusiness,
+                           'yekabusiness': yekabusiness,'negative_insinstitution':negative,
+                           'positive_institution':positive,'not_result_institution':not_result,
                            'yekabussinessblog': yekabussinessblog,
                            'urls': urls, 'current_url': current_url,
                            'url_name': url_name, 'name': name,

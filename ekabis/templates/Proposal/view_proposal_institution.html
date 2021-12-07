@@ -143,7 +143,14 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Kurum Görüşleri</h3>
-
+                            <div class="float-sm-right">
+                                <small class="badge badge-success"><i class="fa fa-check-circle"></i> Olumlu
+                                    : {{ positive_institution }}</small>
+                                <small class="badge badge-danger"><i class="fa fa-minus-circle"></i>
+                                    Olumsuz: {{ negative_insinstitution }}</small>
+                                <small class="badge badge-warning"><i class="fa fa-question-circle"></i> Sonuçlanmadı
+                                    : {{ not_result_institution }}</small>
+                            </div>
                         </div>
 
                         <div class="card-body">
@@ -164,53 +171,53 @@
                                     {% for item in proposal_institution %}
                                         {% if item.status == 'Sonuçlanmadı' %}
                                             <tr style="background: #ffff6e">
-                                            {% elif item.status == 'Olumlu' %}
+                                                {% elif item.status == 'Olumlu' %}
                                             <tr style="background: #8cff8c">
-                                            {% elif item.status == 'Olumsuz' %}
+                                                {% elif item.status == 'Olumsuz' %}
                                             <tr style="background: #ff3a3a">
-                                               {% endif %}
-                                                <td>{{ forloop.counter }} </td>
-                                                <td>{{ item.institution.name }}</td>
-                                                <td>{{ item.status }}</td>
-                                                <td> {{ item.date }}
-                                                </th>
-                                                <td>{{ item.file }}</td>
+                                        {% endif %}
+                                    <td>{{ forloop.counter }} </td>
+                                    <td>{{ item.institution.name }}</td>
+                                    <td>{{ item.status }}</td>
+                                    <td> {{ item.date }}
+                                    </th>
+                                    <td>{{ item.file }}</td>
 
 
-                                                <td>
-                                                    <div class="btn-group">
+                                    <td>
+                                        <div class="btn-group">
 
-                                                        <button type="button"
-                                                                class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                data-toggle="dropdown"> İşlemler
-                                                        </button>
-                                                        <div class="dropdown-menu" role="menu">
-                                                            {% for p in perm %}
-                                                                {% if p == 'change_proposal_institution' %}
-                                                                    <a href="{% url "ekabis:change_proposal_institution" yekaproposal.uuid proposal.uuid item.uuid %}"
-                                                                       class="dropdown-item"> <i
-                                                                            class="fa fa-edit" title="Düzenle"></i>
-                                                                        Düzenle
-                                                                    </a>
-                                                                {% endif %}
-
-
-                                                                {% if p == 'delete_proposal_institution' %}
-
-                                                                    <a class="dropdown-item" href=""
-                                                                       data-toggle="modal"
-                                                                       onclick=deleteExtraTime('{{ item.uuid }}')><i
-                                                                            class="fa fa-trash"></i>Sil</a>
-
-                                                                {% endif %}
-                                                            {% endfor %}
+                                            <button type="button"
+                                                    class="btn btn-default dropdown-toggle dropdown-icon"
+                                                    data-toggle="dropdown"> İşlemler
+                                            </button>
+                                            <div class="dropdown-menu" role="menu">
+                                                {% for p in perm %}
+                                                    {% if p == 'change_proposal_institution' %}
+                                                        <a href="{% url "ekabis:change_proposal_institution" yekaproposal.uuid proposal.uuid item.uuid %}"
+                                                           class="dropdown-item"> <i
+                                                                class="fa fa-edit" title="Düzenle"></i>
+                                                            Düzenle
+                                                        </a>
+                                                    {% endif %}
 
 
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                    {% if p == 'delete_proposal_institution' %}
 
-                                            </tr>
+                                                        <a class="dropdown-item" href=""
+                                                           data-toggle="modal"
+                                                           onclick=deleteExtraTime('{{ item.uuid }}')><i
+                                                                class="fa fa-trash"></i>Sil</a>
+
+                                                    {% endif %}
+                                                {% endfor %}
+
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    </tr>
 
                                     {% endfor %}
                                 {% endif %}

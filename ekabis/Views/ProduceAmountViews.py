@@ -54,7 +54,9 @@ def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
             elif not YekaPurchaseGuarantee.objects.get(business=yeka_business).type:
                 messages.warning(request, 'Alım garantisi türü seçilmemiştir.')
                 return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
-
+        if purchase_guarantee == 0:
+            messages.warning(request, 'Üretim miktarı girilmemiştir.')
+            return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         if request.method == 'POST':
             with transaction.atomic():
                 form = ProduceAmountForm(request.POST)
@@ -86,9 +88,9 @@ def add_produce_amount(request, yeka_business_uuid, yeka_business_block_uuid):
                         else:
                             messages.success(request, 'Toplam üretim miktarına ulaşıldığı için yeni bir miktar eklenememektedir.')
                             return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
-                    else:
-                        messages.warning(request, 'Üretim miktarı girilmemiştir.')
-                        return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                else:
+                    messages.warning(request, 'Üretim miktarı girilmemiştir.')
+                    return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         return render(request, 'ProduceAmount/add_produce_amount.html', {'form': form,
                                                                          'error_messages': '', 'urls': urls,
                                                                          'current_url': current_url,
