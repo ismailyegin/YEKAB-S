@@ -195,8 +195,15 @@
     {% load static %}
     <script>
         $(function () {
-
+            var currentdate=new Date();
+            {#console.log(new Date().getTime())#}
+         {#console.log(+ (currentdate.getMonth()+1)  + "/"#}
+         {#       + currentdate.getFullYear() + " @ "#}
+         {#       + currentdate.getHours() + ":"#}
+         {#       + currentdate.getMinutes() + ":"#}
+         {#       + currentdate.getSeconds())#}
             table = $('#yeka').DataTable({
+
 
                 "processing": true,
                 "serverSide": true,
@@ -335,12 +342,19 @@
                         }
                     }
                 ],
+
                 "search": {
                     "caseInsensitive": true
                 }
 
 
             });
+                {#        console.log(+ (currentdate.getMonth()+1)  + "/"#}
+                {#+ currentdate.getFullYear() + " @ "#}
+                {#+ currentdate.getHours() + ":"#}
+                {#+ currentdate.getMinutes() + ":"#}
+                {#+ currentdate.getSeconds())#}
+
             table.on('draw.dt', function () {
                 var info = table.page.info();
                 table.column(0, {

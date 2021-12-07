@@ -13,7 +13,7 @@ from django.urls import resolve
 from ekabis.Forms.BusinessBlogForm import BusinessBlogForm
 from ekabis.Forms.BusinessBlogParametreForm import BusinessBlogParametreForm
 from ekabis.Forms.YekaBusinessForm import YekaBusinessForm
-from ekabis.models import Permission
+from ekabis.models import Permission, YekaBusinessBlogParemetre
 from ekabis.models.BusinessBlog import BusinessBlog
 from ekabis.models.BusinessBlogParametreType import BusinessBlogParametreType
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
@@ -110,6 +110,15 @@ def delete_businessBlogParametre(request):
                 uuid = request.POST['uuid']
 
                 obj = BusinessBlogParametreType.objects.get(uuid=uuid)
+                if YekaBusinessBlogParemetre.objects.filter(parametre=obj):
+                    item=YekaBusinessBlogParemetre.objects.get(isDeleted=False,parametre=obj)
+                    item.isDeleted=True
+                    item.save()
+                if BusinessBlog.objects.filter(parametre=obj):
+                    businessBlock =BusinessBlog.objects.get(parametre=obj)
+                    businessBlock.parametre.remove(obj)
+
+
                 #
                 log = str(obj.pk) + " İş bloğu parametresi silindi"
                 log = general_methods.logwrite(request, request.user, log)

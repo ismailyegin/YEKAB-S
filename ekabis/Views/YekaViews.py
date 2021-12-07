@@ -18,10 +18,11 @@ from rest_framework.response import Response
 from ekabis.Forms.YekaBusinessBlogForm import YekaBusinessBlogForm
 from ekabis.Forms.YekaCompanyForm import YekaCompanyForm
 from ekabis.Forms.YekaForm import YekaForm
+from ekabis.Forms.YekaHoldingCompetitionForm import YekaHoldingCompetitionForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import ExtraTime, \
     Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension, YekaCompetitionEskalasyon, YekaBusiness, \
-    YekaBusinessBlogParemetre
+    YekaBusinessBlogParemetre, YekaHoldingCompetition, ConnectionUnit
 
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
@@ -33,6 +34,7 @@ from ekabis.models.YekaApplicationFileName import YekaApplicationFileName
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models.YekaCompany import YekaCompany
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
+from ekabis.models.YekaContract import YekaContract
 from ekabis.models.YekaPerson import YekaPerson
 from ekabis.models.YekaPersonHistory import YekaPersonHistory
 from ekabis.models.YekaProposal import YekaProposal
@@ -69,6 +71,7 @@ def return_yeka(request):
         return redirect('accounts:login')
     yeka_form = YekaForm()
     try:
+        print(datetime.datetime.now())
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
@@ -818,12 +821,43 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
         #     yekaBusinessBlogo_form.fields['startDate'].widget.attrs['disabled'] = True
         # yekaBusinessBlogo_form.fields['status'].widget.attrs['disabled'] = True
         name = general_methods.yekaname(yeka.business)
+        holding_competition_form = None
+        if business.name == 'Yarışmanın Yapılması':
+
+            if YekaHoldingCompetition.objects.filter(business=yeka.business):
+                holding_competition = YekaHoldingCompetition.objects.get(business=yeka.business)
+            else:
+                holding_competition = YekaHoldingCompetition(
+                    yekabusinessblog=yekabussiness,
+                    business=yeka.business
+                )
+                holding_competition.save()
+            holding_competition_form = YekaHoldingCompetitionForm(request.POST or None,
+                                                                  instance=holding_competition)
 
         if request.POST:
 
             yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, request.POST or None,
                                                           request.FILES or None,
                                                           instance=yekabussiness)
+            if holding_competition_form:
+                if holding_competition_form.is_valid():
+                    holding_comp = holding_competition_form.save(request, commit=False)
+                    holding_comp.save()
+                    if YekaContract.objects.filter(business=yeka.business):
+                        contract = YekaContract.objects.get(business=yeka.business)
+                    else:
+                        contract = YekaContract(
+                            yekabusinessblog=yekabussiness,
+                            business=yeka.business
+                        )
+                        contract.save()
+                    if holding_competition_form.cleaned_data['unit'].name == 'TL':
+                        contract.unit = ConnectionUnit.objects.get(name='TL')
+                        contract.save()
+                    elif holding_competition_form.cleaned_data['unit'].name == 'USD':
+                        contract.unit = ConnectionUnit.objects.get(name='USD')
+                        contract.save()
             if yekaBusinessBlogo_form.is_valid():
                 if yekabussiness.indefinite:
                     yekabussiness.businessTime=None
@@ -862,8 +896,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                     if item.file:
                         yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
                         yekaBusinessBlogo_form.fields[item.parametre.title].widget.attrs = {'class': 'form-control'}
-                    else:
-                        yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
+
                 elif item.parametre.type == 'date':
                     if item.value:
                         yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.value
@@ -874,7 +907,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                       {
                           'yekaBusinessBlogo_form': yekaBusinessBlogo_form,
                           'yeka': yeka, 'urls': urls, 'current_url': current_url, 'url_name': url_name,
-                          'name': name
+                          'name': name,'holding_competition_form':holding_competition_form
                       })
     except Exception as e:
 
@@ -1380,7 +1413,17 @@ def view_yeka_detail(request, uuid):
         }
         name = ''
         blocks = []
-
+        indemnity_bond_file = None
+        indemnity_quantity = None
+        # x = yeka.business.businessblogs.filter(isDeleted=False,
+        #                                        businessblog__name='YEKA Kullanım Hakkı Sözleşmesinin İmzalanması')
+        # if x:
+        #     block = yeka.business.businessblogs.get(isDeleted=False,
+        #                                             businessblog__name='YEKA Kullanım Hakkı Sözleşmesinin İmzalanması')
+        #     if block.parameter.filter(isDeleted=False).filter(parametre__title='Teminat Mektubu'):
+        #         indemnity_bond_file = block.parameter.get(isDeleted=False, parametre__title='Teminat Mektubu').file
+        #     if block.parameter.filter(isDeleted=False).filter(parametre__title='Teminat Miktarı'):
+        #         indemnity_quantity = block.parameter.get(isDeleted=False, parametre__title='Teminat Miktarı').value
         yekabusinessbloks = None
         if yeka.business:
             name = general_methods.yekaname(yeka.business)  # Yeka Adı
@@ -1398,7 +1441,7 @@ def view_yeka_detail(request, uuid):
         return render(request, 'Yeka/yekaDetail.html',
                       {'urls': urls, 'current_url': current_url, 'employee': employee,
                        'url_name': url_name, 'name': name, 'blocks': blocks, 'user': user,
-                       'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks,
+                       'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks, 'indemnity_quantity':indemnity_quantity,'indemnity_file':indemnity_bond_file,
                        'employees': employees, 'connection_regions': connection_regions
                        })
     except Exception as e:
@@ -1974,12 +2017,11 @@ def get_yeka_competition_company(request):
 
             id = request.POST.get('competition_id')
             competition = YekaCompetition.objects.get(pk=id)
-            if YekaCompany.objects.filter(competition=competition):
-                companies = YekaCompany.objects.filter(competition=competition)
+            companies = YekaCompany.objects.filter(competition=competition)
 
-                data_companies = YekaCompanySerializer(companies, many=True)
+            data_companies = YekaCompanySerializer(companies, many=True)
 
-                response = {
+            response = {
 
                     'data': data_companies.data,
                     'draw': int(request.POST.get('draw')),
@@ -1987,9 +2029,8 @@ def get_yeka_competition_company(request):
                     'recordsFiltered': companies.count(),
 
                 }
-                return JsonResponse(response)
-            else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Bu bilgilere ait firma bulunamadı'})
+            return JsonResponse(response)
+
 
 
         except Exception as e:

@@ -286,15 +286,17 @@
                         select: function (ele) {
                             let html = '';
                             html += '<div class="col-md-6">'
-                            html += '<div class="form-group"> <label for="exampleInputEmail1">Başlangıç Tarihi: </label>  ' +this.data('startDate')+'</div>';
-                            html += '<div class="form-group"> <label for="exampleInputEmail1">Bitiş Tarihi : </label> ' + this.data('finishDate') + '  </div>';
-                            if (this.data('status')) {
-                                html += '<div class="form-group"> <label for="exampleInputEmail1">Durumu : </label> Devam Ediyor </div>';
+                            html += '<div class="form-group"> <label for="exampleInputEmail1">İşin Yapılma Tarihi: </label>  ' +this.data('startDate')+'</div>';
+                             if (this.data('status') === "1") {
+                                    html += '<div class="form-group"> <label>Durumu : </label> Tamamlandı </div>';
+                                } else if (this.data('status') === "2") {
+                                    html += '<div class="form-group"> <label>Durumu : </label> Tamamlanmadı </div>';
+                                } else if (this.data('status') === "3") {
+                                    html += '<div class="form-group"> <label>Durumu : </label> Devam Ediyor </div>';
+                                } else {
+                                    html += '<div class="form-group"> <label>Durumu : </label> Başlanmadı </div>';
 
-                            } else {
-                                html += '<div class="form-group"> <label for="exampleInputEmail1">Durumu : </label> Tamamlandı</div>';
-
-                            }
+                                }
                             if (this.data('indefinite')) {
                                 html += '<div class="form-group"> <label for="exampleInputEmail1">Süre Türü : </label> Süresiz</div></div>';
 
@@ -597,6 +599,7 @@
 
                                     </div>
                                 </div>
+
                                 <div class="card card-default card-outline">
                                     <div class="card-header with-border">
                                         <h3 class="card-title">Görevli Personel Listesi</h3>

@@ -661,16 +661,46 @@
                                         </p>
                                         <p class="text-muted" style="font-size: 16px;"><b>Kapasite
                                             :</b> {{ yeka.capacity }} MWe</p>
-                                        {% if yeka.company %}
-                                        <p class="text-muted" style="font-size: 16px;"><b>Firma
-                                            :</b> {{ yeka.company.name }}</p>
+                                        {% if yeka.business.company %}
+                                        <p class="text-muted" style="font-size: 16px;"><b>Kazanan Firma
+                                            :</b> {{ yeka.business.company.name }}</p>
                                         {% else %}
                                         <p class="text-muted" style="font-size: 16px;"><b>Firma
                                             :</b> Kazanan Firma Belirtilmedi.</p>
                                         {% endif %}
 
+
                                     </div>
                                 </div>
+                            <div class="card card-default card-outline">
+                                    <div class="card-header with-border">
+                                        <h3 class="card-title">YEKA Kullanım Hakkı Sözleşmesi Teminat Bilgileri</h3>
+
+                                    </div>
+
+                                    <div class="card-body">
+
+                                     {% if indemnity_file %}
+
+                                        <p class="text-muted" style="font-size: 16px;"><b>Teminat Mektubu
+                                            :</b> <a target="_blank"  href="{{ MEDIA_URL }}{{ indemnity_file.url}}"
+                                                                   download="">{{ indemnity_file }}</a></p>
+                                        {% else %}
+                                        <p class="text-muted" style="font-size: 16px;"><b>Teminat Mektubu
+                                            :</b> YEKA Kullanım Hakkı Sözleşmesi Teminat Mektubu Mevcut Değil.</p>
+                                        {% endif %}
+                                     {% if indemnity_quantity %}
+
+                                         <p class="text-muted" style="font-size: 16px;"><b>Teminat Miktarı
+                                            :</b> {{ indemnity_quantity }}</p>
+                                        {% else %}
+                                        <p class="text-muted" style="font-size: 16px;"><b>Teminat Miktarı
+                                            :</b> YEKA Kullanım Hakkı Sözleşmesi Teminat Miktarı Mevcut Değil.</p>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+
                                 <div class="card card-default card-outline">
                                     <div class="card-header with-border">
                                         <h3 class="card-title">Görevli Personel Listesi</h3>
@@ -756,7 +786,17 @@
                                             </div>
 
                                             <div class="card-body">
-                                                <table id="region" class="table table-bordered table-hover">
+                                            <div class=" float-sm-left" style="margin: 5px">
+                                                <small class="badge badge-success"><i
+                                                        class="fa fa-check-circle"></i> Olumlu
+                                                    : {{ positive_institution }}</small>
+                                                <small class="badge badge-danger"><i class="fa fa-minus-circle"></i>
+                                                    Olumsuz: {{ negative_insinstitution }}</small>
+                                                <small class="badge badge-warning"><i
+                                                        class="fa fa-question-circle"></i> Sonuçlanmadı
+                                                    : {{ not_result_institution }}</small>
+                                            </div>
+                                                <table id="aday-yeka" class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
 
@@ -978,7 +1018,70 @@
             $(".clickable-row").click(function () {
                 window.location = $(this).data("href");
             });
+
+             $('#aday-yeka').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'YEKA LİSTESİ',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'responsive': true,
+            })
+
         });
+
 
         function view_competition(id) {
             var html = 'competition_table'
