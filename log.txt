@@ -190,4 +190,5 @@
  [25-02-2021 16:16]  lag kaydetme hata   
  [01-03-2021 11:35]  lag kaydetme hata   
  [28-06-2021 16:57]  lag kaydetme hata   
+ [07-12-2021 17:08]  lag kaydetme hata   
  
