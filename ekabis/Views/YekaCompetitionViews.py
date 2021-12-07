@@ -271,12 +271,12 @@ def delete_competition(request):
                 competition_filter = {
                     'uuid': uuid
                 }
-                obj = YekaCompetitionGetService(request, competition_filter)
+                obj = YekaCompetition.objects.get(uuid=uuid)
                 parent_filter = {
                     'parent': obj
                 }
 
-                if YekaCompetitionService(request, parent_filter):
+                if YekaCompetition.objects.filter(parent=obj):
 
                     return JsonResponse({'status': 'Fail', 'msg': ' Bağlı alt YEKA olduğu için silinemez.'})
 
@@ -285,6 +285,9 @@ def delete_competition(request):
                     log = general_methods.logwrite(request, request.user, log)
                     obj.isDeleted = True
                     obj.save()
+                    if ProposalSubYeka.objects.filter(sub_yeka=obj):
+                        sub_yeka=ProposalSubYeka.objects.get(sub_yeka=obj)
+                        sub_yeka.delete()
                     url = redirect('ekabis:view_yeka').url
                     html = '<a style="" href="' + url + '"> ID: ' + str(
                         obj.pk) + ' - ' + obj.name + '</a> YEKA yarışması silindi.'
@@ -1079,26 +1082,44 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                                     yeka_businessblog = YekaBusinessBlog(
                                         finisDate=item.finisDate,
                                         startDate=item.startDate,
+                                        completion_date=item.completion_date,
                                         sorting=item.sorting,
                                         businessTime=item.businessTime,
                                         status=item.status,
                                         businessblog=item.businessblog
 
                                     )
-                                    parent_yeka_business_blog = yeka_businessblog
                                     yeka_businessblog.save()
+                                    for param in item.parameter.all():
+                                        new_param = YekaBusinessBlogParemetre(value=param.value, file=param.file,
+                                                                              title=param.title,
+                                                                              parametre=param.parametre)
+                                        new_param.save()
+                                        yeka_businessblog.parameter.add(new_param)
+                                        yeka_businessblog.save()
+
+                                    parent_yeka_business_blog = yeka_businessblog
 
                                 else:
                                     yeka_businessblog = YekaBusinessBlog(parent=parent_yeka_business_blog,
                                                                          finisDate=item.finisDate,
                                                                          businessblog=item.businessblog,
                                                                          startDate=item.startDate,
+                                                                         completion_date=item.completion_date,
                                                                          sorting=item.sorting,
                                                                          businessTime=item.businessTime,
                                                                          status=item.status,
                                                                          )
                                     yeka_businessblog.save()
+                                    for param in item.parameter.filter(isDeleted=False):
+                                        new_param = YekaBusinessBlogParemetre(value=param.value, file=param.file,
+                                                                              title=param.title,
+                                                                              parametre=param.parametre)
+                                        new_param.save()
+                                        yeka_businessblog.parameter.add(new_param)
+                                        yeka_businessblog.save()
                                     parent_yeka_business_blog = yeka_businessblog
+
                                 if item.companies.filter(isDeleted=False):
                                     for company in item.companies.filter(isDeleted=False):
                                         yeka_businessblog.companies.add(company)
@@ -1108,13 +1129,7 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                                 yeka_business.businessblogs.add(yeka_businessblog)
                                 yeka_business.save()
 
-                                for param in item.parameter.filter(isDeleted=False):
-                                    new_param = YekaBusinessBlogParemetre(value=param.value, file=param.file,
-                                                                          title=param.title,
-                                                                          parametre=param.parametre)
-                                    new_param.save()
-                                    yeka_businessblog.parameter.add(new_param)
-                                    yeka_businessblog.save()
+
 
 
                             competition.business = yeka_business
@@ -1124,13 +1139,10 @@ def add_sumcompetition(request, uuid, proposal_uuid):
 
                                 if YekaHoldingCompetition.objects.filter(business=parent_competition.business):
                                     holding_competition = YekaHoldingCompetition(
-                                        yekabusinessblog=competition.business.businessblogs.get(
-                                            businessblog__name='Yarışmanın Yapılması'),
+                                        yekabusinessblog=competition.business.businessblogs.get(businessblog__name='Yarışmanın Yapılması'),
                                         business=competition.business,
-                                        max_price=YekaHoldingCompetition.objects.get(
-                                            business=competition.business).max_price,
-                                        unit=YekaHoldingCompetition.objects.get(
-                                            business=parent_competition.business).unit
+                                        max_price=YekaHoldingCompetition.objects.get(business=parent_competition.business).max_price,
+                                        unit=YekaHoldingCompetition.objects.get(business=parent_competition.business).unit
 
                                     )
                                     holding_competition.save()

@@ -380,7 +380,7 @@ def general_reporting(request):
             sql2 = f.read()
             f.close()
 
-            params = ["3","False"]
+            params = ["3",False]
             params2 = ["Kabuller"]
             competition_id = None
 

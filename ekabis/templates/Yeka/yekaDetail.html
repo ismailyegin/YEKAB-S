@@ -880,13 +880,12 @@
                             {% for item in perm %}
 
 
-
-                                {% if item == 'view_yeka_competition_detail'%}
+                                {% if item == 'view_yeka_competition_detail' %}
                                     html += '<a href="' + view_yeka_competition_detail + '" class="dropdown-item" title="Detay" type="button"><i class="fa fa-search"></i>Detay</a>';
-                                {% elif item == 'delete_competition'%}
+                                {% elif item == 'delete_competition'  and employee in employees %}
                                     html += '<a onclick="' + url_delete + '" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
 
-
+{
 
                                 {% endif %}
                             {% endfor %}
