@@ -914,7 +914,7 @@ def change_yekaproposal(request, business, businessblog):
             proposal_dict = dict()
             proposal_dict['status'] = '##ffffff'
             olumsuz = proposal.institution.filter(status='Olumsuz')
-            sonuclanmadi = proposal.institution.filter(status='Sonuclanmadi')
+            sonuclanmadi = proposal.institution.filter(status='Sonuçlanmadı')
             if olumsuz:
                 proposal_dict['status'] = '#ff3a3a'
                 proposal_dict['proposal'] = proposal
