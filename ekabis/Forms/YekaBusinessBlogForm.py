@@ -108,7 +108,7 @@ class YekaBusinessBlogForm(ModelForm):
                     self.fields[item.title].widget.attrs = {'required': 'required',
                                                             'class': 'form-control datepicker6', }
                 else:
-                    self.fields[item.title].widget.attrs = {'class': 'form-control','type':'date', }
+                    self.fields[item.title].widget.attrs = {'class': 'form-control datepicker6' }
                     self.fields[item.title].required = False
 
 
