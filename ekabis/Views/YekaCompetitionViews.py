@@ -1352,7 +1352,7 @@ def view_yeka_competition_detail(request, uuid):
                 proposal_dict = {}
                 proposal_dict['status'] = '##ffffff'
                 negative = proposal.institution.filter(status='Olumsuz').count()
-                not_result = proposal.institution.filter(status='Sonuclanmadi').count()
+                not_result = proposal.institution.filter(status='Sonuçlanmadı').count()
                 if negative:
                     proposal_dict['status'] = '#ff3a3a'
                     proposal_dict['proposal'] = proposal
