@@ -380,11 +380,11 @@ def general_reporting(request):
 
             for file in files:
                 if file == 'sql-1.txt':
-                    f = open(file, "r")
+                    f = open(cwd+'/'+file, "r")
                     sql = f.read()
                     f.close()
                 if file == 'sql-2.txt':
-                    f = open("sql-2.txt", "r")
+                    f = open(cwd+'/'+file, "r")
                     sql2 = f.read()
                     f.close()
 
