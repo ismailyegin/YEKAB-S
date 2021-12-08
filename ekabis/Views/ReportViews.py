@@ -374,21 +374,14 @@ def general_reporting(request):
             current_url = resolve(request.path_info)
             url_name = Permission.objects.get(codename=current_url.url_name)
 
-            cwd = os.getcwd()  # Get the current working directory (cwd)
-            files = os.listdir(cwd)  # Get all the files in that directory
-            print("Files in %r: %s" % (cwd, files))
+            # cwd = os.getcwd()  # Get the current working directory (cwd)
+            # files = os.listdir(cwd)  # Get all the files in that directory
+            # print("Files in %r: %s" % (cwd, files))
 
-            for file in files:
-                if file == 'sql-1.txt':
-                    f = open(cwd+'/'+file, "r")
-                    sql = f.read()
-                    f.close()
-                if file == 'sql-2.txt':
-                    f = open(cwd+'/'+file, "r")
-                    sql2 = f.read()
-                    f.close()
+            sql='SELECT yeka_business.ID AS blok_id,yeka_business_block.ID AS yeka_business_block_id, firma.TAXNUMBER AS vergi_no , firma.TAXOFFICE AS vergi_dairesi ,sozlesme.contract_date as sozlesme_tarih, baglanti_bol.NAME AS baglanti_bolgesi, yeka.DEFINITION AS yeka ,yarisma.ID AS yarisma_id ,firma.NAME AS firma , firma.MAIL AS firma_mail , yarisma.NAME AS yarisma , sozlesme.PRICE AS sozlesme_fiyat ,business_block.NAME AS is_blogu ,yeka_business_block.STATUS AS is_blok_durumu ,yeka_business_block.STARTDATE AS baslangic_tarihi ,city.name as sehir ,district.name as ilce,neighborhood.name as mah, yeka_eskalasyon.RESULT as guncel_fiyat,location.PARCEL AS ada_parsel, yeka_business_block.FINISDATE AS bitis_tarihi FROM EKABIS_YEKACOMPETITION yarisma LEFT JOIN ekabis_connectionregion_yekacompetition x ON x.YEKACOMPETITION_ID = yarisma.ID LEFT JOIN EKABIS_CONNECTIONREGION baglanti_bol ON baglanti_bol.ID=x.CONNECTIONREGION_ID LEFT JOIN EKABIS_YEKA_CONNECTION_REGION y ON y.CONNECTIONREGION_ID=baglanti_bol.ID LEFT JOIN EKABIS_YEKA yeka ON yeka.ID=y.YEKA_ID LEFT JOIN EKABIS_YEKACOMPANY yeka_company ON yarisma.ID=yeka_company.COMPETITION_ID LEFT JOIN EKABIS_COMPANY firma ON firma.ID=yeka_company.COMPANY_ID LEFT JOIN EKABIS_YEKACONTRACT sozlesme ON sozlesme.BUSINESS_ID=yarisma.BUSINESS_ID LEFT JOIN EKABIS_YEKABUSINESS yeka_business ON yeka_business.ID=yarisma.BUSINESS_ID LEFT JOIN ekabis_yekabusiness_businessblogs ybb ON ybb.yekabusiness_id=yeka_business.ID LEFT JOIN EKABIS_YEKABUSINESSBLOG yeka_business_block ON yeka_business_block.ID=ybb.YEKABUSINESSBLOG_ID LEFT JOIN EKABIS_BUSINESSBLOG business_block ON business_block.ID=yeka_business_block.BUSINESSBLOG_ID LEFT JOIN EKABIS_BUSINESSBLOG_PARAMETRE business_parametre ON business_parametre.BUSINESSBLOG_ID=business_block.ID LEFT JOIN ekabis_businessblogparametretype parametre_type ON parametre_type.ID=business_parametre.BUSINESSBLOGPARAMETRETYPE_ID LEFT JOIN ekabis_yekabusinessblogparemetre yeka_blok_parametre ON yeka_blok_parametre.PARAMETRE_ID=parametre_type.ID LEFT JOIN ekabis_yekacompetitioneskalasyon yeka_eskalasyon ON yeka_eskalasyon.competition_id=yarisma.ID LEFT JOIN ekabis_yekacompetitioneskalasyon_eskalasyon e ON e.yeka_competition_eskalasyon_id=yeka_eskalasyon.ID LEFT JOIN EKABIS_ESKALASYON eskalasyon ON eskalasyon.ID=e.ESKALASYON_INFO_ID LEFT JOIN EKABIS_YEKAPROPOSAL yeka_proposal ON yeka_proposal.BUSINESS_ID=yeka_business.ID LEFT JOIN EKABIS_YEKAPROPOSAL_PROPOSAL yekaproposal_proposal ON yekaproposal_proposal.YEKAPROPOSAL_ID=yeka_proposal.ID LEFT JOIN EKABIS_PROPOSAL_LOCATION proposal_location ON proposal_location.PROPOSAL_ID=yekaproposal_proposal.PROPOSAL_ID LEFT JOIN EKABIS_LOCATION location ON location.ID=proposal_location.LOCATION_ID LEFT JOIN EKABIS_CITY city ON city.ID=location.city LEFT JOIN EKABIS_DISTRICT district ON district.ID=location.DISTRICT_ID LEFT JOIN EKABIS_NEIGHBORHOOD neighborhood ON neighborhood.ID=location.NEIGHBORHOOD_ID LEFT JOIN EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID WHERE yeka.isDeleted=%s'
+            sql2='SELECT SUM(accept.CURRENTPOWER) AS total_elektriksel_guc , SUM(accept.INSTALLEDPOWER) AS total_mekanik_guc ,yarisma.ID AS yarisma_id FROM EKABIS_YEKACOMPETITION yarisma LEFT JOIN EKABIS_YEKABUSINESS yeka_business ON yeka_business.ID=yarisma.BUSINESS_ID LEFT JOIN ekabis_yekabusiness_businessblogs ybb ON ybb.YEKABUSINESS_ID=yeka_business.ID LEFT JOIN EKABIS_YEKABUSINESSBLOG yeka_business_block ON yeka_business_block.ID=ybb.YEKABUSINESSBLOG_ID LEFT JOIN EKABIS_BUSINESSBLOG business_block ON business_block.ID=yeka_business_block.BUSINESSBLOG_ID LEFT JOIN EKABIS_BUSINESSBLOG_PARAMETRE business_parametre ON business_parametre.BUSINESSBLOG_ID=business_block.ID LEFT JOIN ekabis_businessblogparametretype parametre_type ON parametre_type.ID=business_parametre.BUSINESSBLOGPARAMETRETYPE_ID LEFT JOIN ekabis_yekabusinessblogparemetre yeka_blok_parametre ON yeka_blok_parametre.PARAMETRE_ID=parametre_type.ID LEFT JOIN EKABIS_YEKAACCEPT yeka_accept ON yeka_accept.BUSINESS_ID=yeka_business.ID LEFT JOIN EKABIS_YEKAACCEPT_ACCEPT yeka_yekaaccept ON yeka_yekaaccept.YEKAACCEPT_ID=yeka_accept.ID LEFT JOIN EKABIS_ACCEPT accept ON accept.ID=yeka_yekaaccept.ACCEPT_ID WHERE business_block.name=%s'
 
-            params = ["3",False]
+            params = [False]
             params2 = ["Kabuller"]
             competition_id = None
 
