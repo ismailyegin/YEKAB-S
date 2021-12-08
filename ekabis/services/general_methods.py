@@ -239,7 +239,6 @@ def get_notification(request):
 
 def get_error_messages(form):
     if form:
-        print(form.errors)
         error_messages = []
         for key in form.errors:
             for field in form.fields:
