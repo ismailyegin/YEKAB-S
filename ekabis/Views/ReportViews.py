@@ -1,5 +1,6 @@
 import copy
 import datetime
+import os
 import traceback
 
 from django.contrib import messages
@@ -372,13 +373,20 @@ def general_reporting(request):
             urls = last_urls(request)
             current_url = resolve(request.path_info)
             url_name = Permission.objects.get(codename=current_url.url_name)
-            f = open("sql-1.txt", "r")
-            sql = f.read()
-            f.close()
 
-            f = open("sql-2.txt", "r")
-            sql2 = f.read()
-            f.close()
+            cwd = os.getcwd()  # Get the current working directory (cwd)
+            files = os.listdir(cwd)  # Get all the files in that directory
+            print("Files in %r: %s" % (cwd, files))
+
+            for file in files:
+                if file == 'sql-1.txt':
+                    f = open(file, "r")
+                    sql = f.read()
+                    f.close()
+                if file == 'sql-2.txt':
+                    f = open("sql-2.txt", "r")
+                    sql2 = f.read()
+                    f.close()
 
             params = ["3",False]
             params2 = ["Kabuller"]
