@@ -65,6 +65,9 @@ class CardRefresh {
     $.get(this._settings.source, this._settings.params, response => {
       if (this._settings.loadInContent) {
         if (this._settings.sourceSelector !== '') {
+          
+          response =response.replace(/\&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;').replace(/\'/g, '&#x27').replace(/\//g, '&#x2F');
+          
            if(!response.includes("<script>")){
           response = $(response).find(this._settings.sourceSelector).html();}
         }
