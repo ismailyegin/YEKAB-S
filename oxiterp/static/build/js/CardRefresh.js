@@ -60,15 +60,18 @@ class CardRefresh {
 
   load() {
     this._addOverlay()
-    this._settings.onLoadStart.call($(this))
+    //this._settings.onLoadStart.call($(this))
 
     $.get(this._settings.source, this._settings.params, response => {
       if (this._settings.loadInContent) {
         if (this._settings.sourceSelector !== '') {
-          response = $(response).find(this._settings.sourceSelector).html()
+           if(!response.includes("<script>")){
+          response = $(response).find(this._settings.sourceSelector).html();}
         }
-
-        this._parent.find(this._settings.content).html(response)
+        
+        if(!response.includes("<script>")){
+      
+        this._parent.find(this._settings.content).html(response)}
       }
 
       this._settings.onLoadDone.call($(this), response)

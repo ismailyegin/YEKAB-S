@@ -82,9 +82,9 @@ gulp.task('bump', function (complete) {
     });
 });
 
-gulp.task('release', ['build'], function () {
+/*gulp.task('release', ['build'], function () {
     exec('git tag -a v' + package.version);
-});
+});*/
 
 gulp.task('jshint', function () {
     return gulp.src(srcDir + '*.js')
@@ -131,8 +131,8 @@ gulp.task('server', function () {
 
 // Convenience task for opening the project straight from the command line
 gulp.task('_open', function () {
-    exec('open http://localhost:8000');
-    exec('subl .');
+    //exec('open http://localhost:8000');
+    //exec('subl .');
 });
 
 gulp.task('dev', ['server', 'default']);
