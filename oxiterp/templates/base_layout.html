@@ -317,22 +317,22 @@
                         <div class="row">
                             <div class="col-md">
 
-                                {% if aktif == "Admin" %}
-                                    <a href="{% url "ekabis:admin-profil-guncelle" %}"
-                                       class="btn btn-default btn-flat">Profil Bilgisi</a>
+{#                                {% if aktif == "Admin" %}#}
+{#                                    <a href="{% url "ekabis:admin-profil-guncelle" %}"#}
+{#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
+{##}
+{#                                {% elif aktif == "Yonetim" %}#}
+{#                                    <a href=""#}
+{#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
+{##}
+{#                                {% elif aktif == "Personel" %}#}
+{#                                    <a href=""#}
+{#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
 
-                                {% elif aktif == "Yonetim" %}
-                                    <a href=""
-                                       class="btn btn-default btn-flat">Profil Bilgisi</a>
-
-                                {% elif aktif == "Personel" %}
-                                    <a href=""
-                                       class="btn btn-default btn-flat">Profil Bilgisi</a>
 
 
-                                {% else %}
                                     <a><i class="fa fa-circle text-success"></i> {{ aktif }}</a>
-                                {% endif %}
+
 
                             </div>
                             <div class="col-md text-right">

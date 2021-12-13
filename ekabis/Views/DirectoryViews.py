@@ -2,7 +2,6 @@ import traceback
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db import transaction
@@ -550,71 +549,3 @@ def update_commission(request, pk):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
 
 
-@login_required
-def updateDirectoryProfile(request):
-    perm = general_methods.control_access(request)
-
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-
-    user = request.user
-    memberfilter = {
-        'user': user
-    }
-    member = DirectoryMemberGetService(request, memberfilter)
-    person = member.person
-    communication = member.communication
-    user_form = DisabledUserForm(request.POST or None, instance=user)
-    person_form = DisabledPersonForm(request.POST or None, instance=person)
-    communication_form = DisabledCommunicationForm(request.POST or None, instance=communication)
-    member_form = DisabledDirectoryForm(request.POST or None, instance=request.user)
-    password_form = SetPasswordForm(request.user, request.POST)
-    try:
-        urls = last_urls(request)
-        current_url = resolve(request.path_info)
-        url_name = Permission.objects.get(codename=current_url.url_name)
-        with transaction.atomic():
-            if request.method == 'POST':
-
-                if user_form.is_valid() and communication_form.is_valid() and person_form.is_valid() and member_form.is_valid() and password_form.is_valid():
-
-                    user.username = user_form.cleaned_data['email']
-                    user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
-                    user.last_name = unicode_tr(user_form.cleaned_data['last_name']).upper()
-                    user.email = user_form.cleaned_data['email']
-                    user.set_password(password_form.cleaned_data['new_password1'])
-                    user.save()
-
-                    person_form.save()
-                    communication_form.save()
-                    member_form.save()
-                    password_form.save()
-
-                    messages.success(request, 'Yönetim Kurul Üyesi Başarıyla Güncellenmiştir.')
-
-                    log = str(user.get_full_name()) + " yönetim kurulu guncellendi"
-                    log = general_methods.logwrite(request, request.user, log)
-
-                else:
-
-                    error_message_password = get_error_messages(password_form)
-                    error_messages_communication = get_error_messages(communication_form)
-                    error_messages_person = get_error_messages(person_form)
-                    error_messages_member = get_error_messages(member_form)
-                    error_messages_user = get_error_messages(user_form)
-
-                    error_messages = error_messages_user + error_message_password + error_messages_communication + error_messages_person + error_messages_member
-                    return render(request, 'yonetim/yonetim-kurul-profil-guncelle.html',
-                                  {'user_form': user_form, 'communication_form': communication_form,
-                                   'person_form': person_form, 'password_form': password_form,
-                                   'member_form': member_form,
-                                   'error_messages': error_messages,'urls': urls, 'current_url': current_url, 'url_name': url_name})
-
-            return render(request, 'yonetim/yonetim-kurul-profil-guncelle.html',
-                          {'user_form': user_form, 'communication_form': communication_form,
-                           'person_form': person_form, 'password_form': password_form, 'member_form': member_form,'urls': urls, 'current_url': current_url, 'url_name': url_name,
-                           'error_messages': ''})
-    except Exception as e:
-        traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
