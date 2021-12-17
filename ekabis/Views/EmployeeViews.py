@@ -3,7 +3,6 @@ import traceback
 from django.contrib import messages
 from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User, Group
 from django.core import serializers
 from django.db import transaction
@@ -450,57 +449,7 @@ def delete_employeetitle(request):
         return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
 
 
-@login_required
-def updateRefereeProfile(request):
-    perm = general_methods.control_access(request)
 
-    if not perm:
-        logout(request)
-        return redirect('accounts:login')
-
-    employeefilter = {
-        'user': request.user
-    }
-    employee = EmployeeGetService(request, employeefilter)
-    user_form = DisabledUserForm(request.POST or None, instance=employee.user)
-    person_form = DisabledPersonForm(request.POST or None, request.FILES or None, instance=employee.person)
-    communication_form = DisabledCommunicationForm(request.POST or None, instance=employee.communication)
-    password_form = SetPasswordForm(request.user, request.POST)
-    urls = last_urls(request)
-    current_url = resolve(request.path_info)
-    url_name = Permission.objects.get(codename=current_url.url_name)
-    if request.method == 'POST':
-        person_form = DisabledPersonForm(request.POST, request.FILES)
-        try:
-            with transaction.atomic():
-                if request.FILES['profileImage']:
-                    employee.person.profileImage = request.FILES['profileImage']
-                    employee.person.save()
-                    messages.success(request, 'Resim güncellendi.')
-        except Exception as e:
-            print(e)
-        if password_form.is_valid():
-            employee.user.set_password(password_form.cleaned_data['new_password2'])
-            employee.user.save()
-            update_session_auth_hash(request, employee.user)
-            messages.success(request, 'Şifre Başarıyla Güncellenmiştir.')
-            return redirect('ekabis:personel-profil-guncelle')
-
-        else:
-            error_messages = get_error_messages(password_form)
-            # error_messages_communication = get_error_messages(communication_form)
-            # error_messages_person = get_error_messages(person_form)
-            # error_messages_employee = get_error_messages(communication_form)
-
-            return render(request, 'personel/Personel-Profil-güncelle.html',
-                          {'user_form': user_form, 'communication_form': communication_form,
-                           'person_form': person_form, 'password_form': password_form,
-                           'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name})
-    return render(request, 'personel/Personel-Profil-güncelle.html',
-                  {'user_form': user_form, 'communication_form': communication_form,
-                   'person_form': person_form, 'password_form': password_form, 'error_messages': '', 'urls': urls,
-                   'current_url': current_url, 'url_name': url_name})
 @login_required
 def search_person(request):
     perm = general_methods.control_access(request)

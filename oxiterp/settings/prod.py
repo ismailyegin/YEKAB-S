@@ -40,6 +40,7 @@ DATABASES = {
 
 
 SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/home/yekadmin/static/'
 #LDAP_URL = 'https://api.enerji.gov.tr/apigateway/merkezi-ldap-api'

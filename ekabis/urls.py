@@ -30,13 +30,13 @@ urlpatterns = [
     path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendar, name='add_calendarfdk'),
 
     # profil güncelle
-    path('admin/admin-profil-guncelle/', AdminViews.updateProfile,
-         name='admin-profil-guncelle'),
+    # path('admin/admin-profil-guncelle/', AdminViews.updateProfile,
+    #      name='admin-profil-guncelle'),
+    #
+    # path('yonetim/yonetim-kurul-profil-guncelle/', DirectoryViews.updateDirectoryProfile,
+    #      name='yonetim-kurul-profil-guncelle'),
 
-    path('yonetim/yonetim-kurul-profil-guncelle/', DirectoryViews.updateDirectoryProfile,
-         name='yonetim-kurul-profil-guncelle'),
-
-    path('personel/personel-profil-guncelle/', EmployeeViews.updateRefereeProfile, name='personel-profil-guncelle'),
+    # path('personel/personel-profil-guncelle/', EmployeeViews.updateRefereeProfile, name='personel-profil-guncelle'),
 
     # Yönetim
     path('kurul/kurul-uyeleri/', DirectoryViews.return_directory_members, name='view_directoryMember'),
@@ -510,7 +510,6 @@ urlpatterns = [
          name='get_yeka_competition_proposal'),
     path('yeka/yeka-yarisma-guncel-fiyat/', YekaViews.get_yeka_competition_eskalasyon,
          name='get_yeka_competition_eskalasyon'),
-
 
     path('yeka/butun-yekalar/', DashboardViews.api_yeka_by_type,
          name='api_yeka_by_type'),
