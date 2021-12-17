@@ -417,6 +417,14 @@
                                 html2 += '<a class="btn btn-secondary" href="' + proposal_add_sub_yeka + '" type="button" style="float:right">Aday Yeka Belirle</a>';
 
                             }
+                            else if (this.data('name').includes('YEKA Kullanım Hakkı Sözleşmesinin İmzalanması') ) {
+                                let yeka_guarantee = "{% url 'ekabis:guaranteeListYekaCompetition' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
+                                yeka_guarantee = yeka_guarantee.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
+                                yeka_guarantee = yeka_guarantee.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
+                                html2 += '<a class="btn btn-secondary" href="' + yeka_guarantee + '" type="button" style="float:right">Teminatlar</a>';
+
+                            }
+
 
 
                             html2 += '</div>';

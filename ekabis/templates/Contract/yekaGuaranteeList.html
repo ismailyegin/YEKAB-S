@@ -1,10 +1,7 @@
 {% extends 'base_layout.html' %}
-
 {% block content %}
 
-
-
-
+    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -78,19 +75,12 @@
                         {% endfor %}
                         </div>
                     </div>
-
-
-
                 {% endif %}
             </div>
         {% endfor %}
 
 
     {% endif %}
-
-
-
-
 
 
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -112,6 +102,8 @@
             </div>
         </div>
     </div>
+
+
     <section class="content-header">
 
 
@@ -119,7 +111,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Ek Süre Listesi</h1>
+                        {{ name }} - Teminat </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -135,112 +127,135 @@
 
     </section>
     <section class="content">
-        <div class="row">
-            <section class="col-lg-12 ">
-                <div class="card-body">
 
-
+        <form method="post" enctype="multipart/form-data" role="form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
                     <div class="card card-primary card-outline">
+
+
                         <div class="card-header with-border">
-                            <h3 class="card-title">Ek Süre </h3>
+                            <h3 class="card-title">Teminat Listesi</h3>
+                            {% for item in perm %}
+                                {% if item == 'add_guarantee' %}
+
+                                    <a href="{% url 'ekabis:add_guarantee' yeka_guarantee.uuid %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" title="Teminat Ekle"></i>
+                                    </a>
+
+                                {% endif %}
+                            {% endfor %}
                         </div>
-
                         <div class="card-body">
-                            <table id="company" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Yeka</th>
-                                    <th>İş Blogu</th>
-                                    <td>Süre</td>
-                                    <td>İşlemler</td>
+                            <div class="card-body">
+                                <table id="guarantee" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
 
+                                        <th>#</th>
+                                        <th>Teminat Tarihi</th>
+                                        <th>Teminat Mektubu</th>
+                                        <th>Banka</th>
+                                        <th>Şube</th>
+                                        <th>Tutar</th>
+                                        <th>Süre</th>
+                                        <th>Durum</th>
+                                        <th>İade Tarihi</th>
+                                        <th>Firma</th>
+                                        <th>Referans/Pikur</th>
+                                        <th>Teminat Sayısı</th>
+                                        <th>Açıklama</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
 
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% if ekstratime %}
-                                    {% for item in ekstratime %}
+                                    {% for guarantee in guarantees %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ item.yeka }}</td>
-                                            <td>
-                                                {{ item.blogname }}
-                                            </td>
-                                            <td>
-                                                {{ item.time }}
-                                            </td>
+                                            <td>{{ guarantee.guaranteeDate | date }}</td>
+                                            <td><a target="_blank" title="{{ guarantee.guaranteeFile }}"
+                                                   href=" {{ MEDIA_URL }}{{ guarantee.guaranteeFile.url }}"
+                                                   download="">{{ guarantee.guaranteeFile | truncatechars:20 }}</a></td>
+
+                                            <td>{{ guarantee.bank }}</td>
+                                            <td>{{ guarantee.branch }}</td>
+                                            <td>{{ guarantee.quantity }}</td>
+                                            <td>{{ guarantee.guaranteeTime }}</td>
+                                            <td>{{ guarantee.status }}</td>
+                                            {% if guarantee.rebateDate %}
+                                                <td>{{ guarantee.rebateDate }}</td>{% endif %}
+                                            <td>{{ guarantee.company.name }}</td>
+                                            <td>{% if guarantee.pikur %} <b> Pikur : </b>
+                                                {{ guarantee.pikur }} {% elif guarantee.reference %} <b> Referans : </b>
+                                                {{ guarantee.reference }}{% endif %}</td>
+                                            <td>{{ guarantee.guaranteeCount }}</td>
+                                            <td>{{ guarantee.definition }}</td>
+
                                             <td>
                                                 <div class="btn-group">
-
                                                     <button type="button"
                                                             class="btn btn-default dropdown-toggle dropdown-icon"
-                                                            data-toggle="dropdown"> İşlemler
+                                                            data-toggle="dropdown">İşlemler
                                                     </button>
                                                     <div class="dropdown-menu" role="menu">
-                                                        {% for p in perm %}
-                                                            {% if p == 'change_extratime' %}
-                                                                <a href="{% url "ekabis:change_extratime" item.uuid %}"
-                                                                   class="dropdown-item"> <i
-                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
-                                                                </a>
-                                                            {% endif %}
-                                                            {% if p == 'add_extratimefile' %}
-                                                                <a href="{% url "ekabis:add_extratimefile" item.uuid %}"
-                                                                   class="dropdown-item"> <i
-                                                                        class="fa fa-plus " title="Düzenle"></i> Dosya Ekle
-                                                                </a>
-                                                            {% endif %}
 
-                                                            {% if p == 'delete_extratime' %}
+                                                        {% for item in perm %}
+                                                            {% if item == 'change_guarantee' %}
+                                                                <a href="{% url 'ekabis:change_guarantee' yeka_guarantee.uuid  guarantee.uuid %}"
+                                                                   class="dropdown-item"> <i
+                                                                        class="fa fa-edit"
+                                                                        title="Düzenle"></i>
+                                                                    Düzenle
+                                                                </a>
+
+                                                            {% elif item == 'delete_guarantee' %}
 
                                                                 <a class="dropdown-item" href=""
                                                                    data-toggle="modal"
-                                                                   onclick=deleteExtraTime('{{ item.uuid }}')><i
+                                                                   onclick=deleteGarantee('{{ guarantee.uuid }}')><i
                                                                         class="fa fa-trash"></i>Sil</a>
-
                                                             {% endif %}
+
                                                         {% endfor %}
 
 
                                                     </div>
-                                                </div>
-                                            </td>
 
+                                                </div>
+
+
+                                            </td>
                                         </tr>
 
                                     {% endfor %}
-                                {% endif %}
 
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
 
+
+                            </div>
                         </div>
                     </div>
-                    <!-- /.card -->
-
 
                 </div>
-            </section>
+        </form>
 
-
-        </div>
-        <!-- /.row (main row) -->
 
     </section>
-    {% load  static %}
+    {% load static %}
     <script>
         $(function () {
-            $('#company').DataTable({
+            $('#guarantee').DataTable({
                 dom: 'Bfrtip',
-
 
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
-
                 'buttons': [
 
 
@@ -257,11 +272,11 @@
                     },
                     {
                         extend: 'print',
-                        title: 'YEKA LİSTESİ',
+                        title: 'Ek Süreler',
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -271,7 +286,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -280,19 +295,14 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
 
 
                 ],
-                "search": {
-                    "caseInsensitive": true,
-                },
-                'language': {
-                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
-                },
+                
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
@@ -300,47 +310,62 @@
                 'info': true,
                 'autoWidth': true,
                 'responsive': true,
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                }
             })
 
         })
+
+
     </script>
-
-    <script>  function deleteExtraTime(id) {
-        debugger;
-        console.log(id);
-        var html = ''
-        $("#modal-delete").on("shown.bs.modal", function (e) {
-            $("#btn-conf1").click(function () {
-                $.ajax({
-                    url: "{% url "ekabis:delete_extratime" %}",
-                    type: "POST",
-                    data: {
-                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                        uuid: id,
-                    },
-                    success: function (result) {
-
-                        html = 'Ek Süre Başarıyla Silindi';
-                        debugger;
-                        $(".successModal").html(html);
-                        $('#modal-success').on("shown.bs.modal", function (e) {
-                            $(".btn-ok").click(function () {
-
-                                window.location.replace("{% url "ekabis:view_extratime" %}");
-
-                            });
-
-                        }).modal('show');
-
-                        console.log(result.status)
-                    }
-                });
-            });
-        }).modal('show');
-        $('#btn-close1').click(function () {
-            $('#modal-active').modal('hide');
+    <script>
+        $(document).ready(function () {
+            {% if error_messages  %}
+                errors_messages({{ error_messages |safe }})
+            {% endif %}
         });
 
-    }</script>
+
+        function deleteGarantee(id) {
+            debugger;
+            console.log(id);
+            var html = ''
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    $.ajax({
+                        url: "{% url "ekabis:delete_guarantee" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid: id,
+                        },
+                        success: function (result) {
+
+                            html = ' Başarıyla Silindi';
+                            debugger;
+                            $(".successModal").html(html);
+                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                $(".btn-ok").click(function () {
+
+                                    window.location.replace("{% url "ekabis:guaranteeListYekaCompetition" yeka_guarantee.business.uuid yeka_guarantee.yekabusinessblog.uuid %}");
+
+                                });
+
+                            }).modal('show');
+
+                            console.log(result.status)
+                        }
+                    });
+                });
+            }).modal('show');
+            $('#btn-close1').click(function () {
+                $('#modal-active').modal('hide');
+            });
+
+        }
+    </script>
+
 {% endblock %}
+
 

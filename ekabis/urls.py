@@ -510,7 +510,6 @@ urlpatterns = [
          name='get_yeka_competition_proposal'),
     path('yeka/yeka-yarisma-guncel-fiyat/', YekaViews.get_yeka_competition_eskalasyon,
          name='get_yeka_competition_eskalasyon'),
-   
 
     path('yeka/butun-yekalar/', DashboardViews.api_yeka_by_type,
          name='api_yeka_by_type'),
@@ -526,5 +525,9 @@ urlpatterns = [
     # path('yeka/is-blok-parametre/', BusinessBlogViews.data_parameter, name='data_business_block_parameter'),
     # path('yeka/is-blok-parametre-id/', BusinessBlogViews.data_parameter_block_id, name='data_block_parameter_id'),
     path('yeka/tum-bildirim-okundu-yap/', NotificationViews.read_notification_all, name='read_notification_all'),
+    path('yeka/yarisma-teminat-listesi/<uuid:yeka_business>/<uuid:yeka_business_block>', YekaBussinessBlogStaticView.guaranteeListYekaCompetition, name='guaranteeListYekaCompetition'),
+    path('yeka/teminat-ekle/<uuid:uuid>', YekaBussinessBlogStaticView.add_guarantee, name='add_guarantee'),
+    path('yeka/teminat-guncelle/<uuid:uuid>/<uuid:guarantee>', YekaBussinessBlogStaticView.change_guarantee, name='change_guarantee'),
+    path('yeka/yeka-teminat-sil/', YekaBussinessBlogStaticView.delete_guarantee, name='delete_guarantee'),
 
 ]

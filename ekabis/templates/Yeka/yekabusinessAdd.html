@@ -23,13 +23,13 @@
     {% if messages %}
         {% for message in messages %}
 
-            <div id="toast-container"  class="toasts-top-right" >
+            <div id="toast-container" class="toasts-top-right">
                 {% if message.tags == 'warning' %}
                     <div class="toast toast-error" aria-live="polite" style="" id="toast">
                         <div class="toast-message">
                             {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
+                                {{ message }}
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -53,7 +53,7 @@
 
 
     {% endif %}
- <section class="content-header">
+    <section class="content-header">
 
         <div class="container-fluid">
             <div class="row mb-2">
@@ -79,33 +79,28 @@
 
             {% csrf_token %}
 
-        <input type="hidden" id="businessblog" name="businessblog" value="">
-
+            <input type="hidden" id="businessblog" name="businessblog" value="">
 
 
             <div class="row">
 
 
-
-{#            <div class="col-lg-12">#}
-{#                 <div class="card card-primary">#}
-{#                        <div class="card-header with-border">#}
-{#                            <h3 class="card-title"> Yeka İş Blogu Ekle </h3>#}
-{#                        </div>#}
-{#                        <div class="card-body">#}
-{##}
-{#{{ yekabusiness_form }}#}
-{##}
-{##}
-{#                        </div>#}
-{#            </div>#}
-
-
-
+                {#            <div class="col-lg-12">#}
+                {#                 <div class="card card-primary">#}
+                {#                        <div class="card-header with-border">#}
+                {#                            <h3 class="card-title"> Yeka İş Blogu Ekle </h3>#}
+                {#                        </div>#}
+                {#                        <div class="card-body">#}
+                {##}
+                {#{{ yekabusiness_form }}#}
+                {##}
+                {##}
+                {#                        </div>#}
+                {#            </div>#}
 
 
                 <div class="col-lg-12">
-                <div class="card card-primary card-outline">
+                    <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title"> İş Bloğu </h3>
                         </div>
@@ -113,7 +108,9 @@
 
 
                             <div class="row">
+
                                 <div class="col-lg-6">
+                                    <h6><b>İş Planında Bulunmayan İş Blokları</b></h6>
                                     <ul class="list-group mt-auto" id="left">
                                         {% for busi in business %}
                                             <li class="list-group-item" value="{{ busi.pk }}">{{ busi.name }}</li>
@@ -123,6 +120,8 @@
                                 </div>
 
                                 <div class="col-lg-6">
+                                    <h6><b>İş Planına Eklenen İş Blokları</b></h6>
+
                                     <ul class="list-group mt-auto" id="right">
 
                                     </ul>
@@ -131,13 +130,12 @@
                             </div>
 
 
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
+                            </button>
 
                         </div>
-                     <div class="card-footer">
-                                    <button class="btn btn-outline-primary" type="submit" style="float:right">Kaydet
-                                    </button>
-
-                                </div>
                     </div>
                 </div>
             </div>
