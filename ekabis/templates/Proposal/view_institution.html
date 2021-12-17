@@ -286,20 +286,29 @@
                         title: 'YEKA LİSTESİ',
                         text: '<i class="fa fa-print"></i>',
 
-                        titleAttr: 'Yazdır'
+                        titleAttr: 'Yazdır',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: '<i class="fa fa-file-pdf"></i>',
 
-                        titleAttr: 'Pdf Kaydet'
+                        titleAttr: 'Pdf Kaydet',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
 
                     {
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
-                        titleAttr: 'Excel Kaydet'
+                        titleAttr: 'Excel Kaydet',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
 
 
@@ -337,13 +346,13 @@
                     },
                     success: function (result) {
 
-                        html = 'Ek Süre Başarıyla Silindi';
+                        html = 'Kurum Başarıyla Silindi';
                         debugger;
                         $(".successModal").html(html);
                         $('#modal-success').on("shown.bs.modal", function (e) {
                             $(".btn-ok").click(function () {
 
-                                window.location.replace("{% url "ekabis:view_extratime" %}");
+                                location.reload();
 
                             });
 

@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect
 from django.urls import resolve
 
 from ekabis.Forms.CoordinateForm import CoordinateForm
+from ekabis.Forms.GuaranteeForm import GuaranteeForm
 from ekabis.Forms.LocationForm import LocationForm
 from ekabis.models.Coordinate import Coordinate
 from ekabis.models.Location import Location
@@ -25,7 +26,7 @@ from ekabis.Forms.YekaApplicationFileNameForm import YekaApplicationFileName, Ye
 from ekabis.Forms.YekaApplicationForm import YekaApplicationForm
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
-    YekaCompany
+    YekaCompany, YekaGuarantee, Guarantee
 from ekabis.models.Competition import Competition
 from ekabis.models.Settings import Settings
 from ekabis.models.CompetitionCompany import CompetitionCompany
@@ -1004,6 +1005,212 @@ def add_proposal(request, uuid):
 
 
 @login_required
+def add_guarantee(request, uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        yeka_guarantee = YekaGuarantee.objects.get(uuid=uuid)
+
+        guarantee_form = GuaranteeForm()
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        name = general_methods.yekaname(yeka_guarantee.business)
+        competition = YekaCompetition.objects.get(business=yeka_guarantee.business)
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                guarantee_form = GuaranteeForm(request.POST or None, request.FILES or None)
+                if guarantee_form.is_valid():
+                    guarantee = guarantee_form.save(request, commit=False)
+                    guarantee.save()
+                    guarantee.competition = competition
+                    yeka = Yeka.objects.get(connection_region=ConnectionRegion.objects.get(yekacompetition=competition))
+                    if YekaCompany.objects.filter(yeka=yeka):
+                        yekaCompany = YekaCompany.objects.get(yeka=yeka)
+                        guarantee.company = yekaCompany.company
+                    guarantee.save()
+                    yeka_guarantee.guarantee.add(guarantee)
+                    yeka_guarantee.save()
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                        guarantee.guaranteeFile) + ' teminat mektubu eklendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
+                    messages.success(request, 'Teminat Mektubu Eklenmiştir.')
+                    return redirect('ekabis:guaranteeListYekaCompetition', yeka_guarantee.business.uuid,
+                                    yeka_guarantee.yekabusinessblog.uuid)
+                else:
+                    error_messages = get_error_messages(guarantee_form)
+                    return render(request, 'Contract/guaranteeAdd.html',
+                                  {
+                                      'urls': urls,
+                                      'current_url': current_url,
+                                      'url_name': url_name,
+                                      'error_messages': error_messages,
+                                      'guarantee_form': guarantee_form, 'name': name,
+                                  })
+
+            return render(request, 'Contract/guaranteeAdd.html',
+                          {'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'guarantee_form': guarantee_form, 'name': name,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+@login_required
+def change_guarantee(request, uuid, guarantee):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        yeka_guarantee = YekaGuarantee.objects.get(uuid=uuid)
+        guarantee = Guarantee.objects.get(uuid=guarantee)
+        guarantee_form = GuaranteeForm(request.POST or None, request.FILES or None, instance=guarantee)
+        name = general_methods.yekaname(yeka_guarantee.business)
+        competition=YekaCompetition.objects.get(business=yeka_guarantee.business)
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                guarantee_form = GuaranteeForm(request.POST or None, request.FILES or None)
+
+                if guarantee_form.is_valid():
+                    form = guarantee_form.save(request, commit=False)
+                    guarantee.bank=guarantee_form.cleaned_data['bank']
+                    guarantee.branch=guarantee_form.cleaned_data['branch']
+                    for filename, file in request.FILES.items():
+                        if filename == 'guaranteeFile':
+                            guarantee.guaranteeFile = file
+
+                    guarantee.guaranteeFile=guarantee_form.cleaned_data['guaranteeFile']
+                    guarantee.guaranteeDate=guarantee_form.cleaned_data['guaranteeDate']
+                    guarantee.rebateDate=guarantee_form.cleaned_data['rebateDate']
+                    guarantee.quantity=guarantee_form.cleaned_data['quantity']
+                    guarantee.status=guarantee_form.cleaned_data['status']
+                    guarantee.definition=guarantee_form.cleaned_data['definition']
+                    guarantee.pikur=guarantee_form.cleaned_data['pikur']
+                    guarantee.reference=guarantee_form.cleaned_data['reference']
+                    guarantee.guaranteeCount=guarantee_form.cleaned_data['guaranteeCount']
+                    guarantee.save()
+
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                        guarantee.guaranteeFile) + ' teminat mektubu güncellendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
+                    messages.success(request, 'Teminat  Güncellenmiştir.')
+                    return redirect('ekabis:guaranteeListYekaCompetition',yeka_guarantee.business.uuid,yeka_guarantee.yekabusinessblog.uuid )
+                else:
+                    guarantee_form = GuaranteeForm(request.POST, request.FILES)
+                    error_messages = get_error_messages(guarantee)
+                    return render(request, 'Contract/guaranteeAdd.html',
+                                  {
+                                      'urls': urls,
+                                      'current_url': current_url,
+                                      'url_name': url_name, 'name': name,
+                                      'error_messages': error_messages,
+                                      'guarantee_form': guarantee_form,'yeka_guarantee':yeka_guarantee
+                                  })
+            return render(request, 'Contract/guaranteeAdd.html',
+                          {'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'guarantee_form': guarantee_form, 'name': name,'yeka_guarantee':yeka_guarantee
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
+def guaranteeListYekaCompetition(request, yeka_business, yeka_business_block):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        yeka_bussiness_block = YekaBusinessBlog.objects.get(uuid=yeka_business_block)
+        yeka_business = YekaBusiness.objects.get(uuid=yeka_business)
+
+        if YekaGuarantee.objects.filter(business=yeka_business):
+            yeka_guarantee = YekaGuarantee.objects.get(business=yeka_business)
+        else:
+            yeka_guarantee = YekaGuarantee(
+                yekabusinessblog=yeka_bussiness_block,
+                business=yeka_business
+            )
+            yeka_guarantee.save()
+
+        name = general_methods.yekaname(yeka_business)
+        competition = None
+        if YekaCompetition.objects.filter(business=yeka_business):
+            competition = YekaCompetition.objects.get(business=yeka_business)
+        guarantees=yeka_guarantee.guarantee.filter(isDeleted=False).order_by('-id')
+        return render(request, 'Contract/yekaGuaranteeList.html',
+                      {'yeka_guarantee': yeka_guarantee,'guarantees':guarantees,
+                       'business': yeka_business, 'competition': competition,
+                       'yekabussinessblog': yeka_bussiness_block, 'urls': urls, 'current_url': current_url,
+                       'url_name': url_name, 'name': name,
+                       })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+@login_required
+def delete_guarantee(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                obj = Guarantee.objects.get(uuid=uuid)
+                data_as_json_pre = serializers.serialize('json', Guarantee.objects.filter(uuid=uuid))
+
+                obj.isDeleted = True
+                obj.save()
+                log = str(obj.pk) + " - teminat silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
+                yeka_guarantee = YekaGuarantee.objects.get(guarantee=obj)
+                yeka_guarantee.guarantee.remove(obj)
+                competition = YekaCompetition.objects.get(business=yeka_guarantee.business)
+
+                url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                    competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                    obj.guaranteeFile) + ' teminat  silindi.'
+                notification(request, html, competition.uuid, 'yeka_competition')
+
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+@login_required
 def change_proposal(request, uuid, proposal):
     perm = general_methods.control_access(request)
     if not perm:
@@ -1014,7 +1221,7 @@ def change_proposal(request, uuid, proposal):
         yeka_proposal = YekaProposal.objects.get(uuid=uuid)
         proposal = Proposal.objects.get(uuid=proposal)
         proposal_form = ProposalForm(request.POST or None, request.FILES or None, instance=proposal)
-
+        name = general_methods.yekaname(yeka_proposal.business)
 
         # proposal_form.fields['farm_form'].initial = proposal.farm_form
         # proposal_form.fields['information_form'].initial = proposal.information_form
@@ -1032,42 +1239,42 @@ def change_proposal(request, uuid, proposal):
 
                 if proposal_form.is_valid():
                     company = proposal_form.save(request, commit=False)
-                    proposal.name=proposal_form.cleaned_data['name']
-                    proposal.capacity=proposal_form.cleaned_data['capacity']
-                    proposal.date=proposal_form.cleaned_data['date']
+                    proposal.name = proposal_form.cleaned_data['name']
+                    proposal.capacity = proposal_form.cleaned_data['capacity']
+                    proposal.date = proposal_form.cleaned_data['date']
                     for filename, file in request.FILES.items():
                         if filename == 'farm_form':
-                            proposal.farm_form=file
+                            proposal.farm_form = file
                         elif filename == 'kml_file':
-                            proposal.kml_file=file
+                            proposal.kml_file = file
                         elif filename == 'information_form':
-                            proposal.information_form=file
+                            proposal.information_form = file
 
                     proposal.save()
 
                     messages.success(request, 'Aday Yeka Güncellenmiştir.')
                     return render(request, 'Proposal/change_proposal.html',
                                   {
-                                      'urls': urls,
+                                      'urls': urls, 'name': name,
                                       'current_url': current_url,
                                       'url_name': url_name,
                                       'proposal_form': proposal_form
                                   })
                 else:
-                    proposal_form = ProposalForm(request.POST , request.FILES)
+                    proposal_form = ProposalForm(request.POST, request.FILES)
                     error_messages = get_error_messages(proposal_form)
                     return render(request, 'Proposal/change_proposal.html',
                                   {
                                       'urls': urls,
                                       'current_url': current_url,
-                                      'url_name': url_name,
+                                      'url_name': url_name, 'name': name,
                                       'error_messages': error_messages,
                                       'proposal_form': proposal_form
                                   })
             return render(request, 'Proposal/change_proposal.html',
                           {'urls': urls,
                            'current_url': current_url, 'url_name': url_name,
-                           'proposal_form': proposal_form
+                           'proposal_form': proposal_form, 'name': name,
                            })
     except Exception as e:
         traceback.print_exc()
@@ -1142,7 +1349,7 @@ def change_proposal_active(request, business, businessblog):
                 institution=item
             )
             active.save()
-        pro_active = ProposalActive.objects.filter(business=yekabusiness)
+        pro_active = ProposalActive.objects.filter(business=yekabusiness,institution__isDeleted=False)
         name = general_methods.yekaname(yekabusiness)
 
         with transaction.atomic():
@@ -1340,17 +1547,15 @@ def view_proposal_institution(request, yekaproposal, uuid):
                 proposal.save()
 
         proposal_institution = proposal.institution.filter(isDeleted=False)
-        negative=proposal.institution.filter(status='Olumsuz').count()
-        positive=proposal.institution.filter(status='Olumlu').count()
-        not_result=proposal.institution.filter(status='Sonuçlanmadı').count()
-
-
+        negative = proposal.institution.filter(status='Olumsuz').count()
+        positive = proposal.institution.filter(status='Olumlu').count()
+        not_result = proposal.institution.filter(status='Sonuçlanmadı').count()
 
         with transaction.atomic():
             return render(request, 'Proposal/view_proposal_institution.html',
                           {'proposal_institution': proposal_institution,
-                           'yekabusiness': yekabusiness,'negative_insinstitution':negative,
-                           'positive_institution':positive,'not_result_institution':not_result,
+                           'yekabusiness': yekabusiness, 'negative_insinstitution': negative,
+                           'positive_institution': positive, 'not_result_institution': not_result,
                            'yekabussinessblog': yekabussinessblog,
                            'urls': urls, 'current_url': current_url,
                            'url_name': url_name, 'name': name,
@@ -1951,3 +2156,4 @@ def proposal_add_sub_yeka(request, yeka_business, yeka_business_block):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+

@@ -800,20 +800,29 @@
                         title: 'Firmalar',
                         text: '<i class="fa fa-print"></i>',
 
-                        titleAttr: 'Yazdır'
+                        titleAttr: 'Yazdır',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: '<i class="fa fa-file-pdf"></i>',
 
-                        titleAttr: 'Pdf Kaydet'
+                        titleAttr: 'Pdf Kaydet',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
 
                     {
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
-                        titleAttr: 'Excel Kaydet'
+                        titleAttr: 'Excel Kaydet',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
 
 
@@ -882,10 +891,10 @@
 
                                 {% if item == 'view_yeka_competition_detail' %}
                                     html += '<a href="' + view_yeka_competition_detail + '" class="dropdown-item" title="Detay" type="button"><i class="fa fa-search"></i>Detay</a>';
-                                {% elif item == 'delete_competition'  and employee in employees %}
+                                {% elif item == 'delete_competition'  or employee in employees %}
                                     html += '<a onclick="' + url_delete + '" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
 
-{
+
 
                                 {% endif %}
                             {% endfor %}
