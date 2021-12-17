@@ -510,10 +510,7 @@ urlpatterns = [
          name='get_yeka_competition_proposal'),
     path('yeka/yeka-yarisma-guncel-fiyat/', YekaViews.get_yeka_competition_eskalasyon,
          name='get_yeka_competition_eskalasyon'),
-    path('yeka/genel-raporlama-local', ReportViews.general_reporting,
-         name='general_reporting'),
-    path('yeka/genel-raporlama', ReportViews.general_reporting_orcl,
-         name='general_reporting_orcl'),
+
 
     path('yeka/butun-yekalar/', DashboardViews.api_yeka_by_type,
          name='api_yeka_by_type'),
