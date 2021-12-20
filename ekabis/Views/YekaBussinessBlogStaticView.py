@@ -26,7 +26,7 @@ from ekabis.Forms.YekaApplicationFileNameForm import YekaApplicationFileName, Ye
 from ekabis.Forms.YekaApplicationForm import YekaApplicationForm
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
-    YekaCompany, YekaGuarantee, Guarantee
+    YekaCompany, YekaGuarantee, Collateral
 from ekabis.models.Competition import Competition
 from ekabis.models.Settings import Settings
 from ekabis.models.CompetitionCompany import CompetitionCompany
@@ -1076,7 +1076,7 @@ def change_guarantee(request, uuid, guarantee):
     try:
 
         yeka_guarantee = YekaGuarantee.objects.get(uuid=uuid)
-        guarantee = Guarantee.objects.get(uuid=guarantee)
+        guarantee = Collateral.objects.get(uuid=guarantee)
         guarantee_form = GuaranteeForm(request.POST or None, request.FILES or None, instance=guarantee)
         name = general_methods.yekaname(yeka_guarantee.business)
         competition=YekaCompetition.objects.get(business=yeka_guarantee.business)
@@ -1185,8 +1185,8 @@ def delete_guarantee(request):
         with transaction.atomic():
             if request.method == 'POST' and request.is_ajax():
                 uuid = request.POST['uuid']
-                obj = Guarantee.objects.get(uuid=uuid)
-                data_as_json_pre = serializers.serialize('json', Guarantee.objects.filter(uuid=uuid))
+                obj = Collateral.objects.get(uuid=uuid)
+                data_as_json_pre = serializers.serialize('json', Collateral.objects.filter(uuid=uuid))
 
                 obj.isDeleted = True
                 obj.save()
