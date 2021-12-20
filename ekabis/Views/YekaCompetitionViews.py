@@ -1068,7 +1068,7 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                     total += proposal.capacity
 
                     if total > parent_competition.capacity:
-                        messages.warning(request, 'Yeka Yarışmalarının Toplam Kapasitesi Bölgeden Büyük Olamaz')
+                        messages.warning(request, 'Kapasite Yarışmadan Büyük Olamaz')
                         return render(request, 'YekaCompetition/add_sub_competition.html',
                                       {'competition_form': competition_form, 'parent_competition': parent_competition,
                                        'error_messages': '', 'urls': urls, 'current_url': current_url,
