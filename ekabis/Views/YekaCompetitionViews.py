@@ -661,6 +661,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         #     yekaBusinessBlogo_form.fields['startDate'].widget.attrs['readonly'] = True
         contract = None
         companies = None
+        holding_competition=None
         if business.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
             contract = None
 
@@ -693,7 +694,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                 )
                 purchase_guarantee.save()
             purchase_guarantee_form = PurchaseGuaranteeForm(request.POST or None, request.FILES or None,
-                                                            instance=purchase_guarantee)
+                                                          instance=purchase_guarantee)
         elif business.name == 'Yarışmanın Yapılması':
 
             if YekaHoldingCompetition.objects.filter(business=competition.business):
