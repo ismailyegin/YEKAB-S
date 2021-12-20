@@ -841,7 +841,10 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                 html = '<a style="" href="' + url + '"> ID : ' + str(business.pk) + ' - ' + str(
                     business.name) + '</a> adlı iş bloğu güncellendi.'
                 notification(request, html, competition.uuid, 'yeka_competition')
-                return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                if competition.parent:
+                    return redirect('ekabis:view_sub_yeka_competition_detail', competition.uuid)
+                else:
+                    return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
         else:
 
             for item in yekabussiness.parameter.filter(isDeleted=False):
@@ -1371,15 +1374,15 @@ def view_yeka_competition_detail(request, uuid):
                 proposal_dict = {}
                 proposal_dict['status'] = '##ffffff'
                 negative = proposal.institution.filter(status='Olumsuz').count()
-                not_result = proposal.institution.filter(status='Sonuçlanmadı').count()
+                not_negative = proposal.institution.filter(status='Olumlu').count()
                 if negative:
                     proposal_dict['status'] = '#ff3a3a'
                     proposal_dict['proposal'] = proposal
-                elif not_result:
-                    proposal_dict['status'] = '#ffff6e'
+                elif not_negative:
+                    proposal_dict['status'] = '#8cff8c'
                     proposal_dict['proposal'] = proposal
                 else:
-                    proposal_dict['status'] = '#8cff8c'
+                    proposal_dict['status'] = '#ffff6e'
                     proposal_dict['proposal'] = proposal
                 array_proposal.append(proposal_dict)
 
