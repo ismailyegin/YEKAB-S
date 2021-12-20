@@ -417,8 +417,12 @@ def yekaname(yekabusiness):
         html = '<a href="' + path + '">' + yeka.definition + '</a>'
     elif YekaCompetition.objects.filter(business=yekabusiness):
         yeka = YekaCompetition.objects.get(business=yekabusiness)
-        path = redirect('ekabis:view_yeka_competition_detail', yeka.uuid).url
-        html = '<a href="' + path + '">' + yeka.name + '</a>'
+        if yeka.parent:
+            path = redirect('ekabis:view_sub_yeka_competition_detail', yeka.uuid).url
+            html = '<a href="' + path + '">' + yeka.name + '</a>'
+        else:
+            path = redirect('ekabis:view_yeka_competition_detail', yeka.uuid).url
+            html = '<a href="' + path + '">' + yeka.name + '</a>'
     return mark_safe(html)
 
 
