@@ -252,7 +252,7 @@ def add_competition(request, region):
 
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
 
 
