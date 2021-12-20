@@ -94,6 +94,7 @@ def add_competition(request, region):
         }
         region = ConnectionRegionGetService(request, region_filter)
         competition_form = YekaCompetitionForm()
+        holding_competition=None
         if Yeka.objects.filter(connection_region=region):
             yeka = Yeka.objects.filter(connection_region=region)[0]
             competition_form = YekaCompetitionForm()  # initial={'date': yeka.date} yeka resmi gazete tarihi  miras
@@ -1031,6 +1032,7 @@ def add_sumcompetition(request, uuid, proposal_uuid):
         }
         parent_competition = YekaCompetitionGetService(request, competition_filter)
         proposal = None
+        holding_competition=None
         if Proposal.objects.filter(uuid=proposal_uuid):
             proposal = Proposal.objects.get(uuid=proposal_uuid)
 
