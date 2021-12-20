@@ -16,7 +16,7 @@ class YekaContractForm(BaseForm):
             'unit': 'Birimi',
             'company': 'Kazanan Firma', }
         widgets = {
-            'unit': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible', 'disabled': 'disabled',
+            'unit': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible', 'disabled':'true',
                                            'style': 'width: 100%;'}),
             # 'contract_date': forms.DateInput(
             #     attrs={'class': 'form-control  pull-right', 'id': 'datepicker', 'autocomplete': 'off',

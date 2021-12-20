@@ -680,8 +680,14 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                 contract.save()
             form_contract = YekaContractForm(request.POST or None, request.FILES or None, instance=contract)
             form_contract.fields['unit'].initial = contract.unit
-            form_contract.fields['unit'].widget.attrs = {'class': 'form-control', 'readonly': 'readonly'}
-            form_contract.fields['eskalasyonMaxPrice'].initial = contract.eskalasyonMaxPrice
+            form_contract.fields['unit'].widget.attrs = {'class': 'form-control',  'disabled':'true'}
+            if contract.unit:
+                if contract.unit.name == 'USD':
+                    form_contract.fields['eskalasyonMaxPrice'].widget.attrs = {'class': 'form-control',  'readonly':'readonly','placeholder':'BİRİM USD SEÇİLMİŞTİR'}
+                else:
+                    form_contract.fields['eskalasyonMaxPrice'].initial = contract.eskalasyonMaxPrice
+            else:
+                form_contract.fields['eskalasyonMaxPrice'].initial = contract.eskalasyonMaxPrice
 
         elif business.name == 'Alım Garantisi':
             purchase_guarantee = None
