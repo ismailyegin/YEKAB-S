@@ -1329,9 +1329,9 @@ def view_yeka_competition_detail(request, uuid):
         indemnity_bond_file = None
         indemnity_quantity = None
         guarantee=YekaGuarantee.objects.filter(business=yeka.business)
-        guarantee=None
+        guarantees=None
         if guarantee:
-            guarantee = YekaGuarantee.objects.get(business=yeka.business).guarantee.filter(isDeleted=False).last()
+            guarantees = YekaGuarantee.objects.get(business=yeka.business).guarantee.filter(isDeleted=False).last()
 
 
         for block in yekabusinessbloks:
@@ -1390,7 +1390,7 @@ def view_yeka_competition_detail(request, uuid):
                        'yeka_eskalasyon': eskalasyon, 'employee': employee, 'competition_persons': competition_persons,
                        'employees': employees, 'competitions': competitions, 'region': region,
                        'yekaproposal': yekaproposal, 'negative_insinstitution': negative,
-                       'indemnity': guarantee,
+                       'indemnity': guarantees,
                        'positive_institution': positive, 'not_result_institution': not_result,
 
                        })
