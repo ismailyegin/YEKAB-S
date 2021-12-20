@@ -664,7 +664,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         companies = None
         holding_competition=None
         if business.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
-            contract = None
+
 
             if Competition.objects.filter(yekabusinessblog__businessblog__name='Yarışmanın Yapılması'):
                 companies = Competition.objects.get(
@@ -735,6 +735,8 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     contract.eskalasyonMaxPrice = form_contract.cleaned_data['eskalasyonMaxPrice']
                     contract.price = form_contract.cleaned_data['price']
                     contract.company = form_contract.cleaned_data['company']
+                    if YekaHoldingCompetition.objects.filter(business=competition.business):
+                        contract.unit = YekaHoldingCompetition.objects.get(business=competition.business).unit
                     contract.contract = form_contract.cleaned_data['contract']
                     contract.save()
                     competition.business.company = contract_form.company

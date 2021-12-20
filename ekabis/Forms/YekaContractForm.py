@@ -13,7 +13,7 @@ class YekaContractForm(BaseForm):
             'price': 'Fiyat',
             'eskalasyonMaxPrice':'Eskalasyon Tavan Fiyatı',
             'contract': 'Kullanım Hakkı Sözleşmesi',
-            'unit': 'Birimi',
+            'unit': 'Para Birimi',
             'company': 'Kazanan Firma', }
         widgets = {
             'unit': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible', 'disabled':'true',
