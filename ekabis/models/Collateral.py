@@ -5,7 +5,7 @@ from ekabis.models.BaseModel import BaseModel
 from ekabis.services.services import validate_file_size
 
 #TEMINAT MODELI - yeka kullanim haklari sozlesmesinde kullanılacak
-class Guarantee(BaseModel):
+class Collateral(BaseModel):
     guaranteeDate = models.DateField(null=True, blank=True)
     bank = models.CharField(max_length=250, null=True, blank=True)
     quantity = models.DecimalField(null=True, blank=True, max_digits=20, decimal_places=2,

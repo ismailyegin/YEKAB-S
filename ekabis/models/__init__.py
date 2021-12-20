@@ -57,5 +57,5 @@ from .FileExtension import FileExtension
 from .ReportObject import ReportObject
 from .YekaCompetitionEskalasyon_eskalasyon import YekaCompetitionEskalasyon_eskalasyon
 from .YekaHoldingCompetition import YekaHoldingCompetition
-from .Guarantee import Guarantee
+from .Collateral import Collateral
 from .YekaGuarantee import YekaGuarantee

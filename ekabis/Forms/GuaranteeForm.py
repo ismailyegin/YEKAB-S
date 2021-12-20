@@ -1,6 +1,6 @@
 from django import forms
 from ekabis.Forms.BaseForm import BaseForm
-from ekabis.models import Guarantee
+from ekabis.models import Collateral
 
 from ekabis.models.Proposal import Proposal
 STATUS_CHOICES = (
@@ -13,7 +13,7 @@ STATUS_CHOICES = (
 
 class GuaranteeForm(BaseForm):
     class Meta:
-        model = Guarantee
+        model = Collateral
         fields = ('guaranteeFile','rebateDate','bank','branch','reference','pikur', 'quantity','guaranteeTime','guaranteeCount','guaranteeDate','status','definition',)
         labels = {'bank': 'Banka',
                   'branch': 'Şube',
