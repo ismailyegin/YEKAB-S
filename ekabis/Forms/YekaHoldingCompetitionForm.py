@@ -9,7 +9,7 @@ class YekaHoldingCompetitionForm(BaseForm):
 
         fields = ('unit', 'max_price',)
         labels = {
-            'unit': 'Birimi',
+            'unit': 'Para Birimi',
             'max_price': 'Yarışma Tavan Fiyatı', }
         widgets = {
             'unit': forms.Select(attrs={'class': 'form-control select2 select2-hidden-accessible',
