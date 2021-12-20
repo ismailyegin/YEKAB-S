@@ -185,12 +185,15 @@
                                             <td>{{ guarantee.quantity }}</td>
                                             <td>{{ guarantee.guaranteeTime }}</td>
                                             <td>{{ guarantee.status }}</td>
-                                            {% if guarantee.rebateDate %}
-                                                <td>{{ guarantee.rebateDate }}</td>{% endif %}
+
+                                            <td>{% if guarantee.rebateDate %}{{ guarantee.rebateDate }}{% endif %}</td>
                                             <td>{{ guarantee.company.name }}</td>
-                                            <td>{% if guarantee.pikur %} <b> Pikur : </b>
-                                                {{ guarantee.pikur }} {% elif guarantee.reference %} <b> Referans : </b>
-                                                {{ guarantee.reference }}{% endif %}</td>
+                                            <td>
+                                                {% if guarantee.pikur %} <b> Pikur : </b>
+                                                {{ guarantee.pikur }}
+                                            {% elif guarantee.reference %} <b> Referans : </b>
+                                                {{ guarantee.reference }}{% endif %}
+                                            </td>
                                             <td>{{ guarantee.guaranteeCount }}</td>
                                             <td>{{ guarantee.definition }}</td>
 
