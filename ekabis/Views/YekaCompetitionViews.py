@@ -26,7 +26,7 @@ from ekabis.models.Settings import Settings
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka, YekaCompetitionEskalasyon, \
-    YekaBusinessBlogParemetre, BusinessBlogParametreType, Company, YekaHoldingCompetition, ConnectionUnit
+    YekaBusinessBlogParemetre, BusinessBlogParametreType, Company, YekaHoldingCompetition, ConnectionUnit, YekaGuarantee
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -1328,15 +1328,11 @@ def view_yeka_competition_detail(request, uuid):
         dependency = []
         indemnity_bond_file = None
         indemnity_quantity = None
-        x = yeka.business.businessblogs.filter(isDeleted=False,
-                                               businessblog__name='YEKA Kullanım Hakkı Sözleşmesinin İmzalanması')
-        if x:
-            block = yeka.business.businessblogs.get(isDeleted=False,
-                                                    businessblog__name='YEKA Kullanım Hakkı Sözleşmesinin İmzalanması')
-            if block.parameter.filter(isDeleted=False).filter(parametre__title='Teminat Mektubu'):
-                indemnity_bond_file = block.parameter.get(isDeleted=False, parametre__title='Teminat Mektubu').file
-            if block.parameter.filter(isDeleted=False).filter(parametre__title='Teminat Miktarı'):
-                indemnity_quantity = block.parameter.get(isDeleted=False, parametre__title='Teminat Miktarı').value
+        guarantee=YekaGuarantee.objects.filter(business=yeka.business)
+        guarantee=None
+        if guarantee:
+            guarantee = YekaGuarantee.objects.get(business=yeka.business).guarantee.filter(isDeleted=False).last()
+
 
         for block in yekabusinessbloks:
             bloc_dict = {}
@@ -1394,7 +1390,7 @@ def view_yeka_competition_detail(request, uuid):
                        'yeka_eskalasyon': eskalasyon, 'employee': employee, 'competition_persons': competition_persons,
                        'employees': employees, 'competitions': competitions, 'region': region,
                        'yekaproposal': yekaproposal, 'negative_insinstitution': negative,
-                       'indemnity_quantity': indemnity_quantity, 'indemnity_file': indemnity_bond_file,
+                       'indemnity': guarantee,
                        'positive_institution': positive, 'not_result_institution': not_result,
 
                        })
