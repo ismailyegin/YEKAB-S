@@ -891,7 +891,7 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                 notification(request, html, yeka.uuid, 'yeka')
                 return redirect('ekabis:view_yeka_detail', yeka.uuid)
         else:
-            for item in yekabussiness.parameter.filter(parametre__visibility_in_yeka=True):
+            for item in yekabussiness.parameter.filter(isDeleted=False,parametre__visibility_in_yeka=True):
                 if item.parametre.type == 'file':
                     if item.file:
                         yekaBusinessBlogo_form.fields[item.parametre.title].initial = item.file
