@@ -105,8 +105,8 @@
                                             Yarışmalar</a>
                                         <a class="nav-link" id="vert-4" data-toggle="pill" href="#tab-4" role="tab"
                                            aria-controls="tab-4" aria-selected="false">Yeka Bazında Yarışmalar</a>
-{#                                        <a class="nav-link" id="vert-5" data-toggle="pill" href="#tab-5" role="tab"#}
-{#                                           aria-controls="tab-5" aria-selected="false">İl Bazında Ulaşılan Güç</a>#}
+                                        <a class="nav-link" id="vert-5" data-toggle="pill" href="#tab-5" role="tab"
+                                           aria-controls="tab-5" aria-selected="false">Yeka Bazında Aday Yekalar</a>
                                         {#                                        <a class="nav-link" id="vert-6" data-toggle="pill" href="#tab-6" role="tab"#}
                                         {#                                           aria-controls="tab-6" aria-selected="false">İllere Göre Ulaşılan Güçler</a>#}
                                         {#                                        <a class="nav-link" id="vert-7" data-toggle="pill" href="#tab-7" role="tab"#}
@@ -447,7 +447,40 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="tab-pane fade" id="tab-5" role="tabpanel"
+                                             aria-labelledby="vert-2">
 
+                                            <div class=" card card-primary card-outline">
+
+                                                <div class="card-body">
+                                                      <form action="{% url 'ekabis:proposal_yeka_report' %}" method="POST" >
+                                                        {% csrf_token %}
+
+                                                        <div class="form-group">
+                                                            <label>YEKA</label>
+                                                            <select name="yeka_uuid"
+                                                                    class="form-control select2 select2-hidden-accessible"
+                                                                    style="width: 100%;"
+                                                                    maxlength="100" id="yeka_uuid">
+                                                                {% for yeka in yekas %}
+                                                                    <option value="{{ yeka.uuid }}">{{yeka.definition }}</option>
+                                                                {% endfor %}
+
+                                                            </select>
+
+
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <button type="submit" class="btn btn-outline-primary"
+                                                                    style="float: right">Listele
+                                                            </button>
+
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
                                         {#                                        <div class="tab-pane fade" id="tab-6" role="tabpanel"#}
@@ -578,7 +611,7 @@
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -588,7 +621,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -597,7 +630,7 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -649,7 +682,7 @@
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -659,7 +692,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -668,7 +701,7 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -782,7 +815,7 @@
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -792,7 +825,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -801,7 +834,7 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -853,7 +886,7 @@
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -863,7 +896,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -872,7 +905,7 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -924,7 +957,7 @@
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -934,7 +967,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -943,7 +976,7 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },

@@ -166,8 +166,8 @@
                                             {% endif %}</td>
                                             <td>{% if proposal.proposal.kml_file %}
                                                 <a target="_blank" title="{{ proposal.proposal.kml_file  }}" href="{{ MEDIA_URL }}{{ proposal.proposal.kml_file.url }}"
-                                                   download="">{{ proposal.proposal.kml_file | truncatechars:15}}</a></td>
-                                            {% endif %}
+                                                   download="">{{ proposal.proposal.kml_file | truncatechars:15}}</a>
+                                            {% endif %}</td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button"
