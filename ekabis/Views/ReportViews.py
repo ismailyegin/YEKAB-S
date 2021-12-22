@@ -305,5 +305,5 @@ def proposal_yeka_report(request):
                       {'urls': urls, 'current_url': current_url,'proposal_array':proposal_array,'name':name})
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        messages.warning(request,e)
         return redirect('ekabis:view_yeka')
