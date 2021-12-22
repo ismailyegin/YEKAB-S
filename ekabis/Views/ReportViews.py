@@ -58,17 +58,18 @@ def view_report(request):
         yeka_acccepts = YekaAccept.objects.filter(isDeleted=False)
 
         yeka_array = []
-        competitions = YekaCompetition.objects.filter(isDeleted=False)
+        competitions = YekaCompetition.objects.filter(isDeleted=False   )
         # yeka bazında yapılan yarışmalar
         for competition in competitions:
             yeka_dict = dict()
             if ConnectionRegion.objects.filter(yekacompetition=competition):
                 region = ConnectionRegion.objects.get(yekacompetition=competition)
                 yeka = Yeka.objects.get(connection_region=region)
-                yeka_dict['competition'] = competition
-                yeka_dict['yeka'] = yeka
-                yeka_dict['region'] = region
-                yeka_array.append(yeka_dict)
+                if not yeka.isDeleted:
+                    yeka_dict['competition'] = competition
+                    yeka_dict['yeka'] = yeka
+                    yeka_dict['region'] = region
+                    yeka_array.append(yeka_dict)
 
         # kabulde ulaşılan güce göre yarışmalar
         for yeka_accept in yeka_acccepts:
@@ -77,74 +78,78 @@ def view_report(request):
             yeka_capacity_dict = dict()
             company_dict = dict()
             competition = YekaCompetition.objects.get(business=yeka_accept.business)
-            accept_dict['label'] = competition.name
-            total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
-            currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
-            if total['installedPower__sum'] is None:
-                total['installedPower__sum'] = 0
-            if currentPower['currentPower__sum'] is None:
-                currentPower['currentPower__sum'] = 0
-            accept_dict['power'] = total['installedPower__sum']
-            currentPower_dict['power'] = currentPower['currentPower__sum']
-            currentPower_dict['label'] = competition.name
-            total_capacity = int(total['installedPower__sum']) + int(currentPower['currentPower__sum'])
-            installedPower_array.append(accept_dict)
-            accept_company = competition.company
-            company_dict['electrical_power'] = currentPower['currentPower__sum']
-            contract = YekaContract.objects.filter(business=competition.business)
-            if contract:
-                if contract[0].company:
-                    company_dict['contract'] = YekaContract.objects.get(business=competition.business)
-                else:
-                    company_dict['contract'] = None
-            else:
-                company_dict['contract'] = None
-            company_dict['mechanical_power'] = total['installedPower__sum']
-            company_dict['competition'] = competition
-            company_dict['company'] = accept_company
-            if YekaCompetitionEskalasyon.objects.filter(competition=competition):
-                company_dict['price'] = YekaCompetitionEskalasyon.objects.get(competition=competition)
-            else:
-                company_dict['price'] = None
-            company_array.append(company_dict)
+            if ConnectionRegion.objects.filter(yekacompetition=competition):
+                region = ConnectionRegion.objects.get(yekacompetition=competition)
+                yeka = Yeka.objects.get(connection_region=region)
+                if not yeka.isDeleted:
+                    accept_dict['label'] = competition.name
+                    total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
+                    currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
+                    if total['installedPower__sum'] is None:
+                        total['installedPower__sum'] = 0
+                    if currentPower['currentPower__sum'] is None:
+                        currentPower['currentPower__sum'] = 0
+                    accept_dict['power'] = total['installedPower__sum']
+                    currentPower_dict['power'] = currentPower['currentPower__sum']
+                    currentPower_dict['label'] = competition.name
+                    total_capacity = int(total['installedPower__sum']) + int(currentPower['currentPower__sum'])
+                    installedPower_array.append(accept_dict)
+                    accept_company = competition.company
+                    company_dict['electrical_power'] = currentPower['currentPower__sum']
+                    contract = YekaContract.objects.filter(business=competition.business)
+                    if contract:
+                        if contract[0].company:
+                            company_dict['contract'] = YekaContract.objects.get(business=competition.business)
+                        else:
+                            company_dict['contract'] = None
+                    else:
+                        company_dict['contract'] = None
+                    company_dict['mechanical_power'] = total['installedPower__sum']
+                    company_dict['competition'] = competition
+                    company_dict['company'] = accept_company
+                    if YekaCompetitionEskalasyon.objects.filter(competition=competition):
+                        company_dict['price'] = YekaCompetitionEskalasyon.objects.get(competition=competition)
+                    else:
+                        company_dict['price'] = None
+                    company_array.append(company_dict)
 
-        for item in blogs:
-            business = YekaBusiness.objects.filter(businessblogs=item)[0]
-            if Yeka.objects.filter(business=business):
-                yeka = Yeka.objects.get(business=business)
-                beka = {
-                    'name': yeka.definition,
-                    'startdate': item.startDate,
-                    'finishdate': item.finisDate,
-                    'blogname': item.businessblog.name,
-                    'capacity': yeka.capacity,
-                    'type': yeka.type,
-                    'firma': yeka.business.company,
-                    'yeka': True,
-                    'uuid': yeka.uuid,
-                }
-                prelicense.append(beka)
+            for item in blogs:
+                business = YekaBusiness.objects.filter(businessblogs=item)[0]
+                if Yeka.objects.filter(business=business,isDeleted=False):
+                    yeka = Yeka.objects.get(business=business)
+                    beka = {
+                        'name': yeka.definition,
+                        'startdate': item.startDate,
+                        'finishdate': item.finisDate,
+                        'blogname': item.businessblog.name,
+                        'capacity': yeka.capacity,
+                        'type': yeka.type,
+                        'firma': yeka.business.company,
+                        'yeka': True,
+                        'uuid': yeka.uuid,
+                    }
+                    prelicense.append(beka)
 
-            elif YekaCompetition.objects.filter(business=business):
-                yeka = YekaCompetition.objects.get(business=business)
-                beka = {
-                    'name': yeka.name,
-                    'startdate': item.startDate,
-                    'finishdate': item.finisDate,
-                    'blogname': item.businessblog.name,
-                    'capacity': yeka.capacity,
-                    'type': "",
-                    'firma': yeka.business.company,
-                    'yeka': False,
-                    'uuid': yeka.uuid
-                }
-                prelicense.append(beka)
+                elif YekaCompetition.objects.filter(business=business,isDeleted=False):
+                    yeka = YekaCompetition.objects.get(business=business)
+                    beka = {
+                        'name': yeka.name,
+                        'startdate': item.startDate,
+                        'finishdate': item.finisDate,
+                        'blogname': item.businessblog.name,
+                        'capacity': yeka.capacity,
+                        'type': "",
+                        'firma': yeka.business.company,
+                        'yeka': False,
+                        'uuid': yeka.uuid
+                    }
+                    prelicense.append(beka)
         # lisans sürecindekiler
         blogs = YekaBusinessBlog.objects.filter(businessblog__name='Lisans Dönemi', status='3')
         license = []
         for item in blogs:
             business = YekaBusiness.objects.filter(businessblogs=item)[0]
-            if Yeka.objects.filter(business=business):
+            if Yeka.objects.filter(business=business,isDeleted=False):
                 yeka = Yeka.objects.get(business=business)
                 beka = {
                     'name': yeka.definition,
@@ -159,7 +164,7 @@ def view_report(request):
                 }
                 license.append(beka)
 
-            elif YekaCompetition.objects.filter(business=business):
+            elif YekaCompetition.objects.filter(business=business,isDeleted=False):
                 yeka = YekaCompetition.objects.get(business=business)
                 beka = {
                     'name': yeka.name,
@@ -175,32 +180,37 @@ def view_report(request):
                 license.append(beka)
 
         if 'business' in request.POST:
-            # lisans sürecindekiler
+
             blogs = YekaBusinessBlog.objects.filter(businessblog__id=request.POST.get('business_type'))
             selectblog = []
             for item in blogs:
                 business = YekaBusiness.objects.filter(businessblogs=item)[0]
-                if Yeka.objects.filter(business=business):
-                    yeka = Yeka.objects.get(business=business)
-                    beka = {
-                        'name': yeka.definition,
-                        'startdate': item.startDate,
-                        'finishdate': item.finisDate,
-                        'blogname': item.businessblog.name,
-                        'capacity': yeka.capacity,
-                        'type': yeka.type,
-                        'firma': yeka.business.company,
-                        'yeka': True,
-                        'uuid': yeka.uuid,
-                    }
-                    selectblog.append(beka)
 
-                elif YekaCompetition.objects.filter(business=business):
+                if Yeka.objects.filter(business=business,isDeleted=False):
+                    yeka = Yeka.objects.get(business=business)
+                    if not yeka.isDeleted:
+                        beka = {
+                            'name': yeka.definition,
+                            'startdate': item.startDate,
+                            'finishdate': item.finisDate,
+                            'blogname': item.businessblog.name,
+                            'capacity': yeka.capacity,
+                            'type': yeka.type,
+                            'firma': yeka.business.company,
+                            'yeka': True,
+                            'uuid': yeka.uuid,
+                        }
+                        selectblog.append(beka)
+
+                elif YekaCompetition.objects.filter(business=business,isDeleted=False):
+
                     try:
                         competition = YekaCompetition.objects.get(business=business)
                         region = ConnectionRegion.objects.get(yekacompetition=competition)
                         yeka = Yeka.objects.get(connection_region=region)
+
                         beka = {
+                            'yeka_name':yeka.name,
                             'name': competition.name,
                             'startdate': item.startDate,
                             'finisdate': item.finisDate,

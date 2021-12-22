@@ -172,6 +172,7 @@
                                                             <thead>
                                                             <tr>
                                                                 <th>#</th>
+                                                                <th>YEKA</th>
                                                                 <th>Tanım</th>
                                                                 <th>Başlangıç Tarihi</th>
                                                                 <th>Bitiş Tarihi</th>
@@ -190,6 +191,7 @@
                                                             {% for item in selectblog %}
                                                                 <tr>
                                                                     <td>{{ item.forloop }}</td>
+                                                                    <td>{{ item.yeka_name }}</td>
                                                                     <td>{{ item.name }}</td>
                                                                     <td>{{ item.startdate| date }}</td>
                                                                     <td>{{ item.finishdate | date }}</td>
