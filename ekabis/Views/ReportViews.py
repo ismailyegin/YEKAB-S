@@ -16,11 +16,13 @@ from django.urls import resolve
 from django.utils.safestring import mark_safe
 
 from ekabis.models import City, YekaBusinessBlog, YekaCompetition, BusinessBlog, Yeka, YekaBusiness, ConnectionRegion, \
-    YekaBusinessBlogParemetre, BusinessBlogParametreType, YekaCompetitionEskalasyon, YekaAccept
+    YekaBusinessBlogParemetre, BusinessBlogParametreType, YekaCompetitionEskalasyon, YekaAccept, YekaGuarantee
 from ekabis.models.YekaContract import YekaContract
+from ekabis.models.YekaProposal import YekaProposal
+from ekabis.services import general_methods
 from ekabis.services.general_methods import control_access
 from ekabis.services.services import last_urls, YekaService, ConnectionRegionService, YekaCompetitionService, \
-    CompanyService
+    CompanyService, YekaGetService
 
 from ekabis.models.Permission import Permission
 from oxiterp.settings.base import MEDIA_URL
@@ -43,6 +45,8 @@ def view_report(request):
         city = City.objects.all()
         selectblog = None
         businessblogs = BusinessBlog.objects.all()
+
+        yekas=YekaService(request,None)
 
         # ön lisans sürecindekiler
         blogs = YekaBusinessBlog.objects.filter(businessblog__name='Ön Lisans Dönemi', status='3')
@@ -214,7 +218,8 @@ def view_report(request):
         return render(request, 'Report/reportList.html',
                       {'urls': urls, 'current_url': current_url, 'accept_array': company_array,
                        'url_name': url_name, 'city': city, 'prelicense': prelicense, 'yeka_list': yeka_array,
-                       'businessblogs': businessblogs, 'license': license, 'selectblog': selectblog
+                       'businessblogs': businessblogs, 'license': license, 'selectblog': selectblog,
+                       'yekas':yekas
 
                        })
 
@@ -225,3 +230,80 @@ def view_report(request):
         return redirect('ekabis:view_yeka')
 
 
+def proposal_yeka_report(request):
+    perm = control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        proposal_array=[]
+        with transaction.atomic():
+            if request.method == 'POST':
+                yeka_uuid=request.POST['yeka_uuid']
+                yeka = Yeka.objects.get(uuid=yeka_uuid)
+                name=general_methods.yekaname(yeka.business)
+                connection_regions=yeka.connection_region.filter(isDeleted=False)
+                for region in connection_regions:
+
+                    competitions=region.yekacompetition.filter(isDeleted=False,parent=None)
+                    for competition in competitions:
+                        proposal_dict = dict()
+                        proposal_dict['company'] = competition.business.company
+                        proposal_dict['competition']=competition
+                        guarantee=None
+                        if YekaGuarantee.objects.filter(business=competition.business):
+                            yeka_guarantee=YekaGuarantee.objects.get(business=competition.business)
+                            guarantee=yeka_guarantee.guarantee.filter(isDeleted=False).last()
+                        proposal_dict['guarantee']=guarantee
+                        comp_proposals = []
+                        comp_proposal = dict()
+                        if YekaProposal.objects.filter(business=competition.business,isDeleted=False):
+                            yeka_proposal=YekaProposal.objects.get(business=competition.business,isDeleted=False)
+                            proposals=yeka_proposal.proposal.filter(isDeleted=False)
+                            comp_proposals=[]
+                            if proposals:
+                                for proposal in proposals:
+                                    comp_proposal=dict()
+                                    negative = proposal.institution.filter(status='Olumsuz').count()
+                                    not_negative = proposal.institution.filter(status='Olumlu').count()
+                                    if negative:
+                                        comp_proposal['status_color'] = '#ff3a3a'
+                                        comp_proposal['status'] = 'Olumsuz'
+                                        comp_proposal['proposal']=proposal
+                                    elif not_negative:
+                                        comp_proposal['status_color'] = '#8cff8c'
+                                        comp_proposal['status'] = 'Olumlu'
+                                        comp_proposal['proposal']=proposal
+                                    else:
+                                        comp_proposal['status_color'] = '#ffff6e'
+                                        comp_proposal['status'] = 'Sonuçlanmadı'
+                                        comp_proposal['proposal']=proposal
+                                    comp_proposals.append(comp_proposal)
+                            else:
+                                comp_proposal['status_color'] = '#ffff'
+                                comp_proposal['status'] = 'Yok'
+                                comp_proposal['proposal'] = None
+                                comp_proposals.append(comp_proposal)
+                            proposal_dict['proposals'] = comp_proposals
+                            proposal_dict['proposals'] = comp_proposals
+
+                        else:
+                            comp_proposal['status_color'] = '#ffff'
+                            comp_proposal['status'] = 'Yok'
+                            comp_proposal['proposal'] = None
+                            comp_proposals.append(comp_proposal)
+                            proposal_dict['proposals'] = comp_proposals
+                        proposal_array.append(proposal_dict)
+
+        return render(request, 'Report/proposal_yeka_report.html',
+                      {'urls': urls, 'current_url': current_url,'proposal_array':proposal_array,'name':name})
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')

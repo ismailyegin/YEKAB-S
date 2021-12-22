@@ -176,10 +176,11 @@
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ guarantee.guaranteeDate | date }}</td>
-                                            <td><a target="_blank" title="{{ guarantee.guaranteeFile }}"
+                                            <td>{% if guarantee.guaranteeFile %}
+                                                <a target="_blank" title="{{ guarantee.guaranteeFile }}"
                                                    href=" {{ MEDIA_URL }}{{ guarantee.guaranteeFile.url }}"
                                                    download="">{{ guarantee.guaranteeFile | truncatechars:20 }}</a></td>
-
+                                            {% endif %}
                                             <td>{{ guarantee.bank }}</td>
                                             <td>{{ guarantee.branch }}</td>
                                             <td>{{ guarantee.quantity }}</td>
@@ -190,9 +191,9 @@
                                             <td>{{ guarantee.company.name }}</td>
                                             <td>
                                                 {% if guarantee.pikur %} <b> Pikur : </b>
-                                                {{ guarantee.pikur }}
-                                            {% elif guarantee.reference %} <b> Referans : </b>
-                                                {{ guarantee.reference }}{% endif %}
+                                                    {{ guarantee.pikur }}
+                                                {% elif guarantee.reference %} <b> Referans : </b>
+                                                    {{ guarantee.reference }}{% endif %}
                                             </td>
                                             <td>{{ guarantee.guaranteeCount }}</td>
                                             <td>{{ guarantee.definition }}</td>
@@ -305,7 +306,7 @@
 
 
                 ],
-                
+
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,

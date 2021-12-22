@@ -687,16 +687,19 @@
 
                                     <div class="card-body">
 
-                                     {% if indemnity %}
+                                     {% if indemnity%}
 
-                                        <p class="text-muted" style="font-size: 16px;"><b>Teminat Mektubu
-                                            :</b> <a target="_blank"  href="{{ MEDIA_URL }}{{ indemnity.guaranteeFile.url}}"
-                                                                   download="">{{ indemnity.guaranteeFile }}</a></p>
-                                          <p class="text-muted" style="font-size: 16px;"><b>Teminat Miktarı
-                                            :</b> {{ indemnity.quantity }}</p>
-                                   {% else %}
-                                        <p class="text-muted" style="font-size: 16px;">
-                                             YEKA Kullanım Hakkı Sözleşmesi Teminat Bilgileri Mevcut Değil.</p>
+                                        {% if indemnity.guaranteeFile %}
+                                                <p class="text-muted" style="font-size: 16px;"><b>Teminat Mektubu
+                                                    :</b> <a target="_blank"
+                                                             href="{{ MEDIA_URL }}{{ indemnity.guaranteeFile.url }}"
+                                                             download="">{{ indemnity.guaranteeFile }}</a></p>
+                                            {% endif %}
+                                            <p class="text-muted" style="font-size: 16px;"><b>Teminat Miktarı
+                                                :</b> {{ indemnity.quantity }}</p>
+                                        {% else %}
+                                            <p class="text-muted" style="font-size: 16px;">
+                                                YEKA Kullanım Hakkı Sözleşmesi Teminat Bilgileri Mevcut Değil.</p>
 
                                         {% endif %}
 
@@ -788,16 +791,7 @@
                                             </div>
 
                                             <div class="card-body">
-                                            <div class=" float-sm-left" style="margin: 5px">
-                                                <small class="badge badge-success"><i
-                                                        class="fa fa-check-circle"></i> Olumlu
-                                                    : {{ positive_institution }}</small>
-                                                <small class="badge badge-danger"><i class="fa fa-minus-circle"></i>
-                                                    Olumsuz: {{ negative_insinstitution }}</small>
-                                                <small class="badge badge-warning"><i
-                                                        class="fa fa-question-circle"></i> Sonuçlanmadı
-                                                    : {{ not_result_institution }}</small>
-                                            </div>
+
                                                 <table id="aday-yeka" class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>

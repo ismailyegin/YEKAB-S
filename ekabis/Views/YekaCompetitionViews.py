@@ -205,11 +205,11 @@ def add_competition(request, region):
                                         business=competition.business
                                     )
                                     contract.save()
-                                if holding_competition.unit.name == 'TL':
-                                    contract.unit = ConnectionUnit.objects.get(name='TL')
+                                if holding_competition.unit.name == 'TL Kuruş/kWh':
+                                    contract.unit = ConnectionUnit.objects.get(name='TL Kuruş/kWh')
                                     contract.save()
-                                elif holding_competition.unit.name == 'USD':
-                                    contract.unit = ConnectionUnit.objects.get(name='USD')
+                                elif holding_competition.unit.name == 'USD Cent/kWh':
+                                    contract.unit = ConnectionUnit.objects.get(name='USD Cent/kWh')
                                     contract.save()
 
                             # Bagımlılıkları yeka yarışmasına taşıdık
@@ -682,7 +682,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
             form_contract.fields['unit'].initial = contract.unit
             form_contract.fields['unit'].widget.attrs = {'class': 'form-control',  'disabled':'true'}
             if contract.unit:
-                if contract.unit.name == 'USD':
+                if contract.unit.name == 'USD Cent/kWh':
                     form_contract.fields['eskalasyonMaxPrice'].widget.attrs = {'class': 'form-control',  'readonly':'readonly','placeholder':'BİRİM USD SEÇİLMİŞTİR'}
                 else:
                     form_contract.fields['eskalasyonMaxPrice'].initial = contract.eskalasyonMaxPrice
@@ -772,11 +772,11 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     holding_comp = holding_competition_form.save(request, commit=False)
                     holding_comp.save()
                     contract = YekaContract.objects.get(business=competition.business)
-                    if holding_competition_form.cleaned_data['unit'].name == 'TL':
-                        contract.unit = ConnectionUnit.objects.get(name='TL')
+                    if holding_competition_form.cleaned_data['unit'].name == 'TL Kuruş/kWh':
+                        contract.unit = ConnectionUnit.objects.get(name='TL Kuruş/kWh')
                         contract.save()
-                    elif holding_competition_form.cleaned_data['unit'].name == 'USD':
-                        contract.unit = ConnectionUnit.objects.get(name='USD')
+                    elif holding_competition_form.cleaned_data['unit'].name == 'USD Cent/kWh':
+                        contract.unit = ConnectionUnit.objects.get(name='USD Cent/kWh')
                         contract.save()
             if yekaBusinessBlogo_form.is_valid():
 
@@ -1169,11 +1169,11 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                                             business=competition.business
                                         )
                                         contract.save()
-                                    if holding_competition.unit.name == 'TL':
-                                        contract.unit = ConnectionUnit.objects.get(name='TL')
+                                    if holding_competition.unit.name == 'TL Kuruş/kWh':
+                                        contract.unit = ConnectionUnit.objects.get(name='TL Kuruş/kWh')
                                         contract.save()
-                                    elif holding_competition.unit.name == 'USD':
-                                        contract.unit = ConnectionUnit.objects.get(name='USD')
+                                    elif holding_competition.unit.name == 'USD Cent/kWh':
+                                        contract.unit = ConnectionUnit.objects.get(name='USD Cent/kWh')
                                         contract.save()
 
                             # Bagıntılıkları yeka yarışmasına taşıdık

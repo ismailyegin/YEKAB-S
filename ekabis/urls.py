@@ -529,5 +529,6 @@ urlpatterns = [
     path('yeka/teminat-ekle/<uuid:uuid>', YekaBussinessBlogStaticView.add_guarantee, name='add_guarantee'),
     path('yeka/teminat-guncelle/<uuid:uuid>/<uuid:guarantee>', YekaBussinessBlogStaticView.change_guarantee, name='change_guarantee'),
     path('yeka/yeka-teminat-sil/', YekaBussinessBlogStaticView.delete_guarantee, name='delete_guarantee'),
+    path('yeka/yeka-kurum-gorusleri-rapor', ReportViews.proposal_yeka_report, name='proposal_yeka_report'),
 
 ]

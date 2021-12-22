@@ -1536,6 +1536,7 @@ def view_proposal_institution(request, yekaproposal, uuid):
 
         name = general_methods.yekaname(yekabusiness)
 
+
         # olmayan kurumların eklemesini yaptık
         for item in ProposalActive.objects.filter(business=yekabusiness):
             if not proposal.institution.filter(institution=item.institution):
@@ -1603,7 +1604,7 @@ def change_proposal_institution(request, yekaproposal, proposal, uuid):
                                    'yekabussinessblog': yekabussinessblog,
                                    'urls': urls, 'current_url': current_url,
                                    'url_name': url_name, 'name': name,
-                                   'error_messages': error_messages,
+                                   'error_messages': error_messages,'pro_institution':pro_institution
                                    })
 
             return render(request, 'Proposal/change_propsal_institution.html',
@@ -1612,7 +1613,7 @@ def change_proposal_institution(request, yekaproposal, proposal, uuid):
                            'yekabussinessblog': yekabussinessblog,
                            'urls': urls, 'current_url': current_url,
                            'url_name': url_name, 'name': name,
-                           'proposal': proposal
+                           'proposal': proposal,'pro_institution':pro_institution
                            })
     except Exception as e:
         traceback.print_exc()
