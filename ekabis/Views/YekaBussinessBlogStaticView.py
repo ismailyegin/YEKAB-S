@@ -1547,7 +1547,7 @@ def view_proposal_institution(request, yekaproposal, uuid):
                 proposal.institution.add(pro_institution)
                 proposal.save()
 
-        proposal_institution = proposal.institution.filter(isDeleted=False)
+        proposal_institution =ProposalActive.objects.filter(business=yekabusiness,is_active=True)
         negative = proposal.institution.filter(status='Olumsuz').count()
         positive = proposal.institution.filter(status='Olumlu').count()
         not_result = proposal.institution.filter(status='Sonuçlanmadı').count()

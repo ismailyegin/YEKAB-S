@@ -683,7 +683,7 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
             form_contract.fields['unit'].widget.attrs = {'class': 'form-control',  'disabled':'true'}
             if contract.unit:
                 if contract.unit.name == 'USD Cent/kWh':
-                    form_contract.fields['eskalasyonMaxPrice'].widget.attrs = {'class': 'form-control',  'readonly':'readonly','placeholder':'BİRİM USD SEÇİLMİŞTİR'}
+                    form_contract.fields['eskalasyonMaxPrice'].widget.attrs = {'class': 'form-control',  'readonly':'readonly','placeholder':'BİRİM USD Cent/kWh SEÇİLMİŞTİR'}
                 else:
                     form_contract.fields['eskalasyonMaxPrice'].initial = contract.eskalasyonMaxPrice
             else:

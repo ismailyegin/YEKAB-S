@@ -100,7 +100,7 @@ class GetYeka(APIView):
         count = YekaService(request, filter).count()
 
         all_objects = Yeka.objects.filter(isDeleted=False).filter(yekaParent=None).filter(
-            definition__icontains=request.data['search[value]']).order_by('-id')[
+            definition__icontains=request.data['search[value]']).order_by('date')[
                       int(start):end]
 
         filteredTotal = Yeka.objects.filter(isDeleted=False).filter(yekaParent=None).filter(
