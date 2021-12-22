@@ -11,7 +11,7 @@ class YekaContractForm(BaseForm):
         fields = ('price', 'unit', 'company', 'contract','eskalasyonMaxPrice',)
         labels = {
             'price': 'Fiyat',
-            'eskalasyonMaxPrice':'Eskalasyon Tavan Fiyatı',
+            'eskalasyonMaxPrice':'Eskalasyon Tavan Fiyatı (USD Cent/kWh)',
             'contract': 'Kullanım Hakkı Sözleşmesi',
             'unit': 'Para Birimi',
             'company': 'Kazanan Firma', }

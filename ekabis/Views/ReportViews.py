@@ -46,7 +46,7 @@ def view_report(request):
         selectblog = None
         businessblogs = BusinessBlog.objects.all()
 
-        yekas=YekaService(request,None)
+        yekas = YekaService(request, None)
 
         # ön lisans sürecindekiler
         blogs = YekaBusinessBlog.objects.filter(businessblog__name='Ön Lisans Dönemi', status='3')
@@ -58,7 +58,7 @@ def view_report(request):
         yeka_acccepts = YekaAccept.objects.filter(isDeleted=False)
 
         yeka_array = []
-        competitions = YekaCompetition.objects.filter(isDeleted=False   )
+        competitions = YekaCompetition.objects.filter(isDeleted=False)
         # yeka bazında yapılan yarışmalar
         for competition in competitions:
             yeka_dict = dict()
@@ -115,7 +115,7 @@ def view_report(request):
 
             for item in blogs:
                 business = YekaBusiness.objects.filter(businessblogs=item)[0]
-                if Yeka.objects.filter(business=business,isDeleted=False):
+                if Yeka.objects.filter(business=business, isDeleted=False):
                     yeka = Yeka.objects.get(business=business)
                     beka = {
                         'name': yeka.definition,
@@ -130,7 +130,7 @@ def view_report(request):
                     }
                     prelicense.append(beka)
 
-                elif YekaCompetition.objects.filter(business=business,isDeleted=False):
+                elif YekaCompetition.objects.filter(business=business, isDeleted=False):
                     yeka = YekaCompetition.objects.get(business=business)
                     beka = {
                         'name': yeka.name,
@@ -149,7 +149,7 @@ def view_report(request):
         license = []
         for item in blogs:
             business = YekaBusiness.objects.filter(businessblogs=item)[0]
-            if Yeka.objects.filter(business=business,isDeleted=False):
+            if Yeka.objects.filter(business=business, isDeleted=False):
                 yeka = Yeka.objects.get(business=business)
                 beka = {
                     'name': yeka.definition,
@@ -164,7 +164,7 @@ def view_report(request):
                 }
                 license.append(beka)
 
-            elif YekaCompetition.objects.filter(business=business,isDeleted=False):
+            elif YekaCompetition.objects.filter(business=business, isDeleted=False):
                 yeka = YekaCompetition.objects.get(business=business)
                 beka = {
                     'name': yeka.name,
@@ -186,7 +186,7 @@ def view_report(request):
             for item in blogs:
                 business = YekaBusiness.objects.filter(businessblogs=item)[0]
 
-                if Yeka.objects.filter(business=business,isDeleted=False):
+                if Yeka.objects.filter(business=business, isDeleted=False):
                     yeka = Yeka.objects.get(business=business)
                     if not yeka.isDeleted:
                         beka = {
@@ -202,7 +202,7 @@ def view_report(request):
                         }
                         selectblog.append(beka)
 
-                elif YekaCompetition.objects.filter(business=business,isDeleted=False):
+                elif YekaCompetition.objects.filter(business=business, isDeleted=False):
 
                     try:
                         competition = YekaCompetition.objects.get(business=business)
@@ -210,7 +210,7 @@ def view_report(request):
                         yeka = Yeka.objects.get(connection_region=region)
 
                         beka = {
-                            'yeka_name':yeka.name,
+                            'yeka_name': yeka.name,
                             'name': competition.name,
                             'startdate': item.startDate,
                             'finisdate': item.finisDate,
@@ -229,7 +229,7 @@ def view_report(request):
                       {'urls': urls, 'current_url': current_url, 'accept_array': company_array,
                        'url_name': url_name, 'city': city, 'prelicense': prelicense, 'yeka_list': yeka_array,
                        'businessblogs': businessblogs, 'license': license, 'selectblog': selectblog,
-                       'yekas':yekas
+                       'yekas': yekas
 
                        })
 
@@ -252,54 +252,144 @@ def proposal_yeka_report(request):
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
 
-        proposal_array=[]
+        proposal_array = []
         with transaction.atomic():
             if request.method == 'POST':
-                yeka_uuid=request.POST['yeka_uuid']
+                yeka_uuid = request.POST['yeka_uuid']
                 yeka = Yeka.objects.get(uuid=yeka_uuid)
-                name=general_methods.yekaname(yeka.business)
-                connection_regions=yeka.connection_region.filter(isDeleted=False)
+                name = general_methods.yekaname(yeka.business)
+                connection_regions = yeka.connection_region.filter(isDeleted=False)
                 for region in connection_regions:
 
-                    competitions=region.yekacompetition.filter(isDeleted=False,parent=None)
+                    competitions = region.yekacompetition.filter(isDeleted=False, parent=None)
                     for competition in competitions:
+
                         proposal_dict = dict()
+                        first_accept_date='---'
+                        if YekaBusiness.objects.filter(uuid=competition.business.uuid):
+                            comp_business = YekaBusiness.objects.get(uuid=competition.business.uuid)
+                            competititon_business_block = comp_business.businessblogs.get(
+                                businessblog__name='YEKA İlan Edilmesi')
+                            build_time='---'
+                            build_business_block = comp_business.businessblogs.filter(
+                                businessblog__name='İnşaat Süresi')
+                            if build_business_block:
+                                build_business_block =comp_business.businessblogs.get(
+                                businessblog__name='İnşaat Süresi')
+                                build_time = build_business_block.businessTime
+                            proposal_dict['build_time'] = build_time
+
+                            if YekaAccept.objects.filter(business=competition.business):
+                                yeka_accept=YekaAccept.objects.get(business=competition.business)
+                                if yeka_accept.accept.all():
+                                    first_accept_date=yeka_accept.accept.first().date.strftime("%d-%m-%Y")
+                            proposal_dict['accept_date'] = first_accept_date
+                            value='---'
+                            prelicence_date='---'
+                            licence_value='---'
+                            licence_date='---'
+                            licence_time='---'
+                            prelicence_time='---'
+                            prelicence_business_block = comp_business.businessblogs.filter(
+                                businessblog__name='Ön Lisans Dönemi')
+                            if prelicence_business_block:
+                                prelicence_business_block = comp_business.businessblogs.get(
+                                    businessblog__name='Ön Lisans Dönemi')
+                                prelicence_time=prelicence_business_block.businessTime
+                            else:
+                                prelicence_business_block=None
+                            licence_business_block = comp_business.businessblogs.filter(
+                                businessblog__name='Lisans Dönemi')
+                            if licence_business_block:
+                                licence_business_block = comp_business.businessblogs.get(
+                                    businessblog__name='Lisans Dönemi')
+                                licence_time=licence_business_block.businessTime
+                            else:
+                                licence_business_block=None
+                            proposal_dict['prelicence_time'] = prelicence_time
+                            proposal_dict['licence_time'] = licence_time
+
+                            if  prelicence_business_block.parameter:
+                                if prelicence_business_block.parameter.filter(parametre__title='Ön Lisans Numarası'):
+                                    value=prelicence_business_block.parameter.get(parametre__title='Ön Lisans Numarası').value
+                                if prelicence_business_block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
+                                    prelicence_date=prelicence_business_block.parameter.get(parametre__title='Ön Lisans Tarihi').value
+                            if licence_business_block.parameter:
+                                if licence_business_block.parameter.filter(parametre__title='Lisans Numarası'):
+                                    licence_value = licence_business_block.parameter.get(
+                                        parametre__title='Lisans Numarası').value
+                                if licence_business_block.parameter.filter(parametre__title='Lisans Tarihi'):
+                                    licence_date = licence_business_block.parameter.get(
+                                        parametre__title='Lisans Tarihi').value
+
+                            proposal_dict['prelicence_business_value'] = value
+                            proposal_dict['prelicence_business_date'] = prelicence_date
+                            proposal_dict['licence_business_value'] = licence_value
+                            proposal_dict['licence_business_date'] = licence_date
+
+
+                            prelicence_app_business_block = comp_business.businessblogs.get(
+                                businessblog__name='Ön Lisans Başvurusu')
+
+                            if prelicence_app_business_block.completion_date:
+                                proposal_dict[
+                                    'prelicence_app_business_date'] = prelicence_app_business_block.completion_date
+                            elif prelicence_app_business_block.startDate:
+                                proposal_dict['prelicence_app_business_date'] = prelicence_app_business_block.startDate
+                            else:
+                                proposal_dict['prelicence_app_business_date'] = '---'
+
+                            if competititon_business_block.completion_date:
+                                proposal_dict['competition_business_date'] = competititon_business_block.completion_date
+                            elif competititon_business_block.startDate:
+                                proposal_dict['competition_business_date'] = competititon_business_block.startDate
+                            else:
+                                proposal_dict['competition_business_date'] = '---'
+
+                        proposal_dict['contact_price'] = 0
+                        if YekaContract.objects.filter(business=competition.business):
+                            contract = YekaContract.objects.get(business=competition.business)
+                            if contract.price:
+                                proposal_dict['contact_price'] = contract.price
                         proposal_dict['company'] = competition.business.company
-                        proposal_dict['competition']=competition
-                        guarantee=None
+                        proposal_dict['competition'] = competition
+                        proposal_dict['yeka'] = yeka
+
+                        guarantee = None
                         if YekaGuarantee.objects.filter(business=competition.business):
-                            yeka_guarantee=YekaGuarantee.objects.get(business=competition.business)
-                            guarantee=yeka_guarantee.guarantee.filter(isDeleted=False).last()
-                        proposal_dict['guarantee']=guarantee
+                            yeka_guarantee = YekaGuarantee.objects.get(business=competition.business)
+                            guarantee = yeka_guarantee.guarantee.filter(isDeleted=False).last()
+                        proposal_dict['guarantee'] = guarantee
                         comp_proposals = []
                         comp_proposal = dict()
-                        if YekaProposal.objects.filter(business=competition.business,isDeleted=False):
-                            yeka_proposal=YekaProposal.objects.get(business=competition.business,isDeleted=False)
-                            proposals=yeka_proposal.proposal.filter(isDeleted=False)
-                            comp_proposals=[]
+                        if YekaProposal.objects.filter(business=competition.business, isDeleted=False):
+                            yeka_proposal = YekaProposal.objects.get(business=competition.business, isDeleted=False)
+                            proposals = yeka_proposal.proposal.filter(isDeleted=False)
+                            comp_proposals = []
                             if proposals:
                                 for proposal in proposals:
-                                    comp_proposal=dict()
+                                    comp_proposal = dict()
                                     negative = proposal.institution.filter(status='Olumsuz').count()
                                     not_negative = proposal.institution.filter(status='Olumlu').count()
                                     if negative:
                                         comp_proposal['status_color'] = '#ff3a3a'
                                         comp_proposal['status'] = 'Olumsuz'
-                                        comp_proposal['proposal']=proposal
+                                        comp_proposal['proposal'] = proposal
                                     elif not_negative:
                                         comp_proposal['status_color'] = '#8cff8c'
                                         comp_proposal['status'] = 'Olumlu'
-                                        comp_proposal['proposal']=proposal
+                                        comp_proposal['proposal'] = proposal
                                     else:
                                         comp_proposal['status_color'] = '#ffff6e'
                                         comp_proposal['status'] = 'Sonuçlanmadı'
-                                        comp_proposal['proposal']=proposal
+                                        comp_proposal['proposal'] = proposal
                                     comp_proposals.append(comp_proposal)
                             else:
                                 comp_proposal['status_color'] = '#ffff'
-                                comp_proposal['status'] = 'Yok'
+                                comp_proposal['status'] = '---'
                                 comp_proposal['proposal'] = None
                                 comp_proposals.append(comp_proposal)
+
                             proposal_dict['proposals'] = comp_proposals
                             proposal_dict['proposals'] = comp_proposals
 
@@ -312,8 +402,8 @@ def proposal_yeka_report(request):
                         proposal_array.append(proposal_dict)
 
         return render(request, 'Report/proposal_yeka_report.html',
-                      {'urls': urls, 'current_url': current_url,'proposal_array':proposal_array,'name':name})
+                      {'urls': urls, 'current_url': current_url, 'proposal_array': proposal_array, 'name': name})
     except Exception as e:
         traceback.print_exc()
-        messages.warning(request,e)
+        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
