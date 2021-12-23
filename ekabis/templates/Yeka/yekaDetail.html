@@ -417,7 +417,7 @@
 
                                     <div class="card-body">
 
-                                        <table id="region" class="table table-bordered table-hover">
+                                        <table id="region" style="width: 100%" class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
                                                 <th>No</th>
@@ -435,8 +435,7 @@
                                                     <tr id="hover">
                                                         <td>{{ forloop.counter }} </td>
                                                         <td onclick="view_competition('{{ region.uuid }}')">{{ region.name }}</td>
-                                                        <td onclick="view_competition('{{ region.uuid }}')">{{ region.capacity }}
-                                                            MW
+                                                        <td onclick="view_competition('{{ region.uuid }}')">{{ region.capacity }}MW
                                                         </td>
                                                         <td>
 
@@ -669,7 +668,7 @@
         <div class="row">
             <section class="col-lg-12 ">
                 <div class="card card-default card-outline">
-                    <div class="card-header with-border"><h3 class="card-title">İş Planı</h3>
+                    <div class="card-header with-border"><h3 class="card-title">{{ yeka.definition }} - İş Planı</h3>
                         {% if aktif != "Admin" %}
                         {% for item in perm %}
                             {% if item == 'add_yekabusiness' and employee in employees %}
@@ -747,7 +746,87 @@
         </div>
     </section>
     <script>
+        {% load static %}
 
+        $(document).ready(function () {
+
+            $('#region').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'YEKABIS-baglanti-bolgeleri',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        title: 'YEKABIS-baglanti-bolgeleri',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        title: 'YEKABIS-baglanti-bolgeleri',
+                        titleAttr: 'Excel Kaydet',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}",
+
+                },
+                'bubble': true,
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': true,
+                'scrollX': true,
+                'select': true,
+            })
+
+        })
 
         function view_competition(id) {
             $(document).scrollTop($('#region').height())
@@ -797,11 +876,10 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Firmalar',
+                        title: 'YEKABIS_yarismalar',
                         text: '<i class="fa fa-print"></i>',
-
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -809,9 +887,9 @@
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: '<i class="fa fa-file-pdf"></i>',
-
+                        title: 'YEKABIS_yarismalar',
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -820,7 +898,8 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        title: 'YEKABIS_yarismalar',
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -861,7 +940,7 @@
                         "data": null,
                         render: function (data, type, row) {
                             var html = '';
-                            html = row.capacity + ' MW'
+                            html = ''+row.capacity+'MW';
                             return html;
 
                         }
