@@ -30,17 +30,15 @@ def return_users(request):
     if not perm:
         logout(request)
         return redirect('accounts:login')
-    users = User.objects.none()
+    users = User.objects.all()
     user_form = UserSearchForm()
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
         with transaction.atomic():
-            filter = {
-                'is_active': True,
-            }
-            users = UserService(request, filter)
+
+            users = UserService(request,None)
 
             return render(request, 'kullanici/kullanicilar.html',
                           {'users': users, 'user_form': user_form, 'urls': urls, 'current_url': current_url,
