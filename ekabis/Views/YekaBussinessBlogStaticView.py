@@ -908,22 +908,22 @@ def change_yekaproposal(request, business, businessblog):
                 business=yekabusiness
             )
             yekaproposal.save()
-        proposals = yekaproposal.proposal.all()
+        proposals = yekaproposal.proposal.filter(isDeleted=False)
 
         array_proposal = []
         for proposal in proposals:
             proposal_dict = dict()
             proposal_dict['status'] = '##ffffff'
-            olumsuz = proposal.institution.filter(status='Olumsuz')
-            sonuclanmadi = proposal.institution.filter(status='Sonuçlanmadı')
+            olumsuz = proposal.institution.filter(status='Olumsuz',isDeleted=False)
+            olumlu = proposal.institution.filter(status='Olumlu',isDeleted=False)
             if olumsuz:
                 proposal_dict['status'] = '#ff3a3a'
                 proposal_dict['proposal'] = proposal
-            elif sonuclanmadi:
-                proposal_dict['status'] = '#ffff6e'
+            elif olumlu:
+                proposal_dict['status'] = '#8cff8c'
                 proposal_dict['proposal'] = proposal
             else:
-                proposal_dict['status'] = '#8cff8c'
+                proposal_dict['status'] = '#ffff6e'
                 proposal_dict['proposal'] = proposal
             array_proposal.append(proposal_dict)
 
@@ -1336,7 +1336,7 @@ def change_proposal_active(request, business, businessblog):
         yekabussinessblog = YekaBusinessBlog.objects.get(uuid=businessblog)
         yekabusiness = YekaBusiness.objects.get(uuid=business)
 
-        pro_active = ProposalActive.objects.filter(business=yekabusiness)
+        pro_active = ProposalActive.objects.filter(business=yekabusiness).filter(isDeleted=False)
         #
         # olmayanların eklemesini yaptık
         array = []
@@ -1371,7 +1371,7 @@ def change_proposal_active(request, business, businessblog):
                     except Exception as e:
                         print(e)
                         traceback.print_exc()
-                pro_active = ProposalActive.objects.filter(business=yekabusiness)
+                pro_active = ProposalActive.objects.filter(business=yekabusiness,is_active=True)
 
                 return redirect('ekabis:change_yekaproposal', business, businessblog)
 
@@ -1538,16 +1538,25 @@ def view_proposal_institution(request, yekaproposal, uuid):
 
 
         # olmayan kurumların eklemesini yaptık
-        for item in ProposalActive.objects.filter(business=yekabusiness,is_active=True):
-            if not proposal.institution.filter(institution=item.institution):
-                pro_institution = ProposalInstitution(
-                    institution=item.institution,
-                )
-                pro_institution.save()
-                proposal.institution.add(pro_institution)
-                proposal.save()
+        for item in ProposalActive.objects.filter(business=yekabusiness):
+            if item.is_active:
+                if not proposal.institution.filter(institution=item.institution):
+                    pro_institution = ProposalInstitution(
+                        institution=item.institution,
+                    )
+                    pro_institution.save()
+                    proposal.institution.add(pro_institution)
+                    proposal.save()
+            else:
+                if proposal.institution.filter(institution=item.institution):
+                    pro_institution=proposal.institution.get(institution=item.institution)
+                    proposal.institution.remove(pro_institution)
+                    proposal.save()
+                    pro_institution.isDeleted=False
+                    pro_institution.save()
 
-        proposal_institution = proposal.institution.all().filter(institution__isDeleted=False)
+
+        proposal_institution = proposal.institution.filter(institution__isDeleted=False).filter(isDeleted=False)
         negative = proposal.institution.filter(institution__isDeleted=False).filter(status='Olumsuz',isDeleted=False).count()
         positive = proposal.institution.filter(institution__isDeleted=False).filter(status='Olumlu',isDeleted=False).count()
         not_result = proposal.institution.filter(institution__isDeleted=False).filter(status='Sonuçlanmadı',isDeleted=False).count()
@@ -1639,6 +1648,7 @@ def delete_proposal_institution(request):
                 if proposal_active:
                     active = ProposalActive.objects.get(institution=obj.institution)
                     active.isDeleted=False
+                    active.is_active=False
                     active.save()
 
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})

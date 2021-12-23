@@ -305,7 +305,7 @@
                         render: function (full) {
                             console.log(full.content);
                             let html;
-                            debugger;
+
                             let url_update = "{% url 'ekabis:change_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
                             url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
                             {#yeka firma atama olmayacak yeka firma basvuru olacak#}
@@ -415,7 +415,7 @@
 
     <script>
         function deleteYeka(id) {
-            debugger;
+
             console.log(id);
             var html = ''
             $("#modal-delete").on("shown.bs.modal", function (e) {
@@ -432,7 +432,7 @@
 
 
                                 html = result.msg;
-                                debugger;
+
                                 $(".errorModal").html(html);
                                 $('#modal-error').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {

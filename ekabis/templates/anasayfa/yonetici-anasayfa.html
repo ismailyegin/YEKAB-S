@@ -1,0 +1,670 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+
+            <div id="toast-container" class="toasts-top-right">
+                {% if message.tags == 'warning' %}
+                    <div class="toast toast-warning" aria-live="polite" style="" id="toast">
+                        <div class="toast-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                {% if message.tags == 'success' %}
+                    <div class="toast toast-success" aria-live="polite" style="" id="toast">
+                        <div class="toast-message"> {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        </div>
+                    </div>
+
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    {% endif %}
+
+    <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header primary">
+                    <h4 class="modal-title">Uyarı</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Kullanıcı durumunu değiştirmek istediğinizden emin misiniz ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
+                            data-dismiss="modal">Evet
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-close1">Hayır</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% for url in urls %}
+                            <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ url_name.name }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Content Header (Page header) -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-2 col-6">
+                        <!-- small card -->
+
+                    </div>
+                    <div class="col-lg-4 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>  {{ res_count }}</h3>
+                                <p>Rüzgar Enerjisi</p>
+                            </div>
+                            <div class="icon">
+
+                                <i class="fa fa-wind"></i>
+                            </div>
+                            <a href="{% url 'ekabis:view_yeka_by_type' 'Rüzgar' %}" class="small-box-footer">
+                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-gradient-yellow">
+                            <div class="inner">
+                                <h3>  {{ ges_count }}</h3>
+                                <p>Güneş Enerjisi</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-sun"></i>
+                            </div>
+                            <a href="{% url 'ekabis:view_yeka_by_type' 'Güneş' %}" class="small-box-footer">
+                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6">
+                        <!-- small card -->
+                     
+                    </div>
+
+
+
+                </div>
+        </div>
+        <div class="row">
+                <script>
+                    function deleteCompetition(id) {
+                        $("#modal-delete").on("shown.bs.modal", function (e) {
+                            $("#btn-conf1").click(function () {
+                                debugger;
+
+                                $.ajax({
+                                    url: "{% url "ekabis:delete_competition"%}",
+                                    type: "POST",
+                                    data: {
+                                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                        isActive: 'False',
+                                        uuid: id.toString()
+                                    },
+
+                                    success: function (result) {
+                                        if (result.status === 'Fail') {
+
+
+                                            html = result.msg;
+                                            debugger;
+                                            $(".errorModal").html(html);
+                                            $('#modal-error').on("shown.bs.modal", function (e) {
+                                                $(".btn-ok").click(function () {
+
+
+                                                });
+
+                                            }).modal('show');
+                                            console.log(result.status)
+                                        } else {
+                                            html = 'Yarışma Başarıyla Silindi';
+                                            $(".successModal").html(html);
+                                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                                $(".btn-ok").click(function () {
+
+
+                                                });
+
+                                            }).modal('show');
+                                            console.log(result.status)
+
+                                        }
+
+                                    },
+
+
+                                });
+                            });
+                        }).modal('show');
+                        $('#btn-close').click(function () {
+                            $('#modal-danger').modal('hide');
+                        });
+
+                    }</script>
+                <div class="col-lg-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h4 class="card-title">Görevli Olunan YEKA Yarışma Listesi</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {#                        alt yeka#}
+
+
+                                    <table id="region" class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tanım</th>
+                                            <th>Kapasite</th>
+                                            <th>İşlemler</th>
+
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                        {% for person in person_competitions %}
+                                            <tr id="hover">
+                                                <td>{{ forloop.counter }} </td>
+                                                <td class='clickable-row'
+                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.name }}</td>
+                                                <td class='clickable-row'
+                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.capacity }}
+                                                    MW
+                                                </td>
+                                                <td>
+
+                                                    <div class="btn-group">
+                                                        <button type="button"
+                                                                class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                data-toggle="dropdown"> İşlemler
+                                                        </button>
+                                                        <div class="dropdown-menu" role="menu">
+                                                            {% for item in perm %}
+
+                                                                {% if item == 'change_competition' %}
+                                                                    {% if person.competition.competition_regions.all.0 %}
+                                                                        <a href="{% url "ekabis:change_competition" person.competition.competition_regions.all.0.uuid  person.competition.uuid %}"
+                                                                           class="dropdown-item"
+                                                                           title="Düzenle "
+                                                                           type="button"><i
+                                                                                class="fa fa-edit"></i>Düzenle
+                                                                        </a>
+                                                                    {% endif %}
+                                                                {% elif item == 'view_yeka_competition_detail' %}
+                                                                    <a href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}"
+                                                                       class="dropdown-item" title="Detay"
+                                                                       type="button"><i
+                                                                            class="fa fa-search"></i>Detay
+                                                                    </a>
+                                                                {% elif item == 'delete_competition' %}
+                                                                    <a onclick="deleteCompetition('{{ person.competition.uuid }}')"
+                                                                       class="dropdown-item" title="Sil"
+                                                                       type="button"><i
+                                                                            class="fa fa-edit"></i>Sil</a>
+
+
+                                                                {% endif %}
+                                                            {% endfor %}
+
+
+                                                        </div>
+                                                    </div>
+
+
+                                            </tr>
+
+                                        {% endfor %}
+
+
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+
+
+                                    <div class="col-lg-12">
+                                        <div class="card card-primary card-outline">
+                                            <div class="card-header">
+                                                <h4 class="card-title">YEKA Listesi</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <table id="region" class="table table-bordered table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>Tanım</th>
+                                                                <th>Kapasite</th>
+                                                                <th>İşlemler</th>
+
+                                                            </tr>
+                                                            </thead>
+
+                                                            <tbody>
+
+
+                                                            {% for yeka in yeka %}
+                                                                <tr id="hover">
+                                                                    <td>{{ forloop.counter }} </td>
+
+                                                                    <td class='clickable-row'
+                                                                        data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.definition }}</td>
+                                                                    <td class='clickable-row'
+                                                                        data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.capacity }}
+                                                                        MW
+                                                                    </td>
+                                                                    <td>
+
+                                                                        <div class="btn-group">
+                                                                            <button type="button"
+                                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
+                                                                                    data-toggle="dropdown"> İşlemler
+                                                                            </button>
+                                                                            <div class="dropdown-menu" role="menu">
+                                                                                {% for item in perm %}
+                                                                                    {% if item == 'change_yeka' %}
+
+                                                                                        <a href="{% url "ekabis:change_yeka" yeka.uuid %}"
+                                                                                           class="dropdown-item"
+                                                                                           title="Düzenle "
+                                                                                           type="button"><i
+                                                                                                class="fa fa-edit"></i>Düzenle
+                                                                                        </a>
+                                                                                    {% elif item == 'view_yeka_detail' %}
+                                                                                        <a href="{% url "ekabis:view_yeka_detail" yeka.uuid %}"
+                                                                                           class="dropdown-item"
+                                                                                           title="Detay"
+                                                                                           type="button"><i
+                                                                                                class="fa fa-search"></i>Detay
+                                                                                        </a>
+                                                                                    {% elif item == 'delete_yeka' %}
+                                                                                        <a onclick="deleteYeka('{{ yeka.uuid }}')"
+                                                                                           class="dropdown-item"
+                                                                                           title="Sil"
+                                                                                           type="button"><i
+                                                                                                class="fa fa-edit"></i>Sil</a>
+
+
+                                                                                    {% endif %}
+                                                                                {% endfor %}
+
+
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                </tr>
+
+                                                            {% endfor %}
+
+
+                                                            </tbody>
+                                                        </table>
+
+
+                                                    </div>
+
+                                                    {#personel Listesi#}
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <script>
+                    function deleteCompetition(id) {
+                        $("#modal-delete").on("shown.bs.modal", function (e) {
+                            $("#btn-conf1").click(function () {
+                                debugger;
+
+                                $.ajax({
+                                    url: "{% url "ekabis:delete_competition"%}",
+                                    type: "POST",
+                                    data: {
+                                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                        isActive: 'False',
+                                        uuid: id.toString()
+                                    },
+
+                                    success: function (result) {
+                                        if (result.status === 'Fail') {
+
+
+                                            html = result.msg;
+                                            debugger;
+                                            $(".errorModal").html(html);
+                                            $('#modal-error').on("shown.bs.modal", function (e) {
+                                                $(".btn-ok").click(function () {
+
+
+                                                });
+
+                                            }).modal('show');
+                                            console.log(result.status)
+                                        } else {
+                                            html = 'Yarışma Başarıyla Silindi';
+                                            $(".successModal").html(html);
+                                            $('#modal-success').on("shown.bs.modal", function (e) {
+                                                $(".btn-ok").click(function () {
+
+
+                                                });
+
+                                            }).modal('show');
+                                            console.log(result.status)
+
+                                        }
+
+                                    },
+
+
+                                });
+                            });
+                        }).modal('show');
+                        $('#btn-close').click(function () {
+                            $('#modal-danger').modal('hide');
+                        });
+
+                    }</script>
+
+            <div class="col-md-3">
+                <div class="sticky-top mb-3">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h4 class="card-title">Notlar </h4>
+                            {% for item in perm %}
+                                                {% if item == 'add_calendarName' %}
+
+                                                    <a href="{% url "ekabis:add_calendarName" %}"
+                                                       type="button" class="btn btn-outline-primary btn-sm"
+                                                       style="float: right"><i
+                                                            class="fa fa-plus" title="Not Ekle"></i>
+                                                    </a>
+
+                                                {% endif %}
+                                            {% endfor %}
+                        </div>
+                        <div class="card-body">
+                            <!-- the events -->
+                            <div id="external-events">
+                                {% for cale in calendarNames %}
+                                    <div id="{{ cale.uuid }}"
+                                         class="external-event  ui-draggable ui-draggable-handle"
+                                         style="position: relative; background-color: {{ cale.color }}">{{ cale.name }}
+                                    </div>
+
+                                {% endfor %}
+
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-md-9">
+                <div class="card card-primary card-outline">
+                    <div class="card-body p-1">
+                        <!-- THE CALENDAR -->
+                        <div id="calendar">
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </section>
+
+
+
+
+
+    <script>
+
+        $(function () {
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+            function ini_events(ele) {
+                ele.each(function () {
+
+                    // create an Event Object (https://fullcalendar.io/docs/event-object)
+                    // it doesn't need to have a start or end
+                    var eventObject = {
+                        title: $.trim($(this).text()) // use the element's text as the event title
+                    }
+
+                    // store the Event Object in the DOM element so we can get to it later
+                    $(this).data('eventObject', eventObject)
+
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 1070,
+                        revert: true, // will cause the event to go back to its
+                        revertDuration: 0  //  original position after the drag
+                    })
+
+                })
+            }
+
+            ini_events($('#external-events div.external-event'))
+
+            /* initialize the calendar
+             -----------------------------------------------------------------*/
+            //Date for the calendar events (dummy data)
+            var date = new Date()
+            var d = date.getDate(),
+                m = date.getMonth(),
+                y = date.getFullYear()
+
+            var Calendar = FullCalendar.Calendar;
+            var Draggable = FullCalendar.Draggable;
+
+            var containerEl = document.getElementById('external-events');
+            var calendarEl = document.getElementById('calendar');
+
+            // initialize the external events
+            // -----------------------------------------------------------------
+
+            new Draggable(containerEl, {
+                itemSelector: '.external-event',
+                eventData: function (eventEl) {
+                    console.log(containerEl)
+                    return {
+                        title: eventEl.innerText,
+                        backgroundColor: window.getComputedStyle(eventEl, null).getPropertyValue('background-color'),
+                        borderColor: window.getComputedStyle(eventEl, null).getPropertyValue('background-color'),
+                        textColor: window.getComputedStyle(eventEl, null).getPropertyValue('color'),
+                    };
+                }
+            });
+
+            var calendar = new Calendar(calendarEl, {
+                 monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                monthNamesShort: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                dayNames: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+                dayNamesShort: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+                buttonText: {
+                    today: 'Bugün',
+                    month: 'Ay',
+                    week: 'Hafta',
+                    day: 'Gün',
+                    list: 'Liste',
+                    listMonth: 'Aylık Liste',
+                    listYear: 'Yıllık Liste',
+                    listWeek: 'Haftalık Liste',
+                    listDay: 'Günlük Liste'
+                },
+                locale: 'tr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                themeSystem: 'bootstrap',
+                //Random default events
+                events: [
+                    {% for i in vacation_days %}
+                        {
+                            title: "{{ i.definition }}",
+                            start: "{{ i.date | date:"Y-m-d" }}",
+                            backgroundColor: '#f88507', //red
+                            borderColor: '#f88507', //red
+                            allDay: true,
+                        },
+                    {% endfor %}
+                    {% for x in yeka %}
+
+                        {
+                            title: "{{ x.definition }}",
+                            start: "{{ x.date | date:"Y-m-d" }}",
+                            backgroundColor: '#007bff', //red
+                            borderColor: '#007bff', //red
+                            allDay: true,
+                            url: '{% url 'ekabis:view_yeka_detail' x.uuid %}'
+                        },
+                    {% endfor %}
+                ],
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar !!!
+                drop: function (info) {
+
+                    var tuuid = info.draggedEl.id;
+                    var tdates = info.dateStr;
+                    console.log(tuuid);
+                    console.log(tdates);
+                    $.ajax({
+                        url: "{% url "ekabis:add_calendarfdk" %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            uuid: tuuid,
+                            dates: tdates,
+                        },
+                        success: function (result) {
+                            console.log(result.status)
+                        }
+                    });
+
+                }
+
+            });
+
+            calendar.render();
+            // $('#calendar').fullCalendar()
+
+            /* ADDING EVENTS */
+            var currColor = '#3c8dbc' //Red by default
+            // Color chooser button
+            $('#color-chooser > li > a').click(function (e) {
+                e.preventDefault()
+                // Save color
+                currColor = $(this).css('color')
+                // Add color effect to button
+                $('#add-new-event').css({
+                    'background-color': currColor,
+                    'border-color': currColor
+                })
+            })
+            $('#add-new-event').click(function (e) {
+                e.preventDefault()
+                // Get value and make sure it is not null
+                var val = $('#new-event').val()
+                if (val.length == 0) {
+                    return
+                }
+
+                // Create events
+                var event = $('<div />')
+                event.css({
+                    'background-color': currColor,
+                    'border-color': currColor,
+                    'color': '#fff'
+                }).addClass('external-event')
+                event.text(val)
+                $('#external-events').prepend(event)
+
+                // Add draggable funtionality
+                ini_events(event)
+
+                // Remove event from text input
+                $('#new-event').val('')
+            })
+        })
+
+
+    </script>
+
+
+
+
+
+
+
+{% endblock %}
