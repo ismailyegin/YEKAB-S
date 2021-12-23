@@ -46,8 +46,8 @@ def view_yeka_accept(request, business, businessblog):
             accept = YekaAccept.objects.get(business=yekabusiness)
 
             for item in accept.accept.all():
-                total_mwm=int(item.installedPower)+total_mwm
-                total_mwe=int(item.currentPower)+total_mwe
+                total_mwm=float(item.installedPower)+total_mwm
+                total_mwe=float(item.currentPower)+total_mwe
 
         return render(request, 'Accept/view_accept.html',
                       {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,'total_installed_power':total_mwm,'total_current_power':total_mwe,
