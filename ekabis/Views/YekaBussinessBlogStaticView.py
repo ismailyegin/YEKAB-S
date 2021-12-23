@@ -1538,7 +1538,7 @@ def view_proposal_institution(request, yekaproposal, uuid):
 
 
         # olmayan kurumların eklemesini yaptık
-        for item in ProposalActive.objects.filter(business=yekabusiness):
+        for item in ProposalActive.objects.filter(business=yekabusiness,is_active=True):
             if not proposal.institution.filter(institution=item.institution):
                 pro_institution = ProposalInstitution(
                     institution=item.institution,
@@ -1547,10 +1547,10 @@ def view_proposal_institution(request, yekaproposal, uuid):
                 proposal.institution.add(pro_institution)
                 proposal.save()
 
-        proposal_institution =ProposalActive.objects.filter(business=yekabusiness,is_active=True)
-        negative = proposal.institution.filter(status='Olumsuz').count()
-        positive = proposal.institution.filter(status='Olumlu').count()
-        not_result = proposal.institution.filter(status='Sonuçlanmadı').count()
+        proposal_institution = proposal.institution.all().filter(institution__isDeleted=False)
+        negative = proposal.institution.filter(institution__isDeleted=False).filter(status='Olumsuz',isDeleted=False).count()
+        positive = proposal.institution.filter(institution__isDeleted=False).filter(status='Olumlu',isDeleted=False).count()
+        not_result = proposal.institution.filter(institution__isDeleted=False).filter(status='Sonuçlanmadı',isDeleted=False).count()
 
         with transaction.atomic():
             return render(request, 'Proposal/view_proposal_institution.html',
@@ -1635,6 +1635,12 @@ def delete_proposal_institution(request):
                 obj = ProposalInstitution.objects.get(uuid=uuid)
                 obj.isDeleted = True
                 obj.save()
+                proposal_active=ProposalActive.objects.filter(institution=obj.institution)
+                if proposal_active:
+                    active = ProposalActive.objects.get(institution=obj.institution)
+                    active.isDeleted=False
+                    active.save()
+
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
