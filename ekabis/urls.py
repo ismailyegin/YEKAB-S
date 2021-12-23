@@ -18,6 +18,7 @@ urlpatterns = [
     path('anasayfa/admin/', DashboardViews.return_admin_dashboard, name='view_admin'),
     path('anasayfa/federasyon/', DashboardViews.return_directory_dashboard, name='view_federasyon'),
     path('anasayfa/personel/', DashboardViews.return_personel_dashboard, name='view_personel'),
+    path('anasayfa/yonetici/', DashboardViews.return_yonetici_dashboard, name='view_yonetici'),
 
     # Takvim notları
     path('anasayfa/takvim-not-ekle/', DashboardViews.add_calendarName, name='add_calendarName'),

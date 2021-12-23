@@ -85,7 +85,45 @@ def return_personel_dashboard(request):
                    'jeo_count': jeo_count, 'biyo_count': biyo_count,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
                    })
+@login_required
+def return_yonetici_dashboard(request):
+    active = general_methods.controlGroup(request)
+    perm = general_methods.control_access(request)
 
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    calendar_filter = {
+        'isDeleted': False,
+        'user': request.user
+    }
+
+    calendarNames = CalendarNameService(request, calendar_filter)
+    yeka = YekaService(request, None).order_by('-date')
+    days = VacationDayService(request, None)
+
+    res_count = yeka.filter(type='Rüzgar').count()
+    ges_count = yeka.filter(type='Güneş').count()
+    biyo_count = yeka.filter(type='Biyokütle').count()
+    jeo_count = yeka.filter(type='Jeotermal').count()
+    user = request.user
+    person_filter = {
+        'person__user': user,
+    }
+
+    employee = EmployeeGetService(request, person_filter)
+    competition_filter = {
+        'employee': employee,
+    }
+    competitions = YekaCompetitionPersonService(request, competition_filter)
+
+    return render(request, 'anasayfa/yonetici-anasayfa.html',
+                  {'res_count': res_count, 'yeka': yeka, 'vacation_days': days,
+                   'ges_count': ges_count,
+                   'jeo_count': jeo_count, 'biyo_count': biyo_count,
+                   'calendarNames': calendarNames, 'person_competitions': competitions,
+                   })
 
 @login_required
 def return_admin_dashboard(request):

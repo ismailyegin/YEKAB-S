@@ -166,7 +166,7 @@
     </div>
 
 
-<section class="content-header">
+    <section class="content-header">
 
 
         <div class="container-fluid">
@@ -175,7 +175,7 @@
                     <h1>
                         Kullanıcı Listesi</h1>
                 </div>
-               <div class="col-sm-6">
+                <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         {% for url in urls %}
                             <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
@@ -193,7 +193,6 @@
     <section class="content">
 
 
-
         <div class="row">
             <section class="col-lg-12 ">
                 <div class="card-body">
@@ -202,7 +201,7 @@
                             <h3 class="card-title">Kullanıcılar</h3>
                         </div>
                         <div class="card-body">
-                            <table id="kullanicilar" class="table table-bordered table-hover">
+                            <table width="100%" id="users" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -214,70 +213,62 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% if users.all %}
-                                    {% for user in users %}
-                                        <tr>
-                                            <td>{{ forloop.counter }} </td>
-                                            <td>{{ user.first_name }} {{ user.last_name }} </td>
-                                            <td>{{ user.email }} </td>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ user.first_name }} {{ user.last_name }} </td>
+                                        <td>{{ user.email }} </td>
 
-                                            <td>
+                                        <td>
 
-                                                {% for group  in user.groups.all %}
+                                            {% for group  in user.groups.all %}
 
-                                                    {{ group.name }}<br>
+                                                {{ group.name }}<br>
 
-                                                {% endfor %}
+                                            {% endfor %}
 
-                                            </td>
-                                            {% if user.is_active %}
-                                                <td>Aktif</td>
-                                            {% else %}
-                                                <td>Pasif</td>
-                                            {% endif %}
-                                            <td>
+                                        </td>
+                                        {% if user.is_active %}
+                                            <td>Aktif</td>
+                                        {% else %}
+                                            <td>Pasif</td>
+                                        {% endif %}
+                                        <td>
 
-                                             <div class="btn-group">
+                                            <div class="btn-group">
 
-                                                    <button type="button"
-                                                            class="btn btn-default dropdown-toggle dropdown-icon"
-                                                            data-toggle="dropdown"> İşlemler
-                                                    </button>
-                                                    <div class="dropdown-menu" role="menu">
-                                                   {% for item in perm %}
-                                                    {% if item == 'view_email' %}
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown"> İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    {% for item in perm %}
+                                                        {% if item == 'view_status' %}
                                                             <a class="dropdown-item" href=""
-                                                               data-toggle="modal" onclick=sendInform({{ user.pk }})><i
-                                                                    class="fa  fa-arrow-circle-right" title="Şifre Gönder"></i> Şifre
-                                                                Gönder</a>
+                                                               data-toggle="modal" onclick=activeUser({{ user.pk }})><i
+                                                                    class="fa fa-lock" title="Aktif/Pasif"></i>
+                                                                Aktif/Pasif Yap</a>
                                                         {% endif %}
                                                     {% endfor %}
-                                                         {% for item in perm %}
-                                                        {% if item == 'view_status' %}
-                                                             <a class="dropdown-item" href=""
-                                                               data-toggle="modal" onclick=activeUser({{ user.pk }})><i
-                                                                    class="fa fa-lock" title="Aktif/Pasif"></i> Aktif/Pasif Yap</a>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {% for item in perm %}
+                                                    {% for item in perm %}
                                                         {% if item == 'change_user_group' %}
                                                             <a href="{% url "ekabis:change_user_group" user.pk %}"
                                                                type="button" class="dropdown-item"><i
-                                                                    class="fa fa-edit" title="Grup Güncelle"></i> Grup Güncelle
+                                                                    class="fa fa-edit" title="Grup Güncelle"></i> Grup
+                                                                Güncelle
                                                             </a>
                                                         {% endif %}
                                                     {% endfor %}
 
 
-                                                    </div>
                                                 </div>
+                                            </div>
 
-                                            </td>
+                                        </td>
 
-                                        </tr>
+                                    </tr>
 
-                                    {% endfor %}
-                                {% endif %}
+                                {% endfor %}
 
 
                                 </tbody>
@@ -296,10 +287,10 @@
         <!-- /.row (main row) -->
 
     </section>
-{% load static %}
+    {% load static %}
     <script>
         $(function () {
-            $('#kullanicilar').DataTable({
+            $('#users').DataTable({
                 dom: 'Bfrtip',
 
 
@@ -308,7 +299,7 @@
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                  'buttons': [
+                'buttons': [
 
 
                     {
@@ -324,40 +315,46 @@
                     },
                     {
                         extend: 'print',
-                        title: 'Kullanıcı Listesi',
+                        title: 'YEKABIS-Kullanicilar',
                         text: '<i class="fa fa-print"></i>',
+
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
+                        title: 'YEKABIS-Kullanicilar',
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
+
 
                     {
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        title: 'YEKABIS-Kullanicilar',
+                        exportOptions: {
                             columns: ':visible'
-                        }
+                        },
                     },
 
 
                 ],
-                  "search": {
+
+                "search": {
                     "caseInsensitive": true,
                 },
-                 'language': {
-                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}",
+
                 },
                 'bubble': true,
                 'paging': true,
@@ -366,7 +363,7 @@
                 'ordering': true,
                 'info': true,
                 'autoWidth': true,
-                'responsive': true,
+                'scrollX': true,
                 'select': true,
             })
 
