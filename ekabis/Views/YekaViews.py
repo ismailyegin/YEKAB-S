@@ -2113,3 +2113,29 @@ def yeka_report(request):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+def yeka_business_time(request):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        yekas=Yeka.objects.filter(isDeleted=False)
+        for yeka in yekas:
+            for region in yeka.connection_region.filter(isDeleted=False):
+                for competition in region.yekacompetition.filter(isDeleted=False):
+                    for block in competition.business.businessblogs.filter(isDeleted=False):
+                        if yeka.business.businessblogs.filter(businessblog__name=block.businessblog.name):
+                           block.indefinite=yeka.business.businessblogs.get(businessblog__name=block.businessblog.name).indefinite
+                           block.time_type=yeka.business.businessblogs.get(businessblog__name=block.businessblog.name).time_type
+                           block.save()
+
+        return redirect('ekabis:view_yeka')
+
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
