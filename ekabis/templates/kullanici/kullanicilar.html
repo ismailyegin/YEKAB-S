@@ -308,7 +308,7 @@
                     ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
-                 'buttons': [
+                  'buttons': [
 
 
                     {
@@ -326,21 +326,29 @@
                         extend: 'print',
                         title: 'Kullanıcı Listesi',
                         text: '<i class="fa fa-print"></i>',
-
-                        titleAttr: 'Yazdır'
+                        titleAttr: 'Yazdır',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
                         text: '<i class="fa fa-file-pdf"></i>',
 
-                        titleAttr: 'Pdf Kaydet'
+                        titleAttr: 'Pdf Kaydet',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
 
                     {
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
-                        titleAttr: 'Excel Kaydet'
+                        titleAttr: 'Excel Kaydet',
+                         exportOptions: {
+                            columns: ':visible'
+                        }
                     },
 
 
