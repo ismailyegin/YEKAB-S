@@ -330,13 +330,13 @@
                     },
                     success: function (result) {
 
-                        html = 'Ek Süre Başarıyla Silindi';
+                        html = 'Kurum Başarıyla Silindi';
                         debugger;
                         $(".successModal").html(html);
                         $('#modal-success').on("shown.bs.modal", function (e) {
                             $(".btn-ok").click(function () {
 
-                                window.location.replace("{% url "ekabis:view_extratime" %}");
+                                window.location.reload();
 
                             });
 

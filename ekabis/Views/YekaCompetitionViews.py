@@ -146,6 +146,8 @@ def add_competition(request, region):
                                         sorting=item.sorting,
                                         businessTime=item.businessTime,
                                         status=item.status,
+                                        time_type=item.time_type,
+                                        indefinite=item.indefinite,
                                         businessblog=item.businessblog
 
                                     )
@@ -165,10 +167,13 @@ def add_competition(request, region):
                                         parent=parent_yeka_business_blog,
                                         finisDate=item.finisDate,
                                         startDate=item.startDate,
-                                        businessblog=item.businessblog,
+                                        completion_date=item.completion_date,
                                         sorting=item.sorting,
                                         businessTime=item.businessTime,
                                         status=item.status,
+                                        time_type=item.time_type,
+                                        indefinite=item.indefinite,
+                                        businessblog=item.businessblog
                                     )
                                     yeka_businessblog.save()
                                     for param in item.parameter.all():
