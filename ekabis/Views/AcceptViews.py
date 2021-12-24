@@ -49,6 +49,9 @@ def view_yeka_accept(request, business, businessblog):
                 total_mwm=float(item.installedPower)+total_mwm
                 total_mwe=float(item.currentPower)+total_mwe
 
+            total_mwe=round(float("{:.5f}".format(total_mwe)), 5)
+            total_mwm=round(float("{:.5f}".format(total_mwe)), 5)
+
         return render(request, 'Accept/view_accept.html',
                       {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,'total_installed_power':total_mwm,'total_current_power':total_mwe,
                        'url_name': url_name, 'name': name, 'accept': accept
