@@ -92,7 +92,6 @@ def view_report(request):
                     accept_dict['power'] = total['installedPower__sum']
                     currentPower_dict['power'] = currentPower['currentPower__sum']
                     currentPower_dict['label'] = competition.name
-                    total_capacity = float(total['installedPower__sum']) + float(currentPower['currentPower__sum'])
                     installedPower_array.append(accept_dict)
                     accept_company = competition.company
                     company_dict['electrical_power'] = currentPower['currentPower__sum']
