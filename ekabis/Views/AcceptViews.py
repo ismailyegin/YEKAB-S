@@ -50,7 +50,7 @@ def view_yeka_accept(request, business, businessblog):
             total_mwe = accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))['currentPower__sum']
 
             total_mwe=round(float("{:.5f}".format(total_mwe)), 5)
-            total_mwm=round(float("{:.5f}".format(total_mwe)), 5)
+            total_mwm=round(float("{:.5f}".format(total_mwm)), 5)
 
         return render(request, 'Accept/view_accept.html',
                       {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,'total_installed_power':total_mwm,'total_current_power':total_mwe,
