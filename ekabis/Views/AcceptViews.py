@@ -5,6 +5,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.db import transaction
+from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve
@@ -43,11 +44,10 @@ def view_yeka_accept(request, business, businessblog):
             accept.business = yekabusiness
             accept.save()
         else:
-            accept = YekaAccept.objects.get(business=yekabusiness)
+            accept = YekaAccept.objects.get(business=yekabusiness,isDeleted=False)
 
-            for item in accept.accept.all():
-                total_mwm=float(item.installedPower)+total_mwm
-                total_mwe=float(item.currentPower)+total_mwe
+            total_mwm = accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))['installedPower__sum']
+            total_mwe = accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))['currentPower__sum']
 
             total_mwe=round(float("{:.5f}".format(total_mwe)), 5)
             total_mwm=round(float("{:.5f}".format(total_mwe)), 5)
