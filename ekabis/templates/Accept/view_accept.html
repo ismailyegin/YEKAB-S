@@ -177,7 +177,7 @@
                         </div>
 
                         <div class="card-body">
-                            <table width="100%" id="accept" class="table table-bordered table-hover">
+                            <table style="width: 100%" id="accept" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -197,7 +197,8 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ item.date }}</td>
                                         <td>
-                                            <a download="{{ item.report }}"  target="_blank" href="{{MEDIA_URL}}{{ item.report }}">{{ item.report }}</a>
+                                            <a download="{{ item.report }}" target="_blank"
+                                               href="{{ MEDIA_URL }}{{ item.report }}">{{ item.report }}</a>
                                         </td>
                                         <td>
                                             {{ item.installedPower }}
@@ -265,7 +266,7 @@
     {% load  static %}
     <script>
         $(function () {
-            table= $('#accept').DataTable({
+            table = $('#accept').DataTable({
                 dom: 'Bfrtip',
 
 
@@ -292,7 +293,7 @@
                         extend: 'print',
                         title: 'YEKA LİSTESİ',
                         text: '<i class="fa fa-print"></i>',
- exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         },
                         titleAttr: 'Yazdır'
@@ -303,7 +304,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -312,7 +313,7 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -328,7 +329,7 @@
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
-
+                "order": [[1, "asc"]],
                 'info': true,
                 'autoWidth': true,
                 'responsive': true,
