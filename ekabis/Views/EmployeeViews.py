@@ -70,6 +70,7 @@ def add_employee(request):
                     user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
                     user.last_name = unicode_tr(user_form.cleaned_data['last_name']).upper()
                     user.email = user_form.cleaned_data['email']
+                    user.is_active = True
                     user.save()
                     data_as_json_pre = 'Yok'
                     data_as_json_next = serializers.serialize('json', User.objects.filter(pk=user.pk))
@@ -167,12 +168,12 @@ def edit_employee(request, pk):
             if request.method == 'POST':
 
                 if user_form.is_valid() and communication_form.is_valid() and person_form.is_valid():
-
                     user = user_form.save(request, commit=False)
                     user.username = user_form.cleaned_data['username']
                     user.first_name = unicode_tr(user_form.cleaned_data['first_name']).upper()
                     user.last_name = unicode_tr(user_form.cleaned_data['last_name']).upper()
                     user.email = user_form.cleaned_data['email']
+                    user.is_active=True
                     user.save()
                     person = person_form.save(request, commit=False)
                     person.save()
