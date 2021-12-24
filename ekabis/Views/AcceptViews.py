@@ -193,7 +193,7 @@ def delete_accept(request):
 
                 pre = serializers.serialize('json', Accept.objects.filter(uuid=uuid))
                 obj = Accept.objects.get(uuid=uuid)
-                obj.isDeleted = False
+                obj.isDeleted = True
                 obj.save()
                 yeka_accept = YekaAccept.objects.get(accept=obj)
                 competition=YekaCompetition.objects.get(business=yeka_accept.business)
