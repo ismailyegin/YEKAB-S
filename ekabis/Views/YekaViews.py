@@ -75,9 +75,21 @@ def return_yeka(request):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
-        with transaction.atomic():
-            return render(request, 'Yeka/view_yeka.html',
-                          {'yeka_form': yeka_form, 'error_messages': '', 'urls': urls, 'current_url': current_url,
+        yekas = Yeka.objects.filter(isDeleted=False)
+        comp_array = []
+
+        for yeka in yekas:
+            yeka_dict = dict()
+            competitions=[]
+            regions = yeka.connection_region.filter(isDeleted=False)
+            for region in regions:
+                for comp in region.yekacompetition.filter(isDeleted=False):
+                    competitions.append(comp)
+            yeka_dict['yeka']=yeka
+            yeka_dict['yeka_competitions']=competitions
+            comp_array.append(yeka_dict)
+        return render(request, 'Yeka/view_yeka.html',
+                          {'yeka_form': yeka_form,'yekas':comp_array, 'error_messages': '', 'urls': urls, 'current_url': current_url,
                            'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
@@ -2143,8 +2155,8 @@ def yeka_business_time(request):
                                     unit = comp_holding.unit
                                     price = comp_holding.max_price
                                 if YekaContract.objects.filter(business=competition.business):
-                                    contract=YekaContract.objects.get(business=competition.business)
-                                    contract.unit=unit
+                                    contract = YekaContract.objects.get(business=competition.business)
+                                    contract.unit = unit
                                     contract.save()
         return redirect('ekabis:view_yeka')
 
@@ -2152,3 +2164,27 @@ def yeka_business_time(request):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+@api_view(http_method_names=['POST'])
+def getYekaCompetitions(request):
+    if request.POST:
+        try:
+
+            uuid = request.POST.get('uuid')
+            yeka = Yeka.objects.get(uuid=uuid)
+
+            regions=yeka.connection_region.filter(isDeleted=False)
+            comp_array=[]
+            for region in regions:
+                competitions=region.yekacompetition.filter(isDeleted=False)
+                for comp in competitions:
+                    comp_array.append(comp)
+            data = YekaCompetitionSerializer(comp_array, many=True)
+            responseData = dict()
+            responseData['competitions'] = data.data
+
+            return JsonResponse(responseData, safe=True)
+
+        except Exception as e:
+
+            return JsonResponse({'status': 'Fail', 'msg': e})

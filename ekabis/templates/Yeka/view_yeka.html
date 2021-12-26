@@ -159,25 +159,82 @@
 
                         <div class="card-body">
 
-                            <table id="yeka" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Tanım</th>
-                                    <th>Tarih</th>
-                                    <th>Kapasite</th>
-                                    <th>Kaynak Türü</th>
-                                    <th>İşlemler</th>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
 
+                                        <!-- ./card-header -->
+                                        <div class="card-body p-0">
+                                            <table class="table table-hover">
+                                                <tbody>
+                                                {% for item in yekas %}
+                                                    <tr data-widget="expandable-table" aria-expanded="false">
+                                                        <td style="font-size: 17px">
+                                                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                           <b>{{ item.yeka.definition }}</b>
 
-                                </tr>
-                                </thead>
+                                                        </td>
 
-                                <tbody>
+                                                    </tr>
+                                                    <tr class="expandable-body ">
+                                                        <td>
+                                                            <div class="p-0">
+                                                                <table class="table table-hover">
+                                                                    <tbody>
+                                                                    <tr data-widget="expandable-table"
+                                                                        aria-expanded="false">
+                                                                        <td>
+                                                                            <a href="{% url 'ekabis:view_yeka_detail' item.yeka.uuid %}"
+                                                                               class="button" title="Detay"
+                                                                               type="button"><i
+                                                                                    class="fa fa-search"></i> Detay </a>
+                                                                        </td>
+                                                                    </tr>
 
+                                                                    <tr id="is_close-{{ item.yeka.pk }}"
+                                                                        data-widget="expandable-table"
+                                                                        aria-expanded="false">
+                                                                        <td>
+                                                                            <button type="button"
+                                                                                    class="btn btn-outline-primary p-0 btn-sm">
+                                                                                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                            </button>
+                                                                            YEKA Yarışmaları
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr class="expandable-body d-none">
+                                                                        <td>
+                                                                            <div class="p-0" style="display: none;">
+                                                                                <table id="competitions-{{ item.yeka.pk }}"
+                                                                                       class="table table-hover">
+                                                                                    <tbody>
+                                                                                    {% for competition in item.yeka_competitions %}
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <a href="{% url 'ekabis:view_yeka_competition_detail'  competition.uuid %}"> {{ competition.name }} </a>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    {% endfor %}
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
 
-                                </tbody>
-                            </table>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                            </div>
 
 
                         </div>
@@ -195,13 +252,13 @@
     {% load static %}
     <script>
         $(function () {
-            var currentdate=new Date();
+            var currentdate = new Date();
             {#console.log(new Date().getTime())#}
-         {#console.log(+ (currentdate.getMonth()+1)  + "/"#}
-         {#       + currentdate.getFullYear() + " @ "#}
-         {#       + currentdate.getHours() + ":"#}
-         {#       + currentdate.getMinutes() + ":"#}
-         {#       + currentdate.getSeconds())#}
+            {#console.log(+ (currentdate.getMonth()+1)  + "/"#}
+            {#       + currentdate.getFullYear() + " @ "#}
+            {#       + currentdate.getHours() + ":"#}
+            {#       + currentdate.getMinutes() + ":"#}
+            {#       + currentdate.getSeconds())#}
             table = $('#yeka').DataTable({
 
 
@@ -210,11 +267,6 @@
                 "paging": true,
                 "ordering": true,
 
-
-                "ajax": {
-                    "url": "{% url 'ekabis:view_yeka-api' %}",
-                    "type": "POST",
-                },
                 dom: 'Bfrtip',
 
                 'buttons': [
@@ -237,7 +289,7 @@
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -247,7 +299,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -256,7 +308,7 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -268,89 +320,89 @@
                 'language': {
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
-                "columns": [
-                    {"data": "id"},
-                    {
-                        "data": null,
-                        render: function (full, data, type, row) {
-                            let detail = "{% url 'ekabis:view_yeka_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            detail = detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-                            let html = ''
-                            html = '<a href="' + detail + '">' + full.definition + '</a>'
-                            return html;
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            return row.date;
-
-                        }
-                    },
-                    {
-                        "data": null,
-                        render: function (data, type, row) {
-                            var html = '';
-                            html = row.capacity + ' MW'
-                            return html;
-
-                        }
-                    },
-                    {"data": "type"},
-
-
-                    {
-                        "data": null,
-                        render: function (full) {
-                            console.log(full.content);
-                            let html;
-
-                            let url_update = "{% url 'ekabis:change_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-                            {#yeka firma atama olmayacak yeka firma basvuru olacak#}
-                            {#let url_company = "{% url 'ekabis:view_yeka_company' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
-                            {#url_company = url_company.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
-
-                            let url_person = "{% url 'ekabis:view_yeka_personel' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_person = url_person.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url_view_yeka_detail = "{% url 'ekabis:view_yeka_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_view_yeka_detail = url_view_yeka_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url_business = "{% url 'ekabis:view_yekabusinessBlog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_business = url_business.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url_region = "{% url 'ekabis:view_region' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_region = url_region.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-
-                            let url_gant = "{% url 'ekabis:view_yekabusiness_gant' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                            url_gant = url_gant.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);
-                            html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';
-
-
-                            let url_delete = "deleteYeka('" + full.uuid + "')"
-                            {#let yeka_report = "view_report('" + full.uuid + "')"#}
-
-
-                            {% for item in perm %}
-                                {% if item == 'delete_yeka'%}
-                                    html += '<a onclick="' + url_delete + '" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';
-                                {% elif item == 'change_yeka' %}
-                                    html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';
-                                {% elif item == 'view_yeka_detail' %}
-
-                                    html += '<a href="' + url_view_yeka_detail + '" class="dropdown-item" title="Detay" type="button"><i class="fa fa-search"></i>Detay</a>';
-                                    {#html += '<a onclick="' + yeka_report + '" class="dropdown-item" title="RAPOR" type="button"><i class="fa fa-list"></i>RAPOR</a>';#}
-
-                                {% endif %}
-                            {% endfor %}
-
-
-                            return html;
-                        }
-                    }
-                ],
+                {#"columns": [#}
+                {#    {"data": "id"},#}
+                {#    {#}
+                {#        "data": null,#}
+                {#        render: function (full, data, type, row) {#}
+                {#            let detail = "{% url 'ekabis:view_yeka_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
+                {#            detail = detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                {#            let html = ''#}
+                {#            html = '<a href="' + detail + '">' + full.definition + '</a>'#}
+                {#            return html;#}
+                {##}
+                {#        }#}
+                {#    },#}
+                {#    {#}
+                {#        "data": null,#}
+                {#        render: function (data, type, row) {#}
+                {#            return row.date;#}
+                {##}
+                {#        }#}
+                {#    },#}
+                {#    {#}
+                {#        "data": null,#}
+                {#        render: function (data, type, row) {#}
+                {#            var html = '';#}
+                {#            html = row.capacity + ' MW'#}
+                {#            return html;#}
+                {##}
+                {#        }#}
+                {#    },#}
+                {#    {"data": "type"},#}
+                {##}
+                {##}
+                {#    {#}
+                {#        "data": null,#}
+                {#        render: function (full) {#}
+                {#            console.log(full.content);#}
+                {#            let html;#}
+                {##}
+                {#            let url_update = "{% url 'ekabis:change_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
+                {#            url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                {#yeka firma atama olmayacak yeka firma basvuru olacak#}
+                {#let url_company = "{% url 'ekabis:view_yeka_company' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
+                {#url_company = url_company.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                {##}
+                {#            let url_person = "{% url 'ekabis:view_yeka_personel' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
+                {#            url_person = url_person.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                {##}
+                {#            let url_view_yeka_detail = "{% url 'ekabis:view_yeka_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
+                {#            url_view_yeka_detail = url_view_yeka_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                {##}
+                {#            let url_business = "{% url 'ekabis:view_yekabusinessBlog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
+                {#            url_business = url_business.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                {##}
+                {#            let url_region = "{% url 'ekabis:view_region' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
+                {#            url_region = url_region.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                {##}
+                {#            let url_gant = "{% url 'ekabis:view_yekabusiness_gant' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";#}
+                {#            url_gant = url_gant.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', full.uuid);#}
+                {#            html = '<td><div class="btn-group">  <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown"> İşlemler  </button> <div class="dropdown-menu" role="menu">';#}
+                {##}
+                {##}
+                {#            let url_delete = "deleteYeka('" + full.uuid + "')"#}
+                {#let yeka_report = "view_report('" + full.uuid + "')"#}
+                {##}
+                {##}
+                {#            {% for item in perm %}#}
+                {#                {% if item == 'delete_yeka'%}#}
+                {#                    html += '<a onclick="' + url_delete + '" class="dropdown-item" title="Sil" type="button"><i class="fa fa-edit"></i>Sil</a>';#}
+                {#                {% elif item == 'change_yeka' %}#}
+                {#                    html += '<a href="' + url_update + '" class="dropdown-item" title="Düzenle" type="button"><i class="fa fa-edit"></i>Düzenle</a>';#}
+                {#                {% elif item == 'view_yeka_detail' %}#}
+                {##}
+                {#                    html += '<a href="' + url_view_yeka_detail + '" class="dropdown-item" title="Detay" type="button"><i class="fa fa-search"></i>Detay</a>';#}
+                {#html += '<a onclick="' + yeka_report + '" class="dropdown-item" title="RAPOR" type="button"><i class="fa fa-list"></i>RAPOR</a>';#}
+                {##}
+                {#                {% endif %}#}
+                {#            {% endfor %}#}
+                {##}
+                {##}
+                {#            return html;#}
+                {#        }#}
+                {#    }#}
+                {#],#}
 
                 "search": {
                     "caseInsensitive": true
@@ -358,11 +410,11 @@
 
 
             });
-                {#        console.log(+ (currentdate.getMonth()+1)  + "/"#}
-                {#+ currentdate.getFullYear() + " @ "#}
-                {#+ currentdate.getHours() + ":"#}
-                {#+ currentdate.getMinutes() + ":"#}
-                {#+ currentdate.getSeconds())#}
+            {#        console.log(+ (currentdate.getMonth()+1)  + "/"#}
+            {#+ currentdate.getFullYear() + " @ "#}
+            {#+ currentdate.getHours() + ":"#}
+            {#+ currentdate.getMinutes() + ":"#}
+            {#+ currentdate.getSeconds())#}
 
             table.on('draw.dt', function () {
                 var info = table.page.info();
@@ -410,6 +462,34 @@
                 }
             }
         });
+
+        function yarisma_getir(id, pk) {
+            if (document.getElementById('is_close-' + pk + '').attributes['aria-expanded'].value === 'false') {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'ekabis:yeka-yarismalari-getir' %}",
+                    data: {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                        uuid: id,
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        $("#competitions-" + pk + " tr").remove();
+                        for (let i = 0; i < result.competitions.length; i++) {
+                            var url = '{% url 'ekabis:view_yeka_competition_detail' 'a9ecc4f4-f53a-42c4-85c5-dc1cfb52b590' %}'
+                            url = url.replace('a9ecc4f4-f53a-42c4-85c5-dc1cfb52b590', result.competitions[i].uuid)
+                            $('#competitions-' + pk + '').append('<tr><td><a href="' + url + '" class="button" title="Detay" type="button">' + result.competitions[i].name + '<a><td></tr>');
+                        }
+                    }
+                })
+            } else {
+                debugger;
+                $("#competitions-" + pk + " tr").remove();
+            }
+
+
+        }
+
 
     </script>
 

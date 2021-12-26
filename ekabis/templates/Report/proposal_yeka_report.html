@@ -78,7 +78,7 @@
                     <div class="card-header">
                         <h3 class="card-title">
 
-                            {{ name }} - KURUM GÖRÜŞLERİ
+                            {{ name }} - GENEL RAPORLAMA
                         </h3>
                     </div>
                     <div class="card-body">
@@ -92,6 +92,7 @@
                                 <th>Kazanan Firma</th>
                                 <th>Kurulu Güç(MW<sub>e</sub>)</th>
                                 <th>Sözleşme Fiyatı</th>
+                                <th>Sözleşme Tarihi</th>
                                 <th>YEKA İlan Tarihi</th>
                                 <th>Ön Lisans Başvuru Tarihi</th>
                                 <th>Ön Lisans Tarihi</th>
@@ -120,6 +121,7 @@
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.company.name }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.competition.capacity }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.contact_price }}</td>
+                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.contact_date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.competition_business_date | date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_app_business_date | date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_business_date | date }}</td>
@@ -150,6 +152,7 @@
                                             <td class="ism">{{ brc.competition.name }}</td>
                                             <td class="ism">{{ brc.company.name }}</td>
                                             <td class="ism">{{ brc.competition.capacity }}</td>
+                                            <td class="ism">{{ brc.contract_date }}</td>
                                             <td class="ism">{{ brc.contact_price }}</td>
                                             <td class="ism">{{ brc.competition_business_date | date }}</td>
                                             <td class="ism">{{ brc.prelicence_app_business_date | date }}</td>

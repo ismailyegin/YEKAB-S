@@ -1,5 +1,6 @@
 import traceback
 
+from dateutil.relativedelta import relativedelta
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -1341,8 +1342,50 @@ def view_yeka_competition_detail(request, uuid):
         if guarantee:
             guarantees = YekaGuarantee.objects.get(business=yeka.business).guarantee.filter(isDeleted=False).last()
 
-
+        prelicence_date='---'
+        prelicence_time='---'
+        prelicence_finish_date = '--'
+        licence_date = '---'
+        licence_time = '---'
+        licence_finish_date = '---'
+        contract_price='---'
+        eskalasyon_price='---'
+        build_date='---'
+        serh_date='---'
         for block in yekabusinessbloks:
+            if block.businessblog.name == 'Ön Lisans Dönemi':
+                prelicence_time = block.businessTime
+                if block.startDate:
+                    prelicence_finish_date = block.startDate.date().strftime("%d %m %Y")
+                if block.parameter:
+                    if block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
+                        prelicence_date=block.parameter.get(parametre__title='Ön Lisans Tarihi').value
+            if block.businessblog.name == 'Lisans Dönemi':
+                licence_time = block.businessTime
+                if block.startDate:
+                    licence_finish_date = block.startDate.date().strftime("%d %m %Y")
+                if block.parameter:
+                    if block.parameter.filter(parametre__title='Lisans Tarihi'):
+                        licence_date=block.parameter.get(parametre__title='Lisans Tarihi').value
+            if block.businessblog.name == 'Tesis İnşaatının Tamamlanması':
+                if block.startDate:
+                    build_date = block.startDate.date().strftime("%d %m %Y")
+            if block.businessblog.name == 'YEKA İlan Edilmesi':
+                if block.startDate:
+                    serh_date = x=block.startDate.date() + relativedelta(years=3)
+            if block.businessblog.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
+                if YekaContract.objects.filter(business=yeka.business):
+                    contract=YekaContract.objects.get(business=yeka.business)
+                    if contract.unit:
+                        contract_price=str(contract.price)+' '+contract.unit.name
+                        if contract.unit.name=='TL Kuruş/kWh':
+                            if YekaCompetitionEskalasyon.objects.filter(competition=yeka):
+                                eskalasyon_price=str(YekaCompetitionEskalasyon.objects.filter(competition=yeka).last().result) + ' '+'TL'
+
+            if block.businessblog.name == 'Kabuller':
+                if block.startDate:
+                    serh_date = x=block.startDate.date() + relativedelta(years=3)
+
             bloc_dict = {}
             dict = {}
             bloc_dict['yekabusinessblog'] = block
@@ -1358,7 +1401,17 @@ def view_yeka_competition_detail(request, uuid):
                         param.value) + '</div>'
             bloc_dict['html'] = html
             blocks.append(bloc_dict)
-
+        yeka_info_dict= {}
+        yeka_info_dict['serh_date'] = serh_date
+        yeka_info_dict['eskalasyon_price'] = eskalasyon_price
+        yeka_info_dict['contract_price'] = contract_price
+        yeka_info_dict['build_date'] = build_date
+        yeka_info_dict['licence_date'] = licence_date
+        yeka_info_dict['licence_finish_date'] = licence_finish_date
+        yeka_info_dict['licence_time'] = licence_time
+        yeka_info_dict['prelicence_date'] = prelicence_date
+        yeka_info_dict['prelicence_finish_date'] = prelicence_finish_date
+        yeka_info_dict['prelicence_time'] = prelicence_time
         employees = YekaCompetitionPersonService(request, employe_filter)
         array_proposal = []
         yekaproposal = None
@@ -1400,7 +1453,7 @@ def view_yeka_competition_detail(request, uuid):
                        'yekaproposal': yekaproposal, 'negative_insinstitution': negative,
                        'indemnity': guarantees,
                        'positive_institution': positive, 'not_result_institution': not_result,
-
+                        'yeka_info':yeka_info_dict,
                        })
 
     except Exception as e:
