@@ -1,5 +1,6 @@
 {% extends 'base_layout.html' %}
 {% block content %}
+    {% load static %}
     <style>
         #proposal td {
             text-align: center;
@@ -7,6 +8,8 @@
             font-size: 15px;
         }
     </style>
+     <script type="text/javascript" src="{%  static 'vis/js/jquery.doubleScroll.js' %}"></script>
+
     {% if messages %}
         {% for message in messages %}
 
@@ -82,7 +85,6 @@
                         </h3>
                     </div>
                     <div class="card-body">
-
                         <table style="width: 100%" id="proposal"
                                class="table table-bordered table-hover ">
                             <thead>
@@ -287,10 +289,11 @@
                 'ordering': true,
                 'info': true,
                 'autoWidth': true,
-                'scrollX': true,
+
                 'select': true,
             })
-
+            $('#proposal').wrap('<div id="scrooll_div"> </div>')
+            $('#scrooll_div').doubleScroll();
         })
 
     </script>

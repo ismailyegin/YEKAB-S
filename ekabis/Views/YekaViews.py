@@ -86,7 +86,7 @@ def return_yeka(request):
                 for comp in region.yekacompetition.filter(isDeleted=False):
                     competitions.append(comp)
             yeka_dict['yeka']=yeka
-            yeka_dict['yeka_competitions']=competitions
+            yeka_dict['regions']=regions
             comp_array.append(yeka_dict)
         return render(request, 'Yeka/view_yeka.html',
                           {'yeka_form': yeka_form,'yekas':comp_array, 'error_messages': '', 'urls': urls, 'current_url': current_url,
