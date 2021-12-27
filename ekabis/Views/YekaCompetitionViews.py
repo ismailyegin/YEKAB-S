@@ -1080,11 +1080,12 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                     total += proposal.capacity
 
                     if total > parent_competition.capacity:
-                        messages.warning(request, 'Kapasite Yarışmadan Büyük Olamaz')
+                        name = general_methods.yekaname(parent_competition.business)
+                        messages.warning(request, 'Nihai YEKA yarışmalarının kapasite toplamı yarışmadan Büyük Olamaz')
                         return render(request, 'YekaCompetition/add_sub_competition.html',
                                       {'competition_form': competition_form, 'parent_competition': parent_competition,
                                        'error_messages': '', 'urls': urls, 'current_url': current_url,
-                                       'url_name': url_name
+                                       'url_name': url_name,'name':name
                                        })
                     else:
                         competition.parent = parent_competition
@@ -1096,6 +1097,8 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                     proposal_sub_yeka.save()
                     proposal.status = True
                     proposal.save()
+
+
                     if parent_competition.business:
                         yeka_business = YekaBusiness(name=parent_competition.business.name)
                         yeka_business.save()
@@ -1205,7 +1208,11 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                                             x = fcom.dependence_parent
                                             x.child_block = fcom  # bir sonraki iş bloğu oluşturuldu
                                             x.save()
-
+                    yeka_persons = YekaCompetitionPerson.objects.filter(competition=parent_competition)
+                    if yeka_persons:
+                        for person in yeka_persons:
+                            sub_yeka_person=YekaCompetitionPerson(competition=competition,employee=person.employee,is_active=person.is_active,task_date=person.task_date)
+                            sub_yeka_person.save()
                     url = redirect('ekabis:view_sub_yeka_competition_detail', competition.uuid).url
                     html = '<a style="" href="' + url + '"> ' + str(
                         competition.pk) + ' - ' + str(
@@ -1359,6 +1366,7 @@ def view_yeka_competition_detail(request, uuid):
         build_date='---'
         serh_date='---'
         total = 0
+        unit='---'
         for block in yekabusinessbloks:
             if block.businessblog.name == 'Ön Lisans Dönemi':
                 if block.businessTime:
@@ -1392,10 +1400,10 @@ def view_yeka_competition_detail(request, uuid):
                     contract=YekaContract.objects.get(business=yeka.business)
                     if contract.unit:
                         contract_price=str(contract.price)+' '+contract.unit.name
+                        unit=contract.unit.name
                         if contract.unit.name=='TL Kuruş/kWh':
                             if YekaCompetitionEskalasyon.objects.filter(competition=yeka):
                                 eskalasyon_price=str(YekaCompetitionEskalasyon.objects.filter(competition=yeka).last().result) + ' '+'TL'
-
             if block.businessblog.name == 'Kabuller':
                 if YekaAccept.objects.filter(business=yeka.business):
                     yeka_accept=YekaAccept.objects.get(business=yeka.business)
@@ -1422,6 +1430,7 @@ def view_yeka_competition_detail(request, uuid):
             blocks.append(bloc_dict)
         yeka_info_dict= {}
         yeka_info_dict['serh_date'] = serh_date
+        yeka_info_dict['unit'] = unit
         yeka_info_dict['accept_total'] = total
         yeka_info_dict['eskalasyon_price'] = eskalasyon_price
         yeka_info_dict['contract_price'] = contract_price
@@ -1520,22 +1529,84 @@ def view_sub_yeka_competition_detail(request, uuid):
             'competition': yeka
         }
         blocks = []
+        prelicence_date = '---'
+        prelicence_time = '---'
+        prelicence_finish_date = '--'
+        licence_date = '---'
+        licence_time = '---'
+        licence_finish_date = '---'
+        build_date = '---'
+        serh_date = '---'
+        total = 0
+        for block in yekabusinessbloks:
+            block_dict = {}
+            block_dict['yekabusinessblog'] = block
+            block_dict['businessblog'] = block.businessblog.uuid
+            block_dict['yeka'] = yeka.uuid
 
-        for blok in yekabusinessbloks:
-            bloc_dict = {}
-            bloc_dict['yekabusinessblog'] = blok
-            bloc_dict['businessblog'] = blok.businessblog.uuid
-            bloc_dict['yeka'] = yeka.uuid
+            blocks.append(block_dict)
+            if block.businessblog.name == 'Ön Lisans Dönemi':
+                if block.startDate:
+                    prelicence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
+                if block.parameter:
+                    if block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
+                        prelicence_date = block.parameter.get(parametre__title='Ön Lisans Tarihi').value
+                    if block.parameter.filter(parametre__title='Ön Lisans Süresi (Yıl/Ay/Gün)'):
+                        value = block.parameter.get(parametre__title='Ön Lisans Süresi (Yıl/Ay/Gün)').value
+                        if value:
+                            values = value.split('/')
+                            prelicence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
+            if block.businessblog.name == 'Lisans Dönemi':
+                if block.startDate:
+                    licence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
+                if block.parameter:
+                    if block.parameter.filter(parametre__title='Lisans Tarihi'):
+                        licence_date = block.parameter.get(parametre__title='Lisans Tarihi').value
+                    if block.parameter.filter(parametre__title='Lisans Süresi (Yıl/Ay/Gün)'):
+                        value = block.parameter.get(parametre__title='Lisans Süresi (Yıl/Ay/Gün)').value
+                        if value:
+                            values = value.split('/')
+                            licence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
 
-            blocks.append(bloc_dict)
-
+            if block.businessblog.name == 'Tesis İnşaatının Tamamlanması':
+                if block.startDate:
+                    build_date = block.startDate.date().strftime("%d/%m/%Y")
+            if block.businessblog.name == 'YEKA İlan Edilmesi':
+                if block.startDate:
+                    serh_date =block.startDate.date() + relativedelta(years=3)
+            if block.businessblog.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
+                if YekaContract.objects.filter(business=yeka.business):
+                    contract=YekaContract.objects.get(business=yeka.business)
+                    if contract.unit:
+                        contract_price=str(contract.price)+' '+contract.unit.name
+                        if contract.unit.name=='TL Kuruş/kWh':
+                            if YekaCompetitionEskalasyon.objects.filter(competition=yeka):
+                                eskalasyon_price=str(YekaCompetitionEskalasyon.objects.filter(competition=yeka).last().result) + ' '+'TL'
+            if block.businessblog.name == 'Kabuller':
+                if YekaAccept.objects.filter(business=yeka.business):
+                    yeka_accept=YekaAccept.objects.get(business=yeka.business)
+                    accepts=yeka_accept.accept.filter(isDeleted=False)
+                    if accepts:
+                        for accept in accepts:
+                            total+=float(accept.currentPower)
+                    total=round(float("{:.5f}".format(total)), 5)
+        yeka_info_dict = {}
+        yeka_info_dict['serh_date'] = serh_date
+        yeka_info_dict['accept_total'] = total
+        yeka_info_dict['build_date'] = build_date
+        yeka_info_dict['licence_date'] = licence_date
+        yeka_info_dict['licence_finish_date'] = licence_finish_date
+        yeka_info_dict['licence_time'] = licence_time
+        yeka_info_dict['prelicence_date'] = prelicence_date
+        yeka_info_dict['prelicence_finish_date'] = prelicence_finish_date
+        yeka_info_dict['prelicence_time'] = prelicence_time
         employees = YekaCompetitionPersonService(request, employe_filter)
 
         return render(request, 'YekaCompetition/sub_yeka_detail.html',
                       {'urls': urls, 'current_url': current_url, 'proposal_sub_yeka': proposal_sub_yeka,
                        'url_name': url_name, 'name': name, 'blocks': blocks, 'yeka_proposal': yeka_proposal,
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks, 'employe': employee,
-                       'employees': employees,
+                       'employees': employees,'yeka_info':yeka_info_dict
 
                        })
 

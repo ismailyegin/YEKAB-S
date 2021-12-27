@@ -75,7 +75,7 @@ def return_yeka(request):
         urls = last_urls(request)
         current_url = resolve(request.path_info)
         url_name = Permission.objects.get(codename=current_url.url_name)
-        yekas = Yeka.objects.filter(isDeleted=False)
+        yekas = Yeka.objects.filter(isDeleted=False).order_by('-date')
         comp_array = []
 
         for yeka in yekas:

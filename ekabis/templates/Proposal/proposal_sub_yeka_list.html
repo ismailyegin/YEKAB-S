@@ -135,22 +135,21 @@
                                     <tr>
 
                                         <th>#</th>
-                                        <th>Basvuru Tarihi</th>
+                                        <th>Aday YEKA</th>
+                                        <th>Başvuru Tarihi</th>
                                         <th>Kapasite</th>
-                                        <th>Tarım Yazısı</th>
-                                        <th>Bilgi Formu</th>
-                                        <th></th>
+                                        <th>İşlemler</th>
                                     </tr>
                                     </thead>
                                     <tbody>
 
-                                    {% for proposal in yekaproposal.proposal.all %}
+                                    {% for proposal in proposals %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
+                                            <td>{{ proposal.name }}</td>
                                             <td>{{ proposal.date }}</td>
                                             <td>{{ proposal.capacity }}</td>
-                                            <td>{{ proposal.farm_form }}</td>
-                                            <td>{{ proposal.information_form }}</td>
+
 
                                             <td>
                                                 <div class="btn-group">
@@ -189,7 +188,7 @@
                                                                 <a href="{% url 'ekabis:add_sumcompetition' competition.uuid proposal.uuid %}"
                                                                    class="dropdown-item"> <i
                                                                         class="fa fa-edit" title="Alt Yeka Ekle"></i>
-                                                                    Alt Yeka Ekle
+                                                                    Nihai YEKA Ekle
                                                                 </a>
                                                             {% elif item == 'delete_proposal' %}
                                                                 <a class="dropdown-item" href=""
