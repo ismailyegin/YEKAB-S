@@ -27,7 +27,8 @@ from ekabis.models.Settings import Settings
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka, YekaCompetitionEskalasyon, \
-    YekaBusinessBlogParemetre, BusinessBlogParametreType, Company, YekaHoldingCompetition, ConnectionUnit, YekaGuarantee
+    YekaBusinessBlogParemetre, BusinessBlogParametreType, Company, YekaHoldingCompetition, ConnectionUnit, \
+    YekaGuarantee, YekaAccept
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -1352,16 +1353,19 @@ def view_yeka_competition_detail(request, uuid):
         eskalasyon_price='---'
         build_date='---'
         serh_date='---'
+        total = 0
         for block in yekabusinessbloks:
             if block.businessblog.name == 'Ön Lisans Dönemi':
-                prelicence_time = block.businessTime
+                if block.businessTime:
+                    prelicence_time = block.businessTime
                 if block.startDate:
                     prelicence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:
                     if block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
                         prelicence_date=block.parameter.get(parametre__title='Ön Lisans Tarihi').value
             if block.businessblog.name == 'Lisans Dönemi':
-                licence_time = block.businessTime
+                if block.businessTime:
+                    licence_time = block.businessTime
                 if block.startDate:
                     licence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:
@@ -1383,8 +1387,13 @@ def view_yeka_competition_detail(request, uuid):
                                 eskalasyon_price=str(YekaCompetitionEskalasyon.objects.filter(competition=yeka).last().result) + ' '+'TL'
 
             if block.businessblog.name == 'Kabuller':
-                if block.startDate:
-                    serh_date = x=block.startDate.date() + relativedelta(years=3)
+                if YekaAccept.objects.filter(business=yeka.business):
+                    yeka_accept=YekaAccept.objects.get(business=yeka.business)
+                    accepts=yeka_accept.accept.filter(isDeleted=False)
+                    if accepts:
+                        for accept in accepts:
+                            total+=float(accept.currentPower)
+
 
             bloc_dict = {}
             dict = {}
@@ -1403,6 +1412,7 @@ def view_yeka_competition_detail(request, uuid):
             blocks.append(bloc_dict)
         yeka_info_dict= {}
         yeka_info_dict['serh_date'] = serh_date
+        yeka_info_dict['accept_total'] = total
         yeka_info_dict['eskalasyon_price'] = eskalasyon_price
         yeka_info_dict['contract_price'] = contract_price
         yeka_info_dict['build_date'] = build_date
