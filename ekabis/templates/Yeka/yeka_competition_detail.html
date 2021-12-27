@@ -513,7 +513,7 @@
                             <div class="col-lg-4">
                                 <div class="card card-default card-outline collapsed-card">
                                     <div class="card-header with-border">
-                                        <h3 class="card-title">YEKA Yarışma Bilgileri</h3>
+                                        <h3 class="card-title">Genel YEKA Yarışma Bilgileri </h3>
                                     <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
                   </button>
@@ -564,30 +564,12 @@
                             <div class="col-lg-4">
                                 <div class="card card-default card-outline collapsed-card">
                                     <div class="card-header with-border">
-                                        <h3 class="card-title">YEKA Yarışma Bilgileri</h3>
+                                        <h3 class="card-title">Ön Lisans YEKA Yarışma Bilgileri</h3>
                                     <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
                   </button>
                 </div>
-                                    {% if aktif != 'Admin' %}
-                                        {% for item in perm %}
-                                            {% if item == 'change_competition' and employee in competition_persons %}
-                                                <a href="{% url "ekabis:change_competition" region.uuid yeka.uuid %}"
-                                                   title="Yeka Düzenle"
-                                                   type="button" class="btn btn-outline-primary btn-sm"
-                                                   style="float: right"><i
-                                                        class="fa fa-edit"></i>
-                                                </a>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% else %}
-                                        <a href="{% url "ekabis:change_competition" region.uuid yeka.uuid %}"
-                                                   title="Yeka Düzenle"
-                                                   type="button" class="btn btn-outline-primary btn-sm"
-                                                   style="float: right"><i
-                                                        class="fa fa-edit"></i>
-                                                </a>
-                                    {% endif %}
+
 
                                     </div>
 
@@ -610,30 +592,12 @@
                             <div class="col-lg-4">
                                 <div class="card card-default card-outline collapsed-card">
                                     <div class="card-header with-border">
-                                        <h3 class="card-title">YEKA Yarışma Bilgileri</h3>
+                                        <h3 class="card-title">Lisans YEKA Yarışma Bilgileri </h3>
                                     <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
                   </button>
                 </div>
-                                    {% if aktif != 'Admin' %}
-                                        {% for item in perm %}
-                                            {% if item == 'change_competition' and employee in competition_persons %}
-                                                <a href="{% url "ekabis:change_competition" region.uuid yeka.uuid %}"
-                                                   title="Yeka Düzenle"
-                                                   type="button" class="btn btn-outline-primary btn-sm"
-                                                   style="float: right"><i
-                                                        class="fa fa-edit"></i>
-                                                </a>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% else %}
-                                        <a href="{% url "ekabis:change_competition" region.uuid yeka.uuid %}"
-                                                   title="Yeka Düzenle"
-                                                   type="button" class="btn btn-outline-primary btn-sm"
-                                                   style="float: right"><i
-                                                        class="fa fa-edit"></i>
-                                                </a>
-                                    {% endif %}
+
 
                                     </div>
 
@@ -655,7 +619,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-8">
+                            <div class="col-lg-8" style="width: 100%">
                               {% if array_proposal %}
                                 <div class="card card-default card-outline collapsed-card">
 
@@ -663,10 +627,10 @@
                                             <div class="card-header with-border">
                                                 <h3 class="card-title">Aday Yeka Listesi </h3>
 
-<div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
-                  </button>
-                </div>
+                                            <div class="card-tools">
+                                              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                                              </button>
+                                            </div>
                                             {% if aktif != 'Admin' %}
                                                 {% for item in perm %}
                                                     {% if item == 'add_proposal' and employee in employees%}
@@ -708,7 +672,7 @@
 
                                                     {% for proposal in array_proposal %}
 
-                                                        <tr style="background: {{ proposal.status }}">
+                                                        <tr style="background: {{ proposal.status }};font-size: 15px">
                                                             <td>{{ forloop.counter }} </td>
                                                             <td>{{ proposal.proposal.name }}</td>
                                                             <td>{{ proposal.proposal.date }}</td>
@@ -719,20 +683,25 @@
                                                                        title="{{ proposal.proposal.farm_form }}"
                                                                        href="
                                                                                {{ MEDIA_URL }}{{ proposal.proposal.farm_form.url }}"
-                                                                       download="">{{ proposal.proposal.farm_form | truncatechars:15 }}</a>
+                                                                       download="">{{ proposal.proposal.farm_form | truncatechars:10 }}</a>
+                                                                    {% else %}
+                                                                    <a target="_blank"
+                                                                       title=""
+                                                                       href=""
+                                                                       download=""></a>
                                                                 {% endif %}
                                                             </td>
                                                             <td>{% if proposal.proposal.information_form %}
                                                                 <a target="_blank"
                                                                    href="
                                                                            {{ MEDIA_URL }}{{ proposal.proposal.information_form.url }}"
-                                                                   download="">{{ proposal.proposal.information_form | truncatechars:15 }}</a>
+                                                                   download="">{{ proposal.proposal.information_form | truncatechars:10 }}</a>
                                                             {% endif %}</td>
                                                             <td>{% if proposal.proposal.kml_file %}
                                                                 <a target="_blank"
                                                                    href="
                                                                            {{ MEDIA_URL }}{{ proposal.proposal.kml_file.url }}"
-                                                                   download="">{{ proposal.proposal.kml_file | truncatechars:15 }}</a>
+                                                                   download="">{{ proposal.proposal.kml_file | truncatechars:10 }}</a>
                                                                 </td>
                                                             {% endif %}
                                                             <td>
@@ -1190,7 +1159,6 @@
                 'searching': true,
                 'ordering': true,
                 'info': true,
-                'autoWidth': true,
                 'responsive': true,
             })
 
