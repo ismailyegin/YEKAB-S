@@ -18,7 +18,7 @@ TRUE_FALSE_CHOICES = (
     ('4', 'Başlanmadı'),
     ('3', 'Devam Ediyor'),
     ('1', 'Tamamlandı'),
-    ('2', 'Tamamlanmadı'),
+    ('2', 'İptal Edildi'),
 
 )
 

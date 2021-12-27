@@ -743,8 +743,13 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     contract.price = form_contract.cleaned_data['price']
                     contract.company = form_contract.cleaned_data['company']
                     if YekaHoldingCompetition.objects.filter(business=competition.business):
-                        contract.unit = YekaHoldingCompetition.objects.get(business=competition.business).unit
+                        comp=YekaHoldingCompetition.objects.get(business=competition.business)
+                        if comp.unit:
+                            contract.unit = YekaHoldingCompetition.objects.get(business=competition.business).unit
+                            if contract.unit.name=='USD Cent/kWh':
+                                contract.eskalasyonMaxPrice=None
                     contract.contract = form_contract.cleaned_data['contract']
+
                     contract.save()
                     competition.business.company = contract_form.company
                     competition.business.save()
@@ -1364,13 +1369,18 @@ def view_yeka_competition_detail(request, uuid):
                     if block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
                         prelicence_date=block.parameter.get(parametre__title='Ön Lisans Tarihi').value
             if block.businessblog.name == 'Lisans Dönemi':
-                if block.businessTime:
-                    licence_time = block.businessTime
                 if block.startDate:
                     licence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:
                     if block.parameter.filter(parametre__title='Lisans Tarihi'):
                         licence_date=block.parameter.get(parametre__title='Lisans Tarihi').value
+                    if block.parameter.filter(parametre__title='Lisans Süresi (Yıl/Ay/Gün)'):
+                        value=block.parameter.get(parametre__title='Lisans Süresi (Yıl/Ay/Gün)').value
+                        if value:
+                            values=value.split('/')
+                            licence_time=values[0]+' Yıl '+values[1]+' Ay '+values[2]+' Gün'
+
+
             if block.businessblog.name == 'Tesis İnşaatının Tamamlanması':
                 if block.startDate:
                     build_date = block.startDate.date().strftime("%d/%m/%Y")

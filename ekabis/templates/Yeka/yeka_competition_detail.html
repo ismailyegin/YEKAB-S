@@ -510,10 +510,10 @@
 
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-12">
                                 <div class="card card-default card-outline collapsed-card">
                                     <div class="card-header with-border">
-                                        <h3 class="card-title">Genel YEKA Yarışma Bilgileri </h3>
+                                        <h3 class="card-title">YEKA Yarışma Bilgileri </h3>
                                     <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
                   </button>
@@ -541,7 +541,9 @@
                                     </div>
 
                                     <div class="card-body" style="display: none">
-                                        <p class="text-muted" style="font-size: 16px;"><b>YEKA
+                                    <div class="row">
+                                    <div class="col-lg-4">
+                                         <p class="text-muted" style="font-size: 16px;"><b>YEKA
                                             :</b> {{ definition.definition }} </p>
                                         <p class="text-muted" style="font-size: 16px;"><b>Bağlantı Bölgesi
                                             :</b> {{ region.name }} </p>
@@ -559,22 +561,8 @@
 
 
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="card card-default card-outline collapsed-card">
-                                    <div class="card-header with-border">
-                                        <h3 class="card-title">Ön Lisans YEKA Yarışma Bilgileri</h3>
-                                    <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
-                  </button>
-                </div>
-
-
-                                    </div>
-
-                                    <div class="card-body" style="display: none">
-                                        <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Tarihi
+                                    <div class="col-lg-4">
+                                         <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Tarihi
                                             :</b> {{ yeka_info.prelicence_date }} </p>
                                         <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Süresi
                                             :</b>{{ yeka_info.prelicence_time }} </p>
@@ -585,24 +573,9 @@
                                             :</b> {{ yeka_info.accept_total }} MWe</p>
                                         <p class="text-muted" style="font-size: 16px;"><b>Sözleşme Fiyatı
                                             :</b> {{ yeka_info.contract_price }}</p>
-
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="card card-default card-outline collapsed-card">
-                                    <div class="card-header with-border">
-                                        <h3 class="card-title">Lisans YEKA Yarışma Bilgileri </h3>
-                                    <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
-                  </button>
-                </div>
-
-
-                                    </div>
-
-                                    <div class="card-body" style="display: none">
-                                        <p class="text-muted" style="font-size: 16px;"><b>Lisans Tarihi
+                                    <div class="col-lg-4">
+                                         <p class="text-muted" style="font-size: 16px;"><b>Lisans Tarihi
                                             :</b> {{ yeka_info.licence_date }} </p>
                                         <p class="text-muted" style="font-size: 16px;"><b>Lisans Süresi
                                             :</b> {{ yeka_info.licence_time }} </p>
@@ -614,11 +587,14 @@
                                             :</b>{{ yeka_info.serh_date }} </p>
                                          <p class="text-muted" style="font-size: 16px;"><b>Güncel Fiyat
                                             :</b> {{ yeka_info.eskalasyon_price }} </p>
+                                    </div>
+                                       </div>
 
 
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-8" style="width: 100%">
                               {% if array_proposal %}
                                 <div class="card card-default card-outline collapsed-card">
@@ -1083,7 +1059,7 @@
                                 <div class="bg-warning color-palette" style="padding: 3px"><span>Devam Ediyor</span>
                                 </div>
                                 <div class="bg-success color-palette" style="padding: 3px"><span>Tamamlandı</span></div>
-                                <div class="bg-danger color-palette" style="padding: 3px"><span>Tamamlanmadı</span>
+                                <div class="bg-danger color-palette" style="padding: 3px"><span>İptal Edildi</span>
                                 </div>
 
                             </div>
