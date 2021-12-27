@@ -28,7 +28,7 @@ from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka, YekaCompetitionEskalasyon, \
     YekaBusinessBlogParemetre, BusinessBlogParametreType, Company, YekaHoldingCompetition, ConnectionUnit, \
-    YekaGuarantee, YekaAccept
+    YekaGuarantee, YekaAccept, YekaCompetitionEskalasyon_eskalasyon
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -1366,6 +1366,7 @@ def view_yeka_competition_detail(request, uuid):
         build_date='---'
         serh_date='---'
         total = 0
+        eskalasyon_date='---'
         unit='---'
         for block in yekabusinessbloks:
             if block.businessblog.name == 'Ön Lisans Dönemi':
@@ -1403,7 +1404,9 @@ def view_yeka_competition_detail(request, uuid):
                         unit=contract.unit.name
                         if contract.unit.name=='TL Kuruş/kWh':
                             if YekaCompetitionEskalasyon.objects.filter(competition=yeka):
-                                eskalasyon_price=str(YekaCompetitionEskalasyon.objects.filter(competition=yeka).last().result) + ' '+'TL'
+                                eskalasyon=YekaCompetitionEskalasyon.objects.filter(competition=yeka).last()
+                                eskalasyon_price=str(eskalasyon.result) + ' '+'TL'
+                                eskalasyon_date=eskalasyon.creationDate.date().strftime("%d/%m/%Y")
             if block.businessblog.name == 'Kabuller':
                 if YekaAccept.objects.filter(business=yeka.business):
                     yeka_accept=YekaAccept.objects.get(business=yeka.business)
@@ -1433,6 +1436,8 @@ def view_yeka_competition_detail(request, uuid):
         yeka_info_dict['unit'] = unit
         yeka_info_dict['accept_total'] = total
         yeka_info_dict['eskalasyon_price'] = eskalasyon_price
+        yeka_info_dict['eskalasyon_date'] = eskalasyon_date
+
         yeka_info_dict['contract_price'] = contract_price
         yeka_info_dict['build_date'] = build_date
         yeka_info_dict['licence_date'] = licence_date
