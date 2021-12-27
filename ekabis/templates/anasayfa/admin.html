@@ -670,61 +670,61 @@
                             <!-- /.card-body -->
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="card card-primary card-outline">
-                            <div class="card-header">
-                                <h4 class="card-title">Firmalardaki Toplam Güç</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <table id="accept_company" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Firma</th>
-                                                <th>Yarışma</th>
-                                                <th>Ulaşılan Güç (MW<sub>m</sub>)</th>
-                                                <th>Ulaşılan Güç (MW<sub>e</sub>)</th>
-                                                <th>Sözleşme Fiyatı</th>
-                                                <th>Güncel Fiyat</th>
-
-
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-
-
-                                            {% for accept in company_accepts %}
-                                                <tr id="hover">
-                                                    <td>{{ forloop.counter }} </td>
-                                                    <td>{{ accept.contract.company.name }}</td>
-                                                    <td>{{ accept.competition.name }}</td>
-                                                    <td>{{ accept.mechanical_power }}</td>
-                                                    <td>{{ accept.electrical_power }}</td>
-                                                    <td>{{ accept.contract.price }} {{ accept.contract.unit }}</td>
-
-                                                    <td>{{ accept.price.result }} $</td>
-                                                </tr>
-
-                                            {% endfor %}
-
-
-                                            </tbody>
-                                        </table>
-
-
-                                    </div>
-
+{#                    <div class="col-lg-12">#}
+{#                        <div class="card card-primary card-outline">#}
+{#                            <div class="card-header">#}
+{#                                <h4 class="card-title">Firmalardaki Toplam Güç</h4>#}
+{#                            </div>#}
+{#                            <div class="card-body">#}
+{#                                <div class="row">#}
+{#                                    <div class="col-lg-12">#}
+{#                                        <table id="accept_company" class="table table-bordered table-hover">#}
+{#                                            <thead>#}
+{#                                            <tr>#}
+{#                                                <th>No</th>#}
+{#                                                <th>Firma</th>#}
+{#                                                <th>Yarışma</th>#}
+{#                                                <th>Ulaşılan Güç (MW<sub>m</sub>)</th>#}
+{#                                                <th>Ulaşılan Güç (MW<sub>e</sub>)</th>#}
+{#                                                <th>Sözleşme Fiyatı</th>#}
+{#                                                <th>Güncel Fiyat</th>#}
+{##}
+{##}
+{#                                            </tr>#}
+{#                                            </thead>#}
+{##}
+{#                                            <tbody>#}
+{##}
+{##}
+{#                                            {% for accept in company_accepts %}#}
+{#                                                <tr id="hover">#}
+{#                                                    <td>{{ forloop.counter }} </td>#}
+{#                                                    <td>{{ accept.contract.company.name }}</td>#}
+{#                                                    <td>{{ accept.competition.name }}</td>#}
+{#                                                    <td>{{ accept.mechanical_power }}</td>#}
+{#                                                    <td>{{ accept.electrical_power }}</td>#}
+{#                                                    <td>{{ accept.contract.price }} {{ accept.contract.unit }}</td>#}
+{##}
+{#                                                    <td>{{ accept.price.result }} $</td>#}
+{#                                                </tr>#}
+{##}
+{#                                            {% endfor %}#}
+{##}
+{##}
+{#                                            </tbody>#}
+{#                                        </table>#}
+{##}
+{##}
+{#                                    </div>#}
+{##}
                                     {#personel Listesi#}
-
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
+{##}
+{#                                </div>#}
+{##}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
                     <script>
                         $(document).ready(function () {
 
