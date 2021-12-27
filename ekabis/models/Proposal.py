@@ -10,7 +10,7 @@ from ekabis.services.services import validate_file_extension, validate_file_size
 
 
 class Proposal(BaseModel):
-    capacity = models.DecimalField(null=True,blank=True,max_digits=10,decimal_places=2)
+    capacity = models.IntegerField(blank=True, null=True)
     information_form = models.FileField(upload_to='information/', null=True, blank=True,validators=[validate_file_size])
     date = models.DateField(null=True, blank=True)
     coordinate = models.ManyToManyField(Coordinate)
