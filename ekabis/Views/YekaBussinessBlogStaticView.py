@@ -39,6 +39,7 @@ from ekabis.models.Yeka import Yeka
 # test amaclı yazıldı silinecek
 from ekabis.models.CompetitionApplication import CompetitionApplication
 from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
+from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaProposal import YekaProposal
 from ekabis.services import general_methods
 from ekabis.services.NotificationServices import notification
@@ -1529,6 +1530,7 @@ def view_proposal_institution(request, yekaproposal, uuid):
         url_name = Permission.objects.get(codename=current_url.url_name)
 
         yekaproposal = YekaProposal.objects.get(uuid=yekaproposal)
+        comp=YekaCompetition.objects.filter(business=yekaproposal.business)
         proposal = Proposal.objects.get(uuid=uuid)
 
         yekabussinessblog = yekaproposal.yekabusinessblog
@@ -1560,9 +1562,7 @@ def view_proposal_institution(request, yekaproposal, uuid):
         negative = proposal.institution.filter(institution__isDeleted=False).filter(status='Olumsuz',isDeleted=False).count()
         positive = proposal.institution.filter(institution__isDeleted=False).filter(status='Olumlu',isDeleted=False).count()
         not_result = proposal.institution.filter(institution__isDeleted=False).filter(status='Sonuçlanmadı',isDeleted=False).count()
-
-        with transaction.atomic():
-            return render(request, 'Proposal/view_proposal_institution.html',
+        return render(request, 'Proposal/view_proposal_institution.html',
                           {'proposal_institution': proposal_institution,
                            'yekabusiness': yekabusiness, 'negative_insinstitution': negative,
                            'positive_institution': positive, 'not_result_institution': not_result,
@@ -2159,12 +2159,18 @@ def proposal_add_sub_yeka(request, yeka_business, yeka_business_block):
             yekaproposal.save()
 
         name = general_methods.yekaname(yeka_business)
+        proposals=yekaproposal.proposal.filter(isDeleted=False)
+        array_proposals=[]
+        for proposal in proposals:
+            if proposal.institution.filter(status='Olumsuz').count() == 0 and  proposal.institution.filter(status='Sonuçlanmadı').count() ==0:
+                array_proposals.append(proposal)
+
         competition = None
         if YekaCompetition.objects.filter(business=yeka_business):
             competition = YekaCompetition.objects.get(business=yeka_business)
 
         return render(request, 'Proposal/proposal_sub_yeka_list.html',
-                      {'yekaproposal': yekaproposal,
+                      {'yekaproposal': yekaproposal,'proposals':array_proposals,
                        'business': yeka_business, 'competition': competition,
                        'yekabussinessblog': yeka_bussiness_block, 'urls': urls, 'current_url': current_url,
                        'url_name': url_name, 'name': name,

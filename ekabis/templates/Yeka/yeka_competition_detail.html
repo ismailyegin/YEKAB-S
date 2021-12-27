@@ -414,7 +414,7 @@
                                 let proposal_add_sub_yeka = "{% url 'ekabis:proposal_add_sub_yeka' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
                                 proposal_add_sub_yeka = proposal_add_sub_yeka.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
                                 proposal_add_sub_yeka = proposal_add_sub_yeka.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
-                                html2 += '<a class="btn btn-secondary" href="' + proposal_add_sub_yeka + '" type="button" style="float:right">Aday Yeka Belirle</a>';
+                                html2 += '<a class="btn btn-secondary" href="' + proposal_add_sub_yeka + '" type="button" style="float:right">Nihai Yeka Belirle</a>';
 
                             }
                              else if (this.data('name').includes('YEKA Kullanım Hakkı Sözleşmesinin İmzalanması') ) {
@@ -540,55 +540,42 @@
 
                                     </div>
 
-                                    <div class="card-body" style="display: none">
-                                    <div class="row">
-                                    <div class="col-lg-4">
-                                         <p class="text-muted" style="font-size: 16px;"><b>YEKA
-                                            :</b> {{ definition.definition }} </p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>Bağlantı Bölgesi
-                                            :</b> {{ region.name }} </p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>Yarışma :</b> {{ yeka.name }}
-                                        </p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>Kapasite
-                                            :</b> {{ yeka.capacity }} MWe</p>
-                                        {% if yeka.business.company %}
-                                        <p class="text-muted" style="font-size: 16px;"><b>Kazanan Firma
-                                            :</b> {{ yeka.business.company.name }}</p>
-                                        {% else %}
-                                        <p class="text-muted" style="font-size: 16px;"><b>Firma
-                                            :</b> Kazanan Firma Belirtilmedi.</p>
-                                        {% endif %}
+                                  <div class="card-body" style="display: none">
+                                        <div class="row">
+
+                                            <div class="col-lg-6">
+                                                <p class="text-muted" style="font-size: 16px;"><b>YEKA
+                                                    :</b> {{ definition.definition }} </p>
+                                                <p class="text-muted" style="font-size: 16px;"><b>Bağlantı Bölgesi
+                                                    :</b> {{ region.name }} </p>
+                                                <p class="text-muted" style="font-size: 16px;"><b>Yarışma
+                                                    :</b> {{ yeka.name }}
+                                                </p>
+                                                 <p class="text-muted" style="font-size: 16px;"><b>Kapasite
+                                                    :</b> {{ yeka.capacity }} MWe</p>
 
 
-                                    </div>
-                                    <div class="col-lg-4">
-                                         <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Tarihi
-                                            :</b> {{ yeka_info.prelicence_date }} </p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Süresi
-                                            :</b>{{ yeka_info.prelicence_time }} </p>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <p class="text-muted" style="font-size: 16px;"><b>Kabulde Ulaşılan Güç
+                                                    :</b> {{ yeka_info.accept_total }} MWe</p>
+                                                <p class="text-muted" style="font-size: 16px;"><b>Sözleşme Fiyatı
+                                                    :</b> {{ yeka_info.contract_price }}</p>
+                                                {% if yeka.business.company %}
+                                                    <p class="text-muted" style="font-size: 16px;"><b>Kazanan Firma
+                                                        :</b> {{ yeka.business.company.name }}</p>
+                                                {% else %}
+                                                    <p class="text-muted" style="font-size: 16px;"><b>Firma
+                                                        :</b> Kazanan Firma Belirtilmedi.</p>
 
-                                        <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Bitiş Süresi :</b> {{ yeka_info.prelicence_finish_date }}
-                                        </p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>Kabulde Ulaşılan Güç
-                                            :</b> {{ yeka_info.accept_total }} MWe</p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>Sözleşme Fiyatı
-                                            :</b> {{ yeka_info.contract_price }}</p>
-                                    </div>
-                                    <div class="col-lg-4">
-                                         <p class="text-muted" style="font-size: 16px;"><b>Lisans Tarihi
-                                            :</b> {{ yeka_info.licence_date }} </p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>Lisans Süresi
-                                            :</b> {{ yeka_info.licence_time }} </p>
-                                         <p class="text-muted" style="font-size: 16px;"><b>Lisans Bitiş Tarihi
-                                            :</b> {{ yeka_info.licence_finish_date }} </p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>İnşaat Bitiş Süresi :</b> {{ yeka_info.build_date }}
-                                        </p>
-                                        <p class="text-muted" style="font-size: 16px;"><b>Şerh Kaldırma Tarihi
-                                            :</b>{{ yeka_info.serh_date }} </p>
-                                         <p class="text-muted" style="font-size: 16px;"><b>Güncel Fiyat
-                                            :</b> {{ yeka_info.eskalasyon_price }} </p>
-                                    </div>
-                                       </div>
+                                                {% endif %}
+                                                {% if yeka_info.unit == 'TL Kuruş/kWh' %}
+                                                    <p class="text-muted" style="font-size: 16px;"><b>Güncel Fiyat
+                                                        :</b> {{ yeka_info.eskalasyon_price }} </p>
+                                                {% endif %}
+                                            </div>
+
+                                        </div>
 
 
                                     </div>
@@ -761,7 +748,7 @@
                             {% if proposal_sub_yeka%}
                                 <div class="card card-default card-outline collapsed-card">
                                     <div class="card-header with-border">
-                                        <h3 class="card-title">Alt YEKA Listesi</h3>
+                                        <h3 class="card-title">Nihai YEKA Listesi</h3>
                                        <div class="card-tools">
                                               <button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
                                                 <i class="fas fa-plus"></i>
@@ -1264,7 +1251,7 @@
                                 {% elif item == 'view_competitionbusinessblog'%}
                                     html += '<a href="' + view_competitionbusinessblog + '" class="dropdown-item" title="İş Planı" type="button"><i class="fa fa-plus"></i> İş Planı</a>';
                                 {% elif item == 'view_sub_competition'%}
-                                    html += '<a href="' + view_sub_competition + '" class="dropdown-item" title="Alt YEKA Listesi" type="button"><i class="fa fa-plus"></i> Alt YEKA Listesi</a>';
+                                    html += '<a href="' + view_sub_competition + '" class="dropdown-item" title="Alt YEKA Listesi" type="button"><i class="fa fa-plus"></i> Nihai YEKA Listesi</a>';
                                 {% elif item == 'view_yekacompeittion_business_gant'%}
                                     html += '<a href="' + view_yekacompeittion_business_gant + '" class="dropdown-item" title="Gant Şeması" type="button"><i class="fa fa-plus"></i> Gant Şeması</a>';
                                 {% elif item == 'view_yekacompeittion_business_gant'%}

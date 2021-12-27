@@ -302,7 +302,7 @@ def proposal_yeka_report(request):
 
                             if YekaAccept.objects.filter(business=competition.business):
                                 yeka_accept=YekaAccept.objects.get(business=competition.business)
-                                if yeka_accept.accept.all():
+                                if yeka_accept.accept.filter(isDeleted=False):
                                     first_accept_date=yeka_accept.accept.first().date.strftime("%d-%m-%Y")
                             proposal_dict['accept_date'] = first_accept_date
                             value='---'
