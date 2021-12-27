@@ -1356,23 +1356,23 @@ def view_yeka_competition_detail(request, uuid):
             if block.businessblog.name == 'Ön Lisans Dönemi':
                 prelicence_time = block.businessTime
                 if block.startDate:
-                    prelicence_finish_date = block.startDate.date().strftime("%d %m %Y")
+                    prelicence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:
                     if block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
                         prelicence_date=block.parameter.get(parametre__title='Ön Lisans Tarihi').value
             if block.businessblog.name == 'Lisans Dönemi':
                 licence_time = block.businessTime
                 if block.startDate:
-                    licence_finish_date = block.startDate.date().strftime("%d %m %Y")
+                    licence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:
                     if block.parameter.filter(parametre__title='Lisans Tarihi'):
                         licence_date=block.parameter.get(parametre__title='Lisans Tarihi').value
             if block.businessblog.name == 'Tesis İnşaatının Tamamlanması':
                 if block.startDate:
-                    build_date = block.startDate.date().strftime("%d %m %Y")
+                    build_date = block.startDate.date().strftime("%d/%m/%Y")
             if block.businessblog.name == 'YEKA İlan Edilmesi':
                 if block.startDate:
-                    serh_date = x=block.startDate.date() + relativedelta(years=3)
+                    serh_date =block.startDate.date() + relativedelta(years=3)
             if block.businessblog.name == 'YEKA Kullanım Hakkı Sözleşmesinin İmzalanması':
                 if YekaContract.objects.filter(business=yeka.business):
                     contract=YekaContract.objects.get(business=yeka.business)
