@@ -1393,7 +1393,7 @@ def view_yeka_competition_detail(request, uuid):
                     if accepts:
                         for accept in accepts:
                             total+=float(accept.currentPower)
-
+                    total=round(float("{:.5f}".format(total)), 5)
 
             bloc_dict = {}
             dict = {}
