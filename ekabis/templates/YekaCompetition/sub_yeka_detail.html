@@ -524,6 +524,8 @@
                 name: 'grid'
             });
             layout.run()
+        cy.zoomingEnabled( false );
+
 
         });
     </script>
@@ -785,7 +787,7 @@
         <div class="row">
             <section class="col-lg-12 ">
                 <div class="card card-default card-outline">
-                    <div class="card-header with-border"><h3 class="card-title">İş Planı</h3>
+                    <div class="card-header with-border"><h3 class="card-title">İş Akış Şeması</h3>
                     {% if aktif != 'Admin' %}
                     {% for item in perm %}
                             {% if item == 'add_yekabusiness' %}

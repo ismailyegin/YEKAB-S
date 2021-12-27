@@ -4,6 +4,7 @@
     {% load static %}
     <script src="{% static 'vis/dist/cytoscape.min.js' %}"></script>
     <script src="{% static 'vis/dist/cytoscape-cxtmenu.js' %}"></script>
+
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -202,9 +203,6 @@
 
                 ready: function () {
                 },
-                minZoom: 0.1,
-                maxZoom: 3,
-                zoom: 0.5,
 
                 style: [
                     {
@@ -270,7 +268,8 @@
                 elements: {
                     nodes: demoNodes,
                     edges: demoEdges
-                }
+                },
+
 
             });
 
@@ -340,8 +339,8 @@
                 rows: 2
             });
 
-
             layout.run();
+            cy.zoomingEnabled( false );
 
         });
     </script>
@@ -668,7 +667,7 @@
         <div class="row">
             <section class="col-lg-12 ">
                 <div class="card card-default card-outline">
-                    <div class="card-header with-border"><h3 class="card-title">{{ yeka.definition }} - İş Planı</h3>
+                    <div class="card-header with-border"><h3 class="card-title">{{ yeka.definition }} - İş Akış Şeması</h3>
                         {% if aktif != "Admin" %}
                         {% for item in perm %}
                             {% if item == 'add_yekabusiness' and employee in employees %}
@@ -749,7 +748,6 @@
         {% load static %}
 
         $(document).ready(function () {
-
             table2 =  $('#region').DataTable({
                 dom: 'Bfrtip',
 
