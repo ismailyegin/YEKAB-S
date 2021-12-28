@@ -272,7 +272,7 @@
                                                                         <div class="p-0">
                                                                             <table class="table table-hover">
                                                                                 <tbody>
-                                                                                {% for region in item.regions %}
+                                                                                {% for region in item.regions|dictsort:"name" %}
                                                                                     <tr data-widget="expandable-table"
                                                                                         aria-expanded="false">
 
@@ -405,7 +405,7 @@
                                                                         <div class="p-0">
                                                                             <table class="table table-hover">
                                                                                 <tbody>
-                                                                                {% for region in item.regions %}
+                                                                                {% for region in item.regions|dictsort:"name" %}
                                                                                     <tr data-widget="expandable-table"
                                                                                         aria-expanded="false">
 
