@@ -26,7 +26,7 @@ from ekabis.Forms.YekaApplicationFileNameForm import YekaApplicationFileName, Ye
 from ekabis.Forms.YekaApplicationForm import YekaApplicationForm
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
-    YekaCompany, YekaGuarantee, Collateral
+    YekaCompany, YekaGuarantee, Collateral, ProposalSubYeka
 from ekabis.models.Competition import Competition
 from ekabis.models.Settings import Settings
 from ekabis.models.CompetitionCompany import CompetitionCompany
@@ -2162,10 +2162,18 @@ def proposal_add_sub_yeka(request, yeka_business, yeka_business_block):
         proposals=yekaproposal.proposal.filter(isDeleted=False)
         array_proposals=[]
         for proposal in proposals:
+            proposal_dict=dict()
             for institution in proposal.institution.filter(isDeleted=False):
                 if ProposalActive.objects.filter(is_active=True).filter(business=yeka_business).filter(institution=institution.institution):
                     if proposal.institution.filter(status='Olumsuz').count() == 0 and proposal.institution.filter(status='Sonuçlanmadı').count() ==0:
-                        array_proposals.append(proposal)
+                        proposal_dict['proposal'] = proposal
+                        if ProposalSubYeka.objects.filter(proposal=proposal):
+                            proposal_dict['success'] = True
+                            proposal_dict['yeka'] = ProposalSubYeka.objects.get(proposal=proposal).sub_yeka
+                        else:
+                            proposal_dict['success'] = False
+                        if not proposal_dict in array_proposals :
+                            array_proposals.append(proposal_dict)
 
         competition = None
         if YekaCompetition.objects.filter(business=yeka_business):

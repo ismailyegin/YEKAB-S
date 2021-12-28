@@ -1232,13 +1232,13 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                     return render(request, 'YekaCompetition/add_sub_competition.html',
                                   {'competition_form': competition_form, 'parent_competition': parent_competition,
                                    'error_messages': error_message_region, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name,'name':name})
+                                   'url_name': url_name,'name':name,'proposal':proposal})
 
             competitions = YekaCompetition.objects.filter(parent=parent_competition)
             return render(request, 'YekaCompetition/add_sub_competition.html',
                           {'competition_form': competition_form, 'competitions': competitions, 'error_messages': '',
                            'parent_competition': parent_competition, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name,'name':name})
+                           'url_name': url_name,'name':name,'proposal':proposal})
 
     except Exception as e:
         traceback.print_exc()
