@@ -216,53 +216,53 @@ def return_admin_dashboard(request):
     }
     total_capacity = 0
     calendarNames = CalendarNameService(request, calendar_filter)
-    for yeka_accept in yeka_acccepts:
-        accept_dict = dict()
-        currentPower_dict = dict()
-        yeka_capacity_dict = dict()
-        company_dict = dict()
-        competition = YekaCompetition.objects.get(business=yeka_accept.business)
-        accept_dict['label'] = competition.name
-        total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
-        currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
-        if total['installedPower__sum'] is None:
-            total['installedPower__sum'] = 0
-        if currentPower['currentPower__sum'] is None:
-            currentPower['currentPower__sum'] = 0
-        accept_dict['power'] = total['installedPower__sum']
-        currentPower_dict['power'] = currentPower['currentPower__sum']
-        currentPower_dict['label'] = competition.name
-        if total['installedPower__sum'] != None:
-            total_capacity += float(total['installedPower__sum'])
-        if currentPower['currentPower__sum'] != None:
-            total_capacity += float(currentPower['currentPower__sum'])
-
-        if Yeka.objects.filter(connection_region__yekacompetition=competition):
-            current_yeka = Yeka.objects.get(connection_region__yekacompetition=competition)
-            yeka_capacity_dict['label'] = current_yeka.definition
-            yeka_capacity_dict['remaining_capacity'] = current_yeka.capacity - total_capacity
-            yeka_capacity_dict['total'] = current_yeka.capacity
-            yeka_capacity_dict['capacity'] = total_capacity
-            yeka_capacity_array.append(yeka_capacity_dict)
-        currentPower_array.append(currentPower_dict)
-        installedPower_array.append(accept_dict)
-        accept_company = competition.company
-        company_dict['electrical_power'] = currentPower['currentPower__sum']
-        contract = YekaContract.objects.filter(business=competition.business)
-        if contract:
-            if contract[0].company:
-                company_dict['contract'] = YekaContract.objects.get(business=competition.business)
-            else:
-                company_dict['contract'] = None
-        else:
-            company_dict['contract'] = None
-        company_dict['mechanical_power'] = total['installedPower__sum']
-        company_dict['competition'] = competition
-        if YekaCompetitionEskalasyon.objects.filter(competition=competition):
-            company_dict['price'] = YekaCompetitionEskalasyon.objects.get(competition=competition)
-        else:
-            company_dict['price'] = None
-        company_array.append(company_dict)
+    # for yeka_accept in yeka_acccepts:
+    #     accept_dict = dict()
+    #     currentPower_dict = dict()
+    #     yeka_capacity_dict = dict()
+    #     company_dict = dict()
+    #     competition = YekaCompetition.objects.get(business=yeka_accept.business)
+    #     accept_dict['label'] = competition.name
+    #     total = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('installedPower'))
+    #     currentPower = yeka_accept.accept.filter(isDeleted=False).aggregate(Sum('currentPower'))
+    #     if total['installedPower__sum'] is None:
+    #         total['installedPower__sum'] = 0
+    #     if currentPower['currentPower__sum'] is None:
+    #         currentPower['currentPower__sum'] = 0
+    #     accept_dict['power'] = total['installedPower__sum']
+    #     currentPower_dict['power'] = currentPower['currentPower__sum']
+    #     currentPower_dict['label'] = competition.name
+    #     if total['installedPower__sum'] != None:
+    #         total_capacity += float(total['installedPower__sum'])
+    #     if currentPower['currentPower__sum'] != None:
+    #         total_capacity += float(currentPower['currentPower__sum'])
+    #
+    #     if Yeka.objects.filter(connection_region__yekacompetition=competition):
+    #         current_yeka = Yeka.objects.get(connection_region__yekacompetition=competition)
+    #         yeka_capacity_dict['label'] = current_yeka.definition
+    #         yeka_capacity_dict['remaining_capacity'] = current_yeka.capacity - total_capacity
+    #         yeka_capacity_dict['total'] = current_yeka.capacity
+    #         yeka_capacity_dict['capacity'] = total_capacity
+    #         yeka_capacity_array.append(yeka_capacity_dict)
+    #     currentPower_array.append(currentPower_dict)
+    #     installedPower_array.append(accept_dict)
+    #     accept_company = competition.company
+    #     company_dict['electrical_power'] = currentPower['currentPower__sum']
+    #     contract = YekaContract.objects.filter(business=competition.business)
+    #     if contract:
+    #         if contract[0].company:
+    #             company_dict['contract'] = YekaContract.objects.get(business=competition.business)
+    #         else:
+    #             company_dict['contract'] = None
+    #     else:
+    #         company_dict['contract'] = None
+    #     company_dict['mechanical_power'] = total['installedPower__sum']
+    #     company_dict['competition'] = competition
+    #     if YekaCompetitionEskalasyon.objects.filter(competition=competition):
+    #         company_dict['price'] = YekaCompetitionEskalasyon.objects.get(competition=competition)
+    #     else:
+    #         company_dict['price'] = None
+    #     company_array.append(company_dict)
 
     return render(request, 'anasayfa/admin.html', {
         'yeka': yekas,
