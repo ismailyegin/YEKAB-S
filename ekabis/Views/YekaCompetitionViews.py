@@ -1071,27 +1071,32 @@ def add_sumcompetition(request, uuid, proposal_uuid):
                 if competition_form.is_valid():
 
                     competition = competition_form.save(request, commit=False)
-
-                    # baglı oldugu yarışmanın kapsitesinden fazla olamaz
-                    total = int(
-                        YekaCompetition.objects.filter(parent=parent_competition, isDeleted=False).distinct().aggregate(
-                            Sum('capacity'))[
-                            'capacity__sum'] or 0)
-                    total += proposal.capacity
-
-                    if total > parent_competition.capacity:
+                    if ProposalSubYeka.objects.filter(proposal=proposal):
                         name = general_methods.yekaname(parent_competition.business)
-                        messages.warning(request, 'Nihai YEKA yarışmalarının kapasite toplamı yarışmadan Büyük Olamaz')
-                        return render(request, 'YekaCompetition/add_sub_competition.html',
-                                      {'competition_form': competition_form, 'parent_competition': parent_competition,
-                                       'error_messages': '', 'urls': urls, 'current_url': current_url,
-                                       'url_name': url_name,'name':name
-                                       })
-                    else:
-                        competition.parent = parent_competition
-                        competition.save()
-                        competition.capacity = proposal.capacity
-                        competition.save()
+                        yeka_proposal=YekaProposal.objects.get(proposal=proposal)
+                        messages.warning(request, 'Aday YEKA ya ait nihai yeka kayıt edilmiştir.')
+                        return redirect('ekabis:proposal_add_sub_yeka',yeka_proposal.business.uuid,yeka_proposal.yekabusinessblog.uuid)
+
+                    # # baglı oldugu yarışmanın kapsitesinden fazla olamaz
+                    # total = int(
+                    #     YekaCompetition.objects.filter(parent=parent_competition, isDeleted=False).distinct().aggregate(
+                    #         Sum('capacity'))[
+                    #         'capacity__sum'] or 0)
+                    # total += proposal.capacity
+
+                    # if total > parent_competition.capacity:
+                    #     name = general_methods.yekaname(parent_competition.business)
+                    #     messages.warning(request, 'Nihai YEKA yarışmalarının kapasite toplamı yarışmadan Büyük Olamaz')
+                    #     return render(request, 'YekaCompetition/add_sub_competition.html',
+                    #                   {'competition_form': competition_form, 'parent_competition': parent_competition,
+                    #                    'error_messages': '', 'urls': urls, 'current_url': current_url,
+                    #                    'url_name': url_name,'name':name
+                    #                    })
+
+                    competition.parent = parent_competition
+                    competition.save()
+                    competition.capacity = proposal.capacity
+                    competition.save()
 
                     proposal_sub_yeka = ProposalSubYeka(proposal=proposal, sub_yeka=competition)
                     proposal_sub_yeka.save()
