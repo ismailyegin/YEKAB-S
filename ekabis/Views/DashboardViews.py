@@ -88,7 +88,7 @@ def return_personel_dashboard(request):
     for yeka in yekas:
         yeka_dict = dict()
         yeka_all_dict = dict()
-        regions = yeka.connection_region.filter(isDeleted=False).filter(yekacompetition__pk__in=competition_array)
+        regions = yeka.connection_region.filter(isDeleted=False).filter(yekacompetition__pk__in=competition_array).distinct()
         region_all = yeka.connection_region.filter(isDeleted=False)
         if regions:
             yeka_dict['yeka'] = yeka
