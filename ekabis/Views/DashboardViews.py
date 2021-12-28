@@ -81,33 +81,8 @@ def return_personel_dashboard(request):
         'employee': employee,
     }
     competitions = YekaCompetitionPersonService(request, competition_filter)
-    regions=ConnectionRegion.objects.filter(isDeleted=False).values('yekacompetition')
-    yeka_list=[]
-    for index, competition in enumerate(competitions):
-        if index == 0:
-            region=None
-            yeka=None
-            yeka_dict=dict()
-            comp_array=[]
-            regions=ConnectionRegion.objects.filter(yekacompetition=competition.competition)
-            if regions:
-                region = ConnectionRegion.objects.get(yekacompetition=competition.competition)
-                yeka=Yeka.objects.get(connection_region=region)
-                yeka_dict['region']=region
-                yeka_dict['yeka']=yeka
-                comp_array.append(competition.competition)
-            yeka_dict['competition']=comp_array
-            yeka_list.append(yeka_dict)
-        else:
-            region = None
-            yeka = None
-            yeka_dict = dict()
-            comp_array = []
-            regions=ConnectionRegion.objects.filter(yekacompetition=competition)
-            if regions:
-                region = ConnectionRegion.objects.get(yekacompetition=competition)
-            if yeka_list in region:
-                print(region)
+
+
 
     return render(request, 'anasayfa/personel.html',
                   {'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
