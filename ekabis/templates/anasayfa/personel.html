@@ -292,7 +292,7 @@
                                                                                                 <table id="competitions-{{ item.yeka.pk }}"
                                                                                                        class="table table-hover">
                                                                                                     <tbody>
-                                                                                                    {% for competition in region.yekacompetition.all %}
+                                                                                                    {% for competition in region.yekacompetition.all|dictsort:"name" %}
 
                                                                                                         {% if not competition.isDeleted %}
                                                                                                             {% if competition.pk in person_comp %}
@@ -425,7 +425,7 @@
                                                                                                 <table id="competitions-{{ item.yeka.pk }}"
                                                                                                        class="table table-hover">
                                                                                                     <tbody>
-                                                                                                    {% for competition in region.yekacompetition.all %}
+                                                                                                    {% for competition in region.yekacompetition.all|dictsort:"name" %}
 
                                                                                                         {% if not competition.isDeleted %}
 
