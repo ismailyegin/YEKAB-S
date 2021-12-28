@@ -2162,8 +2162,10 @@ def proposal_add_sub_yeka(request, yeka_business, yeka_business_block):
         proposals=yekaproposal.proposal.filter(isDeleted=False)
         array_proposals=[]
         for proposal in proposals:
-            if proposal.institution.filter(status='Olumsuz').count() == 0 and  proposal.institution.filter(status='Sonuçlanmadı').count() ==0:
-                array_proposals.append(proposal)
+            for institution in proposal.institution.filter(isDeleted=False):
+                if ProposalActive.objects.filter(is_active=True).filter(business=yeka_business).filter(institution=institution.institution):
+                    if proposal.institution.filter(status='Olumsuz').count() == 0 and proposal.institution.filter(status='Sonuçlanmadı').count() ==0:
+                        array_proposals.append(proposal)
 
         competition = None
         if YekaCompetition.objects.filter(business=yeka_business):
