@@ -485,91 +485,134 @@
             <div class="row">
                 {% if yeka %}
                     <div class="col-lg-12">
-                        <div class="card card-primary card-outline">
-                            <div class="card-header">
-                                <h4 class="card-title">YEKA Listesi</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <table id="region" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Tanım</th>
-                                                <th>Kapasite</th>
-                                                <th>İşlemler</th>
+                         <div class="card card-primary card-outline">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">YEKA LİSTESİ</h3>
+                            {% for item in perm %}
+                                {% if item == 'add_yeka' %}
 
-                                            </tr>
-                                            </thead>
+                                    <a href="{% url "ekabis:add_yeka" %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                            class="fa fa-plus" title="Yeni Yeka Ekle"></i>
+                                    </a>
 
-                                            <tbody>
-
-
-                                            {% for yeka in yeka %}
-                                                <tr id="hover">
-                                                    <td>{{ forloop.counter }} </td>
-                                                    <td class='clickable-row'
-                                                        data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.definition }}</td>
-                                                    <td class='clickable-row'
-                                                        data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.capacity }}
-                                                        MW
-                                                    </td>
-                                                    <td>
-
-                                                        <div class="btn-group">
-                                                            <button type="button"
-                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                    data-toggle="dropdown"> İşlemler
-                                                            </button>
-                                                            <div class="dropdown-menu" role="menu">
-                                                                {% for item in perm %}
-                                                                    {% if item == 'change_yeka' %}
-
-                                                                        <a href="{% url "ekabis:change_yeka" yeka.uuid %}"
-                                                                           class="dropdown-item"
-                                                                           title="Düzenle "
-                                                                           type="button"><i
-                                                                                class="fa fa-edit"></i>Düzenle
-                                                                        </a>
-                                                                    {% elif item == 'view_yeka_detail' %}
-                                                                        <a href="{% url "ekabis:view_yeka_detail" yeka.uuid %}"
-                                                                           class="dropdown-item" title="Detay"
-                                                                           type="button"><i
-                                                                                class="fa fa-search"></i>Detay
-                                                                        </a>
-                                                                    {% elif item == 'delete_yeka' %}
-                                                                        <a onclick="deleteYeka('{{ yeka.uuid }}')"
-                                                                           class="dropdown-item" title="Sil"
-                                                                           type="button"><i
-                                                                                class="fa fa-edit"></i>Sil</a>
-
-
-                                                                    {% endif %}
-                                                                {% endfor %}
-
-
-                                                            </div>
-                                                        </div>
-
-
-                                                </tr>
-
-                                            {% endfor %}
-
-
-                                            </tbody>
-                                        </table>
-
-
-                                    </div>
-
-                                    {#personel Listesi#}
-
-                                </div>
-
-                            </div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
+
+
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+
+                                        <!-- ./card-header -->
+                                        <div class="card-body p-0">
+                                            <table class="table table-hover">
+                                                <tbody>
+                                                {% for item in yekas %}
+                                                    <tr data-widget="expandable-table" aria-expanded="false">
+                                                        <td style="font-size: 17px">
+                                                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                           <b>{{ item.yeka.definition }}</b>
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr class="expandable-body ">
+                                                        <td>
+                                                            <div class="p-0">
+                                                                <table class="table table-hover">
+                                                                    <tbody>
+                                                                    <tr data-widget="expandable-table"
+                                                                        aria-expanded="false">
+                                                                        <td>
+                                                                            <a href="{% url 'ekabis:view_yeka_detail' item.yeka.uuid %}"
+                                                                               class="button" title="Detay"
+                                                                               type="button"><i
+                                                                                    class="fa fa-search"></i> Detay </a>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr id="is_close-{{ item.yeka.pk }}"
+                                                                        data-widget="expandable-table"
+                                                                        aria-expanded="false">
+                                                                        <td>
+                                                                            <button type="button"
+                                                                                    class="btn btn-outline-primary p-0 btn-sm">
+                                                                                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                            </button>
+                                                                            YEKA Bağlantı Bölgeleri
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr class="expandable-body ">
+                                                                        <td>
+                                                                            <div class="p-0">
+                                                                                <table class="table table-hover">
+                                                                                    <tbody>
+                                                                                    {% for region in item.regions %}
+                                                                                        <tr data-widget="expandable-table"
+                                                                                            aria-expanded="false">
+
+
+                                                                                            <td>
+                                                                                                <button type="button"
+                                                                                                        class="btn btn-outline-primary p-0 btn-sm">
+                                                                                                    <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                                                </button>
+                                                                                                {{ region.name }}
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr class="expandable-body d-none">
+                                                                                            <td>
+                                                                                                <div class="p-0"
+                                                                                                     style="display: none;">
+                                                                                                    <table id="competitions-{{ item.yeka.pk }}"
+                                                                                                           class="table table-hover">
+                                                                                                        <tbody>
+                                                                                                        {% for competition in region.yekacompetition.all %}
+
+                                                                                                            {% if not competition.isDeleted %}
+                                                                                                                <tr data-widget="expandable-table"
+                                                                                                                    aria-expanded="false">
+                                                                                                                    <td>
+                                                                                                                        <a href="{% url 'ekabis:view_yeka_competition_detail' competition.uuid %}"> {{ competition.name }} </a>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            {% endif %}
+                                                                                                        {% endfor %}
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    {% endfor %}
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
 
                     </div>
 

@@ -61,13 +61,16 @@ def return_personel_dashboard(request):
     }
 
     calendarNames = CalendarNameService(request, calendar_filter)
-    yeka = YekaService(request, None).order_by('-date')
+    yekas = YekaService(request, None).order_by('-date')
+    comp_array = []
+
+
     days = VacationDayService(request, None)
 
-    res_count = yeka.filter(type='Rüzgar').count()
-    ges_count = yeka.filter(type='Güneş').count()
-    biyo_count = yeka.filter(type='Biyokütle').count()
-    jeo_count = yeka.filter(type='Jeotermal').count()
+    res_count = yekas.filter(type='Rüzgar').count()
+    ges_count = yekas.filter(type='Güneş').count()
+    biyo_count = yekas.filter(type='Biyokütle').count()
+    jeo_count = yekas.filter(type='Jeotermal').count()
     user = request.user
     person_filter = {
         'person__user': user,
@@ -78,10 +81,37 @@ def return_personel_dashboard(request):
         'employee': employee,
     }
     competitions = YekaCompetitionPersonService(request, competition_filter)
+    regions=ConnectionRegion.objects.filter(isDeleted=False).values('yekacompetition')
+    yeka_list=[]
+    for index, competition in enumerate(competitions):
+        if index == 0:
+            region=None
+            yeka=None
+            yeka_dict=dict()
+            comp_array=[]
+            regions=ConnectionRegion.objects.filter(yekacompetition=competition.competition)
+            if regions:
+                region = ConnectionRegion.objects.get(yekacompetition=competition.competition)
+                yeka=Yeka.objects.get(connection_region=region)
+                yeka_dict['region']=region
+                yeka_dict['yeka']=yeka
+                comp_array.append(competition.competition)
+            yeka_dict['competition']=comp_array
+            yeka_list.append(yeka_dict)
+        else:
+            region = None
+            yeka = None
+            yeka_dict = dict()
+            comp_array = []
+            regions=ConnectionRegion.objects.filter(yekacompetition=competition)
+            if regions:
+                region = ConnectionRegion.objects.get(yekacompetition=competition)
+            if yeka_list in region:
+                print(region)
 
     return render(request, 'anasayfa/personel.html',
-                  {'res_count': res_count, 'yeka': yeka, 'vacation_days': days,
-                   'ges_count': ges_count,
+                  {'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
+                   'ges_count': ges_count,'yekas':comp_array,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
                    })
@@ -100,13 +130,25 @@ def return_yonetici_dashboard(request):
     }
 
     calendarNames = CalendarNameService(request, calendar_filter)
-    yeka = YekaService(request, None).order_by('-date')
+    yekas = YekaService(request, None).order_by('-date')
+    comp_array = []
+
+    for yeka in yekas:
+        yeka_dict = dict()
+        competitions = []
+        regions = yeka.connection_region.filter(isDeleted=False)
+        for region in regions:
+            for comp in region.yekacompetition.filter(isDeleted=False):
+                competitions.append(comp)
+        yeka_dict['yeka'] = yeka
+        yeka_dict['regions'] = regions
+        comp_array.append(yeka_dict)
     days = VacationDayService(request, None)
 
-    res_count = yeka.filter(type='Rüzgar').count()
-    ges_count = yeka.filter(type='Güneş').count()
-    biyo_count = yeka.filter(type='Biyokütle').count()
-    jeo_count = yeka.filter(type='Jeotermal').count()
+    res_count = yekas.filter(type='Rüzgar').count()
+    ges_count = yekas.filter(type='Güneş').count()
+    biyo_count = yekas.filter(type='Biyokütle').count()
+    jeo_count = yekas.filter(type='Jeotermal').count()
     user = request.user
     person_filter = {
         'person__user': user,
@@ -119,8 +161,8 @@ def return_yonetici_dashboard(request):
     competitions = YekaCompetitionPersonService(request, competition_filter)
 
     return render(request, 'anasayfa/yonetici-anasayfa.html',
-                  {'res_count': res_count, 'yeka': yeka, 'vacation_days': days,
-                   'ges_count': ges_count,
+                  {'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
+                   'ges_count': ges_count,'yekas':comp_array,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
                    })
@@ -136,11 +178,23 @@ def return_admin_dashboard(request):
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
 
-    yeka = YekaService(request, None).order_by('-date')
-    res_count = yeka.filter(type='Rüzgar').count()
-    ges_count = yeka.filter(type='Güneş').count()
-    biyo_count = yeka.filter(type='Biyokütle').count()
-    jeo_count = yeka.filter(type='Jeotermal').count()
+    yekas = YekaService(request, None).order_by('-date')
+    comp_array = []
+
+    for yeka in yekas:
+        yeka_dict = dict()
+        competitions = []
+        regions = yeka.connection_region.filter(isDeleted=False)
+        for region in regions:
+            for comp in region.yekacompetition.filter(isDeleted=False):
+                competitions.append(comp)
+        yeka_dict['yeka'] = yeka
+        yeka_dict['regions'] = regions
+        comp_array.append(yeka_dict)
+    res_count = yekas.filter(type='Rüzgar').count()
+    ges_count = yekas.filter(type='Güneş').count()
+    biyo_count = yekas.filter(type='Biyokütle').count()
+    jeo_count = yekas.filter(type='Jeotermal').count()
 
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
@@ -178,10 +232,10 @@ def return_admin_dashboard(request):
         accept_dict['power'] = total['installedPower__sum']
         currentPower_dict['power'] = currentPower['currentPower__sum']
         currentPower_dict['label'] = competition.name
-        # if total['installedPower__sum'] != None:
-        #     total_capacity += float(total['installedPower__sum'])
-        # if currentPower['currentPower__sum'] != None:
-        #     total_capacity += float(currentPower['currentPower__sum'])
+        if total['installedPower__sum'] != None:
+            total_capacity += round(float("{:.5f}".format(total['installedPower__sum'])), 5)
+        if currentPower['currentPower__sum'] != None:
+            total_capacity += round(float("{:.5f}".format(currentPower['currentPower__sum'])), 5)
 
         if Yeka.objects.filter(connection_region__yekacompetition=competition):
             current_yeka = Yeka.objects.get(connection_region__yekacompetition=competition)
@@ -211,11 +265,11 @@ def return_admin_dashboard(request):
         company_array.append(company_dict)
 
     return render(request, 'anasayfa/admin.html', {
-        'yeka': yeka,
+        'yeka': yekas,
         # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
         'res_count': res_count, 'accepts': installedPower_array, 'yeka_capacity': yeka_capacity_array,
-        'ges_count': ges_count, 'current_power': currentPower_array,
+        'ges_count': ges_count, 'current_power': currentPower_array,'yekas':comp_array,
         'jeo_count': jeo_count, 'calendarNames': calendarNames, 'company_accepts': company_array,
         'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
