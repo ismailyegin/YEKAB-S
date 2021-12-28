@@ -80,14 +80,28 @@ def return_personel_dashboard(request):
     competition_filter = {
         'employee': employee,
     }
+    competition_array=[]
+    all_yeka=[]
     competitions = YekaCompetitionPersonService(request, competition_filter)
-
-
+    for competition in  competitions:
+        competition_array.append(competition.competition.pk)
+    for yeka in yekas:
+        yeka_dict = dict()
+        yeka_all_dict = dict()
+        regions = yeka.connection_region.filter(isDeleted=False).filter(yekacompetition__pk__in=competition_array)
+        region_all = yeka.connection_region.filter(isDeleted=False)
+        if regions:
+            yeka_dict['yeka'] = yeka
+            yeka_dict['regions'] = regions
+            comp_array.append(yeka_dict)
+        yeka_all_dict['yeka'] = yeka
+        yeka_all_dict['regions'] = region_all
+        all_yeka.append(yeka_all_dict)
 
     return render(request, 'anasayfa/personel.html',
                   {'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
-                   'ges_count': ges_count,'yekas':comp_array,
-                   'jeo_count': jeo_count, 'biyo_count': biyo_count,
+                   'ges_count': ges_count,'comp_array':comp_array,'all_yeka':all_yeka,
+                   'jeo_count': jeo_count, 'biyo_count': biyo_count,'person_comp':competition_array,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
                    })
 @login_required

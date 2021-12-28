@@ -82,369 +82,451 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-           <h5 class="mb-2">Toplam YEKA Sayıları</h5>
-                <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3>  {{ res_count }}</h3>
-                                <p>Rüzgar Enerjisi</p>
-                            </div>
-                            <div class="icon">
+            <h5 class="mb-2">Toplam YEKA Sayıları</h5>
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>  {{ res_count }}</h3>
+                            <p>Rüzgar Enerjisi</p>
+                        </div>
+                        <div class="icon">
 
-                                <i class="fa fa-wind"></i>
-                            </div>
-                            <a href="{% url 'ekabis:view_yeka_by_type' 'Rüzgar' %}" class="small-box-footer">
-                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
-                            </a>
+                            <i class="fa fa-wind"></i>
                         </div>
+                        <a href="{% url 'ekabis:view_yeka_by_type' 'Rüzgar' %}" class="small-box-footer">
+                            <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                        </a>
                     </div>
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-gradient-yellow">
-                            <div class="inner">
-                                <h3>  {{ ges_count }}</h3>
-                                <p>Güneş Enerjisi</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fa fa-sun"></i>
-                            </div>
-                            <a href="{% url 'ekabis:view_yeka_by_type' 'Güneş' %}" class="small-box-footer">
-                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-success">
-                            <div class="inner">
-                                <h3>  {{ biyo_count }}</h3>
-                                <p>Biyokütle Enerjisi</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fa fa-globe"></i>
-                            </div>
-                            <a href="{% url 'ekabis:view_yeka_by_type' 'Biyokütle' %}" class="small-box-footer">
-                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-danger">
-                            <div class="inner">
-                                <h3>  {{ jeo_count }}</h3>
-                                <p>Jeotermal Enerjisi</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fa fa-fire"></i>
-                            </div>
-                            <a href="{% url 'ekabis:view_yeka_by_type' 'Jeotermal' %}" class="small-box-footer">
-                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
-                            </a>
-                        </div>
-                    </div>
-
-
                 </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-gradient-yellow">
+                        <div class="inner">
+                            <h3>  {{ ges_count }}</h3>
+                            <p>Güneş Enerjisi</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-sun"></i>
+                        </div>
+                        <a href="{% url 'ekabis:view_yeka_by_type' 'Güneş' %}" class="small-box-footer">
+                            <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>  {{ biyo_count }}</h3>
+                            <p>Biyokütle Enerjisi</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-globe"></i>
+                        </div>
+                        <a href="{% url 'ekabis:view_yeka_by_type' 'Biyokütle' %}" class="small-box-footer">
+                            <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>  {{ jeo_count }}</h3>
+                            <p>Jeotermal Enerjisi</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-fire"></i>
+                        </div>
+                        <a href="{% url 'ekabis:view_yeka_by_type' 'Jeotermal' %}" class="small-box-footer">
+                            <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
         <div class="row">
-                <script>
-                    function deleteCompetition(id) {
-                        $("#modal-delete").on("shown.bs.modal", function (e) {
-                            $("#btn-conf1").click(function () {
-                                debugger;
+            <script>
+                function deleteCompetition(id) {
+                    $("#modal-delete").on("shown.bs.modal", function (e) {
+                        $("#btn-conf1").click(function () {
+                            debugger;
 
-                                $.ajax({
-                                    url: "{% url "ekabis:delete_competition"%}",
-                                    type: "POST",
-                                    data: {
-                                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                                        isActive: 'False',
-                                        uuid: id.toString()
-                                    },
+                            $.ajax({
+                                url: "{% url "ekabis:delete_competition"%}",
+                                type: "POST",
+                                data: {
+                                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                    isActive: 'False',
+                                    uuid: id.toString()
+                                },
 
-                                    success: function (result) {
-                                        if (result.status === 'Fail') {
-
-
-                                            html = result.msg;
-                                            debugger;
-                                            $(".errorModal").html(html);
-                                            $('#modal-error').on("shown.bs.modal", function (e) {
-                                                $(".btn-ok").click(function () {
+                                success: function (result) {
+                                    if (result.status === 'Fail') {
 
 
-                                                });
-
-                                            }).modal('show');
-                                            console.log(result.status)
-                                        } else {
-                                            html = 'Yarışma Başarıyla Silindi';
-                                            $(".successModal").html(html);
-                                            $('#modal-success').on("shown.bs.modal", function (e) {
-                                                $(".btn-ok").click(function () {
+                                        html = result.msg;
+                                        debugger;
+                                        $(".errorModal").html(html);
+                                        $('#modal-error').on("shown.bs.modal", function (e) {
+                                            $(".btn-ok").click(function () {
 
 
-                                                });
+                                            });
 
-                                            }).modal('show');
-                                            console.log(result.status)
+                                        }).modal('show');
+                                        console.log(result.status)
+                                    } else {
+                                        html = 'Yarışma Başarıyla Silindi';
+                                        $(".successModal").html(html);
+                                        $('#modal-success').on("shown.bs.modal", function (e) {
+                                            $(".btn-ok").click(function () {
 
-                                        }
 
-                                    },
+                                            });
+
+                                        }).modal('show');
+                                        console.log(result.status)
+
+                                    }
+
+                                },
 
 
-                                });
                             });
-                        }).modal('show');
-                        $('#btn-close').click(function () {
-                            $('#modal-danger').modal('hide');
                         });
+                    }).modal('show');
+                    $('#btn-close').click(function () {
+                        $('#modal-danger').modal('hide');
+                    });
 
-                    }</script>
-                <div class="col-lg-12">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h4 class="card-title">Görevli Olunan YEKA Yarışma Listesi</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    {#                        alt yeka#}
+                }</script>
+            <div class="col-lg-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">Görevli Olunan Yeka Listesi</h3>
+                        {% for item in perm %}
+                            {% if item == 'add_yeka' %}
 
+                                <a href="{% url "ekabis:add_yeka" %}"
+                                   type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                        class="fa fa-plus" title="Yeni Yeka Ekle"></i>
+                                </a>
 
-                                    <table id="region" class="table table-bordered table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Tanım</th>
-                                            <th>Kapasite</th>
-                                            <th>İşlemler</th>
-
-
-                                        </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                        {% for person in person_competitions %}
-                                            <tr id="hover">
-                                                <td>{{ forloop.counter }} </td>
-                                                <td class='clickable-row'
-                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.name }}</td>
-                                                <td class='clickable-row'
-                                                    data-href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}">{{ person.competition.capacity }}
-                                                    MW
-                                                </td>
-                                                <td>
-
-                                                    <div class="btn-group">
-                                                        <button type="button"
-                                                                class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                data-toggle="dropdown"> İşlemler
-                                                        </button>
-                                                        <div class="dropdown-menu" role="menu">
-                                                            {% for item in perm %}
-
-                                                                {% if item == 'change_competition' %}
-                                                                    {% if person.competition.competition_regions.all.0 %}
-                                                                        <a href="{% url "ekabis:change_competition" person.competition.competition_regions.all.0.uuid  person.competition.uuid %}"
-                                                                           class="dropdown-item"
-                                                                           title="Düzenle "
-                                                                           type="button"><i
-                                                                                class="fa fa-edit"></i>Düzenle
-                                                                        </a>
-                                                                    {% endif %}
-                                                                {% elif item == 'view_yeka_competition_detail' %}
-                                                                    <a href="{% url "ekabis:view_yeka_competition_detail" person.competition.uuid %}"
-                                                                       class="dropdown-item" title="Detay"
-                                                                       type="button"><i
-                                                                            class="fa fa-search"></i>Detay
-                                                                    </a>
-                                                                {% elif item == 'delete_competition' %}
-                                                                    <a onclick="deleteCompetition('{{ person.competition.uuid }}')"
-                                                                       class="dropdown-item" title="Sil"
-                                                                       type="button"><i
-                                                                            class="fa fa-edit"></i>Sil</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
 
 
-                                                                {% endif %}
-                                                            {% endfor %}
+                    <div class="card-body">
 
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
 
-                                                        </div>
-                                                    </div>
+                                    <!-- ./card-header -->
+                                    <div class="card-body p-0">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                            {% for item in comp_array %}
+                                                <tr data-widget="expandable-table" aria-expanded="false">
+                                                    <td style="font-size: 17px">
+                                                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                        <b>{{ item.yeka.definition }}</b>
 
+                                                    </td>
 
-                                            </tr>
-
-                                        {% endfor %}
-
-
-                                        </tbody>
-                                    </table>
-
-
-                                </div>
-
-
-                                    <div class="col-lg-12">
-                                        <div class="card card-primary card-outline">
-                                            <div class="card-header">
-                                                <h4 class="card-title">YEKA Listesi</h4>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <table id="region" class="table table-bordered table-hover">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Tanım</th>
-                                                                <th>Kapasite</th>
-                                                                <th>İşlemler</th>
-
-                                                            </tr>
-                                                            </thead>
-
-                                                            <tbody>
-
-
-                                                            {% for yeka in yeka %}
-                                                                <tr id="hover">
-                                                                    <td>{{ forloop.counter }} </td>
-
-                                                                    <td class='clickable-row'
-                                                                        data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.definition }}</td>
-                                                                    <td class='clickable-row'
-                                                                        data-href="{% url "ekabis:view_yeka_detail" yeka.uuid %}">{{ yeka.capacity }}
-                                                                        MW
-                                                                    </td>
+                                                </tr>
+                                                <tr class="expandable-body ">
+                                                    <td>
+                                                        <div class="p-0">
+                                                            <table class="table table-hover">
+                                                                <tbody>
+                                                                <tr data-widget="expandable-table"
+                                                                    aria-expanded="false">
                                                                     <td>
-
-                                                                        <div class="btn-group">
-                                                                            <button type="button"
-                                                                                    class="btn btn-default dropdown-toggle dropdown-icon"
-                                                                                    data-toggle="dropdown"> İşlemler
-                                                                            </button>
-                                                                            <div class="dropdown-menu" role="menu">
-                                                                                {% for item in perm %}
-                                                                                    {% if item == 'change_yeka' %}
-
-                                                                                        <a href="{% url "ekabis:change_yeka" yeka.uuid %}"
-                                                                                           class="dropdown-item"
-                                                                                           title="Düzenle "
-                                                                                           type="button"><i
-                                                                                                class="fa fa-edit"></i>Düzenle
-                                                                                        </a>
-                                                                                    {% elif item == 'view_yeka_detail' %}
-                                                                                        <a href="{% url "ekabis:view_yeka_detail" yeka.uuid %}"
-                                                                                           class="dropdown-item"
-                                                                                           title="Detay"
-                                                                                           type="button"><i
-                                                                                                class="fa fa-search"></i>Detay
-                                                                                        </a>
-                                                                                    {% elif item == 'delete_yeka' %}
-                                                                                        <a onclick="deleteYeka('{{ yeka.uuid }}')"
-                                                                                           class="dropdown-item"
-                                                                                           title="Sil"
-                                                                                           type="button"><i
-                                                                                                class="fa fa-edit"></i>Sil</a>
-
-
-                                                                                    {% endif %}
-                                                                                {% endfor %}
-
-
-                                                                            </div>
-                                                                        </div>
-
-
+                                                                        <a href="{% url 'ekabis:view_yeka_detail' item.yeka.uuid %}"
+                                                                           class="button" title="Detay"
+                                                                           type="button"><i
+                                                                                class="fa fa-search"></i> Detay </a>
+                                                                    </td>
                                                                 </tr>
 
-                                                            {% endfor %}
+                                                                <tr id="is_close-{{ item.yeka.pk }}"
+                                                                    data-widget="expandable-table"
+                                                                    aria-expanded="false">
+                                                                    <td>
+                                                                        <button type="button"
+                                                                                class="btn btn-outline-primary p-0 btn-sm">
+                                                                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                        </button>
+                                                                        YEKA Bağlantı Bölgeleri
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="expandable-body ">
+                                                                    <td>
+                                                                        <div class="p-0">
+                                                                            <table class="table table-hover">
+                                                                                <tbody>
+                                                                                {% for region in item.regions %}
+                                                                                    <tr data-widget="expandable-table"
+                                                                                        aria-expanded="false">
 
 
-                                                            </tbody>
-                                                        </table>
+                                                                                        <td>
+                                                                                            <button type="button"
+                                                                                                    class="btn btn-outline-primary p-0 btn-sm">
+                                                                                                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                                            </button>
+                                                                                            {{ region.name }}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr class="expandable-body d-none">
+                                                                                        <td>
+                                                                                            <div class="p-0"
+                                                                                                 style="display: none;">
+                                                                                                <table id="competitions-{{ item.yeka.pk }}"
+                                                                                                       class="table table-hover">
+                                                                                                    <tbody>
+                                                                                                    {% for competition in region.yekacompetition.all %}
 
+                                                                                                        {% if not competition.isDeleted %}
+                                                                                                            {% if competition.pk in person_comp %}
+                                                                                                                <tr data-widget="expandable-table"
+                                                                                                                    aria-expanded="false">
+                                                                                                                    <td>
+                                                                                                                        <a href="{% url 'ekabis:view_yeka_competition_detail' competition.uuid %}"> {{ competition.name }} </a>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            {% endif %}
+                                                                                                        {% endif %}
+                                                                                                    {% endfor %}
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                {% endfor %}
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
 
-                                                    </div>
-
-                                                    {#personel Listesi#}
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
                                     </div>
-
-
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
                             </div>
-
                         </div>
+
+
                     </div>
 
                 </div>
-                <script>
-                    function deleteCompetition(id) {
-                        $("#modal-delete").on("shown.bs.modal", function (e) {
-                            $("#btn-conf1").click(function () {
-                                debugger;
 
-                                $.ajax({
-                                    url: "{% url "ekabis:delete_competition"%}",
-                                    type: "POST",
-                                    data: {
-                                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                                        isActive: 'False',
-                                        uuid: id.toString()
-                                    },
+            </div>
+            <div class="col-lg-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">YEKA LİSTESİ</h3>
+                        {% for item in perm %}
+                            {% if item == 'add_yeka' %}
 
-                                    success: function (result) {
-                                        if (result.status === 'Fail') {
+                                <a href="{% url "ekabis:add_yeka" %}"
+                                   type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                        class="fa fa-plus" title="Yeni Yeka Ekle"></i>
+                                </a>
 
-
-                                            html = result.msg;
-                                            debugger;
-                                            $(".errorModal").html(html);
-                                            $('#modal-error').on("shown.bs.modal", function (e) {
-                                                $(".btn-ok").click(function () {
+                            {% endif %}
+                        {% endfor %}
+                    </div>
 
 
-                                                });
+                    <div class="card-body">
 
-                                            }).modal('show');
-                                            console.log(result.status)
-                                        } else {
-                                            html = 'Yarışma Başarıyla Silindi';
-                                            $(".successModal").html(html);
-                                            $('#modal-success').on("shown.bs.modal", function (e) {
-                                                $(".btn-ok").click(function () {
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+
+                                    <!-- ./card-header -->
+                                    <div class="card-body p-0">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                            {% for item in all_yeka %}
+                                                <tr data-widget="expandable-table" aria-expanded="false">
+                                                    <td style="font-size: 17px">
+                                                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                        <b>{{ item.yeka.definition }}</b>
+
+                                                    </td>
+
+                                                </tr>
+                                                <tr class="expandable-body ">
+                                                    <td>
+                                                        <div class="p-0">
+                                                            <table class="table table-hover">
+                                                                <tbody>
+                                                                <tr data-widget="expandable-table"
+                                                                    aria-expanded="false">
+                                                                    <td>
+                                                                        <a href="{% url 'ekabis:view_yeka_detail' item.yeka.uuid %}"
+                                                                           class="button" title="Detay"
+                                                                           type="button"><i
+                                                                                class="fa fa-search"></i> Detay </a>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr id="is_close-{{ item.yeka.pk }}"
+                                                                    data-widget="expandable-table"
+                                                                    aria-expanded="false">
+                                                                    <td>
+                                                                        <button type="button"
+                                                                                class="btn btn-outline-primary p-0 btn-sm">
+                                                                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                        </button>
+                                                                        YEKA Bağlantı Bölgeleri
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="expandable-body ">
+                                                                    <td>
+                                                                        <div class="p-0">
+                                                                            <table class="table table-hover">
+                                                                                <tbody>
+                                                                                {% for region in item.regions %}
+                                                                                    <tr data-widget="expandable-table"
+                                                                                        aria-expanded="false">
 
 
-                                                });
+                                                                                        <td>
+                                                                                            <button type="button"
+                                                                                                    class="btn btn-outline-primary p-0 btn-sm">
+                                                                                                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                                            </button>
+                                                                                            {{ region.name }}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr class="expandable-body d-none">
+                                                                                        <td>
+                                                                                            <div class="p-0"
+                                                                                                 style="display: none;">
+                                                                                                <table id="competitions-{{ item.yeka.pk }}"
+                                                                                                       class="table table-hover">
+                                                                                                    <tbody>
+                                                                                                    {% for competition in region.yekacompetition.all %}
 
-                                            }).modal('show');
-                                            console.log(result.status)
+                                                                                                        {% if not competition.isDeleted %}
 
-                                        }
+                                                                                                            <tr data-widget="expandable-table"
+                                                                                                                aria-expanded="false">
+                                                                                                                <td>
+                                                                                                                    <a href="{% url 'ekabis:view_yeka_competition_detail' competition.uuid %}"> {{ competition.name }} </a>
+                                                                                                                </td>
+                                                                                                            </tr>
 
-                                    },
+                                                                                                        {% endif %}
+                                                                                                    {% endfor %}
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                {% endfor %}
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
 
 
-                                });
+                    </div>
+
+                </div>
+
+            </div>
+
+            <script>
+                function deleteCompetition(id) {
+                    $("#modal-delete").on("shown.bs.modal", function (e) {
+                        $("#btn-conf1").click(function () {
+                            debugger;
+
+                            $.ajax({
+                                url: "{% url "ekabis:delete_competition"%}",
+                                type: "POST",
+                                data: {
+                                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                                    isActive: 'False',
+                                    uuid: id.toString()
+                                },
+
+                                success: function (result) {
+                                    if (result.status === 'Fail') {
+
+
+                                        html = result.msg;
+                                        debugger;
+                                        $(".errorModal").html(html);
+                                        $('#modal-error').on("shown.bs.modal", function (e) {
+                                            $(".btn-ok").click(function () {
+
+
+                                            });
+
+                                        }).modal('show');
+                                        console.log(result.status)
+                                    } else {
+                                        html = 'Yarışma Başarıyla Silindi';
+                                        $(".successModal").html(html);
+                                        $('#modal-success').on("shown.bs.modal", function (e) {
+                                            $(".btn-ok").click(function () {
+
+
+                                            });
+
+                                        }).modal('show');
+                                        console.log(result.status)
+
+                                    }
+
+                                },
+
+
                             });
-                        }).modal('show');
-                        $('#btn-close').click(function () {
-                            $('#modal-danger').modal('hide');
                         });
+                    }).modal('show');
+                    $('#btn-close').click(function () {
+                        $('#modal-danger').modal('hide');
+                    });
 
-                    }</script>
+                }</script>
 
             <div class="col-md-3">
                 <div class="sticky-top mb-3">
@@ -452,16 +534,16 @@
                         <div class="card-header">
                             <h4 class="card-title">Notlar </h4>
                             {% for item in perm %}
-                                                {% if item == 'add_calendarName' %}
+                                {% if item == 'add_calendarName' %}
 
-                                                    <a href="{% url "ekabis:add_calendarName" %}"
-                                                       type="button" class="btn btn-outline-primary btn-sm"
-                                                       style="float: right"><i
-                                                            class="fa fa-plus" title="Not Ekle"></i>
-                                                    </a>
+                                    <a href="{% url "ekabis:add_calendarName" %}"
+                                       type="button" class="btn btn-outline-primary btn-sm"
+                                       style="float: right"><i
+                                            class="fa fa-plus" title="Not Ekle"></i>
+                                    </a>
 
-                                                {% endif %}
-                                            {% endfor %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                         <div class="card-body">
                             <!-- the events -->
@@ -568,7 +650,7 @@
             });
 
             var calendar = new Calendar(calendarEl, {
-                 monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+                monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
                 monthNamesShort: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
                 dayNames: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
                 dayNamesShort: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
