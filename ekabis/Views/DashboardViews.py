@@ -207,7 +207,7 @@ def return_admin_dashboard(request):
             for competition in region.yekacompetition.filter(isDeleted=False):
                 yeka_accepts=YekaAccept.objects.filter(business=competition.business).filter(isDeleted=False)
                 if yeka_accepts:
-                    yeka_accept=YekaAccept.objects.get(business=competition.business)
+                    yeka_accept=YekaAccept.objects.get(business=competition.business,isDeleted=False)
                     for accept in yeka_accept.accept.filter(isDeleted=False):
                         accept_array.append(accept)
         accept_dict['accepts']=accept_array
@@ -470,7 +470,7 @@ def api_yeka_accept(request):
                 accept_dict=dict()
                 currentPower_array=[]
                 yeka = YekaCompetitionGetService(request, yekafilter)
-                yeka_acccepts = YekaAccept.objects.filter(isDeleted=False).filter(business=yeka.business)
+                yeka_acccepts = YekaAccept.objects.filter(isDeleted=False).filter(business=yeka.business).filter(accept__isDeleted=False)
                 accept_dict['label'] = 'Tamamlanan'
                 total = yeka_acccepts.aggregate(Sum('accept__currentPower'))
                 installed = yeka_acccepts.aggregate(Sum('accept__installedPower'))
