@@ -208,7 +208,7 @@
           <div class="col-lg-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header with-border">
-                                <h3 class="card-title">YEKA LİSTESİ</h3>
+                                <h3 class="card-title">YEKA YARIŞMALARI</h3>
                                 {% for item in perm %}
                                     {% if item == 'add_yeka' %}
 
@@ -386,38 +386,38 @@
 
 
             </div>
-            <div class="col-lg-6">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">YEKA da Ulaşılan Kapasite</h3>
+             <div class="col-lg-6">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">YEKA da Ulaşılan Kapasite</h3>
 
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart">
-                            <div class="chartjs-size-monitor">
-                                <div class="chartjs-size-monitor-expand">
-                                    <div class=""></div>
-                                </div>
-                                <div class="chartjs-size-monitor-shrink">
-                                    <div class=""></div>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <canvas id="stackedBarChart"
-                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 764px;"
-                                    width="764" height="250" class="chartjs-render-monitor"></canvas>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <div class="chartjs-size-monitor">
+                                        <div class="chartjs-size-monitor-expand">
+                                            <div class=""></div>
+                                        </div>
+                                        <div class="chartjs-size-monitor-shrink">
+                                            <div class=""></div>
+                                        </div>
+                                    </div>
+                                    <canvas id="barChart"
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 764px;"
+                                            width="764" height="250" class="chartjs-render-monitor"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                     </div>
-                    <!-- /.card-body -->
-                </div>
-            </div>
 
 
             <div class="col-md-3">
@@ -491,7 +491,7 @@
             for (var k = 0; k < z.length; k++) {
                 debugger;
                 capacity_labels.push(z[k].label)
-                capacity_remaining.push(z[k].remaining_capacity)
+                capacity_remaining.push(z[k].total)
                 capacity.push(z[k].capacity)
 
 
@@ -499,53 +499,50 @@
 
 
             var areaChartData = {
-                labels: capacity_labels,
-                datasets: [
-                    {
-                        label: 'Kalan Güç',
-                        backgroundColor: 'rgba(210, 214, 222, 1)',
-                        borderColor: 'rgba(210, 214, 222, 1)',
-                        pointRadius: false,
-                        pointColor: 'rgba(210, 214, 222, 1)',
-                        pointStrokeColor: '#c1c7d1',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data: capacity_remaining
-                    },
-                    {
-                        label: 'Kurulu Güç',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
-                        pointRadius: false,
-                        pointColor: '#3b8bba',
-                        pointStrokeColor: 'rgba(60,141,188,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data: capacity
-                    },
+                                labels: capacity_labels,
+                                datasets: [
+                                    {
+                                        label: 'Kurulu Güç (MWe)',
+                                         backgroundColor: 'rgba(60,141,188,0.9)',
+                                        borderColor: 'rgba(60,141,188,0.8)',
+                                        pointRadius: false,
+                                        pointColor: '#3b8bba',
+                                        pointStrokeColor: 'rgba(60,141,188,1)',
+                                        pointHighlightFill: '#fff',
+                                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                                        data: capacity
+                                    },
+                                    {
+                                        label: 'Toplam Güç (MWe)',
+                                       backgroundColor: 'rgba(210, 214, 222, 1)',
+                                        borderColor: 'rgba(210, 214, 222, 1)',
+                                        pointRadius: false,
+                                        pointColor: 'rgba(210, 214, 222, 1)',
+                                        pointStrokeColor: '#c1c7d1',
+                                        pointHighlightFill: '#fff',
+                                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                                        data: capacity_remaining
+                                    },
 
-                ]
-            }
-            var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
-            var stackedBarChartData = $.extend(true, {}, areaChartData)
+                                ]
+                            }
+            var barChartCanvas = $('#barChart').get(0).getContext('2d')
+            var barChartData = $.extend(true, {}, areaChartData)
+            var temp0 = areaChartData.datasets[0]
+            var temp1 = areaChartData.datasets[1]
+            barChartData.datasets[0] = temp1
+            barChartData.datasets[1] = temp0
 
-            var stackedBarChartOptions = {
+            var barChartOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    xAxes: [{
-                        stacked: true,
-                    }],
-                    yAxes: [{
-                        stacked: true
-                    }]
-                }
+                datasetFill: false
             }
 
-            new Chart(stackedBarChartCanvas, {
+            new Chart(barChartCanvas, {
                 type: 'bar',
-                data: stackedBarChartData,
-                options: stackedBarChartOptions
+                data: barChartData,
+                options: barChartOptions
             })
 
 
@@ -640,7 +637,7 @@
                             datasets: [
                                 {
                                     data: graphArray2,
-                                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df', '#ce60d0', '#f1d53b', '#3275d5', '#4659c7', '#d77399', '#fc0000'],
+                                    backgroundColor: ['#00a65a','#f56954', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df', '#ce60d0', '#f1d53b', '#3275d5', '#4659c7', '#d77399', '#fc0000'],
                                 }
                             ]
                         }
