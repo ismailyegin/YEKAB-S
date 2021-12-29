@@ -98,8 +98,6 @@ def return_personel_dashboard(request):
         yeka_all_dict['yeka'] = yeka
         yeka_all_dict['regions'] = region_all
         all_yeka.append(yeka_all_dict)
-    comp_array = []
-    competitions = []
 
     yeka_accept_array = []
     for yeka in yekas:
@@ -113,10 +111,6 @@ def return_personel_dashboard(request):
                     yeka_accept = YekaAccept.objects.get(business=competition.business, isDeleted=False)
                     for accept in yeka_accept.accept.filter(isDeleted=False):
                         accept_array.append(accept)
-                comp_dict = dict()
-                comp_dict['pk'] = competition.pk
-                comp_dict['competition'] = '(' + yeka.definition + ')' + ' - ' + competition.name
-                competitions.append(comp_dict)
         accept_dict['accepts'] = accept_array
         yeka_accept_array.append(accept_dict)
 
@@ -144,7 +138,7 @@ def return_personel_dashboard(request):
                    'ges_count': ges_count, 'comp_array': comp_array, 'all_yeka': all_yeka,
                    'yeka_capacity': yeka_capacity_array,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count, 'person_comp': competition_array,
-                   'calendarNames': calendarNames,
+                   'calendarNames': calendarNames, 'person_competitions': competitions,
                    })
 
 
@@ -204,7 +198,7 @@ def return_yonetici_dashboard(request):
         for accept in yeka_accept['accepts']:
             total_installed += float(accept.installedPower)
             total_current += float(accept.currentPower)
-        capacity_total = round(float(total_installed + total_current), 3)
+        capacity_total = round(float(total_current), 3)
         yeka_capacity_dict['remaining_capacity'] = round(yeka_accept['yeka'].capacity - round(float(capacity_total), 3),
                                                          3)
         yeka_capacity_dict['total'] = yeka_accept['yeka'].capacity
