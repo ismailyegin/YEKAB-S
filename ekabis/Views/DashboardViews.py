@@ -288,9 +288,8 @@ def return_admin_dashboard(request):
         for accept in yeka_accept['accepts']:
             total_installed += float(accept.installedPower)
             total_current += float(accept.currentPower)
-        capacity_total = round(float(total_installed + total_current), 3)
-        yeka_capacity_dict['remaining_capacity'] = round(yeka_accept['yeka'].capacity - round(float(capacity_total), 3),
-                                                         3)
+        capacity_total = round(float(total_current), 3)
+        yeka_capacity_dict['remaining_capacity'] = round(yeka_accept['yeka'].capacity,2)
         yeka_capacity_dict['total'] = yeka_accept['yeka'].capacity
         yeka_capacity_dict['capacity'] = capacity_total
         if not yeka_capacity_dict in yeka_capacity_array:
@@ -543,8 +542,7 @@ def api_yeka_accept(request):
                 installed = yeka_acccepts.aggregate(Sum('accept__installedPower'))
                 if total['accept__currentPower__sum'] is None:
                     total['accept__currentPower__sum'] = 0
-                accept_dict['power'] = round(
-                    float(total['accept__currentPower__sum'] + installed['accept__installedPower__sum']), 2)
+                accept_dict['power'] = round(float(total['accept__currentPower__sum']), 2)
                 currentPower_array.append(accept_dict)
                 yeka_total = dict()
                 yeka_total['label'] = 'Kalan'
