@@ -64,7 +64,7 @@ def return_personel_dashboard(request):
     yekas = YekaService(request, None).order_by('-date')
     comp_array = []
 
-
+    regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
 
     res_count = yekas.filter(type='Rüzgar').count()
@@ -80,15 +80,16 @@ def return_personel_dashboard(request):
     competition_filter = {
         'employee': employee,
     }
-    competition_array=[]
-    all_yeka=[]
+    competition_array = []
+    all_yeka = []
     competitions = YekaCompetitionPersonService(request, competition_filter)
-    for competition in  competitions:
+    for competition in competitions:
         competition_array.append(competition.competition.pk)
     for yeka in yekas:
         yeka_dict = dict()
         yeka_all_dict = dict()
-        regions = yeka.connection_region.filter(isDeleted=False).filter(yekacompetition__pk__in=competition_array).distinct()
+        regions = yeka.connection_region.filter(isDeleted=False).filter(
+            yekacompetition__pk__in=competition_array).distinct()
         region_all = yeka.connection_region.filter(isDeleted=False)
         if regions:
             yeka_dict['yeka'] = yeka
@@ -98,12 +99,49 @@ def return_personel_dashboard(request):
         yeka_all_dict['regions'] = region_all
         all_yeka.append(yeka_all_dict)
 
+    yeka_accept_array = []
+    for yeka in yekas:
+        accept_array = []
+        accept_dict = dict()
+        accept_dict['yeka'] = yeka
+        for region in yeka.connection_region.filter(isDeleted=False):
+            for competition in region.yekacompetition.filter(isDeleted=False):
+                yeka_accepts = YekaAccept.objects.filter(business=competition.business).filter(isDeleted=False)
+                if yeka_accepts:
+                    yeka_accept = YekaAccept.objects.get(business=competition.business, isDeleted=False)
+                    for accept in yeka_accept.accept.filter(isDeleted=False):
+                        accept_array.append(accept)
+        accept_dict['accepts'] = accept_array
+        yeka_accept_array.append(accept_dict)
+
+    yeka_capacity_array = []
+    for yeka_accept in yeka_accept_array:
+        yeka_capacity_dict = dict()
+        yeka_capacity_dict['label'] = yeka_accept['yeka'].definition
+        total_installed = 0
+        total_current = 0
+        for accept in yeka_accept['accepts']:
+            total_installed += float(accept.installedPower)
+            total_current += float(accept.currentPower)
+        capacity_total = round(float(total_installed + total_current), 3)
+        yeka_capacity_dict['remaining_capacity'] = round(yeka_accept['yeka'].capacity - round(float(capacity_total), 3),3)
+        yeka_capacity_dict['total'] = yeka_accept['yeka'].capacity
+        yeka_capacity_dict['capacity'] = capacity_total
+        if not yeka_capacity_dict in yeka_capacity_array:
+            yeka_capacity_array.append(yeka_capacity_dict)
+
     return render(request, 'anasayfa/personel.html',
-                  {'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
-                   'ges_count': ges_count,'comp_array':comp_array,'all_yeka':all_yeka,
-                   'jeo_count': jeo_count, 'biyo_count': biyo_count,'person_comp':competition_array,
+
+                  {'yeka_competition': competitions,
+                   # 'region_json': region_json,'yeka_json':yeka_json,
+                   'regions': regions, 'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
+                   'ges_count': ges_count, 'comp_array': comp_array, 'all_yeka': all_yeka,
+                   'yeka_capacity': yeka_capacity_array,
+                   'jeo_count': jeo_count, 'biyo_count': biyo_count, 'person_comp': competition_array,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
                    })
+
+
 @login_required
 def return_yonetici_dashboard(request):
     active = general_methods.controlGroup(request)
@@ -121,40 +159,68 @@ def return_yonetici_dashboard(request):
     calendarNames = CalendarNameService(request, calendar_filter)
     yekas = YekaService(request, None).order_by('-date')
     comp_array = []
-
+    competitions = []
     for yeka in yekas:
         yeka_dict = dict()
-        competitions = []
         regions = yeka.connection_region.filter(isDeleted=False)
         for region in regions:
             for comp in region.yekacompetition.filter(isDeleted=False):
-                competitions.append(comp)
+                comp_dict = dict()
+                comp_dict['pk'] = comp.pk
+                comp_dict['competition'] = '(' + yeka.definition + ')' + ' - ' + comp.name
+                competitions.append(comp_dict)
         yeka_dict['yeka'] = yeka
         yeka_dict['regions'] = regions
         comp_array.append(yeka_dict)
+
+    yeka_accept_array = []
+    for yeka in yekas:
+        accept_array = []
+        accept_dict = dict()
+        accept_dict['yeka'] = yeka
+        for region in yeka.connection_region.filter(isDeleted=False):
+            for competition in region.yekacompetition.filter(isDeleted=False):
+                yeka_accepts = YekaAccept.objects.filter(business=competition.business).filter(isDeleted=False)
+                if yeka_accepts:
+                    yeka_accept = YekaAccept.objects.get(business=competition.business, isDeleted=False)
+                    for accept in yeka_accept.accept.filter(isDeleted=False):
+                        accept_array.append(accept)
+        accept_dict['accepts'] = accept_array
+        yeka_accept_array.append(accept_dict)
+
+    yeka_capacity_array = []
+    for yeka_accept in yeka_accept_array:
+
+        yeka_capacity_dict = dict()
+        yeka_capacity_dict['label'] = yeka_accept['yeka'].definition
+        total_installed = 0
+        total_current = 0
+        for accept in yeka_accept['accepts']:
+            total_installed += float(accept.installedPower)
+            total_current += float(accept.currentPower)
+        capacity_total = round(float(total_installed + total_current), 3)
+        yeka_capacity_dict['remaining_capacity'] = round(yeka_accept['yeka'].capacity - round(float(capacity_total), 3),
+                                                         3)
+        yeka_capacity_dict['total'] = yeka_accept['yeka'].capacity
+        yeka_capacity_dict['capacity'] = capacity_total
+        if not yeka_capacity_dict in yeka_capacity_array:
+            yeka_capacity_array.append(yeka_capacity_dict)
     days = VacationDayService(request, None)
 
     res_count = yekas.filter(type='Rüzgar').count()
     ges_count = yekas.filter(type='Güneş').count()
     biyo_count = yekas.filter(type='Biyokütle').count()
     jeo_count = yekas.filter(type='Jeotermal').count()
-    user = request.user
-    person_filter = {
-        'person__user': user,
-    }
 
-    employee = EmployeeGetService(request, person_filter)
-    competition_filter = {
-        'employee': employee,
-    }
-    competitions = YekaCompetitionPersonService(request, competition_filter)
+
 
     return render(request, 'anasayfa/yonetici-anasayfa.html',
                   {'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
-                   'ges_count': ges_count,'yekas':comp_array,
-                   'jeo_count': jeo_count, 'biyo_count': biyo_count,
-                   'calendarNames': calendarNames, 'person_competitions': competitions,
+                   'ges_count': ges_count, 'yekas': comp_array,
+                   'jeo_count': jeo_count, 'biyo_count': biyo_count, 'yeka_capacity': yeka_capacity_array,
+                   'calendarNames': calendarNames, 'competitions': competitions,
                    })
+
 
 @login_required
 def return_admin_dashboard(request):
@@ -173,13 +239,12 @@ def return_admin_dashboard(request):
     for yeka in yekas:
         yeka_dict = dict()
 
-
         regions = yeka.connection_region.filter(isDeleted=False)
         for region in regions:
             for comp in region.yekacompetition.filter(isDeleted=False):
                 comp_dict = dict()
-                comp_dict['pk']=comp.pk
-                comp_dict['competition'] = '('+yeka.definition+')'+' - '+comp.name
+                comp_dict['pk'] = comp.pk
+                comp_dict['competition'] = '(' + yeka.definition + ')' + ' - ' + comp.name
                 competitions.append(comp_dict)
         yeka_dict['yeka'] = yeka
         yeka_dict['regions'] = regions
@@ -197,34 +262,35 @@ def return_admin_dashboard(request):
     # list_yeka=list(yeka)
 
     yeka_acccepts = YekaAccept.objects.filter(isDeleted=False)
-    yeka_competitions=YekaCompetition.objects.filter(isDeleted=False)
-    yeka_accept_array=[]
+    yeka_competitions = YekaCompetition.objects.filter(isDeleted=False)
+    yeka_accept_array = []
     for yeka in yekas:
-        accept_array=[]
-        accept_dict=dict()
-        accept_dict['yeka']=yeka
+        accept_array = []
+        accept_dict = dict()
+        accept_dict['yeka'] = yeka
         for region in yeka.connection_region.filter(isDeleted=False):
             for competition in region.yekacompetition.filter(isDeleted=False):
-                yeka_accepts=YekaAccept.objects.filter(business=competition.business).filter(isDeleted=False)
+                yeka_accepts = YekaAccept.objects.filter(business=competition.business).filter(isDeleted=False)
                 if yeka_accepts:
-                    yeka_accept=YekaAccept.objects.get(business=competition.business,isDeleted=False)
+                    yeka_accept = YekaAccept.objects.get(business=competition.business, isDeleted=False)
                     for accept in yeka_accept.accept.filter(isDeleted=False):
                         accept_array.append(accept)
-        accept_dict['accepts']=accept_array
+        accept_dict['accepts'] = accept_array
         yeka_accept_array.append(accept_dict)
 
     yeka_capacity_array = []
     for yeka_accept in yeka_accept_array:
 
-        yeka_capacity_dict=dict()
+        yeka_capacity_dict = dict()
         yeka_capacity_dict['label'] = yeka_accept['yeka'].definition
-        total_installed=0
-        total_current=0
+        total_installed = 0
+        total_current = 0
         for accept in yeka_accept['accepts']:
-            total_installed+=float(accept.installedPower)
-            total_current+=float(accept.currentPower)
-        capacity_total=round(float(total_installed + total_current), 3)
-        yeka_capacity_dict['remaining_capacity'] = round(yeka_accept['yeka'].capacity - round(float(capacity_total),3),3)
+            total_installed += float(accept.installedPower)
+            total_current += float(accept.currentPower)
+        capacity_total = round(float(total_installed + total_current), 3)
+        yeka_capacity_dict['remaining_capacity'] = round(yeka_accept['yeka'].capacity - round(float(capacity_total), 3),
+                                                         3)
         yeka_capacity_dict['total'] = yeka_accept['yeka'].capacity
         yeka_capacity_dict['capacity'] = capacity_total
         if not yeka_capacity_dict in yeka_capacity_array:
@@ -263,11 +329,11 @@ def return_admin_dashboard(request):
             company_dict['price'] = None
         company_array.append(company_dict)
     return render(request, 'anasayfa/admin.html', {
-        'yeka': yekas,'yeka_competition':competitions,
+        'yeka': yekas, 'yeka_competition': competitions,
         # 'region_json': region_json,'yeka_json':yeka_json,
         'regions': regions, 'vacation_days': days,
         'res_count': res_count, 'accepts': installedPower_array, 'yeka_capacity': yeka_capacity_array,
-        'ges_count': ges_count, 'current_power': currentPower_array,'yekas':comp_array,
+        'ges_count': ges_count, 'current_power': currentPower_array, 'yekas': comp_array,
         'jeo_count': jeo_count, 'calendarNames': calendarNames, 'company_accepts': company_array,
         'biyo_count': biyo_count, 'urls': urls, 'current_url': current_url, 'url_name': url_name
     })
@@ -467,25 +533,27 @@ def api_yeka_accept(request):
                 yekafilter = {
                     'pk': pk
                 }
-                accept_dict=dict()
-                currentPower_array=[]
+                accept_dict = dict()
+                currentPower_array = []
                 yeka = YekaCompetitionGetService(request, yekafilter)
-                yeka_acccepts = YekaAccept.objects.filter(isDeleted=False).filter(business=yeka.business).filter(accept__isDeleted=False)
+                yeka_acccepts = YekaAccept.objects.filter(isDeleted=False).filter(business=yeka.business).filter(
+                    accept__isDeleted=False)
                 accept_dict['label'] = 'Tamamlanan'
                 total = yeka_acccepts.aggregate(Sum('accept__currentPower'))
                 installed = yeka_acccepts.aggregate(Sum('accept__installedPower'))
                 if total['accept__currentPower__sum'] is None:
                     total['accept__currentPower__sum'] = 0
-                accept_dict['power'] = round(float(total['accept__currentPower__sum'] + installed['accept__installedPower__sum']),2)
+                accept_dict['power'] = round(
+                    float(total['accept__currentPower__sum'] + installed['accept__installedPower__sum']), 2)
                 currentPower_array.append(accept_dict)
-                yeka_total=dict()
-                yeka_total['label']='Kalan'
-                yeka_total['power']=round((float(yeka.capacity) - accept_dict['power']),3)
+                yeka_total = dict()
+                yeka_total['label'] = 'Kalan'
+                yeka_total['power'] = round((float(yeka.capacity) - accept_dict['power']), 3)
                 currentPower_array.append(yeka_total)
 
                 return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'accepts': currentPower_array})
             else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request' ,'accepts': []})
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request', 'accepts': []})
     except Exception as e:
         traceback.print_exc()
-        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist','accepts': []})
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist', 'accepts': []})

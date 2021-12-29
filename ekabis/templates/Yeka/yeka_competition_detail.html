@@ -553,11 +553,7 @@
                                                 </p>
                                                  <p class="text-muted" style="font-size: 16px;"><b>Kapasite
                                                     :</b> {{ yeka.capacity }} MWe</p>
-
-
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <p class="text-muted" style="font-size: 16px;"><b>Kabulde Ulaşılan Güç
+<p class="text-muted" style="font-size: 16px;"><b>Kabulde Ulaşılan Güç
                                                     :</b> {{ yeka_info.accept_total }} MWe</p>
                                                 <p class="text-muted" style="font-size: 16px;"><b>Sözleşme Fiyatı
                                                     :</b> {{ yeka_info.contract_price }}</p>
@@ -575,8 +571,63 @@
                                                      <p class="text-muted" style="font-size: 16px;"><b>Eskalasyon Tarihi
                                                         :</b> {{ yeka_info.eskalasyon_date }} </p>
                                                 {% endif %}
+
                                             </div>
 
+                                             <div class="col-sm-6">
+                                                <div class="card">
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <!-- we are adding the accordion ID so Bootstrap's collapse plugin detects it -->
+                                                        <div id="accordion">
+                                                            {% for proposal in  proposal_array %}
+                                                            <div class="card card-default">
+                                                                <div class="card-header">
+                                                                    <h4 class="card-title w-100">
+                                                                        <a class="d-block w-100 collapsed"
+                                                                           data-toggle="collapse" href="#collapse{{ proposal.proposal.pk }}"
+                                                                           aria-expanded="false">
+                                                                            {{ proposal.proposal.name}}
+                                                                        </a>
+                                                                    </h4>
+                                                                </div>
+                                                                <div id="collapse{{ proposal.proposal.pk }}" class="collapse"
+                                                                     data-parent="#accordion" style="">
+                                                                    <div class="card-body">
+                                                         <div class="col-lg-6">
+                                         <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Tarihi
+                                            :</b> {{ proposal.sub_prelicence_date }} </p>
+                                        <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Süresi
+                                            :</b>{{ proposal.prelicence_time }} </p>
+
+                                        <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Bitiş Süresi :</b> {{ proposal.prelicence_finish_date }}
+                                        </p>
+
+
+                                    </div>
+                                    <div class="col-lg-6">
+                                         <p class="text-muted" style="font-size: 16px;"><b>Lisans Tarihi
+                                            :</b> {{ proposal.licence_date }} </p>
+                                        <p class="text-muted" style="font-size: 16px;"><b>Lisans Süresi
+                                            :</b> {{ proposal.licence_time }} </p>
+                                         <p class="text-muted" style="font-size: 16px;"><b>Lisans Bitiş Tarihi
+                                            :</b> {{ proposal.licence_finish_date }} </p>
+                                        <p class="text-muted" style="font-size: 16px;"><b>İnşaat Bitiş Süresi :</b> {{ proposal.build_date }}
+                                        </p>
+                                        <p class="text-muted" style="font-size: 16px;"><b>Şerh Kaldırma Tarihi
+                                            :</b>{{ proposal.serh_date }} </p>
+
+                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                           {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
                                         </div>
 
 

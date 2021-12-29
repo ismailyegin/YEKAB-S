@@ -205,7 +205,7 @@
                     });
 
                 }</script>
-            <div class="col-lg-12">
+            <div class="col-lg-6">
                 <div class="card card-primary card-outline">
                     <div class="card-header with-border">
                         <h3 class="card-title">Görevli Olunan Yeka Listesi</h3>
@@ -338,7 +338,7 @@
                 </div>
 
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-6">
                 <div class="card card-primary card-outline">
                     <div class="card-header with-border">
                         <h3 class="card-title">YEKA LİSTESİ</h3>
@@ -471,62 +471,89 @@
                 </div>
 
             </div>
+            <div class="col-lg-6">
 
-            <script>
-                function deleteCompetition(id) {
-                    $("#modal-delete").on("shown.bs.modal", function (e) {
-                        $("#btn-conf1").click(function () {
-                            debugger;
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">YEKA Yarışmaları Toplam Kururulu Güç</h3>
 
-                            $.ajax({
-                                url: "{% url "ekabis:delete_competition"%}",
-                                type: "POST",
-                                data: {
-                                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
-                                    isActive: 'False',
-                                    uuid: id.toString()
-                                },
+                        <div class="card-tools">
+                            <div class="row">
 
-                                success: function (result) {
-                                    if (result.status === 'Fail') {
+                                <div class="col-lg-10">
+                                    <select style="width: 100%;"
+                                            class="form-control select2 select2-hidden-accessible float-right"
+                                            id="select_pieChart" aria-label="">
 
-
-                                        html = result.msg;
-                                        debugger;
-                                        $(".errorModal").html(html);
-                                        $('#modal-error').on("shown.bs.modal", function (e) {
-                                            $(".btn-ok").click(function () {
-
-
-                                            });
-
-                                        }).modal('show');
-                                        console.log(result.status)
-                                    } else {
-                                        html = 'Yarışma Başarıyla Silindi';
-                                        $(".successModal").html(html);
-                                        $('#modal-success').on("shown.bs.modal", function (e) {
-                                            $(".btn-ok").click(function () {
+                                        {% for item in yeka_competition %}
+                                            <option value="{{ item.competition.pk }}">{{ item.competition }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-lg-2">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
 
 
-                                            });
+                        </div>
 
-                                        }).modal('show');
-                                        console.log(result.status)
+                    </div>
+                    <div class="card-body">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class=""></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class=""></div>
+                            </div>
+                        </div>
+                        <div id="chart">
+                            <p>Yarışma Seçiniz</p>
+                        </div>
+                    </div>
 
-                                    }
+                    <!-- /.card-body -->
+                </div>
 
-                                },
 
+            </div>
 
-                            });
-                        });
-                    }).modal('show');
-                    $('#btn-close').click(function () {
-                        $('#modal-danger').modal('hide');
-                    });
+            <div class="col-lg-6">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">YEKA da Ulaşılan Kapasite</h3>
 
-                }</script>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart">
+                            <div class="chartjs-size-monitor">
+                                <div class="chartjs-size-monitor-expand">
+                                    <div class=""></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink">
+                                    <div class=""></div>
+                                </div>
+                            </div>
+                            <canvas id="stackedBarChart"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 764px;"
+                                    width="764" height="250" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+
 
             <div class="col-md-3">
                 <div class="sticky-top mb-3">
@@ -585,9 +612,199 @@
 
 
 
-
     <script>
+        $(document).ready(function () {
 
+            var z = [];
+            z ={{ yeka_capacity | safe }};
+            // LINE CHART
+            let capacity_labels = [];
+            let capacity_remaining = []
+            let capacity = [];
+
+
+            for (var k = 0; k < z.length; k++) {
+                debugger;
+                capacity_labels.push(z[k].label)
+                capacity_remaining.push(z[k].remaining_capacity)
+                capacity.push(z[k].capacity)
+
+
+            }
+
+
+            var areaChartData = {
+                labels: capacity_labels,
+                datasets: [
+                    {
+                        label: 'Kalan Güç',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: capacity_remaining
+                    },
+                    {
+                        label: 'Kurulu Güç',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: capacity
+                    },
+
+                ]
+            }
+            var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+            var stackedBarChartData = $.extend(true, {}, areaChartData)
+
+            var stackedBarChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+
+            new Chart(stackedBarChartCanvas, {
+                type: 'bar',
+                data: stackedBarChartData,
+                options: stackedBarChartOptions
+            })
+
+
+        })
+
+    </script>
+    <script>
+        function deleteCompetition(id) {
+            $("#modal-delete").on("shown.bs.modal", function (e) {
+                $("#btn-conf1").click(function () {
+                    debugger;
+
+                    $.ajax({
+                        url: "{% url "ekabis:delete_competition"%}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                            isActive: 'False',
+                            uuid: id.toString()
+                        },
+
+                        success: function (result) {
+                            if (result.status === 'Fail') {
+
+
+                                html = result.msg;
+                                debugger;
+                                $(".errorModal").html(html);
+                                $('#modal-error').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+                            } else {
+                                html = 'Yarışma Başarıyla Silindi';
+                                $(".successModal").html(html);
+                                $('#modal-success').on("shown.bs.modal", function (e) {
+                                    $(".btn-ok").click(function () {
+
+
+                                    });
+
+                                }).modal('show');
+                                console.log(result.status)
+
+                            }
+
+                        },
+
+
+                    });
+                });
+            }).modal('show');
+            $('#btn-close').click(function () {
+                $('#modal-danger').modal('hide');
+            });
+
+        }</script>
+    <script>
+        $("#select_pieChart").change(function (e) {
+            var graphArray2 = []
+            var accepts = []
+            let label2 = []
+            $.ajax({
+                url: "{% url "ekabis:api_yeka_accept" %}",
+                type: "POST",
+                async: true,
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    pk: $(this).val(),
+                },
+                success: function (result) {
+                    debugger;
+                    accepts = result.accepts;
+                    if (accepts.length > 0) {
+                        var html = ''
+                        html += '<canvas id="pieChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 572px;" width="715" height="312" class="chartjs-render-monitor"></canvas>';
+                        document.getElementById('chart').innerHTML = html;
+
+                        var x = accepts;
+                        for (var i = 0; i < x.length; i++) {
+                            label2.push(x[i].label.toString())
+                            graphArray2.push(x[i].power)
+
+                        }
+
+                        var donutData2 = {
+                            labels: label2,
+                            datasets: [
+                                {
+                                    data: graphArray2,
+                                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df', '#ce60d0', '#f1d53b', '#3275d5', '#4659c7', '#d77399', '#fc0000'],
+                                }
+                            ]
+                        }
+
+
+                        var pieChartCanvas2 = $('#pieChart2').get(0).getContext('2d')
+                        var pieData2 = donutData2;
+                        var pieOptions2 = {
+                            maintainAspectRatio: false,
+                            responsive: true,
+                        }
+                        //Create pie or douhnut chart
+                        // You can switch between pie and douhnut using the method below.
+                        new Chart(pieChartCanvas2, {
+                            type: 'pie',
+                            data: pieData2,
+                            options: pieOptions2
+                        })
+                    } else {
+                        var html2 = ''
+                        html2 = 'Yarışmaya ait kabul bulunmamaktadır';
+                        document.getElementById('chart').innerHTML = html2;
+                    }
+
+
+                }
+            })
+
+        })
         $(function () {
             $(".clickable-row").click(function () {
                 window.location = $(this).data("href");
