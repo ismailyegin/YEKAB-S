@@ -473,7 +473,7 @@ def api_yeka_accept(request):
                 currentPower_array.append(accept_dict)
                 yeka_total=dict()
                 yeka_total['label']='Kalan'
-                yeka_total['power']=float(yeka.capacity) - (round(float(total['accept__currentPower__sum'] + installed['accept__installedPower__sum']),2))
+                yeka_total['power']=round((float(yeka.capacity) - accept_dict['power']),3)
                 currentPower_array.append(yeka_total)
 
                 return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'accepts': currentPower_array})
