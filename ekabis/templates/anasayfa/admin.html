@@ -485,289 +485,190 @@
             <div class="row">
                 {% if yeka %}
                     <div class="col-lg-12">
-                         <div class="card card-primary card-outline">
-                        <div class="card-header with-border">
-                            <h3 class="card-title">YEKA LİSTESİ</h3>
-                            {% for item in perm %}
-                                {% if item == 'add_yeka' %}
+                        <div class="card card-primary card-outline">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">YEKA LİSTESİ</h3>
+                                {% for item in perm %}
+                                    {% if item == 'add_yeka' %}
 
-                                    <a href="{% url "ekabis:add_yeka" %}"
-                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
-                                            class="fa fa-plus" title="Yeni Yeka Ekle"></i>
-                                    </a>
+                                        <a href="{% url "ekabis:add_yeka" %}"
+                                           type="button" class="btn btn-outline-primary btn-sm" style="float: right"><i
+                                                class="fa fa-plus" title="Yeni Yeka Ekle"></i>
+                                        </a>
 
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-
-
-                        <div class="card-body">
-
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card">
-
-                                        <!-- ./card-header -->
-                                        <div class="card-body p-0">
-                                            <table class="table table-hover">
-                                                <tbody>
-                                                {% for item in yekas %}
-                                                    <tr data-widget="expandable-table" aria-expanded="false">
-                                                        <td style="font-size: 17px">
-                                                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                                                           <b>{{ item.yeka.definition }}</b>
-
-                                                        </td>
-
-                                                    </tr>
-                                                    <tr class="expandable-body ">
-                                                        <td>
-                                                            <div class="p-0">
-                                                                <table class="table table-hover">
-                                                                    <tbody>
-                                                                    <tr data-widget="expandable-table"
-                                                                        aria-expanded="false">
-                                                                        <td>
-                                                                            <a href="{% url 'ekabis:view_yeka_detail' item.yeka.uuid %}"
-                                                                               class="button" title="Detay"
-                                                                               type="button"><i
-                                                                                    class="fa fa-search"></i> Detay </a>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                    <tr id="is_close-{{ item.yeka.pk }}"
-                                                                        data-widget="expandable-table"
-                                                                        aria-expanded="false">
-                                                                        <td>
-                                                                            <button type="button"
-                                                                                    class="btn btn-outline-primary p-0 btn-sm">
-                                                                                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                                                                            </button>
-                                                                            YEKA Bağlantı Bölgeleri
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr class="expandable-body ">
-                                                                        <td>
-                                                                            <div class="p-0">
-                                                                                <table class="table table-hover">
-                                                                                    <tbody>
-                                                                                    {% for region in item.regions %}
-                                                                                        <tr data-widget="expandable-table"
-                                                                                            aria-expanded="false">
-
-
-                                                                                            <td>
-                                                                                                <button type="button"
-                                                                                                        class="btn btn-outline-primary p-0 btn-sm">
-                                                                                                    <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                                                                                                </button>
-                                                                                                {{ region.name }}
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                        <tr class="expandable-body d-none">
-                                                                                            <td>
-                                                                                                <div class="p-0"
-                                                                                                     style="display: none;">
-                                                                                                    <table id="competitions-{{ item.yeka.pk }}"
-                                                                                                           class="table table-hover">
-                                                                                                        <tbody>
-                                                                                                        {% for competition in region.yekacompetition.all %}
-
-                                                                                                            {% if not competition.isDeleted %}
-                                                                                                                <tr data-widget="expandable-table"
-                                                                                                                    aria-expanded="false">
-                                                                                                                    <td>
-                                                                                                                        <a href="{% url 'ekabis:view_yeka_competition_detail' competition.uuid %}"> {{ competition.name }} </a>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            {% endif %}
-                                                                                                        {% endfor %}
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </div>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    {% endfor %}
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <!-- /.card-body -->
-                                    </div>
-                                    <!-- /.card -->
-                                </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
 
 
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+
+                                            <!-- ./card-header -->
+                                            <div class="card-body p-0">
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    {% for item in yekas %}
+                                                        <tr data-widget="expandable-table" aria-expanded="false">
+                                                            <td style="font-size: 17px">
+                                                                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                <b>{{ item.yeka.definition }}</b>
+
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr class="expandable-body ">
+                                                            <td>
+                                                                <div class="p-0">
+                                                                    <table class="table table-hover">
+                                                                        <tbody>
+                                                                        <tr data-widget="expandable-table"
+                                                                            aria-expanded="false">
+                                                                            <td>
+                                                                                <a href="{% url 'ekabis:view_yeka_detail' item.yeka.uuid %}"
+                                                                                   class="button" title="Detay"
+                                                                                   type="button"><i
+                                                                                        class="fa fa-search"></i> Detay
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr id="is_close-{{ item.yeka.pk }}"
+                                                                            data-widget="expandable-table"
+                                                                            aria-expanded="false">
+                                                                            <td>
+                                                                                <button type="button"
+                                                                                        class="btn btn-outline-primary p-0 btn-sm">
+                                                                                    <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                                </button>
+                                                                                YEKA Bağlantı Bölgeleri
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="expandable-body ">
+                                                                            <td>
+                                                                                <div class="p-0">
+                                                                                    <table class="table table-hover">
+                                                                                        <tbody>
+                                                                                        {% for region in item.regions %}
+                                                                                            <tr data-widget="expandable-table"
+                                                                                                aria-expanded="false">
+
+
+                                                                                                <td>
+                                                                                                    <button type="button"
+                                                                                                            class="btn btn-outline-primary p-0 btn-sm">
+                                                                                                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                                                    </button>
+                                                                                                    {{ region.name }}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="expandable-body d-none">
+                                                                                                <td>
+                                                                                                    <div class="p-0"
+                                                                                                         style="display: none;">
+                                                                                                        <table id="competitions-{{ item.yeka.pk }}"
+                                                                                                               class="table table-hover">
+                                                                                                            <tbody>
+                                                                                                            {% for competition in region.yekacompetition.all %}
+
+                                                                                                                {% if not competition.isDeleted %}
+                                                                                                                    <tr data-widget="expandable-table"
+                                                                                                                        aria-expanded="false">
+                                                                                                                        <td>
+                                                                                                                            <a href="{% url 'ekabis:view_yeka_competition_detail' competition.uuid %}"> {{ competition.name }} </a>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                {% endif %}
+                                                                                                            {% endfor %}
+                                                                                                            </tbody>
+                                                                                                        </table>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        {% endfor %}
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+                                        <!-- /.card -->
+                                    </div>
+                                </div>
+
+
+                            </div>
+
                         </div>
 
                     </div>
 
+                    <div class="col-lg-12">
+
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">YEKA Yarışmaları Toplam Kururulu Güç</h3>
+
+                                <div class="card-tools">
+                                    <div class="row">
+
+                                        <div class="col-lg-10">
+                                            <select style="width: 100%;"
+                                                    class="form-control select2 select2-hidden-accessible float-right"
+                                                    id="select_pieChart" aria-label="">
+
+                                                {% for item in yeka_competition %}
+                                                    <option value="{{ item.pk }}">{{ item.competition }} </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor">
+                                    <div class="chartjs-size-monitor-expand">
+                                        <div class=""></div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink">
+                                        <div class=""></div>
+                                    </div>
+                                </div>
+                                <div id="chart">
+                                   <p>Yarışma Seçiniz</p>
+                                </div>
+                            </div>
+
+                            <!-- /.card-body -->
+                        </div>
+
+
                     </div>
 
-{#                    <div class="col-lg-6">#}
-{##}
-{#                        <div class="card card-primary card-outline">#}
-{#                            <div class="card-header">#}
-{#                                <h3 class="card-title">YEKA Yarışmaları Toplam Kurulu Güç (MW<sub>e</sub>)</h3>#}
-{##}
-{#                                <div class="card-tools">#}
-{#                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">#}
-{#                                        <i class="fas fa-minus"></i>#}
-{#                                    </button>#}
-{##}
-{#                                </div>#}
-{#                            </div>#}
-{#                            <div class="card-body">#}
-{#                                <div class="chartjs-size-monitor">#}
-{#                                    <div class="chartjs-size-monitor-expand">#}
-{#                                        <div class=""></div>#}
-{#                                    </div>#}
-{#                                    <div class="chartjs-size-monitor-shrink">#}
-{#                                        <div class=""></div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                                <canvas id="pieChart2"#}
-{#                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 572px;"#}
-{#                                        width="715" height="312" class="chartjs-render-monitor"></canvas>#}
-{#                            </div>#}
-{##}
-{#                            <!-- /.card-body -->#}
-{#                        </div>#}
-{##}
-{##}
-{#                    </div>#}
-{#                    <div class="col-lg-6">#}
-{##}
-{#                        <div class="card card-primary card-outline">#}
-{#                            <div class="card-header">#}
-{#                                <h3 class="card-title">YEKA Yarışmaları Toplam Kurulu Güç (MW<sub>m</sub>)#}
-{#                                </h3>#}
-{##}
-{#                                <div class="card-tools">#}
-{#                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">#}
-{#                                        <i class="fas fa-minus"></i>#}
-{#                                    </button>#}
-{##}
-{#                                </div>#}
-{#                            </div>#}
-{#                            <div class="card-body">#}
-{#                                <div class="chartjs-size-monitor">#}
-{#                                    <div class="chartjs-size-monitor-expand">#}
-{#                                        <div class=""></div>#}
-{#                                    </div>#}
-{#                                    <div class="chartjs-size-monitor-shrink">#}
-{#                                        <div class=""></div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                                <canvas id="pieChart"#}
-{#                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 572px;"#}
-{#                                        width="715" height="312" class="chartjs-render-monitor"></canvas>#}
-{#                            </div>#}
-{##}
-{#                            <!-- /.card-body -->#}
-{#                        </div>#}
-{##}
-{##}
-{#                    </div>#}
-{#                    <div class="col-lg-12">#}
-{#                        <div class="card card-primary card-outline">#}
-{#                            <div class="card-header">#}
-{#                                <h3 class="card-title">YEKA da Ulaşılan Kapasite</h3>#}
-{##}
-{#                                <div class="card-tools">#}
-{#                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">#}
-{#                                        <i class="fas fa-minus"></i>#}
-{#                                    </button>#}
-{#                                    <button type="button" class="btn btn-tool" data-card-widget="remove">#}
-{#                                        <i class="fas fa-times"></i>#}
-{#                                    </button>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                            <div class="card-body">#}
-{#                                <div class="chart">#}
-{#                                    <div class="chartjs-size-monitor">#}
-{#                                        <div class="chartjs-size-monitor-expand">#}
-{#                                            <div class=""></div>#}
-{#                                        </div>#}
-{#                                        <div class="chartjs-size-monitor-shrink">#}
-{#                                            <div class=""></div>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                    <canvas id="stackedBarChart"#}
-{#                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 764px;"#}
-{#                                            width="764" height="250" class="chartjs-render-monitor"></canvas>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                            <!-- /.card-body -->#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="col-lg-12">#}
-{#                        <div class="card card-primary card-outline">#}
-{#                            <div class="card-header">#}
-{#                                <h4 class="card-title">Firmalardaki Toplam Güç</h4>#}
-{#                            </div>#}
-{#                            <div class="card-body">#}
-{#                                <div class="row">#}
-{#                                    <div class="col-lg-12">#}
-{#                                        <table id="accept_company" class="table table-bordered table-hover">#}
-{#                                            <thead>#}
-{#                                            <tr>#}
-{#                                                <th>No</th>#}
-{#                                                <th>Firma</th>#}
-{#                                                <th>Yarışma</th>#}
-{#                                                <th>Ulaşılan Güç (MW<sub>m</sub>)</th>#}
-{#                                                <th>Ulaşılan Güç (MW<sub>e</sub>)</th>#}
-{#                                                <th>Sözleşme Fiyatı</th>#}
-{#                                                <th>Güncel Fiyat</th>#}
-{##}
-{##}
-{#                                            </tr>#}
-{#                                            </thead>#}
-{##}
-{#                                            <tbody>#}
-{##}
-{##}
-{#                                            {% for accept in company_accepts %}#}
-{#                                                <tr id="hover">#}
-{#                                                    <td>{{ forloop.counter }} </td>#}
-{#                                                    <td>{{ accept.contract.company.name }}</td>#}
-{#                                                    <td>{{ accept.competition.name }}</td>#}
-{#                                                    <td>{{ accept.mechanical_power }}</td>#}
-{#                                                    <td>{{ accept.electrical_power }}</td>#}
-{#                                                    <td>{{ accept.contract.price }} {{ accept.contract.unit }}</td>#}
-{##}
-{#                                                    <td>{{ accept.price.result }} $</td>#}
-{#                                                </tr>#}
-{##}
-{#                                            {% endfor %}#}
-{##}
-{##}
-{#                                            </tbody>#}
-{#                                        </table>#}
-{##}
-{##}
-{#                                    </div>#}
-{##}
-                                    {#personel Listesi#}
-{##}
-{#                                </div>#}
-{##}
-{#                            </div>#}
-{#                        </div>#}
-{##}
-{#                    </div>#}
+
+
                     <script>
                         $(document).ready(function () {
 
@@ -776,7 +677,11 @@
                             var x = [];
                             var z = [];
 
-                            x ={{ accepts|safe }};
+                            var graphArray2 = []
+                            var accepts = []
+                            let label2 = []
+
+
                             y ={{ current_power | safe }};
                             z ={{ yeka_capacity | safe }};
                             // LINE CHART
@@ -784,8 +689,6 @@
                             let graphArray = [];
                             let label = []
 
-                            let graphArray2 = [];
-                            let label2 = []
 
                             let capacity_labels = [];
                             let capacity_remaining = []
@@ -797,11 +700,7 @@
                                 graphArray.push(x[i].power)
 
                             }
-                            for (var j = 0; j < y.length; j++) {
-                                label2.push(y[j].label.toString())
-                                graphArray2.push(y[j].power)
 
-                            }
                             for (var k = 0; k < z.length; k++) {
                                 debugger;
                                 capacity_labels.push(z[k].label)
@@ -810,7 +709,6 @@
 
 
                             }
-
                             var donutData = {
                                 labels: label,
                                 datasets: [
@@ -820,47 +718,7 @@
                                     }
                                 ]
                             }
-                            var donutData2 = {
-                                labels: label2,
-                                datasets: [
-                                    {
-                                        data: graphArray2,
-                                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df', '#ce60d0', '#f1d53b', '#3275d5', '#4659c7', '#d77399', '#fc0000'],
-                                    }
-                                ]
-                            }
 
-                            //-------------
-                            //- PIE CHART -
-                            //-------------
-                            // Get context with jQuery - using jQuery's .get() method.
-                            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-                            var pieData = donutData;
-                            var pieOptions = {
-                                maintainAspectRatio: false,
-                                responsive: true,
-                            }
-                            //Create pie or douhnut chart
-                            // You can switch between pie and douhnut using the method below.
-                            new Chart(pieChartCanvas, {
-                                type: 'pie',
-                                data: pieData,
-                                options: pieOptions
-                            })
-
-                            var pieChartCanvas2 = $('#pieChart2').get(0).getContext('2d')
-                            var pieData2 = donutData2;
-                            var pieOptions2 = {
-                                maintainAspectRatio: false,
-                                responsive: true,
-                            }
-                            //Create pie or douhnut chart
-                            // You can switch between pie and douhnut using the method below.
-                            new Chart(pieChartCanvas2, {
-                                type: 'pie',
-                                data: pieData2,
-                                options: pieOptions2
-                            })
 
                             var areaChartData = {
                                 labels: capacity_labels,
@@ -1391,7 +1249,68 @@
 
 
     <script type="text/javascript">
+        $("#select_pieChart").change(function (e) {
+            var graphArray2 = []
+            var accepts = []
+            let label2 = []
+            $.ajax({
+                url: "{% url "ekabis:api_yeka_accept" %}",
+                type: "POST",
+                async: true,
+                data: {
+                    'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                    pk: $(this).val(),
+                },
+                success: function (result) {
+                    debugger;
+                    accepts = result.accepts;
+                    if (accepts.length > 0) {
+                        var html = ''
+                        html += '<canvas id="pieChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 572px;" width="715" height="312" class="chartjs-render-monitor"></canvas>';
+                        document.getElementById('chart').innerHTML = html;
 
+                        var x = accepts;
+                        for (var i = 0; i < x.length; i++) {
+                            label2.push(x[i].label.toString())
+                            graphArray2.push(x[i].power)
+
+                        }
+
+                        var donutData2 = {
+                            labels: label2,
+                            datasets: [
+                                {
+                                    data: graphArray2,
+                                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#24c2d0', '#3c8dbc', '#d2d6df', '#ce60d0', '#f1d53b', '#3275d5', '#4659c7', '#d77399', '#fc0000'],
+                                }
+                            ]
+                        }
+
+
+                        var pieChartCanvas2 = $('#pieChart2').get(0).getContext('2d')
+                        var pieData2 = donutData2;
+                        var pieOptions2 = {
+                            maintainAspectRatio: false,
+                            responsive: true,
+                        }
+                        //Create pie or douhnut chart
+                        // You can switch between pie and douhnut using the method below.
+                        new Chart(pieChartCanvas2, {
+                            type: 'pie',
+                            data: pieData2,
+                            options: pieOptions2
+                        })
+                    } else {
+                       var html2 =''
+                        html2 = 'Yarışmaya ait kabul bulunmamaktadır';
+                        document.getElementById('chart').innerHTML = html2;
+                    }
+
+
+                }
+            })
+
+        })
 
         function degerAta(count, city) {
 
