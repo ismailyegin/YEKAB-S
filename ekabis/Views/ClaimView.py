@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
 from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
 from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse
@@ -58,8 +59,8 @@ def return_claim(request):
                     if firstName:
                         query &= Q(user__first_name__icontains=firstName)
 
-                    if active == 'Admin':
-                        destek = ClaimService(request, query)
+
+                    destek = ClaimService(request, query)
 
             return render(request, 'Destek/DestekTalepListesi.html',
                           {'claims': destek, 'destek_form': destek_form, 'user_form': user_form, 'urls': urls, 'current_url': current_url, 'url_name': url_name})
@@ -89,6 +90,18 @@ def claim_add(request):
                     claimSave = claim_form.save(request,commit=False)
                     claimSave.user = request.user
                     claimSave.save()
+
+                    html_content = ''
+                    subject, from_email, to = 'YEKABIS', request.user.email ,'byurdakul@kobiltek.com'
+                    html_content = '<h2>YEKABİS DESTEK TALEP</h2>'
+                    html_content = '<h2>Talep Eden : </h2>' +request.user.first_name+' '+request.user.last_name
+                    html_content = html_content + '<p><strong>BAŞLIK : </strong>' + claimSave.title + '</p>'
+                    html_content = html_content + '<p> <strong>Önem Derecesi : </strong> ' + claimSave.importanceSort+ '</p>'
+                    html_content = html_content + '<p> <strong>Açıklama : </strong> ' + claimSave.definition + '</p>'
+
+                    msg = EmailMultiAlternatives(subject, '', from_email, [to])
+                    msg.attach_alternative(html_content, "text/html")
+                    msg.send()
 
                     messages.success(request, 'Destek Talep  Eklendi.')
                     return redirect('ekabis:view_claim')
