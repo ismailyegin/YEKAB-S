@@ -199,28 +199,36 @@ def return_admin_dashboard(request):
     yeka_acccepts = YekaAccept.objects.filter(isDeleted=False)
     yeka_competitions=YekaCompetition.objects.filter(isDeleted=False)
     yeka_accept_array=[]
-    # for competition in yeka_competitions:
-    #     comp_accetps=YekaAccept.objects.filter(business=competition.business)
-    #     if comp_accetps:
-    #         yeka_accept_array.append(YekaAccept.objects.get(business=competition.business))
-    # yeka_capacity_array = []
-    # for yeka_accept in yeka_accept_array:
-    #     competition = YekaCompetition.objects.get(business=yeka_accept.business)
-    #     yeka_capacity_dict=dict()
-    #     if Yeka.objects.filter(connection_region__yekacompetition=competition):
-    #         current_yeka = Yeka.objects.get(connection_region__yekacompetition=competition)
-    #         yeka_capacity_dict['label'] = current_yeka.definition
-    #         total_installed=0
-    #         total_current=0
-    #         for accept in yeka_accept.accept.filter(isDeleted=False):
-    #             total_installed+=float(accept.installedPower)
-    #             total_current+=float(accept.currentPower)
-    #         capacity_total=round(float(total_installed + total_current), 3)
-    #         yeka_capacity_dict['remaining_capacity'] = round(current_yeka.capacity - round(float(capacity_total),3),3)
-    #         yeka_capacity_dict['total'] = current_yeka.capacity
-    #         yeka_capacity_dict['capacity'] = capacity_total
-    #         if not yeka_capacity_dict in yeka_capacity_array:
-    #             yeka_capacity_array.append(yeka_capacity_dict)
+    for yeka in yekas:
+        accept_array=[]
+        accept_dict=dict()
+        accept_dict['yeka']=yeka
+        for region in yeka.connection_region.filter(isDeleted=False):
+            for competition in region.yekacompetition.filter(isDeleted=False):
+                yeka_accepts=YekaAccept.objects.filter(business=competition.business).filter(isDeleted=False)
+                if yeka_accepts:
+                    yeka_accept=YekaAccept.objects.get(business=competition.business)
+                    for accept in yeka_accept.accept.filter(isDeleted=False):
+                        accept_array.append(accept)
+        accept_dict['accepts']=accept_array
+        yeka_accept_array.append(accept_dict)
+
+    yeka_capacity_array = []
+    for yeka_accept in yeka_accept_array:
+
+        yeka_capacity_dict=dict()
+        yeka_capacity_dict['label'] = yeka_accept['yeka'].definition
+        total_installed=0
+        total_current=0
+        for accept in yeka_accept['accepts']:
+            total_installed+=float(accept.installedPower)
+            total_current+=float(accept.currentPower)
+        capacity_total=round(float(total_installed + total_current), 3)
+        yeka_capacity_dict['remaining_capacity'] = round(yeka_accept['yeka'].capacity - round(float(capacity_total),3),3)
+        yeka_capacity_dict['total'] = yeka_accept['yeka'].capacity
+        yeka_capacity_dict['capacity'] = capacity_total
+        if not yeka_capacity_dict in yeka_capacity_array:
+            yeka_capacity_array.append(yeka_capacity_dict)
 
     installedPower_array = []
     currentPower_array = []
@@ -254,7 +262,6 @@ def return_admin_dashboard(request):
         else:
             company_dict['price'] = None
         company_array.append(company_dict)
-    yeka_capacity_array=[]
     return render(request, 'anasayfa/admin.html', {
         'yeka': yekas,'yeka_competition':competitions,
         # 'region_json': region_json,'yeka_json':yeka_json,
