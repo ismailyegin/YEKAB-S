@@ -459,6 +459,9 @@ urlpatterns = [
          name='api_connection_region_cities'),
     path('yeka/yeka-baglantı-bolgesi-yarismalari/', DashboardViews.api_connection_region_competitions,
          name='api_connection_region_competitions'),
+    path('yeka/yarisma-kabul-toplam/', DashboardViews.api_yeka_accept,
+         name='api_yeka_accept'),
+
     path('yeka/yeka-rapor-listesi/', ReportViews.view_report, name='view_report'),
 
     path('yeka/basvuru-firma-ekle/', YekaBussinessBlogStaticView.add_competition_company_select,
@@ -526,9 +529,11 @@ urlpatterns = [
     # path('yeka/is-blok-parametre/', BusinessBlogViews.data_parameter, name='data_business_block_parameter'),
     # path('yeka/is-blok-parametre-id/', BusinessBlogViews.data_parameter_block_id, name='data_block_parameter_id'),
     path('yeka/tum-bildirim-okundu-yap/', NotificationViews.read_notification_all, name='read_notification_all'),
-    path('yeka/yarisma-teminat-listesi/<uuid:yeka_business>/<uuid:yeka_business_block>', YekaBussinessBlogStaticView.guaranteeListYekaCompetition, name='guaranteeListYekaCompetition'),
+    path('yeka/yarisma-teminat-listesi/<uuid:yeka_business>/<uuid:yeka_business_block>',
+         YekaBussinessBlogStaticView.guaranteeListYekaCompetition, name='guaranteeListYekaCompetition'),
     path('yeka/teminat-ekle/<uuid:uuid>', YekaBussinessBlogStaticView.add_guarantee, name='add_guarantee'),
-    path('yeka/teminat-guncelle/<uuid:uuid>/<uuid:guarantee>', YekaBussinessBlogStaticView.change_guarantee, name='change_guarantee'),
+    path('yeka/teminat-guncelle/<uuid:uuid>/<uuid:guarantee>', YekaBussinessBlogStaticView.change_guarantee,
+         name='change_guarantee'),
     path('yeka/yeka-teminat-sil/', YekaBussinessBlogStaticView.delete_guarantee, name='delete_guarantee'),
     path('yeka/yeka-kurum-gorusleri-rapor', ReportViews.proposal_yeka_report, name='proposal_yeka_report'),
     path('yeka/is-blok-sure', YekaViews.yeka_business_time, name='yeka_business_time'),

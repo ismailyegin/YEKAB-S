@@ -430,7 +430,7 @@
                                             <tbody>
 
                                             {% if connection_regions %}
-                                                {% for region in connection_regions %}
+                                                {% for region in connection_regions|dictsort:"name" %}
                                                     <tr id="hover">
                                                         <td>{{ forloop.counter }} </td>
                                                         <td onclick="view_competition('{{ region.uuid }}')">{{ region.name }}</td>

@@ -196,7 +196,7 @@
                                 </thead>
                                 <tbody>
                                 {% if institutions %}
-                                    {% for item in institutions %}
+                                    {% for item in institutions|dictsort:"name" %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
                                             <td>{{ item.name }}</td>
