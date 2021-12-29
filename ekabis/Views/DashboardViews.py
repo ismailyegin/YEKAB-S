@@ -98,7 +98,7 @@ def return_personel_dashboard(request):
         yeka_all_dict['yeka'] = yeka
         yeka_all_dict['regions'] = region_all
         all_yeka.append(yeka_all_dict)
-
+    competitions_yeka=[]
     yeka_accept_array = []
     for yeka in yekas:
         accept_array = []
@@ -111,6 +111,10 @@ def return_personel_dashboard(request):
                     yeka_accept = YekaAccept.objects.get(business=competition.business, isDeleted=False)
                     for accept in yeka_accept.accept.filter(isDeleted=False):
                         accept_array.append(accept)
+                comp_dict = dict()
+                comp_dict['pk'] = competition.pk
+                comp_dict['competition'] = '(' + yeka.definition + ')' + ' - ' + competition.name
+                competitions_yeka.append(comp_dict)
         accept_dict['accepts'] = accept_array
         yeka_accept_array.append(accept_dict)
 
@@ -132,7 +136,7 @@ def return_personel_dashboard(request):
 
     return render(request, 'anasayfa/personel.html',
 
-                  {'yeka_competition': competitions,
+                  {'yeka_competition': competitions_yeka,
                    # 'region_json': region_json,'yeka_json':yeka_json,
                    'regions': regions, 'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
                    'ges_count': ges_count, 'comp_array': comp_array, 'all_yeka': all_yeka,
