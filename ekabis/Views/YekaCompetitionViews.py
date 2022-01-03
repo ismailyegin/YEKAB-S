@@ -1526,9 +1526,14 @@ def view_yeka_competition_detail(request, uuid):
                 proposal_dict = {}
                 proposal_dict['status'] = '##ffffff'
                 olumsuz = proposal.institution.filter(status='Olumsuz', isDeleted=False)
+                sonuclanmadi = proposal.institution.filter(status='Sonuçlanmadı', isDeleted=False)
                 olumlu = proposal.institution.filter(status='Olumlu', isDeleted=False)
+
                 if olumsuz:
                     proposal_dict['status'] = '#ff3a3a'
+                    proposal_dict['proposal'] = proposal
+                elif sonuclanmadi:
+                    proposal_dict['status'] ='#ffff6e'
                     proposal_dict['proposal'] = proposal
                 elif olumlu:
                     proposal_dict['status'] = '#8cff8c'
@@ -1619,6 +1624,7 @@ def view_sub_yeka_competition_detail(request, uuid):
                         value = block.parameter.get(parametre__title='Ön Lisans Süresi (Yıl/Ay/Gün)').value
                         if value:
                             values = value.split('/')
+
                             prelicence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
             if block.businessblog.name == 'Lisans Dönemi':
                 if block.startDate:
@@ -1630,7 +1636,13 @@ def view_sub_yeka_competition_detail(request, uuid):
                         value = block.parameter.get(parametre__title='Lisans Süresi (Yıl/Ay/Gün)').value
                         if value:
                             values = value.split('/')
-                            licence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
+                            if values.__len__() == 1:
+                                licence_time = values[0] + ' Yıl '
+                            elif values.__len__() == 2:
+                                licence_time = values[0] + ' Yıl ' + values[1] + ' Ay '
+                            elif values.__len__() ==3:
+                                licence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
+
 
             if block.businessblog.name == 'Tesis İnşaatının Tamamlanması':
                 if block.startDate:
