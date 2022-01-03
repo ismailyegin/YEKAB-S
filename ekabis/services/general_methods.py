@@ -185,9 +185,9 @@ def controlGroup(request):
         }
         if not (ActiveGroupService(request, activfilter)):
             if request.user.groups.all():
-                aktive = ActiveGroup(user=request.user, group=request.user.groups.all()[0])
+                aktive = ActiveGroup(user=request.user, group=request.user.groups.all().last())
                 aktive.save()
-                active = request.user.groups.all()[0].name
+                active = request.user.groups.all().last().name
             else:
                 logout(request)
                 return redirect('accounts:login')
