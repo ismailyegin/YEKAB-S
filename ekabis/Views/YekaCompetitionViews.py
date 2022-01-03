@@ -1520,21 +1520,17 @@ def view_yeka_competition_detail(request, uuid):
             yekaproposal = YekaProposal.objects.get(business=yeka.business)
 
             proposals = yekaproposal.proposal.filter(isDeleted=False)
-            positive = yekaproposal.proposal.filter(isDeleted=False).filter(institution__status='Olumlu').count()
-            negative = yekaproposal.proposal.filter(isDeleted=False).filter(institution__status='Olumsuz').count()
-            not_result = yekaproposal.proposal.filter(isDeleted=False).filter(
-                institution__status='Sonuçlanmadı').count()
 
             array_proposal = []
             for proposal in proposals:
                 proposal_dict = {}
                 proposal_dict['status'] = '##ffffff'
-                negative = proposal.institution.filter(status='Olumsuz').count()
-                not_negative = proposal.institution.filter(status='Olumlu').count()
-                if negative:
+                olumsuz = proposal.institution.filter(status='Olumsuz', isDeleted=False)
+                olumlu = proposal.institution.filter(status='Olumlu', isDeleted=False)
+                if olumsuz:
                     proposal_dict['status'] = '#ff3a3a'
                     proposal_dict['proposal'] = proposal
-                elif not_negative:
+                elif olumlu:
                     proposal_dict['status'] = '#8cff8c'
                     proposal_dict['proposal'] = proposal
                 else:
@@ -1548,9 +1544,8 @@ def view_yeka_competition_detail(request, uuid):
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks, 'array_proposal': array_proposal,
                        'yeka_eskalasyon': eskalasyon, 'employee': employee, 'competition_persons': competition_persons,
                        'employees': employees, 'competitions': competitions, 'region': region,
-                       'yekaproposal': yekaproposal, 'negative_insinstitution': negative,
+                       'yekaproposal': yekaproposal,
                        'indemnity': guarantees,'comp_yeka':comp_yeka,
-                       'positive_institution': positive, 'not_result_institution': not_result,
                        'yeka_info': yeka_info_dict, 'proposal_array': proposal_array
                        })
 
