@@ -62,10 +62,9 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Anasayfa</h1>
                 </div>
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
+                    <ol class="breadcrumb float-sm-right" style="line-height: 0.3rem;">
                         {% for url in urls %}
                             <li class="breadcrumb-item"><a href="{{ url.last }}">{{ url.last_url_name }}</a>
                             </li>
@@ -82,69 +81,40 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <h5 class="mb-2">Toplam YEKA Sayıları</h5>
             <div class="row">
-                <div class="col-lg-3 col-6">
-                    <!-- small card -->
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>  {{ res_count }}</h3>
-                            <p>Rüzgar Enerjisi</p>
-                        </div>
-                        <div class="icon">
+               <div class="col-lg-6 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-gradient-blue">
+                            <div class="inner">
+                                <h3>  {{ res_count }}</h3>
+                                <p>Rüzgar Enerjisi</p>
 
-                            <i class="fa fa-wind"></i>
+                            </div>
+                            <div class="icon">
+
+                                <i class="fa fa-wind"></i>
+                            </div>
+                            <a href="{% url 'ekabis:view_yeka_by_type' 'Rüzgar' %}" class="small-box-footer">
+                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                            </a>
                         </div>
-                        <a href="{% url 'ekabis:view_yeka_by_type' 'Rüzgar' %}" class="small-box-footer">
-                            <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
-                        </a>
+
                     </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <!-- small card -->
-                    <div class="small-box bg-gradient-yellow">
-                        <div class="inner">
-                            <h3>  {{ ges_count }}</h3>
-                            <p>Güneş Enerjisi</p>
+                    <div class="col-lg-6 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-gradient-yellow">
+                            <div class="inner">
+                                <h3>  {{ ges_count }}</h3>
+                                <p>Güneş Enerjisi</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-sun"></i>
+                            </div>
+                            <a href="{% url 'ekabis:view_yeka_by_type' 'Güneş' %}" class="small-box-footer">
+                                <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
+                            </a>
                         </div>
-                        <div class="icon">
-                            <i class="fa fa-sun"></i>
-                        </div>
-                        <a href="{% url 'ekabis:view_yeka_by_type' 'Güneş' %}" class="small-box-footer">
-                            <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
-                        </a>
                     </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <!-- small card -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>  {{ biyo_count }}</h3>
-                            <p>Biyokütle Enerjisi</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-globe"></i>
-                        </div>
-                        <a href="{% url 'ekabis:view_yeka_by_type' 'Biyokütle' %}" class="small-box-footer">
-                            <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <!-- small card -->
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3>  {{ jeo_count }}</h3>
-                            <p>Jeotermal Enerjisi</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-fire"></i>
-                        </div>
-                        <a href="{% url 'ekabis:view_yeka_by_type' 'Jeotermal' %}" class="small-box-footer">
-                            <i class="fas fa-arrow-circle-right"></i>Daha Fazla Bilgi
-                        </a>
-                    </div>
-                </div>
 
 
             </div>

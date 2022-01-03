@@ -532,4 +532,19 @@ def initial_data(request):
         return redirect('ekabis:initial_data_error_page')
 
 
+def yekaMenus(request):
+    yekas = Yeka.objects.filter(isDeleted=False).order_by('-date')
+    comp_array = []
 
+    for yeka in yekas:
+        yeka_dict = dict()
+        competitions = []
+        regions = yeka.connection_region.filter(isDeleted=False)
+        for region in regions:
+            for comp in region.yekacompetition.filter(isDeleted=False):
+                competitions.append(comp)
+        yeka_dict['yeka'] = yeka
+        yeka_dict['regions'] = regions
+        comp_array.append(yeka_dict)
+
+    return {'yeka_competition_array':comp_array}

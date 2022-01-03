@@ -1392,9 +1392,12 @@ def view_yeka_competition_detail(request, uuid):
             proposal_array.append(proposal_info_dict)
         if yeka.parent:
             region = ConnectionRegion.objects.get(yekacompetition=yeka.parent)
+            comp_yeka=Yeka.objects.get(connection_region=region)
+
 
         else:
             region = ConnectionRegion.objects.get(yekacompetition=yeka)
+            comp_yeka=Yeka.objects.get(connection_region=region)
         filter = {
             'connection_region': region
         }
@@ -1546,7 +1549,7 @@ def view_yeka_competition_detail(request, uuid):
                        'yeka_eskalasyon': eskalasyon, 'employee': employee, 'competition_persons': competition_persons,
                        'employees': employees, 'competitions': competitions, 'region': region,
                        'yekaproposal': yekaproposal, 'negative_insinstitution': negative,
-                       'indemnity': guarantees,
+                       'indemnity': guarantees,'comp_yeka':comp_yeka,
                        'positive_institution': positive, 'not_result_institution': not_result,
                        'yeka_info': yeka_info_dict, 'proposal_array': proposal_array
                        })

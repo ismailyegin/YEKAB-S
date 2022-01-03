@@ -216,11 +216,11 @@ def return_yonetici_dashboard(request):
     biyo_count = yekas.filter(type='Biyokütle').count()
     jeo_count = yekas.filter(type='Jeotermal').count()
 
-
+    regions = ConnectionRegionService(request, None)
 
     return render(request, 'anasayfa/yonetici-anasayfa.html',
                   {'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
-                   'ges_count': ges_count, 'yekas': comp_array,
+                   'ges_count': ges_count, 'yekas': comp_array,'regions':regions,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count, 'yeka_capacity': yeka_capacity_array,
                    'calendarNames': calendarNames, 'competitions': competitions,
                    })
