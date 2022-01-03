@@ -156,7 +156,6 @@
     <script>
 
         window.addEventListener('DOMContentLoaded', function () {
-            debugger;
             var demoNodes = [];
             var demoEdges = [];
             {% for blok in blocks %}
@@ -194,8 +193,6 @@
             {% endfor %}
 
 
-
-            debugger;
 
             var cy = window.cy = cytoscape({
 
@@ -320,7 +317,6 @@
                         content: 'Düzenle',
 
                         select: function (ele) {
-                            debugger;
                             console.log(ele.position());
                             let url_update = "{% url 'ekabis:change_yekabusinessBlog' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' '7729c6ee-739d-4a89-8ffe-1357e691ca18' %}";
                             url_update = url_update.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('yeka'))
@@ -747,7 +743,13 @@
     <script>
         {% load static %}
 
-        $(document).ready(function () {
+        $(function () {
+            $('#yeka-is-close-{{ yeka.pk }}').attr( 'class', 'expandable-body')
+            $('#yeka-tr-{{ yeka.pk }}').attr( 'aria-expanded', 'true')
+            $('#is_close-{{ yeka.pk }}').attr( 'aria-expanded', 'true')
+            $('#is_close-{{ yeka.pk }}').attr(  'aria-expanded', 'true')
+            $('#comp-td-{{ yeka.pk }}').css('color','#fff')
+
             table2 =  $('#region').DataTable({
                 dom: 'Bfrtip',
 
@@ -1021,7 +1023,6 @@
             var html = ''
             $("#modal-delete").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
-                    debugger;
 
                     $.ajax({
                         url: "{% url "ekabis:delete_region"%}",
@@ -1037,7 +1038,6 @@
 
 
                                 html = result.msg;
-                                debugger;
                                 $(".errorModal").html(html);
                                 $('#modal-error').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {
@@ -1077,7 +1077,6 @@
         function deleteCompetition(id) {
             $("#modal-delete").on("shown.bs.modal", function (e) {
                 $("#btn-conf1").click(function () {
-                    debugger;
 
                     $.ajax({
                         url: "{% url "ekabis:delete_competition"%}",
@@ -1091,9 +1090,7 @@
                         success: function (result) {
                             if (result.status === 'Fail') {
 
-                                debugger;
                                 html = result.msg;
-                                debugger;
                                 $(".errorModal").html(html);
                                 $('#modal-error').on("shown.bs.modal", function (e) {
                                     $(".btn-ok").click(function () {

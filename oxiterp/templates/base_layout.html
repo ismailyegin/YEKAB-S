@@ -93,7 +93,7 @@
     <script src="{% static 'file/fileinput.js' %}"></script>
 
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed" id="main-body">
 <style>
     .table tr {
         cursor: pointer;
@@ -104,7 +104,10 @@
         background-color: #d4d3d3;
         color: black;
     }
+
+
 </style>
+
 <div class="wrapper">
 
     <!-- Preloader -->
@@ -123,7 +126,7 @@
         </ul>
 
         <!-- Right navbar links -->
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto" id="menu-item">
             <!-- Messages Dropdown Menu -->
             {#            <li class="nav-item dropdown">#}
             {#                <a class="nav-link" data-toggle="dropdown" href="#">#}
@@ -235,9 +238,11 @@
                         </a>
                         <div class="dropdown-divider"></div>
                     {% endfor %}
-                <div class="col-lg-12"> <a href="{% url 'ekabis:bildirimler' %}" class="dropdown-item dropdown-footer">Tüm Bildirimleri
+                    <div class="col-lg-12"><a href="{% url 'ekabis:bildirimler' %}"
+                                              class="dropdown-item dropdown-footer">Tüm Bildirimleri
                         Gör</a></div>
-                  <div class="col-lg-12"> <a href="{% url 'ekabis:read_notification_all' %}" class="dropdown-item dropdown-footer">Tümünü Okundu Yap</a></div>
+                    <div class="col-lg-12"><a href="{% url 'ekabis:read_notification_all' %}"
+                                              class="dropdown-item dropdown-footer">Tümünü Okundu Yap</a></div>
 
 
                 </div>
@@ -246,6 +251,11 @@
             <li class="nav-item">
                 <a class="nav-link" onclick="help_text()" role="button">
                     <i class="fas fa-question"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                    <i class="fa fa-fan "></i>
                 </a>
             </li>
 
@@ -257,7 +267,7 @@
             {#                </a>#}
             {#            </li>#}
 
-
+            <div id="sidebar-overlay"></div>
             <li class=" nav-item dropdown user user-menu open">
                 <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">
 
@@ -317,21 +327,20 @@
                         <div class="row">
                             <div class="col-md">
 
-{#                                {% if aktif == "Admin" %}#}
-{#                                    <a href="{% url "ekabis:admin-profil-guncelle" %}"#}
-{#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
-{##}
-{#                                {% elif aktif == "Yonetim" %}#}
-{#                                    <a href=""#}
-{#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
-{##}
-{#                                {% elif aktif == "Personel" %}#}
-{#                                    <a href=""#}
-{#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
+                                {#                                {% if aktif == "Admin" %}#}
+                                {#                                    <a href="{% url "ekabis:admin-profil-guncelle" %}"#}
+                                {#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
+                                {##}
+                                {#                                {% elif aktif == "Yonetim" %}#}
+                                {#                                    <a href=""#}
+                                {#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
+                                {##}
+                                {#                                {% elif aktif == "Personel" %}#}
+                                {#                                    <a href=""#}
+                                {#                                       class="btn btn-default btn-flat">Profil Bilgisi</a>#}
 
 
-
-                                    <a><i class="fa fa-circle text-success"></i> {{ aktif }}</a>
+                                <a><i class="fa fa-circle text-success"></i> {{ aktif }}</a>
 
 
                             </div>
@@ -468,7 +477,107 @@
     </footer>
 
     <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
+
+    <aside class="control-sidebar control-sidebar-dark" style="display: block;">
+        <!-- Control sidebar content goes here -->
+        <div class="col-12">
+
+            <table class="table table-hover brc" id="brc_menu">
+                <tbody>
+                {% for item in yeka_competition_array %}
+                    <tr data-widget="expandable-table" aria-expanded="false" id="yeka-tr-{{ item.yeka.pk }}">
+                        <td style="font-size: 17px">
+                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                            <b>{{ item.yeka.definition }}</b>
+
+                        </td>
+
+                    </tr>
+                    <tr class="expandable-body" id="yeka-is-close-{{ item.yeka.pk }}">
+                        <td>
+                            <div class="p-0">
+                                <table class="table table-hover">
+                                    <tbody>
+                                    <tr data-widget="expandable-table"
+                                        aria-expanded="false" id="">
+                                        <td>
+                                            <a href="{% url 'ekabis:view_yeka_detail' item.yeka.uuid %}"
+                                               class="button" title="Detay"
+                                               type="button"><i
+                                                    class="fa fa-search"></i> Detay </a>
+                                        </td>
+                                    </tr>
+
+                                    <tr id="is_close-{{ item.yeka.pk }}"
+                                        data-widget="expandable-table"
+                                        aria-expanded="false">
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-outline-primary p-0 btn-sm">
+                                                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                            </button>
+                                            YEKA Bağlantı Bölgeleri
+                                        </td>
+                                    </tr>
+                                    <tr class="expandable-body" id="is_close_class-{{ item.yeka.pk }}">
+                                        <td>
+                                            <div class="p-0">
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    {% for region in item.regions %}
+                                                        <tr data-widget="expandable-table"
+                                                            aria-expanded="false" id="reg-tr-{{ region.pk }}">
+                                                            <td>
+                                                                <button type="button"
+                                                                        class="btn btn-outline-primary p-0 btn-sm">
+                                                                    <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                </button>
+                                                                {{ region.name }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="expandable-body d-none"
+                                                            id="competition-is-close-{{ item.yeka.pk }}">
+                                                            <td>
+                                                                <div class="p-0"
+                                                                     style="display: none;"
+                                                                     id="div-show-{{ item.yeka.pk }}">
+                                                                    <table id="competitions-{{ item.yeka.pk }}"
+                                                                           class="table table-hover">
+                                                                        <tbody>
+                                                                        {% for competition in region.yekacompetition.all %}
+
+                                                                            {% if not competition.isDeleted %}
+                                                                                <tr data-widget="expandable-table"
+                                                                                    aria-expanded="false"
+                                                                                    id="comp-tr-{{ competition.pk }}">
+                                                                                    <td>
+                                                                                        <a id="comp-td-{{ competition.pk }}"
+                                                                                           href="{% url 'ekabis:view_yeka_competition_detail' competition.uuid %}"> {{ competition.name }} </a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
     </aside>
     <!-- /.control-sidebar -->
@@ -568,6 +677,7 @@
 <script>
 
 
+
     function help_text(text) {
         debugger;
         $('#help-text').modal('show');
@@ -584,6 +694,9 @@
 
 
     $(function () {
+         $('#brc_menu td').css({
+        color:'#fff'
+    });
 
         $('.files').fileinput({
             {#rtl: true,#}
