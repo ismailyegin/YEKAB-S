@@ -357,8 +357,8 @@ def activeGroup(request, pk):
     if group.name == "Admin":
         return redirect('ekabis:view_admin')
 
-    elif group.name == 'Yonetim':
-        return redirect('ekabis:view_federasyon')
+    elif group.name == 'Yönetici':
+        return redirect('ekabis:view_yonetici')
 
     elif group.name == 'Personel':
         return redirect('ekabis:view_personel')
