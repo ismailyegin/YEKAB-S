@@ -143,6 +143,14 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
                             <h3 class="card-title">Kurum Görüşleri</h3>
+                            {% for item in perm %}
+                                {% if item == 'change_proposal_active' %}
+                                    <a  href="{% url "ekabis:change_proposal_active" yekabusiness.uuid yekabussinessblog.uuid %}"
+                                       type="button" class="btn btn-outline-primary btn-sm" style="float: right;margin-left: 10px"><i
+                                            class="fa fa-plus" title="Kurum Ekle"></i>
+                                    </a>
+                            {% endif %}
+                           {% endfor %}
                             <div class="float-sm-right">
                                 <small class="badge badge-success"><i class="fa fa-check-circle"></i> Olumlu
                                     : {{ positive_institution }}</small>
@@ -151,6 +159,8 @@
                                 <small class="badge badge-warning"><i class="fa fa-question-circle"></i> Sonuçlanmadı
                                     : {{ not_result_institution }}</small>
                             </div>
+
+
                         </div>
 
                         <div class="card-body">

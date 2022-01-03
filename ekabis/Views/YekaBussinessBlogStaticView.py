@@ -1530,7 +1530,8 @@ def view_proposal_institution(request, yekaproposal, uuid):
         url_name = Permission.objects.get(codename=current_url.url_name)
 
         yekaproposal = YekaProposal.objects.get(uuid=yekaproposal)
-        comp=YekaCompetition.objects.filter(business=yekaproposal.business)
+        business=yekaproposal.business
+
         proposal = Proposal.objects.get(uuid=uuid)
 
         yekabussinessblog = yekaproposal.yekabusinessblog
@@ -1644,12 +1645,21 @@ def delete_proposal_institution(request):
                 obj = ProposalInstitution.objects.get(uuid=uuid)
                 obj.isDeleted = True
                 obj.save()
-                proposal_active=ProposalActive.objects.filter(institution=obj.institution)
-                if proposal_active:
-                    active = ProposalActive.objects.get(institution=obj.institution)
-                    active.isDeleted=False
-                    active.is_active=False
-                    active.save()
+                proposals=Proposal.objects.filter(institution=obj)
+                business=None
+                if proposals:
+                    proposal = Proposal.objects.get(institution=obj)
+                    yeka_proposals=YekaProposal.objects.filter(proposal=proposal)
+                    if yeka_proposals:
+                        yeka_proposal = YekaProposal.objects.get(proposal=proposal)
+                        business=yeka_proposal.business
+                        proposal_active = ProposalActive.objects.filter(institution=obj.institution).filter(business=business)
+                        if proposal_active:
+                            active = ProposalActive.objects.get(institution=obj.institution,business=business)
+                            active.isDeleted = False
+                            active.is_active = False
+                            active.save()
+
 
                 return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
             else:
