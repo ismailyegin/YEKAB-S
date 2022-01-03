@@ -478,14 +478,14 @@
 
     <!-- Control Sidebar -->
 
-    <aside class="control-sidebar control-sidebar-dark" style="display: block;">
+    <aside class="control-sidebar control-sidebar-dark" style=";top: 57px; height: 265px; display: block;">
         <!-- Control sidebar content goes here -->
-        <div class="col-12">
-
-            <table class="table table-hover brc" id="brc_menu">
+        <div class="p-3 control-sidebar-content os-host os-theme-light os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition os-host-overflow os-host-overflow-y">
+            <table class="table table-hover brc" id="brc_menu" style="">
                 <tbody>
                 {% for item in yeka_competition_array %}
-                    <tr data-widget="expandable-table" aria-expanded="false" id="yeka-tr-{{ item.yeka.pk }}">
+                    <tr data-widget="expandable-table" aria-expanded="false"
+                        id="yeka-tr-{{ item.yeka.pk }}">
                         <td style="font-size: 17px">
                             <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
                             <b>{{ item.yeka.definition }}</b>
@@ -522,11 +522,12 @@
                                     <tr class="expandable-body" id="is_close_class-{{ item.yeka.pk }}">
                                         <td>
                                             <div class="p-0">
-                                                <table class="table table-hover">
+                                                <table class="table table-hover" style="overflow-y: scroll;">
                                                     <tbody>
                                                     {% for region in item.regions %}
                                                         <tr data-widget="expandable-table"
-                                                            aria-expanded="false" id="reg-tr-{{ region.pk }}">
+                                                            aria-expanded="false"
+                                                            id="reg-tr-{{ region.pk }}">
                                                             <td>
                                                                 <button type="button"
                                                                         class="btn btn-outline-primary p-0 btn-sm">
@@ -542,7 +543,8 @@
                                                                      style="display: none;"
                                                                      id="div-show-{{ item.yeka.pk }}">
                                                                     <table id="competitions-{{ item.yeka.pk }}"
-                                                                           class="table table-hover">
+                                                                           class="table table-hover"
+                                                                           style="overflow-y: scroll;">
                                                                         <tbody>
                                                                         {% for competition in region.yekacompetition.all %}
 
@@ -577,10 +579,15 @@
                 {% endfor %}
                 </tbody>
             </table>
+            <div class="os-scrollbar os-scrollbar-vertical os-scrollbar-auto-hidden">
+                <div class="os-scrollbar-track">
+                    <div class="os-scrollbar-handle" style="transform: translate(0px, 207px); height: 20.5108%;"></div>
+                </div>
+            </div>
+        <div class="os-scrollbar-corner"></div>
         </div>
-
     </aside>
-    <!-- /.control-sidebar -->
+    <div id="sidebar-overlay"></div><!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 
@@ -677,7 +684,6 @@
 <script>
 
 
-
     function help_text(text) {
         debugger;
         $('#help-text').modal('show');
@@ -694,9 +700,9 @@
 
 
     $(function () {
-         $('#brc_menu td').css({
-        color:'#fff'
-    });
+        $('#brc_menu td').css({
+            color: '#fff'
+        });
 
         $('.files').fileinput({
             {#rtl: true,#}
@@ -875,6 +881,9 @@
         }
     }
 
+    $('#brc_menu').DataTable({
+        'scrollX': true,
+    });
 
     {#const interval = setInterval(function () {#}
     {##}
