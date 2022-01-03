@@ -110,6 +110,9 @@ def login(request):
                     elif active.group.name == 'Admin' or person.user.is_superuser:
                         auth.login(request, user)
                         return redirect('ekabis:view_admin')
+                    if active.group.name == 'Yönetici':
+                        auth.login(request, user)
+                        return redirect('ekabis:view_yonetici')
                     else:
                         auth.login(request, user)
                         return redirect('ekabis:view_personel')
