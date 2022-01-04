@@ -46,7 +46,7 @@ def EskalasyonCalculation(request, uuid):
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması"):
                 yeka_business = YekaBusiness.objects.get(pk=competition.business.pk).businessblogs.get(
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması")
-                if YekaContract.objects.get(business=competition.business).unit.name=='TL':
+                if YekaContract.objects.get(business=competition.business).unit.name=='TL Kuruş/kWh':
                     if YekaContract.objects.get(business=competition.business).eskalasyonMaxPrice:
                         peak_value = YekaContract.objects.get(business=competition.business).eskalasyonMaxPrice  # Sözleşme iş bloğunda girilen eskalasyon pik değeri (USD)
                         startDate = 'startDate=' + str(datetime.today().date().strftime('%d-%m-%Y')) + '&'

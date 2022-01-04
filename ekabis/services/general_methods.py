@@ -539,7 +539,7 @@ def yekaMenus(request):
     for yeka in yekas:
         yeka_dict = dict()
         competitions = []
-        regions = yeka.connection_region.filter(isDeleted=False)
+        regions = yeka.connection_region.filter(isDeleted=False).order_by('name')
         for region in regions:
             for comp in region.yekacompetition.filter(isDeleted=False):
                 competitions.append(comp)

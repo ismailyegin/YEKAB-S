@@ -524,7 +524,7 @@
                                             <div class="p-0">
                                                 <table class="table table-hover" style="overflow-y: scroll;">
                                                     <tbody>
-                                                    {% for region in item.regions %}
+                                                    {% for region in item.regions|dictsort:"name" %}
                                                         <tr data-widget="expandable-table"
                                                             aria-expanded="false"
                                                             id="reg-tr-{{ region.pk }}">
@@ -546,7 +546,7 @@
                                                                            class="table table-hover"
                                                                            style="overflow-y: scroll;">
                                                                         <tbody>
-                                                                        {% for competition in region.yekacompetition.all %}
+                                                                        {% for competition in region.yekacompetition.all|dictsort:"name" %}
 
                                                                             {% if not competition.isDeleted %}
                                                                                 <tr data-widget="expandable-table"
