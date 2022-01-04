@@ -63,7 +63,9 @@ def return_personel_dashboard(request):
     calendarNames = CalendarNameService(request, calendar_filter)
     yekas = YekaService(request, None).order_by('-date')
     comp_array = []
-
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
 
@@ -140,7 +142,7 @@ def return_personel_dashboard(request):
                    # 'region_json': region_json,'yeka_json':yeka_json,
                    'regions': regions, 'res_count': res_count, 'yeka': yekas, 'vacation_days': days,
                    'ges_count': ges_count, 'comp_array': comp_array, 'all_yeka': all_yeka,
-                   'yeka_capacity': yeka_capacity_array,
+                   'yeka_capacity': yeka_capacity_array,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count, 'person_comp': competition_array,
                    'calendarNames': calendarNames, 'person_competitions': competitions,
                    })
@@ -326,10 +328,6 @@ def return_admin_dashboard(request):
             company_dict['contract'] = None
         company_dict['mechanical_power'] = total['installedPower__sum']
         company_dict['competition'] = competition
-        if YekaCompetitionEskalasyon.objects.filter(competition=competition):
-            company_dict['price'] = YekaCompetitionEskalasyon.objects.get(competition=competition)
-        else:
-            company_dict['price'] = None
         company_array.append(company_dict)
     return render(request, 'anasayfa/admin.html', {
         'yeka': yekas, 'yeka_competition': competitions,
