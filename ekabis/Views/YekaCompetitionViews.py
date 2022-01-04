@@ -1361,7 +1361,7 @@ def view_yeka_competition_detail(request, uuid):
                     if block.parameter:
                         if block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
                             sub_prelicence_date = block.parameter.get(parametre__title='Ön Lisans Tarihi').value
-                if block.businessblog.name == 'Lisans Dönemi':
+                if block.businessblog.name == 'Lisans Alma Tarihi':
                     if block.startDate:
                         sub_licence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                     if block.parameter:
@@ -1371,7 +1371,12 @@ def view_yeka_competition_detail(request, uuid):
                             value = block.parameter.get(parametre__title='Lisans Süresi (Yıl/Ay/Gün)').value
                             if value:
                                 values = value.split('/')
-                                sub_licence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
+                                if values.__len__() == 1:
+                                    sub_licence_time = values[0] + ' Yıl '
+                                elif values.__len__() == 2:
+                                    sub_licence_time = values[0] + ' Yıl ' + values[1] + ' Ay '
+                                elif values.__len__() == 3:
+                                    sub_licence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
 
                 if block.businessblog.name == 'Tesis İnşaatının Tamamlanması':
                     if block.startDate:
@@ -1442,7 +1447,7 @@ def view_yeka_competition_detail(request, uuid):
                 if block.parameter:
                     if block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
                         prelicence_date = block.parameter.get(parametre__title='Ön Lisans Tarihi').value
-            if block.businessblog.name == 'Lisans Dönemi':
+            if block.businessblog.name == 'Lisans Alma Tarihi':
                 if block.startDate:
                     licence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:
@@ -1624,9 +1629,14 @@ def view_sub_yeka_competition_detail(request, uuid):
                         value = block.parameter.get(parametre__title='Ön Lisans Süresi (Yıl/Ay/Gün)').value
                         if value:
                             values = value.split('/')
+                            if values.__len__() == 1:
+                                prelicence_time = values[0] + ' Yıl '
+                            elif values.__len__() == 2:
+                                prelicence_time = values[0] + ' Yıl ' + values[1] + ' Ay '
+                            elif values.__len__() == 3:
+                                prelicence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
 
-                            prelicence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
-            if block.businessblog.name == 'Lisans Dönemi':
+            if block.businessblog.name == 'Lisans Alma Tarihi':
                 if block.startDate:
                     licence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:

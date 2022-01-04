@@ -780,15 +780,13 @@
                             "bSortable": false,
                             "mRender": function (data) {
                                 debugger;
+                                var months = ["01", "02", "03", "04", "05", "06", "07","08", "09", "10", "11", "12"];
                                 let date = new Date(data.creationDate);
                                 let year = date.getFullYear().toString()
-                                let month = date.getMonth().toString()
+                                let month = months[date.getMonth()];
                                 let day = date.getDay().toString()
                                 if (day.length < 2) {
                                     day = '0' + day
-                                }
-                                if (month.length < 2) {
-                                    month = '0' + month
                                 }
 
                                 return [day, month, year].join('/')
