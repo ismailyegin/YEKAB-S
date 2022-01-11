@@ -10,7 +10,9 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import resolve
 
+from ekabis.Forms.BudgetForm import BudgetForm
 from ekabis.Forms.CoordinateForm import CoordinateForm
+from ekabis.Forms.EmploymentForm import EmploymentForm
 from ekabis.Forms.GuaranteeForm import GuaranteeForm
 from ekabis.Forms.LocationForm import LocationForm
 from ekabis.models.Coordinate import Coordinate
@@ -26,7 +28,7 @@ from ekabis.Forms.YekaApplicationFileNameForm import YekaApplicationFileName, Ye
 from ekabis.Forms.YekaApplicationForm import YekaApplicationForm
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
-    YekaCompany, YekaGuarantee, Collateral, ProposalSubYeka
+    YekaCompany, YekaGuarantee, Collateral, ProposalSubYeka, YekaBudget, YekaEmployment, Budget, Employment
 from ekabis.models.Competition import Competition
 from ekabis.models.Settings import Settings
 from ekabis.models.CompetitionCompany import CompetitionCompany
@@ -2136,7 +2138,6 @@ def add_competition_company_select_api(request):
                 else:
                     return JsonResponse({'status': 'Fail', 'msg': 'Başvuruların alınması iş Blogu yok'})
 
-                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı'})
             else:
                 return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
     except Exception as e:
@@ -2200,3 +2201,266 @@ def proposal_add_sub_yeka(request, yeka_business, yeka_business_block):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
+def budgetYekaCompetition(request, yeka_business, yeka_business_block):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        yeka_bussiness_block = YekaBusinessBlog.objects.get(uuid=yeka_business_block)
+        yeka_business = YekaBusiness.objects.get(uuid=yeka_business)
+
+        if YekaBudget.objects.filter(business=yeka_business):
+            yeka_budget = YekaBudget.objects.get(business=yeka_business)
+        else:
+            yeka_budget = YekaBudget(
+                yekabusinessblog=yeka_bussiness_block,
+                business=yeka_business
+            )
+            yeka_budget.save()
+
+        name = general_methods.yekaname(yeka_business)
+        competition = None
+        if YekaCompetition.objects.filter(business=yeka_business):
+            competition = YekaCompetition.objects.get(business=yeka_business)
+        budgets=yeka_budget.budget.filter(isDeleted=False).order_by('-budgetDate')
+        return render(request, 'Arge/yekaBudgetList.html',
+                      {'yeka_budget': yeka_budget,'budgets':budgets,
+                       'business': yeka_business, 'competition': competition,
+                       'yekabussinessblog': yeka_bussiness_block, 'urls': urls, 'current_url': current_url,
+                       'url_name': url_name, 'name': name,
+                       })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+@login_required
+def add_budget(request, uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        yeka_budget = YekaBudget.objects.get(uuid=uuid)
+
+        budget_form = BudgetForm()
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        name = general_methods.yekaname(yeka_budget.business)
+        competition = YekaCompetition.objects.get(business=yeka_budget.business)
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                budget_form = BudgetForm(request.POST or None, request.FILES or None)
+                if budget_form.is_valid():
+                    budget = budget_form.save(request, commit=False)
+                    budget.save()
+                    budget.competition = competition
+                    yeka_budget.budget.add(budget)
+                    yeka_budget.save()
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                        budget.budgetFile) + ' bütçe dokümanı eklendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
+                    messages.success(request, 'Bütçe Eklenmiştir.')
+                    return redirect('ekabis:budget-yeka-competition-list', yeka_budget.business.uuid,
+                                    yeka_budget.yekabusinessblog.uuid)
+                else:
+                    error_messages = get_error_messages(budget_form)
+                    return render(request, 'Arge/add_budget.html',
+                                  {
+                                      'urls': urls,
+                                      'current_url': current_url,
+                                      'url_name': url_name,
+                                      'error_messages': error_messages,
+                                      'budget_form': budget_form, 'name': name,
+                                  })
+
+            return render(request, 'Arge/add_budget.html',
+                          {'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'budget_form': budget_form, 'name': name,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+def employmentYekaCompetition(request, yeka_business, yeka_business_block):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    try:
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+
+        yeka_bussiness_block = YekaBusinessBlog.objects.get(uuid=yeka_business_block)
+        yeka_business = YekaBusiness.objects.get(uuid=yeka_business)
+
+        if YekaEmployment.objects.filter(business=yeka_business):
+            yeka_employment = YekaEmployment.objects.get(business=yeka_business)
+        else:
+            yeka_employment = YekaEmployment(
+                yekabusinessblog=yeka_bussiness_block,
+                business=yeka_business
+            )
+            yeka_employment.save()
+
+        name = general_methods.yekaname(yeka_business)
+        competition = None
+        if YekaCompetition.objects.filter(business=yeka_business):
+            competition = YekaCompetition.objects.get(business=yeka_business)
+        employments=yeka_employment.employment.filter(isDeleted=False).order_by('-employmentDate')
+        return render(request, 'Arge/employmentList.html',
+                      {'yeka_employment': yeka_employment,'employments':employments,
+                       'business': yeka_business, 'competition': competition,
+                       'yekabussinessblog': yeka_bussiness_block, 'urls': urls, 'current_url': current_url,
+                       'url_name': url_name, 'name': name,
+                       })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+@login_required
+def add_employment(request, uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        yeka_employment = YekaEmployment.objects.get(uuid=uuid)
+
+        employment_form = EmploymentForm()
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        name = general_methods.yekaname(yeka_employment.business)
+        competition = YekaCompetition.objects.get(business=yeka_employment.business)
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                employment_form = EmploymentForm(request.POST or None, request.FILES or None)
+                if employment_form.is_valid():
+                    employment = employment_form.save(request, commit=False)
+                    employment.save()
+                    employment.competition = competition
+                    yeka_employment.employment.add(employment)
+                    yeka_employment.save()
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                        employment.employmentFile) + ' istihdam dokümanı eklendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
+                    messages.success(request, 'İstihdam Bilgisi Eklenmiştir.')
+                    return redirect('ekabis:employment-yeka-competition-list', yeka_employment.business.uuid,
+                                    yeka_employment.yekabusinessblog.uuid)
+                else:
+                    error_messages = get_error_messages(employment_form)
+                    return render(request, 'Arge/add_employment.html',
+                                  {
+                                      'urls': urls,
+                                      'current_url': current_url,
+                                      'url_name': url_name,
+                                      'error_messages': error_messages,
+                                      'employment_form': employment_form, 'name': name,
+                                  })
+
+            return render(request, 'Arge/add_employment.html',
+                          {'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'employment_form': employment_form, 'name': name,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+def delete_employment(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                obj = Employment.objects.get(uuid=uuid)
+                data_as_json_pre = serializers.serialize('json', Employment.objects.filter(uuid=uuid))
+
+                obj.isDeleted = True
+                obj.save()
+                log = str(obj.pk) + " - istihdam silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
+                yeka_employment = YekaEmployment.objects.get(guarantee=obj)
+                yeka_employment.isDeleted=True
+                yeka_employment.save()
+                competition = YekaCompetition.objects.get(business=yeka_employment.business)
+
+                url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                    competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                    obj.employmentFile) + ' istihdam  silindi.'
+                notification(request, html, competition.uuid, 'yeka_competition')
+
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+def delete_budget(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        with transaction.atomic():
+            if request.method == 'POST' and request.is_ajax():
+                uuid = request.POST['uuid']
+                obj = Budget.objects.get(uuid=uuid)
+                data_as_json_pre = serializers.serialize('json', Budget.objects.filter(uuid=uuid))
+
+                obj.isDeleted = True
+                obj.save()
+                log = str(obj.pk) + " - bütçe silindi."
+                logs = Logs(user=request.user, subject=log, ip=get_client_ip(request), previousData=data_as_json_pre)
+                logs.save()
+                yeka_budget = YekaBudget.objects.get(guarantee=obj)
+                yeka_budget.isDeleted=True
+                yeka_budget.save()
+                competition = YekaCompetition.objects.get(business=yeka_budget.business)
+
+                url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                    competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                    obj.budgetFile) + ' bütçe  silindi.'
+                notification(request, html, competition.uuid, 'yeka_competition')
+
+                return JsonResponse({'status': 'Success', 'messages': 'save successfully'})
+            else:
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+    except:
+        traceback.print_exc()
+        return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})

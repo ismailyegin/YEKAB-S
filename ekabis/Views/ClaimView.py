@@ -21,6 +21,7 @@ from unicode_tr import unicode_tr
 from ekabis.Forms.UserSearchForm import UserSearchForm
 from ekabis.services.general_methods import get_error_messages
 from ekabis.services.services import ClaimService, ClaimGetService, last_urls
+from oxiterp.settings.base import EMAIL_HOST_USER
 
 
 @login_required
@@ -92,10 +93,10 @@ def claim_add(request):
                     claimSave.save()
 
                     html_content = ''
-                    subject, from_email, to = 'YEKABIS', request.user.email ,'byurdakul@kobiltek.com'
+                    subject, from_email, to = 'YEKABİS DESTEK TALEP', 'yekabis@enerji.gov.tr' , EMAIL_HOST_USER
                     html_content = '<h2>YEKABİS DESTEK TALEP</h2>'
-                    html_content = '<h2>Talep Eden : </h2>' +request.user.first_name+' '+request.user.last_name
-                    html_content = html_content + '<p><strong>BAŞLIK : </strong>' + claimSave.title + '</p>'
+                    html_content = '<p><strong>Talep Eden : </strong>' +request.user.first_name+' '+request.user.last_name+ '</p>'
+                    html_content = html_content + '<p><strong>Başlık : </strong>' + claimSave.title + '</p>'
                     html_content = html_content + '<p> <strong>Önem Derecesi : </strong> ' + claimSave.importanceSort+ '</p>'
                     html_content = html_content + '<p> <strong>Açıklama : </strong> ' + claimSave.definition + '</p>'
 

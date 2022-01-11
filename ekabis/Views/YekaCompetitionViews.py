@@ -659,6 +659,9 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
         form_contract = None
         purchase_guarantee_form = None
         holding_competition_form = None
+        annual_spend_form = None
+        employment_form = None
+        budget_form = None
 
         business = BusinessBlogGetService(request, yeka_business_filter_)
         yekaBusinessBlogo_form = CompetitionBusinessBlockForm(business.pk, yekabussiness, request.POST or None,
@@ -696,7 +699,6 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     form_contract.fields['eskalasyonMaxPrice'].initial = contract.eskalasyonMaxPrice
             else:
                 form_contract.fields['eskalasyonMaxPrice'].initial = contract.eskalasyonMaxPrice
-
         elif business.name == 'Alım Garantisi':
             purchase_guarantee = None
 
@@ -722,7 +724,6 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                 holding_competition.save()
             holding_competition_form = YekaHoldingCompetitionForm(request.POST or None, request.FILES or None,
                                                                   instance=holding_competition)
-
         name = general_methods.yekaname(competition.business)
 
         yekaBusinessBlogo_form.fields['dependence_parent'].queryset = competition.business.businessblogs.exclude(
@@ -802,7 +803,8 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                                       'current_url': current_url, 'contract_form': form_contract,
                                       'purchase_guarantee_form': purchase_guarantee_form,
                                       'url_name': url_name, 'companies': companies,
-                                      'name': name
+                                      'name': name, 'employment_form': employment_form, 'budget_form': budget_form,
+                                      'annual_spend_form': annual_spend_form
                                   })
                 # dosya boyutu
                 for item in yekabussiness.parameter.filter(isDeleted=False):
@@ -833,7 +835,9 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                                                       'current_url': current_url, 'contract_form': form_contract,
                                                       'purchase_guarantee_form': purchase_guarantee_form,
                                                       'url_name': url_name, 'companies': companies,
-                                                      'name': name,
+                                                      'name': name, 'employment_form': employment_form,
+                                                      'budget_form': budget_form,
+                                                      'annual_spend_form': annual_spend_form,
                                                       'holding_competition_form': holding_competition_form
                                                   })
 
@@ -877,7 +881,9 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                           'current_url': current_url, 'contract_form': form_contract,
                           'purchase_guarantee_form': purchase_guarantee_form,
                           'url_name': url_name, 'companies': companies, 'contract': contract,
-                          'name': name, 'holding_competition_form': holding_competition_form
+                          'name': name, 'holding_competition_form': holding_competition_form,
+                          'employment_form': employment_form, 'budget_form': budget_form,
+                          'annual_spend_form': annual_spend_form
                       })
     except Exception as e:
 
@@ -1336,7 +1342,7 @@ def view_yeka_competition_detail(request, uuid):
         competitions = YekaCompetition.objects.filter(parent=yeka, isDeleted=False)
 
         yekabusinessbloks_sub = None
-        proposal_array=[]
+        proposal_array = []
         proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka__parent=yeka, isDeleted=False)
         for proposal in proposal_sub_yeka:
             sub_prelicence_date = '---'
@@ -1397,12 +1403,12 @@ def view_yeka_competition_detail(request, uuid):
             proposal_array.append(proposal_info_dict)
         if yeka.parent:
             region = ConnectionRegion.objects.get(yekacompetition=yeka.parent)
-            comp_yeka=Yeka.objects.get(connection_region=region)
+            comp_yeka = Yeka.objects.get(connection_region=region)
 
 
         else:
             region = ConnectionRegion.objects.get(yekacompetition=yeka)
-            comp_yeka=Yeka.objects.get(connection_region=region)
+            comp_yeka = Yeka.objects.get(connection_region=region)
         filter = {
             'connection_region': region
         }
@@ -1538,7 +1544,7 @@ def view_yeka_competition_detail(request, uuid):
                     proposal_dict['status'] = '#ff3a3a'
                     proposal_dict['proposal'] = proposal
                 elif sonuclanmadi:
-                    proposal_dict['status'] ='#ffff6e'
+                    proposal_dict['status'] = '#ffff6e'
                     proposal_dict['proposal'] = proposal
                 elif olumlu:
                     proposal_dict['status'] = '#8cff8c'
@@ -1555,7 +1561,7 @@ def view_yeka_competition_detail(request, uuid):
                        'yeka_eskalasyon': eskalasyon, 'employee': employee, 'competition_persons': competition_persons,
                        'employees': employees, 'competitions': competitions, 'region': region,
                        'yekaproposal': yekaproposal,
-                       'indemnity': guarantees,'comp_yeka':comp_yeka,
+                       'indemnity': guarantees, 'comp_yeka': comp_yeka,
                        'yeka_info': yeka_info_dict, 'proposal_array': proposal_array
                        })
 
@@ -1650,9 +1656,8 @@ def view_sub_yeka_competition_detail(request, uuid):
                                 licence_time = values[0] + ' Yıl '
                             elif values.__len__() == 2:
                                 licence_time = values[0] + ' Yıl ' + values[1] + ' Ay '
-                            elif values.__len__() ==3:
+                            elif values.__len__() == 3:
                                 licence_time = values[0] + ' Yıl ' + values[1] + ' Ay ' + values[2] + ' Gün'
-
 
             if block.businessblog.name == 'Tesis İnşaatının Tamamlanması':
                 if block.startDate:
