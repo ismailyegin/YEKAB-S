@@ -107,7 +107,7 @@ def view_report(request):
                     company_dict['competition'] = competition
                     company_dict['company'] = accept_company
                     if YekaCompetitionEskalasyon.objects.filter(competition=competition):
-                        company_dict['price'] = YekaCompetitionEskalasyon.objects.get(competition=competition)
+                        company_dict['price'] = YekaCompetitionEskalasyon.objects.filter(competition=competition).last()
                     else:
                         company_dict['price'] = None
                     company_array.append(company_dict)
