@@ -468,6 +468,17 @@
                                 html2 += '<a class="btn btn-secondary" href="' + yeka_guarantee + '" type="button" style="float:right">Teminatlar</a>';
 
                             }
+                             else if (this.data('name').includes('AR-GE Faaliyetleri') ) {
+                                let yeka_budget = "{% url 'ekabis:budget-yeka-competition-list' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
+                                yeka_budget = yeka_budget.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
+                                yeka_budget = yeka_budget.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
+                                html2 += '<a class="btn btn-secondary" href="' + yeka_budget + '" type="button" style="float:right">Bütçeler</a>';
+                                let yeka_employment = "{% url 'ekabis:employment-yeka-competition-list' '7729c6ee-739d-4a89-8ffe-1357e691ca16' '7729c6ee-739d-4a89-8ffe-1357e691ca17' %}";
+                                yeka_employment = yeka_employment.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', this.data('business'))
+                                yeka_employment = yeka_employment.replace('7729c6ee-739d-4a89-8ffe-1357e691ca17', this.data('yekabusinessblog'))
+                                html2 += '<a class="btn btn-secondary" href="' + yeka_employment + '" type="button" style="float:right;margin-left: 5px">İstihdam</a>';
+
+                            }
 
                             html2 += '</div>';
                             let html3 = '<h4 class="modal-title">' + this.data('name') + '</h4>';

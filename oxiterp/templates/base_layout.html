@@ -17,6 +17,8 @@
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
           href="{% static 'source_sans/source_sans_pro.css' %}">
+        <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fullcalendar/main.css' %}">
@@ -87,7 +89,6 @@
         $.widget.bridge('uibutton', $.ui.button)
     </script>
     <!-- Bootstrap 4 -->
-    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'file/fileinput-rtl.min.css' %}">
     <link rel="stylesheet" href="{% static 'file/fileinput.css' %}">
     <script src="{% static 'file/fileinput.js' %}"></script>
@@ -700,6 +701,7 @@
 
 
     $(function () {
+         $('.toast').delay(4000).fadeOut(3000);
         $('#brc_menu td').css({
             color: '#fff'
         });
@@ -910,12 +912,7 @@
     {#    });#}
     {#, 50000);#}
 
-    $(document).ready(function () {
-        $('.toast').delay(4000).fadeOut(3000);
-        {#setInterval();#}
 
-
-    });
 
 </script>
 </body>
