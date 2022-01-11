@@ -29,11 +29,11 @@
   // Create the defaults once
   var pluginName = 'bootstrapDualListbox',
     defaults = {
-      filterTextClear: 'show all',
-      filterPlaceHolder: 'Filter',
+      filterTextClear: 'Hepsini Göster',
+      filterPlaceHolder: 'Filtrele',
       moveSelectedLabel: 'Move selected',
-      moveAllLabel: 'Move all',
-      removeSelectedLabel: 'Remove selected',
+      moveAllLabel: 'Taşı',
+      removeSelectedLabel: 'Seçimi Kaldır',
       removeAllLabel: 'Remove all',
       moveOnSelect: true,                                                                 // true/false (forced true on androids, see the comment later)
       moveOnDoubleClick: true,                                                            // true/false (forced false on androids, cause moveOnSelect is forced to true)
@@ -45,9 +45,9 @@
       showFilterInputs: true,                                                             // whether to show filter inputs
       nonSelectedFilter: '',                                                              // string, filter the non selected options
       selectedFilter: '',                                                                 // string, filter the selected options
-      infoText: 'Showing all {0}',                                                        // text when all options are visible / false for no info text
+      infoText: 'Gösterilen {0}',                                                        // text when all options are visible / false for no info text
       infoTextFiltered: '<span class="badge badge-warning">Filtered</span> {0} from {1}', // when not all of the options are visible due to the filter
-      infoTextEmpty: 'Empty list',                                                        // when there are no options present in the list
+      infoTextEmpty: 'Boş Liste',                                                        // when there are no options present in the list
       filterOnValues: false,                                                              // filter by selector's values, boolean
       sortByInputOrder: false,
       eventMoveOverride: false,                                                           // boolean, allows user to unbind default event behaviour and run their own instead

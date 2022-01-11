@@ -22,7 +22,7 @@ from ekabis.Forms.YekaHoldingCompetitionForm import YekaHoldingCompetitionForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import ExtraTime, \
     Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension, YekaCompetitionEskalasyon, YekaBusiness, \
-    YekaBusinessBlogParemetre, YekaHoldingCompetition, ConnectionUnit
+    YekaBusinessBlogParemetre, YekaHoldingCompetition, ConnectionUnit, Person
 
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
@@ -80,17 +80,18 @@ def return_yeka(request):
 
         for yeka in yekas:
             yeka_dict = dict()
-            competitions=[]
+            competitions = []
             regions = yeka.connection_region.filter(isDeleted=False)
             for region in regions:
                 for comp in region.yekacompetition.filter(isDeleted=False):
                     competitions.append(comp)
-            yeka_dict['yeka']=yeka
-            yeka_dict['regions']=regions
+            yeka_dict['yeka'] = yeka
+            yeka_dict['regions'] = regions
             comp_array.append(yeka_dict)
         return render(request, 'Yeka/view_yeka.html',
-                          {'yeka_form': yeka_form,'yekas':comp_array, 'error_messages': '', 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name})
+                      {'yeka_form': yeka_form, 'yekas': comp_array, 'error_messages': '', 'urls': urls,
+                       'current_url': current_url,
+                       'url_name': url_name})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, e)
@@ -2165,6 +2166,7 @@ def yeka_business_time(request):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
+
 @api_view(http_method_names=['POST'])
 def getYekaCompetitions(request):
     if request.POST:
@@ -2173,10 +2175,10 @@ def getYekaCompetitions(request):
             uuid = request.POST.get('uuid')
             yeka = Yeka.objects.get(uuid=uuid)
 
-            regions=yeka.connection_region.filter(isDeleted=False)
-            comp_array=[]
+            regions = yeka.connection_region.filter(isDeleted=False)
+            comp_array = []
             for region in regions:
-                competitions=region.yekacompetition.filter(isDeleted=False)
+                competitions = region.yekacompetition.filter(isDeleted=False)
                 for comp in competitions:
                     comp_array.append(comp)
             data = YekaCompetitionSerializer(comp_array, many=True)
@@ -2188,3 +2190,44 @@ def getYekaCompetitions(request):
         except Exception as e:
 
             return JsonResponse({'status': 'Fail', 'msg': e})
+
+
+@login_required
+def competition_personal_assigment(request):
+    perm = general_methods.control_access(request)
+
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+
+    urls = last_urls(request)
+    current_url = resolve(request.path_info)
+    url_name = Permission.objects.get(codename=current_url.url_name)
+
+    person_all = Employee.objects.filter(isDeleted=False, person__user__is_active=True).exclude(person__user__is_superuser=True)
+    competition_all = YekaCompetition.objects.filter(isDeleted=False)
+    try:
+        if request.POST:
+            competitions = request.POST.getlist('competition')
+            personals = request.POST.getlist('person')
+            for competition in competitions:
+                for item in personals:
+                    filter = {
+                        'pk': competition
+                    }
+                    comp = YekaCompetitionGetService(request, filter)
+                    employee = Employee.objects.get(pk=item)
+                    if not YekaCompetitionPerson.objects.filter(competition=competition, employee=employee):
+                        yeka_person = YekaCompetitionPerson(employee=employee, competition=comp, is_active=True)
+                        yeka_person.save()
+            messages.success(request, 'Yarışmalara Personeller Eklenmistir.')
+            return redirect('ekabis:competition_personal_assigment')
+
+        else:
+            return render(request, 'YekaCompetition/competition_personel_assigment.html',
+                          {'urls': urls, 'current_url': current_url, 'url_name': url_name, 'person_all': person_all,
+                           'competition_all': competition_all})
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
