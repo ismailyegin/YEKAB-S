@@ -2297,6 +2297,67 @@ def add_budget(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
+
+@login_required
+def change_budget(request, uuid, budget_uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        yeka_budget = YekaBudget.objects.get(uuid=uuid)
+        budget = Budget.objects.get(uuid=budget_uuid)
+        budget_form = BudgetForm(request.POST or None, request.FILES or None, instance=budget)
+        name = general_methods.yekaname(yeka_budget.business)
+        competition=YekaCompetition.objects.get(business=yeka_budget.business)
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                budget_form = BudgetForm(request.POST or None, request.FILES or None)
+
+                if budget_form.is_valid():
+                    form = budget_form.save(request, commit=False)
+
+                    for filename, file in request.FILES.items():
+                        if filename == 'budgetFile':
+                            budget.budgetFile = file
+
+                    budget.budgetDate=budget_form.cleaned_data['budgetDate']
+                    budget.annualSpendAmount=budget_form.cleaned_data['annualSpendAmount']
+                    budget.save()
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                        budget.budgetFile) + ' bütçe belgesi güncellendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
+                    messages.success(request, 'Bütçe  Güncellenmiştir.')
+                    return redirect('ekabis:budget-yeka-competition-list',yeka_budget.business.uuid,yeka_budget.yekabusinessblog.uuid )
+                else:
+                    budget_form = BudgetForm(request.POST, request.FILES)
+                    error_messages = get_error_messages(budget_form)
+                    return render(request, 'Arge/add_budget.html',
+                                  {
+                                      'urls': urls,
+                                      'current_url': current_url,
+                                      'url_name': url_name, 'name': name,
+                                      'error_messages': error_messages,
+                                      'budget_form': budget_form,'yeka_budget':yeka_budget
+                                  })
+            return render(request, 'Arge/add_budget.html',
+                          {'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'budget_form': budget_form, 'name': name,'yeka_budget':yeka_budget
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
+
+
 def employmentYekaCompetition(request, yeka_business, yeka_business_block):
     perm = general_methods.control_access(request)
     if not perm:

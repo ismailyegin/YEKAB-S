@@ -539,7 +539,7 @@ urlpatterns = [
     path('yeka/is-blok-sure', YekaViews.yeka_business_time, name='yeka_business_time'),
     path('yeka/yeka-yarismalari-getir/', YekaViews.getYekaCompetitions, name='yeka-yarismalari-getir'),
 
-    #Bütçe
+    # Bütçe
     path('yeka/yarisma-butce-listesi/<uuid:yeka_business>/<uuid:yeka_business_block>',
          YekaBussinessBlogStaticView.budgetYekaCompetition, name='budget-yeka-competition-list'),
     path('yeka/butce-ekle/<uuid:uuid>', YekaBussinessBlogStaticView.add_budget, name='add_budget'),
@@ -548,5 +548,7 @@ urlpatterns = [
     path('yeka/istihdam-ekle/<uuid:uuid>', YekaBussinessBlogStaticView.add_employment, name='add_employment'),
     path('yeka/yeka-butce-sil/', YekaBussinessBlogStaticView.delete_budget, name='delete_budget'),
     path('yeka/yeka-istihdam-sil/', YekaBussinessBlogStaticView.delete_employment, name='delete_employment'),
+    path('yeka/butce-guncelle/<uuid:uuid>/<uuid:budget_uuid>', YekaBussinessBlogStaticView.change_budget,
+         name='change_budget'),
 
 ]

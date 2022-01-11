@@ -149,72 +149,72 @@
                         </div>
                         <div class="card-body">
 
-                                <table id="budget" class="table table-bordered table-hover">
-                                    <thead>
+                            <table id="budget" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+
+                                    <th>#</th>
+                                    <th>Tarih</th>
+                                    <th>Doküman</th>
+                                    <th>Yıllık Harcanan Tutar</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for budget in budgets %}
                                     <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td>{{ budget.budgetDate | date }}</td>
+                                        <td>{% if budget.budgetFile %}
+                                            <a target="_blank" title="{{ budget.budgetFile }}"
+                                               href=" {{ MEDIA_URL }}{{ budget.budgetFile.url }}"
+                                               download="">{{ budget.budgetFile | truncatechars:20 }}</a></td>
+                                        {% endif %}
+                                        <td>{{ budget.annualSpendAmount }}</td>
 
-                                        <th>#</th>
-                                        <th>Tarih</th>
-                                        <th>Doküman</th>
-                                        <th>Yıllık Harcanan Tutar</th>
-                                        <th>İşlemler</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                                        <td>
 
-                                    {% for budget in budgets %}
-                                        <tr>
-                                            <td>{{ forloop.counter }} </td>
-                                            <td>{{ budget.budgetDate | date }}</td>
-                                            <td>{% if budget.budgetFile %}
-                                                <a target="_blank" title="{{ budget.budgetFile }}"
-                                                   href=" {{ MEDIA_URL }}{{ budget.budgetFile.url }}"
-                                                   download="">{{ budget.budgetFile | truncatechars:20 }}</a></td>
-                                            {% endif %}
-                                            <td>{{ budget.annualSpendAmount }}</td>
+                                            <div class="btn-group">
 
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button"
-                                                            class="btn btn-default dropdown-toggle dropdown-icon"
-                                                            data-toggle="dropdown">İşlemler
-                                                    </button>
-                                                    <div class="dropdown-menu" role="menu">
+                                                <button type="button"
+                                                        class="btn btn-default dropdown-toggle dropdown-icon"
+                                                        data-toggle="dropdown">İşlemler
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
 
-                                                        {% for item in perm %}
-                                                            {% if item == 'change_guarantee' %}
-                                                                <a href=""
-                                                                   class="dropdown-item"> <i
-                                                                        class="fa fa-edit"
-                                                                        title="Düzenle"></i>
-                                                                    Düzenle
-                                                                </a>
+                                                    {% for item in perm %}
+                                                        {% if item == 'change_budget' %}
+                                                            <a href="{% url 'ekabis:change_budget' yeka_budget.uuid budget.uuid %}"
+                                                               class="dropdown-item"> <i
+                                                                    class="fa fa-edit"
+                                                                    title="Düzenle"></i>
+                                                                Düzenle
+                                                            </a>
 
-                                                            {% elif item == 'delete_guarantee' %}
+                                                        {% elif item == 'delete_budget' %}
+                                                            <a class="dropdown-item" href=""
+                                                               data-toggle="modal"
+                                                               onclick="deleteBudget('{{ budget.uuid }}')"><i
+                                                                    class="fa fa-trash"></i>Sil</a>
+                                                        {% endif %}
 
-                                                                <a class="dropdown-item" href=""
-                                                                   data-toggle="modal"
-                                                                   onclick="deleteBudget('{{ budget.uuid }}')"><i
-                                                                        class="fa fa-trash"></i>Sil</a>
-                                                            {% endif %}
+                                                    {% endfor %}
 
-                                                        {% endfor %}
-
-
-                                                    </div>
 
                                                 </div>
 
-
-                                            </td>
-                                        </tr>
-
-                                    {% endfor %}
+                                            </div>
 
 
-                                    </tbody>
-                                </table>
+                                        </td>
+                                    </tr>
 
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
 
 
                         </div>
@@ -227,6 +227,7 @@
     </section>
     {% load static %}
     <script>
+
         $(function () {
             $('#budget').DataTable({
                 dom: 'Bfrtip',
@@ -308,7 +309,7 @@
         });
 
 
-            function deleteBudget(id) {
+        function deleteBudget(id) {
             debugger;
             console.log(id);
             var html = ''
