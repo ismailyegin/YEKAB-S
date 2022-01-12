@@ -2271,7 +2271,7 @@ def add_budget(request, uuid):
                     url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
                     html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
                         competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
-                        budget.budgetFile) + ' bütçe dokümanı eklendi.'
+                        budget.budgetFile.name) + ' bütçe dokümanı eklendi.'
                     notification(request, html, competition.uuid, 'yeka_competition')
                     messages.success(request, 'Bütçe Eklenmiştir.')
                     return redirect('ekabis:budget-yeka-competition-list', yeka_budget.business.uuid,
