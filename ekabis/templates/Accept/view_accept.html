@@ -197,7 +197,7 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ item.date }}</td>
                                         <td>
-                                            <a download="{{ item.report }}" target="_blank"
+                                            <a download="{{ MEDIA_URL }}{{ item.report }}" target="_blank"
                                                href="{{ MEDIA_URL }}{{ item.report }}">{{ item.report }}</a>
                                         </td>
                                         <td>
