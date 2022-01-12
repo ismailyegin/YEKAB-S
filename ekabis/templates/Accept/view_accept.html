@@ -196,10 +196,12 @@
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ item.date }}</td>
-                                        <td>
-                                            <a download="{{ MEDIA_URL }}{{ item.report }}" target="_blank"
-                                               href="{{ MEDIA_URL }}{{ item.report }}">{{ item.report }}</a>
-                                        </td>
+                                    <td>{% if item.report %}
+                                            <a target="_blank" title="{{ item.report }}"
+                                               href=" {{ MEDIA_URL }}{{ item.report.url }}"
+                                               download="">{{ item.report | truncatechars:20 }}</a></td>
+                                        {% endif %}
+
                                         <td>
                                             {{ item.installedPower }}
                                         </td>
