@@ -1241,7 +1241,9 @@
         })
         function all_region() {
             var data = new Array();
+
             {% if region_all %}
+                debugger;
                 {% for region in region_all %}
                     {% for item in region.cities.all %}
                         data.push("{{ item.plateNo }}");
