@@ -86,8 +86,8 @@
                                         name="competition">
 
 
-                                    {% for gr in competition_all %}
-                                        <option value="{{ gr.pk }}" data-sortindex="{{ gr.pk }}">{{ gr.name }}</option>
+                                    {% for item in competition_all %}
+                                        <option value="{{ item.competition.pk }}" data-sortindex="{{ item.competition.pk }}">{{ item.yeka.definition }} / {{ item.competition.name }} /{{ item.sub.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -133,7 +133,7 @@
 
                                     {% for employee in person_all %}
                                         <option value="{{ employee.pk }}"
-                                                data-sortindex="{{ employee.pk }}">{{ employee.person.user.first_name }} {{ employee.person.user.first_name }}</option>
+                                                data-sortindex="{{ employee.pk }}">{{ employee.person.user.first_name }} {{ employee.person.user.last_name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
