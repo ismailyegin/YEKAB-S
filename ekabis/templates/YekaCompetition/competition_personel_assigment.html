@@ -133,7 +133,7 @@
 
                                     {% for employee in person_all %}
                                         <option value="{{ employee.pk }}"
-                                                data-sortindex="{{ employee.pk }}">{{ employee.person.user.first_name }}</option>
+                                                data-sortindex="{{ employee.pk }}">{{ employee.person.user.first_name }} {{ employee.person.user.first_name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
