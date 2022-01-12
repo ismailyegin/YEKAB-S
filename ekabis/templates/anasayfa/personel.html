@@ -1239,6 +1239,39 @@
             })
 
         })
+         function degerAta(count, city) {
+
+
+            var patternAColor = '#E9A635';
+            var patternBColor = '#E7721C';
+            var patternCColor = '#EC3333';
+
+
+            switch (count) {
+                case 1:
+                    $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
+                    break;
+                case 2:
+                    $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
+                    break;
+                case 3:
+                    $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
+                    break;
+                case 4:
+                    $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
+                    break;
+                case 5:
+                    $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
+                    break;
+                case 6:
+                    $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
+                    break;
+
+                default:
+                    $("g[data-plakakodu=" + city + "] path").css({fill: patternCColor})
+            }
+
+        }
         function all_region() {
             var data = new Array();
                 {% for region in region_all %}
@@ -1266,7 +1299,7 @@
                     select2.value = ""
                     select3.value = ""
                     select3.style.display = 'none';
-
+                    $("g path").css({fill: '#222'});
                     all_region();
                 } else if ($(this).val() === 'select_yeka') {
                     var select = document.getElementById('selected_yeka_type')
