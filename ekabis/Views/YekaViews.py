@@ -2205,7 +2205,28 @@ def competition_personal_assigment(request):
     url_name = Permission.objects.get(codename=current_url.url_name)
 
     person_all = Employee.objects.filter(isDeleted=False, person__user__is_active=True).exclude(person__user__is_superuser=True)
-    competition_all = YekaCompetition.objects.filter(isDeleted=False)
+    competition_all = YekaCompetition.objects.filter(isDeleted=False).order_by('-date')
+    competititon_array=[]
+    for competition in competition_all:
+        yeka_dict=dict()
+        if ConnectionRegion.objects.filter(yekacompetition=competition,isDeleted=False):
+            region = ConnectionRegion.objects.get(yekacompetition=competition)
+            if Yeka.objects.filter(connection_region=region,isDeleted=False):
+                yeka = Yeka.objects.get(connection_region=region)
+                yeka_dict['yeka']=yeka
+                yeka_dict['competition']=competition
+                yeka_dict['sub']=''
+                competititon_array.append(yeka_dict)
+        elif competition.parent :
+            if competition.parent.isDeleted==False:
+                region = ConnectionRegion.objects.get(yekacompetition=competition.parent)
+                yeka = Yeka.objects.get(connection_region=region)
+                yeka_dict['sub'] = competition
+                yeka_dict['yeka'] = yeka
+                yeka_dict['competition'] =YekaCompetition.objects.get(pk=competition.parent.pk)
+                competititon_array.append(yeka_dict)
+
+
     try:
         if request.POST:
             competitions = request.POST.getlist('competition')
@@ -2226,7 +2247,7 @@ def competition_personal_assigment(request):
         else:
             return render(request, 'YekaCompetition/competition_personel_assigment.html',
                           {'urls': urls, 'current_url': current_url, 'url_name': url_name, 'person_all': person_all,
-                           'competition_all': competition_all})
+                           'competition_all': competititon_array})
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
