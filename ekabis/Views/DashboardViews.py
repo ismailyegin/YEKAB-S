@@ -67,7 +67,7 @@ def return_personel_dashboard(request):
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
     regions = ConnectionRegionService(request, None)
-    region_all = ConnectionRegionService(request, None)
+    region_all = ConnectionRegion.objects.filter(isDeleted=False,yeka__isDeleted=False)
 
     days = VacationDayService(request, None)
 
