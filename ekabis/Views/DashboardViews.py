@@ -67,7 +67,7 @@ def return_personel_dashboard(request):
     current_url = resolve(request.path_info)
     url_name = Permission.objects.get(codename=current_url.url_name)
     regions = ConnectionRegionService(request, None)
-    region_all = ConnectionRegion.objects.filter(isDeleted=False,yeka__isDeleted=False)
+    connection_regions = ConnectionRegion.objects.filter(isDeleted=False,yeka__isDeleted=False)
 
     days = VacationDayService(request, None)
 
@@ -146,7 +146,7 @@ def return_personel_dashboard(request):
                    'ges_count': ges_count, 'comp_array': comp_array, 'all_yeka': all_yeka,
                    'yeka_capacity': yeka_capacity_array,'urls': urls, 'current_url': current_url, 'url_name': url_name,
                    'jeo_count': jeo_count, 'biyo_count': biyo_count, 'person_comp': competition_array,
-                   'calendarNames': calendarNames, 'person_competitions': competitions,'region_all':region_all
+                   'calendarNames': calendarNames, 'person_competitions': competitions,'region_all':connection_regions
                    })
 
 
