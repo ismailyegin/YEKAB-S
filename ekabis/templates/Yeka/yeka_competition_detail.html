@@ -1122,12 +1122,15 @@
     <script>
 
          $(document).ready(function(){
+            debugger;
+            $('.x-{{ comp_yeka.pk }}').attr( 'class', 'expandable-body')
             $('#yeka-is-close-{{ comp_yeka.pk }}').attr( 'class', 'expandable-body')
+
             $('#yeka-tr-{{ comp_yeka.pk }}').attr( 'aria-expanded', 'true')
             $('#is_close-{{ comp_yeka.pk }}').attr( 'aria-expanded', 'true')
-            $('#is_close-{{ comp_yeka.pk }}').attr(  'aria-expanded', 'true')
+
             $('#reg-tr-{{ region.pk }}').attr('aria-expanded', 'true')
-            $('#competition-is-close-{{ comp_yeka.pk }}').attr( 'class', 'expandable-body')
+
             $('#div-show-{{ comp_yeka.pk }}').css("display", "block");
             $('#comp-tr-{{ yeka.pk }}').attr( 'aria-expanded', 'true')
             $('#comp-td-{{ yeka.pk }}').css('color','#fff')

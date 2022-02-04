@@ -548,6 +548,8 @@ urlpatterns = [
     path('yeka/istihdam-ekle/<uuid:uuid>', YekaBussinessBlogStaticView.add_employment, name='add_employment'),
     path('yeka/yeka-butce-sil/', YekaBussinessBlogStaticView.delete_budget, name='delete_budget'),
     path('yeka/yeka-istihdam-sil/', YekaBussinessBlogStaticView.delete_employment, name='delete_employment'),
+    path('yeka/istihdam-guncelle/<uuid:uuid>/<uuid:employment_uuid>', YekaBussinessBlogStaticView.change_employment,
+         name='change_employment'),
     path('yeka/butce-guncelle/<uuid:uuid>/<uuid:budget_uuid>', YekaBussinessBlogStaticView.change_budget,
          name='change_budget'),
 

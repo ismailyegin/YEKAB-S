@@ -145,14 +145,15 @@
 
 
                             if (result.status === 'Success') {
-                                var competitions = JSON.parse(result.competitions);
+                                debugger;
+                                var competitions = result.competitions;
                                 $("#modal_city").text(name);
 
                                 for (var comp in competitions) {
 
                                     var url_detail = "{% url 'ekabis:view_yeka_competition_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                                    url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].fields.uuid);
-                                    html = "<a href='" + url_detail + "' class='list-group-item list-group-item-action'>" + competitions[comp].fields.name + "</a>"
+                                    url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].competition_id);
+                                    html = "<a href='" + url_detail + "' class='list-group-item list-group-item-action'>" + competitions[comp].yeka+' - '+competitions[comp].competition + "</a>"
                                     $("#competition_list").prepend(html)
                                 }
 
@@ -1318,39 +1319,6 @@
 
         })
 
-        function degerAta(count, city) {
-
-
-            var patternAColor = '#E9A635';
-            var patternBColor = '#E7721C';
-            var patternCColor = '#EC3333';
-
-
-            switch (count) {
-                case 1:
-                    $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
-                    break;
-                case 2:
-                    $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
-                    break;
-                case 3:
-                    $("g[data-plakakodu=" + city + "] path").css({fill: patternAColor})
-                    break;
-                case 4:
-                    $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
-                    break;
-                case 5:
-                    $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
-                    break;
-                case 6:
-                    $("g[data-plakakodu=" + city + "] path").css({fill: patternBColor})
-                    break;
-
-                default:
-                    $("g[data-plakakodu=" + city + "] path").css({fill: patternCColor})
-            }
-
-        }
 
         function all_region() {
             var data = new Array();
@@ -1706,6 +1674,19 @@
                             borderColor: '#007bff', //red
                             allDay: true,
                             url: '{% url 'ekabis:view_yeka_detail' x.uuid %}'
+                        },
+                    {% endfor %}
+                    {% for x in calender_nots %}
+
+                        {
+                            title: "{{ x.calendarName.name }}",
+                            start: "{{ x.startDate | date:"Y-m-d" }}",
+                            end:"{{ x.finishDate | date:"Y-m-d" }}",
+                            backgroundColor: '#d50000', //red
+                            borderColor: '#000000', //red
+                            allDay: true,
+                            url: '{% url 'ekabis:view_yeka_competition_detail' x.competition.uuid %}'
+
                         },
                     {% endfor %}
 

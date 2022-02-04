@@ -192,7 +192,7 @@
                                 </thead>
                                 <tbody>
 
-                                {% for item in accept_accepts %}
+                                {% for item in accept_accepts|dictsortreversed:"date"%}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ item.date }}</td>
