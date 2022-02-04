@@ -2453,6 +2453,62 @@ def add_employment(request, uuid):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+@login_required
+def change_employment(request, uuid, employment_uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+
+        yeka_employment = YekaEmployment.objects.get(uuid=uuid)
+        employment = Employment.objects.get(uuid=employment_uuid)
+        employment_form = EmploymentForm(request.POST or None, request.FILES or None, instance=employment)
+        name = general_methods.yekaname(yeka_employment.business)
+        competition=YekaCompetition.objects.get(business=yeka_employment.business)
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                employment_form = EmploymentForm(request.POST or None, request.FILES or None)
+
+                if employment_form.is_valid():
+                    form = employment_form.save(request, commit=False)
+
+                    for filename, file in request.FILES.items():
+                        if filename == 'employmentFile':
+                            employment.employmentFile = file
+
+                    employment.employmentDate=employment_form.cleaned_data['employmentDate']
+                    employment.save()
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait istihdam güncellendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
+                    messages.success(request, 'İstihdam  Güncellenmiştir.')
+                    return redirect('ekabis:employment-yeka-competition-list',yeka_employment.business.uuid,yeka_employment.yekabusinessblog.uuid )
+                else:
+                    employment_form = EmploymentForm(request.POST, request.FILES)
+                    error_messages = get_error_messages(employment_form)
+                    return render(request, 'Arge/add_employment.html',
+                                  {
+                                      'urls': urls,
+                                      'current_url': current_url,
+                                      'url_name': url_name, 'name': name,
+                                      'error_messages': error_messages,
+                                      'budgeemployment_formt_form': employment_form,'yeka_employment':yeka_employment
+                                  })
+            return render(request, 'Arge/add_employment.html',
+                          {'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'employment_form': employment_form, 'name': name,'yeka_employment':yeka_employment
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
 
 def delete_employment(request):
     perm = general_methods.control_access(request)

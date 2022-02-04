@@ -22,7 +22,7 @@ from ekabis.Forms.YekaHoldingCompetitionForm import YekaHoldingCompetitionForm
 from ekabis.Views.VacationDayViews import is_vacation_day
 from ekabis.models import ExtraTime, \
     Permission, Logs, ConnectionRegion, YekaCompetition, FileExtension, YekaCompetitionEskalasyon, YekaBusiness, \
-    YekaBusinessBlogParemetre, YekaHoldingCompetition, ConnectionUnit, Person
+    YekaBusinessBlogParemetre, YekaHoldingCompetition, ConnectionUnit, Person, Calendar
 
 from ekabis.models.Company import Company
 from ekabis.models.Employee import Employee
@@ -849,6 +849,11 @@ def change_yekabusinessBlog(request, yeka, yekabusiness, business):
                                                                   instance=holding_competition)
 
         if request.POST:
+            if yekaBusinessBlogo_form.cleaned_data['status'] == '1':
+                if Calendar.objects.filter(calendarName__name=yeka.definition + '-' + business.name):
+                    calendar_yeka = Calendar.objects.get(calendarName__name=yeka.definition + '-' + business.name)
+                    calendar_yeka.is_active = False
+                    calendar_yeka.save()
 
             yekaBusinessBlogo_form = YekaBusinessBlogForm(business.pk, yekabussiness, request.POST or None,
                                                           request.FILES or None,

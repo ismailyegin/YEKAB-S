@@ -46,7 +46,7 @@ def view_yeka_accept(request, business, businessblog):
             accept_accepts=accept.accept.filter(isDeleted=False)
         else:
             accept = YekaAccept.objects.get(business=yekabusiness,isDeleted=False)
-            accept_accepts=accept.accept.filter(isDeleted=False).order_by('-date')
+            accept_accepts=accept.accept.filter(isDeleted=False)
 
 
             total_mwm=accept_accepts.aggregate(Sum('installedPower'))['installedPower__sum']

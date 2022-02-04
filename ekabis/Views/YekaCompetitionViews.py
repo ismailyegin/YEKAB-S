@@ -28,7 +28,7 @@ from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka, YekaCompetitionEskalasyon, \
     YekaBusinessBlogParemetre, BusinessBlogParametreType, Company, YekaHoldingCompetition, ConnectionUnit, \
-    YekaGuarantee, YekaAccept, YekaCompetitionEskalasyon_eskalasyon
+    YekaGuarantee, YekaAccept, YekaCompetitionEskalasyon_eskalasyon, Calendar, CalendarYeka
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -852,6 +852,12 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     dependence_blocks = YekaBusinessBlog.objects.filter(dependence_parent=yekabussiness)
                     for dependence_block in dependence_blocks:
                         add_time_next(yekabussiness.pk, dependence_block.pk, competition)
+                if yekaBusinessBlogo_form.cleaned_data['status']=='1':
+                    region = ConnectionRegion.objects.get(yekacompetition=competition)
+                    yeka_name = Yeka.objects.get(connection_region=region).definition
+                    if CalendarYeka.objects.filter(calendarName__name=yeka_name+'-'+competition.name+'-'+business.name):
+                        calendar_yeka = CalendarYeka.objects.get(calendarName__name=yeka_name+'-'+competition.name+'-'+business.name)
+                        calendar_yeka.delete()
 
                 messages.success(request, 'Başarıyla Kayıt Edilmiştir.')
                 url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
@@ -1605,6 +1611,14 @@ def view_sub_yeka_competition_detail(request, uuid):
             yekabusiness = yeka.business
             yekabusinessbloks = yekabusiness.businessblogs.filter(isDeleted=False).order_by('sorting')
 
+        if yeka.parent:
+            region = ConnectionRegion.objects.get(yekacompetition=yeka.parent)
+            comp_yeka = Yeka.objects.get(connection_region=region)
+
+
+        else:
+            region = ConnectionRegion.objects.get(yekacompetition=yeka)
+            comp_yeka = Yeka.objects.get(connection_region=region)
         employe_filter = {
             'competition': yeka
         }
@@ -1697,8 +1711,8 @@ def view_sub_yeka_competition_detail(request, uuid):
         return render(request, 'YekaCompetition/sub_yeka_detail.html',
                       {'urls': urls, 'current_url': current_url, 'proposal_sub_yeka': proposal_sub_yeka,
                        'url_name': url_name, 'name': name, 'blocks': blocks, 'yeka_proposal': yeka_proposal,
-                       'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks, 'employe': employee,
-                       'employees': employees, 'yeka_info': yeka_info_dict
+                       'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks, 'employe': employee,'competition':yeka.parent,
+                       'employees': employees, 'yeka_info': yeka_info_dict,'comp_yeka': comp_yeka,'region':region
 
                        })
 

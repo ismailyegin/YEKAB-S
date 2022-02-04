@@ -11,7 +11,7 @@ from django.urls import resolve
 from django.utils.safestring import mark_safe
 
 from ekabis.models import ConnectionRegion, Permission, City, YekaCompetition, HelpMenu, YekaAccept, Yeka, \
-    YekaCompetitionEskalasyon_eskalasyon, YekaCompetitionEskalasyon
+    YekaCompetitionEskalasyon_eskalasyon, YekaCompetitionEskalasyon, Calendar, CalendarYeka
 from ekabis.models.VacationDay import VacationDay
 from ekabis.models.YekaContract import YekaContract
 from ekabis.serializers.YekaSerializer import YekaSerializer
@@ -264,6 +264,7 @@ def return_admin_dashboard(request):
 
     regions = ConnectionRegionService(request, None)
     days = VacationDayService(request, None)
+    calender_notifications=CalendarYeka.objects.filter(is_active=True)
 
     # region_json = serializers.serialize("json", ConnectionRegion.objects.all(), cls=DjangoJSONEncoder)
     # yeka_json = serializers.serialize("json",yeka, cls=DjangoJSONEncoder)
@@ -505,11 +506,25 @@ def api_connection_region_competitions(request):
                                                                                                               flat=True)
                         competitions = YekaCompetition.objects.filter(competition_regions__id__in=regions,
                                                                       isDeleted=False).distinct()
+                        competition_array=[]
+                        for competition in competitions:
+                            yeka_dict=dict()
+                            yeka_dict['competition_id']=competition.uuid
+                            yeka_dict['competition']=competition.name
+                            region=ConnectionRegion.objects.filter(yekacompetition=competition)
+                            if region:
+                                region = ConnectionRegion.objects.get(yekacompetition=competition)
+                                yeka=Yeka.objects.get(connection_region=region)
+                                yeka_dict['yeka']=yeka.definition
+                            else:
+                                yeka_dict['yeka']=''
+                            competition_array.append(yeka_dict)
 
-                competitions = serializers.serialize("json", competitions, cls=DjangoJSONEncoder)
-                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'competitions': competitions})
+
+
+                return JsonResponse({'status': 'Success', 'msg': 'İşlem Başarılı', 'competitions': competition_array})
             else:
-                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request'})
+                return JsonResponse({'status': 'Fail', 'msg': 'Not a valid request', 'competitions': []})
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})

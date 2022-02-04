@@ -180,8 +180,8 @@
                                                     <div class="dropdown-menu" role="menu">
 
                                                         {% for item in perm %}
-                                                            {% if item == 'change_guarantee' %}
-                                                                <a href=""
+                                                            {% if item == 'change_employment' %}
+                                                                <a href="{% url 'ekabis:change_employment' yeka_employment.uuid employment.uuid%}"
                                                                    class="dropdown-item"> <i
                                                                         class="fa fa-edit"
                                                                         title="Düzenle"></i>

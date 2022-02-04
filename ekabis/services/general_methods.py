@@ -1,5 +1,5 @@
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import requests
 from bs4 import BeautifulSoup
@@ -15,7 +15,8 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from accounts.models import Forgot
-from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition, BusinessBlog, NotificationUser
+from ekabis.models import Yeka, YekaPerson, HelpMenu, YekaCompetition, BusinessBlog, NotificationUser, YekaBusiness, \
+    CalendarName, Calendar, YekaBusinessBlog, ConnectionRegion, CalendarYeka
 from ekabis.models.ActiveGroup import ActiveGroup
 from ekabis.models.Logs import Logs
 from ekabis.models.Menu import Menu
@@ -37,6 +38,7 @@ import ssl
 
 # from bs4 import BeautifulSoup
 # import requests
+from oxiterp.settings.base import EMAIL_HOST_USER
 
 
 def get_client_ip(request):
@@ -228,13 +230,13 @@ def getProfileImage(request):
 def get_notification(request):
     notifications = None
     date = None
-    notification_count=0
+    notification_count = 0
     if request.user.id:
         user = request.user
         notifications = NotificationUser.objects.filter(is_read=False, user=user).order_by('-creationDate')[:10]
         notification_count = NotificationUser.objects.filter(is_read=False, user=user).order_by('-creationDate').count()
         date = datetime.now().date()
-    return {'notifications': notifications, 'date': date,'notification_count':notification_count}
+    return {'notifications': notifications, 'date': date, 'notification_count': notification_count}
 
 
 def get_error_messages(form):
@@ -547,4 +549,60 @@ def yekaMenus(request):
         yeka_dict['regions'] = regions
         comp_array.append(yeka_dict)
 
-    return {'yeka_competition_array':comp_array}
+    return {'yeka_competition_array': comp_array}
+
+
+def yekaBusinessPlanReminder(request):
+    date_now = datetime.now()
+    yekas = YekaCompetition.objects.filter(isDeleted=False)
+
+    for yeka in yekas:
+        if yeka.business:
+            business_block_actives = yeka.business.businessblogs.filter(status='3')
+            if business_block_actives.count() == 1:
+                business_block_active = yeka.business.businessblogs.get(status='3')
+                block_date = business_block_active.startDate
+                end_date = YekaBusinessBlog.objects.filter(pk=business_block_active.parent.pk)
+                if end_date:
+                    end_date = YekaBusinessBlog.objects.get(parent__id=business_block_active.pk)
+                else:
+                    end_date = business_block_active
+                if ConnectionRegion.objects.filter(yekacompetition=yeka):
+                    region = ConnectionRegion.objects.get(yekacompetition=yeka)
+                    yeka_name = Yeka.objects.get(connection_region=region).definition
+                    if not CalendarYeka.objects.filter(
+                            calendarName__name=yeka_name + '-' + yeka.name + '-' + business_block_active.businessblog.name,
+                            competition=yeka):
+                        if business_block_active.startDate - timedelta(
+                                days=business_block_active.businessblog.start_notification) <= date_now and date_now <= business_block_active.startDate + timedelta(
+                            days=business_block_active.businessblog.finish_notification):
+                            if yeka.parent:
+                                comp_name = yeka_name + ' - ' + yeka.parent.name + ' - ' + yeka.name + ' - ' + business_block_active.businessblog.name
+                            else:
+                                comp_name = yeka_name + '-' + yeka.name + '-' + business_block_active.businessblog.name
+                            new_calender = CalendarName(name=comp_name, color='#fff453')
+                            new_calender.save()
+                            calender = CalendarYeka(calendarName=new_calender, competition=yeka,
+                                                    startDate=block_date, finishDate=end_date.startDate)
+                            calender.save()
+
+                            html_content = ''
+                            subject, from_email, to = 'YEKABİS İş Planı', 'byurdakul@kobiltek.com', EMAIL_HOST_USER
+                            html_content += '<strong>Bu bir hatırlatma mailidir.</strong>'
+                            html_content += '<h4>'+comp_name+'</h4>'
+                            html_content += '<p>İş bloğunun iş yapılma tarihine kalan gün sayısı : <strong>'+str((business_block_active.startDate-date_now).days)+'</strong> !! </p>'
+
+
+                            msg = EmailMultiAlternatives(subject, '', from_email, [to])
+                            msg.attach_alternative(html_content, "text/html")
+                            msg.send()
+                    else:
+                        calender_yeka = CalendarYeka.objects.get(
+                            calendarName__name=yeka_name + '-' + yeka.name + '-' + business_block_active.businessblog.name,
+                            competition=yeka)
+                        if not (calender_yeka.startDate - timedelta(
+                                days=business_block_active.businessblog.start_notification) <= date_now and date_now <= calender_yeka.startDate + timedelta(
+                            days=business_block_active.businessblog.finish_notification)):
+                            calender_yeka.delete()
+
+    return {'calender_nots': CalendarYeka.objects.filter(is_active=True)}

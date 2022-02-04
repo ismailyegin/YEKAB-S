@@ -81,14 +81,15 @@
 
 
                             if (result.status === 'Success') {
-                                var competitions = JSON.parse(result.competitions);
+                                debugger;
+                                var competitions = result.competitions;
                                 $("#modal_city").text(name);
 
                                 for (var comp in competitions) {
 
                                     var url_detail = "{% url 'ekabis:view_yeka_competition_detail' '7729c6ee-739d-4a89-8ffe-1357e691ca16' %}";
-                                    url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].fields.uuid);
-                                    html = "<a href='" + url_detail + "' class='list-group-item list-group-item-action'>" + competitions[comp].fields.name + "</a>"
+                                    url_detail = url_detail.replace('7729c6ee-739d-4a89-8ffe-1357e691ca16', competitions[comp].competition_id);
+                                    html = "<a href='" + url_detail + "' class='list-group-item list-group-item-action'>" + competitions[comp].yeka+' - '+competitions[comp].competition + "</a>"
                                     $("#competition_list").prepend(html)
                                 }
 
