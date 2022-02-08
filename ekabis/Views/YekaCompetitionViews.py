@@ -28,7 +28,7 @@ from ekabis.models.YekaBusinessBlog import YekaBusinessBlog
 from ekabis.models import YekaCompetition, YekaBusiness, BusinessBlog, Employee, YekaPerson, \
     YekaPersonHistory, Permission, ConnectionRegion, YekaPurchaseGuarantee, ProposalSubYeka, YekaCompetitionEskalasyon, \
     YekaBusinessBlogParemetre, BusinessBlogParametreType, Company, YekaHoldingCompetition, ConnectionUnit, \
-    YekaGuarantee, YekaAccept, YekaCompetitionEskalasyon_eskalasyon, Calendar, CalendarYeka
+    YekaGuarantee, YekaAccept, YekaCompetitionEskalasyon_eskalasyon, Calendar, CalendarYeka, YekaProgressReport
 from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.models.YekaCompetitionPersonHistory import YekaCompetitionPersonHistory
 from ekabis.models.YekaContract import YekaContract
@@ -1346,7 +1346,10 @@ def view_yeka_competition_detail(request, uuid):
         eskalasyon = YekaCompetitionEskalasyon.objects.filter(competition=yeka)
         name = general_methods.yekaname(yeka.business)
         competitions = YekaCompetition.objects.filter(parent=yeka, isDeleted=False)
-
+        if YekaProgressReport.objects.filter(competition=yeka):
+            report_progress = YekaProgressReport.objects.get(competition=yeka)
+        else:
+            report_progress=None
         yekabusinessbloks_sub = None
         proposal_array = []
         proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka__parent=yeka, isDeleted=False)
@@ -1566,7 +1569,7 @@ def view_yeka_competition_detail(request, uuid):
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks, 'array_proposal': array_proposal,
                        'yeka_eskalasyon': eskalasyon, 'employee': employee, 'competition_persons': competition_persons,
                        'employees': employees, 'competitions': competitions, 'region': region,
-                       'yekaproposal': yekaproposal,
+                       'yekaproposal': yekaproposal,'report_progress':report_progress,
                        'indemnity': guarantees, 'comp_yeka': comp_yeka,
                        'yeka_info': yeka_info_dict, 'proposal_array': proposal_array
                        })
@@ -1631,6 +1634,8 @@ def view_sub_yeka_competition_detail(request, uuid):
         licence_finish_date = '---'
         build_date = '---'
         serh_date = '---'
+        licence_file=None
+        prelicence_file=None
         total = 0
         for block in yekabusinessbloks:
             block_dict = {}
@@ -1643,6 +1648,8 @@ def view_sub_yeka_competition_detail(request, uuid):
                 if block.startDate:
                     prelicence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:
+                    if block.parameter.filter(parametre__title='Ön Lisans Belgesi'):
+                        prelicence_file = block.parameter.get(parametre__title='Ön Lisans Belgesi').file
                     if block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
                         prelicence_date = block.parameter.get(parametre__title='Ön Lisans Tarihi').value
                     if block.parameter.filter(parametre__title='Ön Lisans Süresi (Yıl/Ay/Gün)'):
@@ -1660,6 +1667,8 @@ def view_sub_yeka_competition_detail(request, uuid):
                 if block.startDate:
                     licence_finish_date = block.startDate.date().strftime("%d/%m/%Y")
                 if block.parameter:
+                    if block.parameter.filter(parametre__title='Lisans Belgesi'):
+                        licence_file = block.parameter.get(parametre__title='Lisans Belgesi').file
                     if block.parameter.filter(parametre__title='Lisans Tarihi'):
                         licence_date = block.parameter.get(parametre__title='Lisans Tarihi').value
                     if block.parameter.filter(parametre__title='Lisans Süresi (Yıl/Ay/Gün)'):
@@ -1698,6 +1707,8 @@ def view_sub_yeka_competition_detail(request, uuid):
                     total = round(float("{:.5f}".format(total)), 5)
         yeka_info_dict = {}
         yeka_info_dict['serh_date'] = serh_date
+        yeka_info_dict['prelicence_file']=prelicence_file
+        yeka_info_dict['licence_file']=licence_file
         yeka_info_dict['accept_total'] = total
         yeka_info_dict['build_date'] = build_date
         yeka_info_dict['licence_date'] = licence_date

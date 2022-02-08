@@ -13,3 +13,5 @@ class ExtraTime(BaseModel):
     yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.DO_NOTHING)
     files = models.ManyToManyField(ExtraTimeFile)
     time_type = models.CharField(null=True, blank=True, max_length=100)
+    definition=models.CharField(null=True,blank=True,max_length=250)
+    new_date=models.DateField(null=True,blank=True)

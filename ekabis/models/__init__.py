@@ -64,3 +64,5 @@ from .Employment import Employment
 from .YekaBudget import YekaBudget
 from .YekaEmployment import YekaEmployment
 from .CalendarYeka import CalendarYeka
+from .ProgressReport import ProgressReport
+from .YekaProgressReport import YekaProgressReport

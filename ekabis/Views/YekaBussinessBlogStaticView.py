@@ -15,6 +15,7 @@ from ekabis.Forms.CoordinateForm import CoordinateForm
 from ekabis.Forms.EmploymentForm import EmploymentForm
 from ekabis.Forms.GuaranteeForm import GuaranteeForm
 from ekabis.Forms.LocationForm import LocationForm
+from ekabis.Forms.ProgressReportForm import ProgressReportForm
 from ekabis.models.Coordinate import Coordinate
 from ekabis.models.Location import Location
 
@@ -28,7 +29,8 @@ from ekabis.Forms.YekaApplicationFileNameForm import YekaApplicationFileName, Ye
 from ekabis.Forms.YekaApplicationForm import YekaApplicationForm
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
-    YekaCompany, YekaGuarantee, Collateral, ProposalSubYeka, YekaBudget, YekaEmployment, Budget, Employment
+    YekaCompany, YekaGuarantee, Collateral, ProposalSubYeka, YekaBudget, YekaEmployment, Budget, Employment, \
+    YekaProgressReport
 from ekabis.models.Competition import Competition
 from ekabis.models.Settings import Settings
 from ekabis.models.CompetitionCompany import CompetitionCompany
@@ -2297,6 +2299,64 @@ def add_budget(request, uuid):
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
 
+@login_required
+def add_progressreport(request, comp_uuid):
+    perm = general_methods.control_access(request)
+    if not perm:
+        logout(request)
+        return redirect('accounts:login')
+    try:
+        competition = YekaCompetition.objects.get(uuid=comp_uuid)
+        if YekaProgressReport.objects.filter(competition=competition):
+            yeka_report = YekaProgressReport.objects.get(competition=competition)
+        else:
+            yeka_report = YekaProgressReport(competition=competition)
+            yeka_report.save()
+
+        report_form = ProgressReportForm()
+
+        urls = last_urls(request)
+        current_url = resolve(request.path_info)
+        url_name = Permission.objects.get(codename=current_url.url_name)
+        name = general_methods.yekaname(competition.business)
+
+        with transaction.atomic():
+
+            if request.method == 'POST':
+                report_form = ProgressReportForm(request.POST or None, request.FILES or None)
+                if report_form.is_valid():
+                    report = report_form.save(request, commit=False)
+                    report.save()
+                    # report.competition = competition
+                    yeka_report.progressReport.add(report)
+                    yeka_report.save()
+                    url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
+                    html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
+                        competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
+                        report.definition) + ' ilerleme raporu eklendi.'
+                    notification(request, html, competition.uuid, 'yeka_competition')
+                    messages.success(request, 'İlerleme Raporu Eklenmiştir.')
+                    return redirect('ekabis:view_yeka_competition_detail', competition.uuid)
+                else:
+                    error_messages = get_error_messages(report_form)
+                    return render(request, 'ProgressReport/addProgressReport.html',
+                                  {
+                                      'urls': urls,
+                                      'current_url': current_url,
+                                      'url_name': url_name,
+                                      'error_messages': error_messages,
+                                      'report_form': report_form, 'name': name,
+                                  })
+
+            return render(request, 'ProgressReport/addProgressReport.html',
+                          {'urls': urls,
+                           'current_url': current_url, 'url_name': url_name,
+                           'report_form': report_form, 'name': name,
+                           })
+    except Exception as e:
+        traceback.print_exc()
+        messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+        return redirect('ekabis:view_yeka')
 
 @login_required
 def change_budget(request, uuid, budget_uuid):

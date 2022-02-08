@@ -51,7 +51,7 @@ def return_add_extra_time(request, business, businessblog):
         # if ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog):
         #      return redirect('ekabis:change_extratime', ExtraTime.objects.get(yekabusinessblog=yekabussinessblog).uuid)
         extratime_form = ExtraTimeForm()
-        extra_times = ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog)
+        extra_times = ExtraTime.objects.filter(yekabusinessblog=yekabussinessblog).filter(isDeleted=False)
         with transaction.atomic():
             if request.method == 'POST':
 
@@ -66,12 +66,33 @@ def return_add_extra_time(request, business, businessblog):
                     extratime.business = yekabusiness
                     extratime.save()
                     main = yekabussinessblog
-
+                    if ExtraTime.objects.filter(business=yekabusiness,yekabusinessblog=yekabussinessblog).exclude(extratime):
+                        start_date=ExtraTime.objects.filter(business=yekabusiness,yekabusinessblog=yekabussinessblog).exclude(extratime).last().new_date
+                    else:
+                        start_date=yekabussinessblog.startDate
+                    if yekabussinessblog.time_type == 'is_gunu':
+                        add_time = extratime.time
+                        count = 0
+                        while add_time > 1:
+                            start_date = start_date + datetime.timedelta(days=1)
+                            count = count + 1
+                            is_vacation = is_vacation_day(start_date)
+                            if not is_vacation:
+                                add_time = add_time - 1
+                    else:
+                        start_date = yekabussinessblog.startDate + datetime.timedelta(days=extratime.time) - datetime.timedelta(days=1)
+                    extratime.new_date=start_date
+                    extratime.save()
                     dependence_blocks = YekaBusinessBlog.objects.filter(dependence_parent=yekabussinessblog)
                     for dependence_block in dependence_blocks:
                             add_time_next(yekabussinessblog.pk, dependence_block.pk, competition,extratime.time,yekabussinessblog)
+
                     messages.success(request, 'Ek Süre Kayıt Edilmiştir.')
-                    return redirect('ekabis:view_yeka_competition_detail',competition.uuid)
+                    if competition.parent:
+                        return redirect('ekabis:view_sub_yeka_competition_detail',competition.uuid)
+
+                    else:
+                        return redirect('ekabis:view_yeka_competition_detail',competition.uuid)
                 else:
                     error_messages = get_error_messages(extratime_form)
                     return render(request, 'ExtraTime/add_extratime.html',
@@ -94,8 +115,11 @@ def return_add_extra_time(request, business, businessblog):
 def add_time_next(parent_id, current_id, yeka,time,sabit):
     parent_block = YekaBusinessBlog.objects.get(pk=parent_id)
     current_block = YekaBusinessBlog.objects.get(pk=current_id)
+    if ExtraTime.objects.filter(business=yeka.business,yekabusinessblog=parent_block):
+        start_date = ExtraTime.objects.filter(business=yeka.business,yekabusinessblog=parent_block).last().new_date
+    else:
+        start_date = parent_block.startDate
 
-    start_date = parent_block.startDate
     if parent_block.businessTime:
         if sabit.pk==current_block.pk:
             time = parent_block.businessTime + int(time)

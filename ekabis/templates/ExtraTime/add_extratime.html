@@ -149,10 +149,12 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Firmalar</th>
+                                    <th>Konu</th>
                                     <th>Ek Süre Ekleyen Personel</th>
                                     <th>Ek Süre</th>
+                                    <th>Eklenen İş Bloğu</th>
                                     <th>Ekleme Tarihi</th>
+                                    <th>Yeni Tarih</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -161,14 +163,12 @@
                                 {% for time in extra_times %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>
-                                            {% for company in  time.yekabusinessblog.companies.all %}
-                                                {{ company.name }}/
-                                            {% endfor %}
-                                        </td>
+                                        <td>{{ time.definition }}</td>
                                         <td>{{ time.user.first_name }} {{ time.user.last_name }}</td>
                                         <td>{{ time.time }}</td>
+                                        <td>{{ time.yekabusinessblog.businessblog.name }}</td>
                                         <td>{{ time.creationDate }}</td>
+                                        <td>{{ time.new_date | date  }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-default">İşlemler</button>
