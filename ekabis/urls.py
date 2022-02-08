@@ -554,5 +554,6 @@ urlpatterns = [
          name='change_budget'),
 
     path('yeka/yarisma-personel-ata', YekaViews.competition_personal_assigment, name='competition_personal_assigment'),
+    path('yeka/ilerleme-rapor-ekle/<uuid:comp_uuid>', YekaBussinessBlogStaticView.add_progressreport, name='add_progressreport'),
 
 ]

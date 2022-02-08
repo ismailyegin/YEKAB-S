@@ -1028,6 +1028,70 @@
 
                                     </div>
                                 </div>
+                             <div class="card card-default card-outline collapsed-card">
+                                    <div class="card-header with-border">
+                                        <h3 class="card-title">İlerleme Raporu</h3>
+<div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                                    {% if aktif != 'Admin' %}
+                                        {% for item in perm %}
+                                            {% if item == 'add_progressreport'  and employee in employees%}
+                                                <a href="{% url "ekabis:add_progressreport" yeka.uuid %}"
+                                                   title="İlerleme Raporu Ekle"
+                                                   type="button" class="btn btn-outline-primary btn-sm"
+                                                   style="float: right"><i
+                                                        class="fa fa-plus"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% else %}
+                                         <a href="{% url "ekabis:add_progressreport" yeka.uuid %}"
+                                                   title="İlerleme Raporu Ekle"
+                                                   type="button" class="btn btn-outline-primary btn-sm"
+                                                   style="float: right"><i
+                                                        class="fa fa-plus"></i>
+                                                </a>
+                                    {% endif %}
+
+                                    </div>
+
+
+                                    <div class="card-body">
+
+                                        <table id="region" class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Açıklama</th>
+                                                <th>İlerleme Raporu</th>
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                            {% for report in report_progress.progressReport.all %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }} </td>
+                                                    <td>{{ report.definition }} </td>
+                                                    <td>
+                                                        <a target="_blank"
+                                                             href="{{ MEDIA_URL }}{{ report.reportFile.url }}"
+                                                             download="">{{ report.reportFile | truncatechars:20 }}</a></td>
+
+                                                </tr>
+
+                                            {% endfor %}
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
                             </div>
 
                             {#personel Listesi#}
