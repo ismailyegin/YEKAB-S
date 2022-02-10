@@ -14,7 +14,7 @@ from django.urls import resolve
 from ekabis.Forms.ExtraTimeFileForm import ExtraTimeFileForm
 from ekabis.Forms.ExtraTimeForm import ExtraTimeForm
 from ekabis.Views.VacationDayViews import is_vacation_day
-from ekabis.models import YekaBusiness, YekaCompetition, Permission, Logs
+from ekabis.models import YekaBusiness, YekaCompetition, Permission, Logs, ConnectionRegion
 from ekabis.models.ExtraTime import ExtraTime
 from ekabis.models.VacationDay import VacationDay
 from ekabis.models.Yeka import Yeka
@@ -160,24 +160,33 @@ def return_list_extra_time(request):
     for item in ExtraTimeService(request, ExtraTimefilter).order_by('-creationDate'):
         if Yeka.objects.filter(business=item.business):
             time = {
+                'yeka_name':None,
                 'yeka': Yeka.objects.get(business=item.business).definition,
                 'blogname': item.yekabusinessblog.businessblog.name,
-                'time': item.time,
+                'time': item,
                 'uuid': item.uuid,
 
             }
 
 
         elif YekaCompetition.objects.filter(business=item.business):
+            comp=YekaCompetition.objects.get(business=item.business)
+            region=ConnectionRegion.objects.filter(yekacompetition=comp)
+            if region:
+                yeka_name=Yeka.objects.get(connection_region__in=region).definition
+            else:
+                yeka_name =None
             time = {
-                'yeka': YekaCompetition.objects.get(business=item.business).name,
+                'yeka_name':yeka_name,
+                'yeka': comp.name,
                 'blogname': item.yekabusinessblog.businessblog.name,
-                'time': item.time,
+                'time': item,
                 'uuid': item.uuid,
 
             }
         else:
             time = {
+                'yeka_name': None,
                 'yeka': None,
                 'blogname': item.yekabusinessblog.businessblog.name,
                 'time': item.time,

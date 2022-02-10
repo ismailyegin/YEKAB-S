@@ -151,9 +151,17 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Yeka</th>
-                                    <th>İş Blogu</th>
-                                    <td>Süre</td>
-                                    <td>İşlemler</td>
+                                    <th>Yarışma</th>
+                                    <th>Konu</th>
+                                    <th>Ek Süre Ekleyen Personel</th>
+                                    <th>Eklenen İş Bloğu</th>
+                                    <th>Ekleme Tarihi</th>
+                                    <th>Ek Süre Başlangıç Tarihi</th>
+                                    <th>Ek Süre</th>
+                                    <th>Yeni Tarih</th>
+                                    <th>Önceki Tarih</th>
+                                    <th>Ek Süre Belgesi</th>
+                                    <th></th>
 
 
                                 </tr>
@@ -163,12 +171,28 @@
                                     {% for item in ekstratime %}
                                         <tr>
                                             <td>{{ forloop.counter }} </td>
-                                            <td>{{ item.yeka }}</td>
-                                            <td>
-                                                {{ item.blogname }}
-                                            </td>
-                                            <td>
-                                                {{ item.time }}
+                                            {% if item.yeka_name %}
+                                                <td>{{ item.yeka_name }}</td>
+                                                <td>{{ item.yeka }}</td>
+                                            {% else %}
+                                                <td>{{ item.yeka }}</td>
+                                                <td>{{ item.yeka_name }}</td>
+
+                                            {% endif %}
+                                            <td>{{ item.time.definition }}</td>
+                                            <td>{{ item.time.user.first_name }} {{ item.time.user.last_name }}</td>
+                                            <td>{{ item.time.yekabusinessblog.businessblog.name }}</td>
+                                            <td>{{ item.time.creationDate }}</td>
+                                            <td>{{ item.time.added_date }}</td>
+                                            <td>{{ item.time.time }}</td>
+                                            <td>{{ item.time.new_date | date }}</td>
+                                            <td>{{ item.time.old_date | date }}</td>
+
+                                            <td>{% if item.time.file %}
+                                                <a target="_blank" title="{{ item.time.file }}"
+                                                   href=" {{ MEDIA_URL }}{{ item.time.file.url }}"
+                                                   download="">{{ item.time.file | truncatechars:20 }}</a>
+                                            {% endif %}
                                             </td>
                                             <td>
                                                 <div class="btn-group">
@@ -188,7 +212,8 @@
                                                             {% if p == 'add_extratimefile' %}
                                                                 <a href="{% url "ekabis:add_extratimefile" item.uuid %}"
                                                                    class="dropdown-item"> <i
-                                                                        class="fa fa-plus " title="Düzenle"></i> Dosya Ekle
+                                                                        class="fa fa-plus " title="Düzenle"></i> Dosya
+                                                                    Ekle
                                                                 </a>
                                                             {% endif %}
 
@@ -261,7 +286,7 @@
                         text: '<i class="fa fa-print"></i>',
 
                         titleAttr: 'Yazdır',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -271,7 +296,7 @@
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
@@ -280,7 +305,7 @@
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
-                         exportOptions: {
+                        exportOptions: {
                             columns: ':visible'
                         }
                     },
