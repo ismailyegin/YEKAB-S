@@ -165,6 +165,7 @@
                                     <th>Ek Süre Başlangıç Tarihi</th>
                                     <th>Ek Süre</th>
                                     <th>Yeni Tarih</th>
+                                    <th>Eski İşin Yapılma Tarihi</th>
                                     <th>Ek Süre Belgesi</th>
                                     <th></th>
                                 </tr>
@@ -181,6 +182,7 @@
                                         <td>{{ time.added_date }}</td>
                                         <td>{{ time.time }}</td>
                                         <td>{{ time.new_date | date }}</td>
+                                        <td>{{ time.old_date | date }}</td>
                                         <td>{% if time.file %}
                                             <a target="_blank" title="{{ time.file }}"
                                                href=" {{ MEDIA_URL }}{{ time.file.url }}"

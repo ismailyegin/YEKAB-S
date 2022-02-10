@@ -107,8 +107,8 @@
                                            aria-controls="tab-4" aria-selected="false">Yeka Bazında Yarışmalar</a>
                                         <a class="nav-link" id="vert-5" data-toggle="pill" href="#tab-5" role="tab"
                                            aria-controls="tab-5" aria-selected="false">YEKA Bazında Genel Raporlama</a>
-                                        {#                                        <a class="nav-link" id="vert-6" data-toggle="pill" href="#tab-6" role="tab"#}
-                                        {#                                           aria-controls="tab-6" aria-selected="false">İllere Göre Ulaşılan Güçler</a>#}
+                                        <a class="nav-link" id="vert-6" href="{% url 'ekabis:view_extratime' %}"
+                                            aria-selected="false">Ek Süre Alan Projeler</a>
                                         {#                                        <a class="nav-link" id="vert-7" data-toggle="pill" href="#tab-7" role="tab"#}
                                         {#                                           aria-controls="tab-7" aria-selected="false">İl Bazında Ulaşılan Kurulu#}
                                         {#                                            Güç</a>#}
@@ -455,7 +455,8 @@
                                             <div class=" card card-primary card-outline">
 
                                                 <div class="card-body">
-                                                      <form action="{% url 'ekabis:proposal_yeka_report' %}" method="POST" >
+                                                    <form action="{% url 'ekabis:proposal_yeka_report' %}"
+                                                          method="POST">
                                                         {% csrf_token %}
 
                                                         <div class="form-group">
@@ -465,7 +466,7 @@
                                                                     style="width: 100%;"
                                                                     maxlength="100" id="yeka_uuid">
                                                                 {% for yeka in yekas %}
-                                                                    <option value="{{ yeka.uuid }}">{{yeka.definition }}</option>
+                                                                    <option value="{{ yeka.uuid }}">{{ yeka.definition }}</option>
                                                                 {% endfor %}
 
                                                             </select>
