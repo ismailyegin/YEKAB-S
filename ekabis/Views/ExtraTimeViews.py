@@ -58,19 +58,18 @@ def return_add_extra_time(request, business, businessblog):
                 extratime = ExtraTime(user=request.user, time=1, business=yekabusiness,
                                       yekabusinessblog=yekabussinessblog)
                 extratime.save()
-                extratime_form = ExtraTimeForm(request.POST,instance=extratime)
+                extratime_form = ExtraTimeForm(request.POST,request.FILES or None,instance=extratime)
                 if extratime_form.is_valid():
                     extratime = extratime_form.save(request, commit=False)
                     extratime.user = request.user
                     extratime.yekabusinessblog = yekabussinessblog
                     extratime.business = yekabusiness
+                    extratime.old_date=yekabussinessblog.startDate
                     extratime.save()
                     main = yekabussinessblog
-                    if ExtraTime.objects.filter(business=yekabusiness,yekabusinessblog=yekabussinessblog).exclude(extratime):
-                        start_date=ExtraTime.objects.filter(business=yekabusiness,yekabusinessblog=yekabussinessblog).exclude(extratime).last().new_date
-                    else:
-                        start_date=yekabussinessblog.startDate
-                    if yekabussinessblog.time_type == 'is_gunu':
+
+                    start_date=extratime.added_date
+                    if extratime.time_type == 'is_gunu':
                         add_time = extratime.time
                         count = 0
                         while add_time > 1:
@@ -80,9 +79,11 @@ def return_add_extra_time(request, business, businessblog):
                             if not is_vacation:
                                 add_time = add_time - 1
                     else:
-                        start_date = yekabussinessblog.startDate + datetime.timedelta(days=extratime.time) - datetime.timedelta(days=1)
+                        start_date = start_date + datetime.timedelta(days=extratime.time) - datetime.timedelta(days=1)
                     extratime.new_date=start_date
                     extratime.save()
+                    yekabussinessblog.startDate=start_date
+                    yekabussinessblog.save()
                     dependence_blocks = YekaBusinessBlog.objects.filter(dependence_parent=yekabussinessblog)
                     for dependence_block in dependence_blocks:
                             add_time_next(yekabussinessblog.pk, dependence_block.pk, competition,extratime.time,yekabussinessblog)
@@ -115,16 +116,13 @@ def return_add_extra_time(request, business, businessblog):
 def add_time_next(parent_id, current_id, yeka,time,sabit):
     parent_block = YekaBusinessBlog.objects.get(pk=parent_id)
     current_block = YekaBusinessBlog.objects.get(pk=current_id)
-    if ExtraTime.objects.filter(business=yeka.business,yekabusinessblog=parent_block):
-        start_date = ExtraTime.objects.filter(business=yeka.business,yekabusinessblog=parent_block).last().new_date
-    else:
-        start_date = parent_block.startDate
-
+    start_date = parent_block.startDate
     if parent_block.businessTime:
-        if sabit.pk==current_block.pk:
-            time = parent_block.businessTime + int(time)
-        else:
-            time = int(time)
+        time = int(parent_block.businessTime)
+        # if sabit.pk==current_block.pk:
+        #     time = parent_block.businessTime + int(time)
+        # else:
+        #     time = int(time)
     else:
         return redirect('ekabis:view_yeka_competition_detail', yeka.uuid)
     time_type = parent_block.time_type
