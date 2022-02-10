@@ -124,6 +124,15 @@
 
                                 <div class="form-group">
                                     {{ extratime_form }}
+
+
+                                </div>
+                                <div class="form-group">
+
+                                    <label for="new_date">Ek Süre Bitiş Tarihi
+                                        <input disabled id="new_date" type="date" class="form-control">
+                                    </label>
+
                                 </div>
 
 
@@ -151,10 +160,12 @@
                                     <th>#</th>
                                     <th>Konu</th>
                                     <th>Ek Süre Ekleyen Personel</th>
-                                    <th>Ek Süre</th>
                                     <th>Eklenen İş Bloğu</th>
                                     <th>Ekleme Tarihi</th>
+                                    <th>Ek Süre Başlangıç Tarihi</th>
+                                    <th>Ek Süre</th>
                                     <th>Yeni Tarih</th>
+                                    <th>Ek Süre Belgesi</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -165,10 +176,17 @@
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ time.definition }}</td>
                                         <td>{{ time.user.first_name }} {{ time.user.last_name }}</td>
-                                        <td>{{ time.time }}</td>
                                         <td>{{ time.yekabusinessblog.businessblog.name }}</td>
                                         <td>{{ time.creationDate }}</td>
-                                        <td>{{ time.new_date | date  }}</td>
+                                        <td>{{ time.added_date }}</td>
+                                        <td>{{ time.time }}</td>
+                                        <td>{{ time.new_date | date }}</td>
+                                        <td>{% if time.file %}
+                                            <a target="_blank" title="{{ time.file }}"
+                                               href=" {{ MEDIA_URL }}{{ time.file.url }}"
+                                               download="">{{ time.file | truncatechars:20 }}</a>
+                                        {% endif %}
+                                        </td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-default">İşlemler</button>

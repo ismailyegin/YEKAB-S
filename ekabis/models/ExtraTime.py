@@ -11,7 +11,9 @@ class ExtraTime(BaseModel):
     time = models.IntegerField()
     business = models.ForeignKey(YekaBusiness, on_delete=models.DO_NOTHING)
     yekabusinessblog = models.ForeignKey(YekaBusinessBlog, on_delete=models.DO_NOTHING)
-    files = models.ManyToManyField(ExtraTimeFile)
+    file = models.FileField(null=True, blank=True) # extra zaman belgesi
     time_type = models.CharField(null=True, blank=True, max_length=100)
-    definition=models.CharField(null=True,blank=True,max_length=250)
-    new_date=models.DateField(null=True,blank=True)
+    definition = models.CharField(null=True, blank=True, max_length=250)
+    new_date = models.DateField(null=True, blank=True)  # added_date + time = isin yapılma tarihi
+    old_date = models.DateField(null=True, blank=True)  # eski işin yapılma tarihi
+    added_date = models.DateField(null=True, blank=True)  # bu tarihten itibaren süre eklenir
