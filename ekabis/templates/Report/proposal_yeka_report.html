@@ -8,7 +8,7 @@
             font-size: 15px;
         }
     </style>
-     <script type="text/javascript" src="{%  static 'vis/js/jquery.doubleScroll.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vis/js/jquery.doubleScroll.js' %}"></script>
 
     {% if messages %}
         {% for message in messages %}
@@ -126,13 +126,14 @@
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.contact_date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.competition_business_date | date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_app_business_date | date }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_business_date  }}</td>
+                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_business_date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_business_value }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_time }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.licence_business_date  }}</td>
+                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.licence_business_date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.licence_business_value }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.licence_time }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{% if brc.build_time  %}{{ brc.build_time }}{% endif %}</td>
+                                    <td rowspan="{{ brc.proposals |length }}">
+                                        {% if brc.build_time %}{{ brc.build_time }}{% endif %}</td>
 
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.accept_date }}</td>
 
@@ -166,16 +167,17 @@
                                             <td class="ism">{{ brc.licence_business_value | date }}</td>
                                             <td class="ism">{{ brc.licence_time }}</td>
 
-                                            <td class="ism"> {% if brc.build_time  %}{{ brc.build_time }}{% endif %}</td>
+                                            <td class="ism"> {% if brc.build_time %}{{ brc.build_time }}{% endif %}</td>
 
                                             <td class="ism">{{ brc.accept_date }}</td>
                                             <td class="ism">{{ brc.guarantee.quantity }}</td>
                                             <td class="ism">
                                                 {% if brc.guarantee %}
-                                                    <a target="_blank" title="{{ brc.guarantee.guaranteeFile }}"
-                                                       href="{{ MEDIA_URL }}{{ brc.guarantee.guaranteeFile.url }}"
-                                                       download="">{{ brc.guarantee.guaranteeFile | truncatechars:12 }}</a>
-
+                                                    {% if brc.guarantee.guaranteeFile %}
+                                                        <a target="_blank" title="{{ brc.guarantee.guaranteeFile }}"
+                                                           href="{{ MEDIA_URL }}{{ brc.guarantee.guaranteeFile.url }}"
+                                                           download="">{{ brc.guarantee.guaranteeFile | truncatechars:12 }}</a>
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
                                         {% endif %}
