@@ -161,7 +161,7 @@
                                     <th>Yeni Tarih</th>
                                     <th>Önceki Tarih</th>
                                     <th>Ek Süre Belgesi</th>
-                                    <th></th>
+
 
 
                                 </tr>
@@ -194,43 +194,7 @@
                                                    download="">{{ item.time.file | truncatechars:20 }}</a>
                                             {% endif %}
                                             </td>
-                                            <td>
-                                                <div class="btn-group">
 
-                                                    <button type="button"
-                                                            class="btn btn-default dropdown-toggle dropdown-icon"
-                                                            data-toggle="dropdown"> İşlemler
-                                                    </button>
-                                                    <div class="dropdown-menu" role="menu">
-                                                        {% for p in perm %}
-                                                            {% if p == 'change_extratime' %}
-                                                                <a href="{% url "ekabis:change_extratime" item.uuid %}"
-                                                                   class="dropdown-item"> <i
-                                                                        class="fa fa-edit" title="Düzenle"></i> Düzenle
-                                                                </a>
-                                                            {% endif %}
-                                                            {% if p == 'add_extratimefile' %}
-                                                                <a href="{% url "ekabis:add_extratimefile" item.uuid %}"
-                                                                   class="dropdown-item"> <i
-                                                                        class="fa fa-plus " title="Düzenle"></i> Dosya
-                                                                    Ekle
-                                                                </a>
-                                                            {% endif %}
-
-                                                            {% if p == 'delete_extratime' %}
-
-                                                                <a class="dropdown-item" href=""
-                                                                   data-toggle="modal"
-                                                                   onclick=deleteExtraTime('{{ item.uuid }}')><i
-                                                                        class="fa fa-trash"></i>Sil</a>
-
-                                                            {% endif %}
-                                                        {% endfor %}
-
-
-                                                    </div>
-                                                </div>
-                                            </td>
 
                                         </tr>
 
