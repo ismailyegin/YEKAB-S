@@ -208,7 +208,11 @@ def return_update_extra_time(request, uuid):
     }
     extratime = ExtraTimeGetService(request, extra_time_filter)
 
-    extratime_form = ExtraTimeForm(request.POST or None, instance=extratime)
+    extratime_form = ExtraTimeForm(request.POST or None,request.FILES or None, instance=extratime)
+    yekabusinessblog = extratime.yekabusinessblog
+    yekabusiness = extratime.business
+    competition = YekaCompetition.objects.get(business=yekabusiness)
+    name=general_methods.yekaname(yekabusiness)
     try:
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -216,22 +220,48 @@ def return_update_extra_time(request, uuid):
         with transaction.atomic():
             if request.method == 'POST':
                 if extratime_form.is_valid():
-                    extra = extratime_form.save(request, commit=False)
-                    extra.save()
-                    messages.success(request, 'Ek Süre Güncellenmiştir')
-                    return redirect('ekabis:view_extratime')
+
+
+                    extratime = extratime_form.save(request, commit=False)
+                    extratime.user = request.user
+                    extratime.old_date = yekabusinessblog.startDate
+                    extratime.save()
+
+                    start_date = extratime.added_date
+                    if extratime.time_type == 'is_gunu':
+                        add_time = extratime.time
+                        count = 0
+                        while add_time > 1:
+                            start_date = start_date + datetime.timedelta(days=1)
+                            count = count + 1
+                            is_vacation = is_vacation_day(start_date)
+                            if not is_vacation:
+                                add_time = add_time - 1
+                    else:
+                        start_date = start_date + datetime.timedelta(days=extratime.time) - datetime.timedelta(days=1)
+                    extratime.new_date = start_date
+                    extratime.save()
+                    yekabusinessblog.startDate = start_date
+                    yekabusinessblog.save()
+                    dependence_blocks = YekaBusinessBlog.objects.filter(dependence_parent=yekabusinessblog)
+                    for dependence_block in dependence_blocks:
+
+                        add_time_next(yekabusinessblog.pk, dependence_block.pk, competition, extratime.time,
+                                      yekabusinessblog)
+                    messages.success(request, 'Ek Süre Kayıt Edilmiştir.')
+                    return redirect('ekabis:add_extratime',yekabusiness.uuid , yekabusinessblog.uuid)
                 else:
                     error_messages = get_error_messages(extratime_form)
                     return render(request, 'ExtraTime/change_extratime.html',
                                   {'extratime_form': extratime_form,
                                    'error_messages': error_messages, 'urls': urls, 'current_url': current_url,
-                                   'url_name': url_name
+                                   'url_name': url_name,'extratime':extratime,'name':name
 
                                    })
 
             return render(request, 'ExtraTime/change_extratime.html',
                           {'extratime_form': extratime_form, 'urls': urls, 'current_url': current_url,
-                           'url_name': url_name
+                           'url_name': url_name,'extratime':extratime,'name':name
 
                            })
     except Exception as e:
@@ -256,47 +286,47 @@ def delete_extra_time(request):
                     'uuid': uuid
                 }
                 obj = ExtraTimeGetService(request, extra_time_filter)
-                times = ExtraTime.objects.filter(yekabusinessblog=obj.yekabusinessblog).order_by('-creationDate')
-                if times:
-                    time = times[0]
-                main = obj.yekabusinessblog
-                while main != None:
-                    if YekaBusinessBlog.objects.filter(parent=main, isDeleted=False):
-                        parent = YekaBusinessBlog.objects.get(parent=main, isDeleted=False)
-                        if not parent.indefinite:
-
-                            if time.time_type == 'is_gunu':
-                                after_day = (parent.startDate.date() + datetime.timedelta(days=obj.time)).strftime(
-                                    "%d/%m/%Y")
-
-                                delete_time = time.time
-                                start_date = parent.startDate.date()
-                                finish_date = parent.finisDate.date() - timedelta(days=time.time)
-                                finish_time = time.time
-                                count = 0
-                                while delete_time > 0:
-                                    start_date = start_date + datetime.timedelta(days=-1)
-                                    count = count + 1
-                                    is_vacation = is_vacation_day(start_date)
-                                    if not is_vacation:
-                                        delete_time = delete_time - 1
-                                while is_vacation_day(finish_date) == True:
-                                    finish_date = finish_date - datetime.timedelta(days=-1)
-
-                                parent.startDate = start_date
-                                parent.finisDate = finish_date
-                                parent.save()
-                                main = parent
-                            else:
-                                parent.startDate = parent.startDate.date() - timedelta(days=time.time)
-                                parent.finisDate = parent.finisDate.date() - timedelta(days=time.time)
-                                parent.save()
-                                main = parent
-                        else:
-                            # süresiz ise işlem yapılmayacaktır.
-                            main = None
-                    else:
-                        main = None
+                #times = ExtraTime.objects.filter(yekabusinessblog=obj.yekabusinessblog).order_by('-creationDate')
+                # if times:
+                #     time = times[0]
+                # main = obj.yekabusinessblog
+                # while main != None:
+                #     if YekaBusinessBlog.objects.filter(parent=main, isDeleted=False):
+                #         parent = YekaBusinessBlog.objects.get(parent=main, isDeleted=False)
+                #         if not parent.indefinite:
+                #
+                #             if time.time_type == 'is_gunu':
+                #                 after_day = (parent.startDate.date() + datetime.timedelta(days=obj.time)).strftime(
+                #                     "%d/%m/%Y")
+                #
+                #                 delete_time = time.time
+                #                 start_date = parent.startDate.date()
+                #                 finish_date = parent.finisDate.date() - timedelta(days=time.time)
+                #                 finish_time = time.time
+                #                 count = 0
+                #                 while delete_time > 0:
+                #                     start_date = start_date + datetime.timedelta(days=-1)
+                #                     count = count + 1
+                #                     is_vacation = is_vacation_day(start_date)
+                #                     if not is_vacation:
+                #                         delete_time = delete_time - 1
+                #                 while is_vacation_day(finish_date) == True:
+                #                     finish_date = finish_date - datetime.timedelta(days=-1)
+                #
+                #                 parent.startDate = start_date
+                #                 parent.finisDate = finish_date
+                #                 parent.save()
+                #                 main = parent
+                #             else:
+                #                 parent.startDate = parent.startDate.date() - timedelta(days=time.time)
+                #                 parent.finisDate = parent.finisDate.date() - timedelta(days=time.time)
+                #                 parent.save()
+                #                 main = parent
+                #         else:
+                #             # süresiz ise işlem yapılmayacaktır.
+                #             main = None
+                #     else:
+                #         main = None
 
                 obj.isDeleted = True
                 obj.save()
