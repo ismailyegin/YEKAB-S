@@ -134,10 +134,13 @@
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.guarantee.quantity }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">
                                         {% if brc.guarantee %}
-                                            <a target="_blank" title="{{ brc.guarantee.guaranteeFile }}"
-                                               href="{{ MEDIA_URL }}{{ brc.guarantee.guaranteeFile.url }}"
-                                               download="">{{ brc.guarantee.guaranteeFile | truncatechars:12 }}</a>
-
+                                            {% if  brc.guarantee.guaranteeFile %}
+                                                <a target="_blank" title="{{ brc.guarantee.guaranteeFile }}"
+                                                   href="{{ MEDIA_URL }}{{ brc.guarantee.guaranteeFile.url }}"
+                                                   download="">{{ brc.guarantee.guaranteeFile | truncatechars:12 }}</a>
+                                            {% else %}
+                                                ---
+                                            {% endif %}
                                         {% endif %}
                                     </td>
 
@@ -271,7 +274,6 @@
                         exportOptions: {
                             columns: ':visible'
                         },
-
 
 
                     },
