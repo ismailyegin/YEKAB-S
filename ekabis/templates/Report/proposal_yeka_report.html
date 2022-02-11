@@ -97,17 +97,17 @@
                                 <th>Sözleşme Tarihi</th>
                                 <th>YEKA İlan Tarihi</th>
                                 <th>Ön Lisans Başvuru Tarihi</th>
+                                <th>İnşaat Süresi</th>
+                                <th>Kabul Tarihi</th>
+                                <th>Teminat Tutarı</th>
+                                <th>Teminat Belgesi</th>
+                                <th>Aday YEKA</th>
                                 <th>Ön Lisans Tarihi</th>
                                 <th>Ön Lisans Numarası</th>
                                 <th>Ön Lisans Süresi</th>
                                 <th>Lisans Tarihi</th>
                                 <th>Lisans Numarası</th>
                                 <th>Lisans Süresi</th>
-                                <th>İnşaat Süresi</th>
-                                <th>Kabul Tarihi</th>
-                                <th>Teminat Tutarı</th>
-                                <th>Teminat Belgesi</th>
-                                <th>Aday YEKA</th>
                                 <th>Aday YEKA Durumu</th>
                                 <th>KML Belgesi</th>
                                 <th>Kurulu Güç(MW<sub>e</sub>)</th>
@@ -122,16 +122,10 @@
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.competition.name }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.company.name }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.competition.capacity }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.contact_price }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.contact_date }}</td>
+                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.contract_price }}</td>
+                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.contract_date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.competition_business_date | date }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_app_business_date | date }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_business_date }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_business_value }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.prelicence_time }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.licence_business_date }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.licence_business_value }}</td>
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.licence_time }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">
                                         {% if brc.build_time %}{{ brc.build_time }}{% endif %}</td>
 
@@ -155,17 +149,11 @@
                                             <td class="ism">{{ brc.competition.name }}</td>
                                             <td class="ism">{{ brc.company.name }}</td>
                                             <td class="ism">{{ brc.competition.capacity }}</td>
-                                            <td class="ism">{{ brc.contact_price }}</td>
+                                            <td class="ism">{{ brc.contract_price }}</td>
                                             <td class="ism">{{ brc.contract_date }}</td>
                                             <td class="ism">{{ brc.competition_business_date | date }}</td>
                                             <td class="ism">{{ brc.prelicence_app_business_date | date }}</td>
-                                            <td class="ism">{{ brc.prelicence_business_date }}</td>
-                                            <td class="ism">{{ brc.prelicence_business_value | date }}</td>
-                                            <td class="ism">{{ brc.prelicence_time }}</td>
 
-                                            <td class="ism">{{ brc.licence_business_date }}</td>
-                                            <td class="ism">{{ brc.licence_business_value | date }}</td>
-                                            <td class="ism">{{ brc.licence_time }}</td>
 
                                             <td class="ism"> {% if brc.build_time %}{{ brc.build_time }}{% endif %}</td>
 
@@ -182,6 +170,15 @@
                                             </td>
                                         {% endif %}
                                     <td>{{ item.proposal.name }}</td>
+                                    <td>{{ item.prelicence_business_date }}</td>
+                                    <td>{{ item.prelicence_business_value }}</td>
+                                    <td>{{ item.prelicence_time }}</td>
+                                    <td>{{ item.licence_business_date }}</td>
+                                    <td>{{ item.licence_business_value }}</td>
+                                    <td>{{ item.licence_time }}</td>
+
+
+
                                     <td style="font-size:15px;background:{{ item.status_color }};">{{ item.status }}</td>
 
                                     <td>{% if item.proposal.kml_file %}
@@ -274,6 +271,9 @@
                         exportOptions: {
                             columns: ':visible'
                         },
+
+
+
                     },
 
 

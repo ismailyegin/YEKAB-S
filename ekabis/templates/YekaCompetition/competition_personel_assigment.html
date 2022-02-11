@@ -87,7 +87,16 @@
 
 
                                     {% for item in competition_all %}
-                                        <option value="{{ item.competition.pk }}" data-sortindex="{{ item.competition.pk }}">{{ item.yeka.definition }} / {{ item.competition.name }} /{{ item.sub.name }}</option>
+                                        {% if item.sub %}
+                                            <option value="{{ item.sub.pk }}"
+                                                    data-sortindex="{{ item.competition.pk }}">{{ item.yeka.definition }}
+                                                / {{ item.competition.name }} /{{ item.sub.name }}</option>
+                                        {% else %}
+                                            <option value="{{ item.competition.pk }}"
+                                                    data-sortindex="{{ item.competition.pk }}">{{ item.yeka.definition }}
+                                                / {{ item.competition.name }} /{{ item.sub.name }}</option>
+
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>

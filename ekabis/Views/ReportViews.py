@@ -16,7 +16,8 @@ from django.urls import resolve
 from django.utils.safestring import mark_safe
 
 from ekabis.models import City, YekaBusinessBlog, YekaCompetition, BusinessBlog, Yeka, YekaBusiness, ConnectionRegion, \
-    YekaBusinessBlogParemetre, BusinessBlogParametreType, YekaCompetitionEskalasyon, YekaAccept, YekaGuarantee
+    YekaBusinessBlogParemetre, BusinessBlogParametreType, YekaCompetitionEskalasyon, YekaAccept, YekaGuarantee, \
+    ProposalSubYeka
 from ekabis.models.YekaContract import YekaContract
 from ekabis.models.YekaProposal import YekaProposal
 from ekabis.services import general_methods
@@ -311,46 +312,8 @@ def proposal_yeka_report(request):
                             licence_date='---'
                             licence_time='---'
                             prelicence_time='---'
-                            prelicence_business_blocks = comp_business.businessblogs.filter(
-                                businessblog__name='Ön Lisans Dönemi')
 
-                            if prelicence_business_blocks:
-                                prelicence_business_block = comp_business.businessblogs.get(
-                                    businessblog__name='Ön Lisans Dönemi')
-                                if prelicence_business_block.businessTime:
-                                    prelicence_time=prelicence_business_block.businessTime
-                                if prelicence_business_block.parameter:
-                                    if prelicence_business_block.parameter.filter(
-                                            parametre__title='Ön Lisans Numarası'):
-                                        value = prelicence_business_block.parameter.get(
-                                            parametre__title='Ön Lisans Numarası').value
-                                    if prelicence_business_block.parameter.filter(parametre__title='Ön Lisans Tarihi'):
-                                        prelicence_date = prelicence_business_block.parameter.get(
-                                            parametre__title='Ön Lisans Tarihi').value
-                            else:
-                                prelicence_business_block=None
-                            licence_business_blocks = comp_business.businessblogs.filter(
-                                businessblog__name='Lisans Dönemi')
-                            if licence_business_blocks:
-                                licence_business_block = comp_business.businessblogs.get(
-                                    businessblog__name='Lisans Dönemi')
-                                if licence_business_block.businessTime:
-                                    licence_time=licence_business_block.businessTime
-                                if licence_business_block.parameter:
-                                    if licence_business_block.parameter.filter(parametre__title='Lisans Numarası'):
-                                        licence_value = licence_business_block.parameter.get(
-                                            parametre__title='Lisans Numarası').value
-                                    if licence_business_block.parameter.filter(parametre__title='Lisans Tarihi'):
-                                        licence_date = licence_business_block.parameter.get(
-                                            parametre__title='Lisans Tarihi').value
-                            else:
-                                licence_business_block=None
-                            proposal_dict['prelicence_time'] = prelicence_time
-                            proposal_dict['licence_time'] = licence_time
-                            proposal_dict['prelicence_business_value'] = value
-                            proposal_dict['prelicence_business_date'] = prelicence_date
-                            proposal_dict['licence_business_value'] = licence_value
-                            proposal_dict['licence_business_date'] = licence_date
+
                             proposal_dict['contract_date'] = contract_date
 
 
@@ -371,11 +334,11 @@ def proposal_yeka_report(request):
 
 
 
-                        proposal_dict['contact_price'] = 0
+                        proposal_dict['contract_price'] = 0
                         if YekaContract.objects.filter(business=competition.business):
                             contract = YekaContract.objects.get(business=competition.business)
                             if contract.price:
-                                proposal_dict['contact_price'] = contract.price
+                                proposal_dict['contract_price'] = str(contract.price)
                         proposal_dict['company'] = competition.business.company
                         proposal_dict['competition'] = competition
                         proposal_dict['yeka'] = yeka
@@ -396,6 +359,7 @@ def proposal_yeka_report(request):
                                     comp_proposal = dict()
                                     negative = proposal.institution.filter(status='Olumsuz').count()
                                     not_negative = proposal.institution.filter(status='Olumlu').count()
+
                                     if negative:
                                         comp_proposal['status_color'] = '#ff3a3a'
                                         comp_proposal['status'] = 'Olumsuz'
@@ -404,18 +368,70 @@ def proposal_yeka_report(request):
                                         comp_proposal['status_color'] = '#8cff8c'
                                         comp_proposal['status'] = 'Olumlu'
                                         comp_proposal['proposal'] = proposal
+                                        if ProposalSubYeka.objects.filter(proposal=proposal):
+                                            sub_yeka = ProposalSubYeka.objects.get(proposal=proposal)
+                                            sub_business = YekaBusiness.objects.get(
+                                                uuid=sub_yeka.sub_yeka.business.uuid)
+                                            prelicence_sub_blocks = sub_business.businessblogs.filter(
+                                                businessblog__name='Ön Lisans Dönemi')
+                                            if prelicence_sub_blocks:
+                                                prelicence_sub_block = sub_business.businessblogs.get(
+                                                    businessblog__name='Ön Lisans Dönemi')
+                                                if prelicence_sub_block.businessTime:
+                                                    prelicence_time = prelicence_sub_block.businessTime
+                                                if prelicence_sub_block.parameter.filter(isDeleted=False):
+                                                    if prelicence_sub_block.parameter.filter(
+                                                            parametre__title='Ön Lisans Numarası'):
+                                                        value = prelicence_sub_block.parameter.get(
+                                                            parametre__title='Ön Lisans Numarası').value
+                                                    if prelicence_sub_block.parameter.filter(
+                                                            parametre__title='Ön Lisans Tarihi'):
+                                                        prelicence_date = prelicence_sub_block.parameter.get(
+                                                            parametre__title='Ön Lisans Tarihi').value
+                                            else:
+                                                prelicence_sub_block = None
+                                            licence_sub_blocks = sub_business.businessblogs.filter(
+                                                businessblog__name='Lisans Alma Tarihi')
+                                            if licence_sub_blocks:
+                                                licence_sub_block = sub_business.businessblogs.get(
+                                                    businessblog__name='Lisans Alma Tarihi')
+                                                if licence_sub_block.businessTime:
+                                                    licence_time = licence_sub_block.businessTime
+                                                if licence_sub_block.parameter.filter(isDeleted=False):
+                                                    if licence_sub_block.parameter.filter(
+                                                            parametre__title='Lisans Numarası'):
+                                                        licence_value = licence_sub_block.parameter.get(
+                                                            parametre__title='Lisans Numarası').value
+                                                    if licence_sub_block.parameter.filter(
+                                                            parametre__title='Lisans Tarihi'):
+                                                        licence_date = licence_sub_block.parameter.get(
+                                                            parametre__title='Lisans Tarihi').value
+                                            else:
+                                                licence_sub_block = None
                                     else:
                                         comp_proposal['status_color'] = '#ffff6e'
                                         comp_proposal['status'] = 'Sonuçlanmadı'
                                         comp_proposal['proposal'] = proposal
+                                    comp_proposal['prelicence_time'] = prelicence_time
+                                    comp_proposal['licence_time'] = licence_time
+                                    comp_proposal['prelicence_business_value'] = value
+                                    comp_proposal['prelicence_business_date'] = prelicence_date
+                                    comp_proposal['licence_business_value'] = licence_value
+                                    comp_proposal['licence_business_date'] = licence_date
                                     comp_proposals.append(comp_proposal)
+
                             else:
                                 comp_proposal['status_color'] = '#ffff'
                                 comp_proposal['status'] = '---'
                                 comp_proposal['proposal'] = None
+                                comp_proposal['prelicence_time'] = prelicence_time
+                                comp_proposal['licence_time'] = licence_time
+                                comp_proposal['prelicence_business_value'] = value
+                                comp_proposal['prelicence_business_date'] = prelicence_date
+                                comp_proposal['licence_business_value'] = licence_value
+                                comp_proposal['licence_business_date'] = licence_date
                                 comp_proposals.append(comp_proposal)
 
-                            proposal_dict['proposals'] = comp_proposals
                             proposal_dict['proposals'] = comp_proposals
 
                         else:

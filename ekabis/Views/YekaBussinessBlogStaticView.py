@@ -2180,7 +2180,7 @@ def proposal_add_sub_yeka(request, yeka_business, yeka_business_block):
                 if ProposalActive.objects.filter(is_active=True).filter(business=yeka_business).filter(institution=institution.institution):
                     if proposal.institution.filter(status='Olumsuz').count() == 0 and proposal.institution.filter(status='Sonuçlanmadı').count() ==0:
                         proposal_dict['proposal'] = proposal
-                        if ProposalSubYeka.objects.filter(proposal=proposal):
+                        if ProposalSubYeka.objects.filter(proposal=proposal).filter(isDeleted=False):
                             proposal_dict['success'] = True
                             proposal_dict['yeka'] = ProposalSubYeka.objects.get(proposal=proposal).sub_yeka
                         else:
