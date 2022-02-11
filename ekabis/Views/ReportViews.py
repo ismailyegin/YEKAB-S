@@ -346,7 +346,8 @@ def proposal_yeka_report(request):
                         guarantee = None
                         if YekaGuarantee.objects.filter(business=competition.business):
                             yeka_guarantee = YekaGuarantee.objects.get(business=competition.business)
-                            guarantee = yeka_guarantee.guarantee.filter(isDeleted=False).last()
+                            if yeka_guarantee.guarantee.all():
+                                guarantee = yeka_guarantee.guarantee.filter(isDeleted=False).last()
                         proposal_dict['guarantee'] = guarantee
                         comp_proposals = []
                         comp_proposal = dict()
