@@ -131,17 +131,20 @@
 
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.accept_date }}</td>
 
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.guarantee.quantity | floatformat:-3 }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">
-                                        {% if brc.guarantee %}
-                                            {% if  brc.guarantee.guaranteeFile %}
-                                                <a target="_blank" title="{{ brc.guarantee.guaranteeFile }}"
-                                                   href="{{ MEDIA_URL }}{{ brc.guarantee.guaranteeFile.url }}"
-                                                   download="">{{ brc.guarantee.guaranteeFile | truncatechars:12 }}</a>
-                                            {% else %}
-                                                ---
-                                            {% endif %}
+
+                                        {{ brc.guarantee_quantity }}
+                                    </td>
+                                    <td rowspan="{{ brc.proposals |length }}">
+
+                                        {% if  brc.guarantee_file %}
+                                            <a target="_blank" title="{{ brc.guarantee_file }}"
+                                               href="{{ MEDIA_URL }}{{ brc.guarantee_file.url }}"
+                                               download="">{{ brc.guarantee_file | truncatechars:12 }}</a>
+                                        {% else %}
+                                            ---
                                         {% endif %}
+
                                     </td>
 
                                     {% for item in brc.proposals %}

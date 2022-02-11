@@ -343,12 +343,17 @@ def proposal_yeka_report(request):
                         proposal_dict['competition'] = competition
                         proposal_dict['yeka'] = yeka
 
-                        guarantee = None
+                        guarantee_file = None
+                        guarantee_quantity=None
                         if YekaGuarantee.objects.filter(business=competition.business):
                             yeka_guarantee = YekaGuarantee.objects.get(business=competition.business)
                             if yeka_guarantee.guarantee.all():
                                 guarantee = yeka_guarantee.guarantee.filter(isDeleted=False).last()
-                        proposal_dict['guarantee'] = guarantee
+                                if guarantee.guaranteeFile:
+                                    guarantee_file = guarantee.guaranteeFile
+                                guarantee_quantity = str(guarantee.quantity)
+                        proposal_dict['guarantee_file'] = guarantee_file
+                        proposal_dict['guarantee_quantity'] = guarantee_quantity
                         comp_proposals = []
                         comp_proposal = dict()
                         if YekaProposal.objects.filter(business=competition.business, isDeleted=False):
