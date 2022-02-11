@@ -344,7 +344,7 @@ def proposal_yeka_report(request):
                         proposal_dict['yeka'] = yeka
 
                         guarantee_file = None
-                        guarantee_quantity=None
+                        guarantee_quantity='---'
                         if YekaGuarantee.objects.filter(business=competition.business):
                             yeka_guarantee = YekaGuarantee.objects.get(business=competition.business)
                             if yeka_guarantee.guarantee.all():
