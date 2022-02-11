@@ -131,7 +131,7 @@
 
                                     <td rowspan="{{ brc.proposals |length }}">{{ brc.accept_date }}</td>
 
-                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.guarantee.quantity }}</td>
+                                    <td rowspan="{{ brc.proposals |length }}">{{ brc.guarantee.quantity | floatformat:-3 }}</td>
                                     <td rowspan="{{ brc.proposals |length }}">
                                         {% if brc.guarantee %}
                                             {% if  brc.guarantee.guaranteeFile %}
