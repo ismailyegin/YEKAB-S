@@ -1,32 +1,10 @@
 {% extends 'base_layout.html' %}
 
 {% block content %}
-    {% load static %}
 
 
-    <div class="modal modal-success modal-success-food fade in" id="modal-error" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">İşlem Başarılı</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
 
-                </div>
-                <div class="modal-body errorModal">
-                    ...
-                </div>
-                <div class="modal-footer">
 
-                    <button type="button" class="btn btn-outline btn-ok">Tamam</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <!-- success modal -->
     <div class="modal modal-success modal-success-food fade in" id="modal-success" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -48,6 +26,8 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+
+
     <div class="modal modal-danger fade in deneme223" tabindex="-1" role="dialog" id="modal-delete"
          aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -139,7 +119,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        {{ name }} - Kabul Listesi</h1>
+                        Ek Süre Listesi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -162,8 +142,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header with-border">
-                            <h3 class="card-title"> Kabul
-                                Listesi</h3>
+                            <h3 class="card-title">Kabul Listesi</h3>
                             {% for item in perm %}
                                 {% if item == 'add_yeka_accept' %}
 
@@ -177,7 +156,7 @@
                         </div>
 
                         <div class="card-body">
-                            <table id="accept_table" class="table table-bordered table-hover">
+                            <table id="company" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -192,26 +171,20 @@
                                 </thead>
                                 <tbody>
 
-                                {% for item in accept_accepts|dictsort:"date" %}
+                                {% for item in accept_accepts|dictsort:'date' %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>{{ item.date |date }}</td>
-                                        <td>
-                                            {% if item.report %}
-                                                <a target="_blank" title="{{ item.report }}"
-                                                   href=" {{ MEDIA_URL }}{{ item.report.url }}"
-                                                   download="">{{ item.report | truncatechars:20 }}
-                                                </a>
-                                            {% else %} <p style="color: red">Kabul Tutanağı Yüklenmedi.</p>
-                                            {% endif %}
-                                        </td>
+                                        <td>{{ item.date }}</td>
+                                        <td>{% if item.report %}
+                                            <a target="_blank" title="{{ item.report }}"
+                                               href=" {{ MEDIA_URL }}{{ item.report.url }}"
+                                               download="">{{ item.report | truncatechars:20 }}
+                                        {% else %} <p>Kabul Tutanağı Yüklenmedi.</p>
+                                        {% endif %}
+                                            </a></td>
 
-                                        <td>
-                                            {{ item.installedPower }}
-                                        </td>
-                                        <td>
-                                            {{ item.currentPower }}
-                                        </td>
+                                        <td>{{ item.installedPower }}</td>
+                                        <td>{{ item.currentPower }}</td>
                                         <td>
                                             <div class="btn-group">
 
@@ -244,27 +217,9 @@
                                     </tr>
 
                                 {% endfor %}
+
+
                                 </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th colspan="3" style="text-align:right">Genel Toplam:</th>
-
-                                    <th style="text-align:left"></th>
-                                    <th style="text-align:left"></th>
-                                    <th></th>
-                                </tr>
-
-
-                                </tfoot>
-                                {#                                <tfoot>#}
-                                {#                                <tr>#}
-                                {#                                    <th colspan="3" style="text-align:right">Toplam Güç :</th>#}
-                                {#                                    <td>{{ total_installed_power }} (MW<sub>m</sub>)</td>#}
-                                {#                                    <td>{{ total_current_power }} (MW<sub>e</sub>)</td>#}
-                                {#                                    <td></td>#}
-                                {#                                </tr>#}
-                                {#                                </tfoot>#}
-
                             </table>
 
                         </div>
@@ -283,13 +238,13 @@
     {% load  static %}
     <script>
         $(function () {
-            table = $('#accept_table').DataTable({
+            $('#company').DataTable({
                 dom: 'Bfrtip',
 
 
                 lengthMenu: [
-                    [50, 100, -1],
-                    ['50 tane', '100 tane ', 'Hepsini Getir']
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
                 ],
 
                 'buttons': [
@@ -310,10 +265,11 @@
                         extend: 'print',
                         title: 'YEKA LİSTESİ',
                         text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır',
                         exportOptions: {
                             columns: ':visible'
-                        },
-                        titleAttr: 'Yazdır'
+                        }
                     },
                     {
                         extend: 'pdfHtml5',
@@ -343,96 +299,26 @@
                 'language': {
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
-                "footerCallback": function (row, data, start, end, display) {
-                    var api = this.api()
-
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function (i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
-                    var intVal2 = function (i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
-
-                    // Total over all pages
-                    total = api
-                        .column(4)
-                        .data()
-                        .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
-
-                    // Total over this page
-                    pageTotal = api
-                        .column(4, {page: 'current'})
-                        .data()
-                        .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
-
-                    total2 = api
-                        .column(3)
-                        .data()
-                        .reduce(function (a, b) {
-                            return intVal2(a) + intVal2(b);
-                        }, 0);
-
-                    // Total over this page
-                    pageTotal2 = api
-                        .column(3, {page: 'current'})
-                        .data()
-                        .reduce(function (a, b) {
-                            return intVal2(a) + intVal2(b);
-                        }, 0);
-
-
-                    $(api.column(4).footer()).html(
-                        '' + total.toFixed(2) + ' (MWe)'
-                    );
-                    $(api.column(3).footer()).html(
-                        '' + total2.toFixed(2) + ' (MWm)'
-                    );
-
-
-                },
-
-
+                'paging': true,
                 'lengthChange': true,
                 'searching': true,
-                'info': true,
                 'ordering': true,
+                'info': true,
                 'autoWidth': true,
                 'responsive': true,
-            });
-            table.on('draw.dt', function () {
-                debugger;
-                table.column(0, {
-                    search: 'applied',
-                    order: 'applied',
-                    page: 'applied'
-                }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1;
-                });
-            });
-
+            })
 
         })
     </script>
 
-    <script>  function deleteAccept(id) {
+    <script>  function deleteExtraTime(id) {
         debugger;
         console.log(id);
         var html = ''
         $("#modal-delete").on("shown.bs.modal", function (e) {
             $("#btn-conf1").click(function () {
                 $.ajax({
-                    url: "{% url "ekabis:delete_accept" %}",
+                    url: "{% url "ekabis:delete_extratime" %}",
                     type: "POST",
                     data: {
                         'csrfmiddlewaretoken': "{{  csrf_token  }}",
@@ -440,13 +326,13 @@
                     },
                     success: function (result) {
 
-                        html = 'Kabul Başarıyla Silindi';
+                        html = 'Ek Süre Başarıyla Silindi';
                         debugger;
                         $(".successModal").html(html);
                         $('#modal-success').on("shown.bs.modal", function (e) {
                             $(".btn-ok").click(function () {
 
-                                window.location.reload();
+                                window.location.replace("{% url "ekabis:view_extratime" %}");
 
                             });
 
