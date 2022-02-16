@@ -426,7 +426,7 @@
                                             <tbody>
 
                                             {% if connection_regions %}
-                                                {% for region in connection_regions|dictsort:"name" %}
+                                                {% for region in connection_regions %}
                                                     <tr id="hover">
                                                         <td>{{ forloop.counter }} </td>
                                                         <td onclick="view_competition('{{ region.uuid }}')">{{ region.name }}</td>
@@ -815,24 +815,24 @@
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}",
 
                 },
+                "order": [[ 1, "asc" ]],
                 'bubble': true,
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
-                'ordering': true,
                 'info': true,
                 'autoWidth': true,
                 'scrollX': true,
                 'select': true,
-            })
+            });
             table2.on('draw.dt', function () {
-                var info = table2.page.info();
+                debugger;
                 table2.column(0, {
                     search: 'applied',
                     order: 'applied',
                     page: 'applied'
                 }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1 + info.start;
+                    cell.innerHTML = i + 1 ;
                 });
             });
 
