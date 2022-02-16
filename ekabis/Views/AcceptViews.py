@@ -46,7 +46,8 @@ def view_yeka_accept(request, business, businessblog):
             accept_accepts=accept.accept.filter(isDeleted=False)
         else:
             accept = YekaAccept.objects.get(business=yekabusiness,isDeleted=False)
-            accept_accepts=accept.accept.filter(isDeleted=False)
+            accept_accepts=accept.accept.filter(isDeleted=False).order_by('date')
+
 
 
             # total_mwm=accept_accepts.aggregate(Sum('installedPower'))['installedPower__sum']
@@ -57,9 +58,9 @@ def view_yeka_accept(request, business, businessblog):
             #     total_mwe=round(float("{:.5f}".format(total_mwe)), 5)
 
 
-        return render(request, 'Accept/accept-list.html',
-                      {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,'total_installed_power':total_mwm,'total_current_power':total_mwe,
-                       'url_name': url_name, 'name': name, 'accept_accepts': accept_accepts,'accept':accept
+        return render(request, 'Accept/view_accept.html',
+                      {'yekabussinessblog': yekabussinessblog, 'urls': urls, 'current_url': current_url,
+                       'url_name': url_name, 'name': name, 'accept_all': accept_accepts,'accept':accept
                        })
     except Exception as e:
         traceback.print_exc()

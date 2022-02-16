@@ -192,7 +192,7 @@
                                 </thead>
                                 <tbody>
 
-                                {% for item in accept_accepts|dictsort:"date" %}
+                                {% for item in accept_all %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
                                         <td>{{ item.date |date }}</td>
@@ -288,8 +288,8 @@
 
 
                 lengthMenu: [
-                    [50, 100, -1],
-                    ['50 tane', '100 tane ', 'Hepsini Getir']
+                    [10, 50, -1],
+                    ['10 tane', '50 tane ', 'Hepsini Getir']
                 ],
 
                 'buttons': [
@@ -343,6 +343,7 @@
                 'language': {
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
+
                 "footerCallback": function (row, data, start, end, display) {
                     var api = this.api()
 
@@ -403,11 +404,11 @@
                 },
 
 
+                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
-                'info': true,
-                'ordering': true,
-                'autoWidth': true,
+
+                 'info': true,
                 'responsive': true,
             });
             table.on('draw.dt', function () {
@@ -420,6 +421,7 @@
                     cell.innerHTML = i + 1;
                 });
             });
+            $.fn.dataTable.moment();
 
 
         })
