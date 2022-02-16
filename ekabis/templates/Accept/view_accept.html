@@ -177,7 +177,7 @@
                         </div>
 
                         <div class="card-body">
-                            <table style="width: 100%" id="accept" class="table table-bordered table-hover">
+                            <table id="accept" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -283,8 +283,8 @@
 
 
                 lengthMenu: [
-                    [100, 150, -1],
-                    ['100 tane', '150 tane ', 'Hepsini Getir']
+                    [50, 100, -1],
+                    ['50 tane', '100 tane ', 'Hepsini Getir']
                 ],
 
                 'buttons': [
@@ -326,7 +326,7 @@
                         text: '<i class="fa fa-file-excel"></i>',
                         titleAttr: 'Excel Kaydet',
                         exportOptions: {
-                            columns: ':visible'
+                              columns: ':visible'
                         }
                     },
 
@@ -400,20 +400,18 @@
                 'lengthChange': true,
                 'searching': true,
                 'info': true,
-                "columnDefs": [{"type": 'date', 'targets': [1]}],
-                "order": [[1, 'desc']],
-
+                'ordering':true,
                 'autoWidth': true,
                 'responsive': true,
-            })
-            table2.on('draw.dt', function () {
+            });
+            table.on('draw.dt', function () {
                 debugger;
-                table2.column(0, {
+                table.column(0, {
                     search: 'applied',
                     order: 'applied',
                     page: 'applied'
                 }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1;
+                    cell.innerHTML = i + 1 ;
                 });
             });
 
