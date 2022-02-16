@@ -1352,7 +1352,7 @@ def view_yeka_competition_detail(request, uuid):
             report_progress=None
         yekabusinessbloks_sub = None
         proposal_array = []
-        proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka__parent=yeka, isDeleted=False)
+        proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka__parent=yeka,isDeleted=False).order_by('proposal__name')
         for proposal in proposal_sub_yeka:
             sub_prelicence_date = '---'
             sub_prelicence_time = '---'
@@ -1539,7 +1539,7 @@ def view_yeka_competition_detail(request, uuid):
         if YekaProposal.objects.filter(business=yeka.business):
             yekaproposal = YekaProposal.objects.get(business=yeka.business)
 
-            proposals = yekaproposal.proposal.filter(isDeleted=False)
+            proposals = yekaproposal.proposal.filter(isDeleted=False).order_by('-name')
 
             array_proposal = []
             for proposal in proposals:
