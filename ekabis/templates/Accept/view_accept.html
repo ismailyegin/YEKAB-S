@@ -195,7 +195,7 @@
                                 {% for item in accept_accepts|dictsort:"date" %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>{{ item.date }}</td>
+                                        <td>{{ item.date |date:"d.m.Y" }}</td>
                                         <td>{% if item.report %}
                                             <a target="_blank" title="{{ item.report }}"
                                                href=" {{ MEDIA_URL }}{{ item.report.url }}"
