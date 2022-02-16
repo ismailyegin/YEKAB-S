@@ -820,7 +820,7 @@
 
                                     <div class="card-body">
 
-                                        <table style="width: 100%" id="region" class="table table-bordered table-hover">
+                                        <table style="width: 100%" id="nihai-yeka" class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
                                                 <th>#</th>
@@ -1261,8 +1261,67 @@
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
-                'ordering': true,
-                'info': true,
+                "order": [[ 1, "asc" ]],
+                 'info': true,
+                'responsive': true,
+            })
+                 $('#nihai-yeka').DataTable({
+                dom: 'Bfrtip',
+
+
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10 tane', '25 tane ', '50 tane ', '100 Tane', 'Hepsini Getir']
+                ],
+
+                'buttons': [
+
+
+                    {
+                        extend: "pageLength",
+                    },
+
+
+                    {
+                        extend: 'colvis',
+                        titleAttr: 'Ekle Çıkar'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'YEKA LİSTESİ',
+                        text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        download: 'open',
+                        text: '<i class="fa fa-file-pdf"></i>',
+
+                        titleAttr: 'Pdf Kaydet'
+                    },
+
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel"></i>',
+                        titleAttr: 'Excel Kaydet'
+                    },
+
+
+                ],
+                "search": {
+                    "caseInsensitive": true,
+                },
+                'language': {
+                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+                },
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                "order": [[ 3, "asc" ]],
+                 'info': true,
                 'responsive': true,
             })
 
@@ -1281,7 +1340,7 @@
                 "processing": true,
                 "serverSide": true,
                 "paging": true,
-                "ordering": true,
+                "order": [[ 1, "asc" ]],
 
 
                 "ajax": {
@@ -1417,14 +1476,14 @@
 
 
             });
-            table.on('draw.dt', function () {
-                var info = table.page.info();
-                table.column(0, {
+           table2.on('draw.dt', function () {
+                debugger;
+                table2.column(0, {
                     search: 'applied',
                     order: 'applied',
                     page: 'applied'
                 }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1 + info.start;
+                    cell.innerHTML = i + 1 ;
                 });
             });
 
