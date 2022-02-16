@@ -815,6 +815,7 @@
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}",
 
                 },
+                'columnDefs' : [{ type: 'turkish', targets: '_all' }],
                 "order": [[ 1, "asc" ]],
                 'bubble': true,
                 'paging': true,
@@ -922,6 +923,8 @@
                 'language': {
                     "url": "{% static 'datatable_tr/datatable_tr.json' %}"
                 },
+                'columnDefs' : [{ type: 'turkish', targets: '_all' }],
+
                 "fnCreatedRow": function (nRow, aData, iDataIndex) {
                     $(nRow).attr('id', "hover");
                 },
@@ -996,6 +999,7 @@
 
 
                 ],
+
                 "search": {
                     "caseInsensitive": true
                 }
