@@ -43,7 +43,7 @@ def view_yeka_accept(request, business, businessblog):
             accept.yekabusinessblog = yekabussinessblog
             accept.business = yekabusiness
             accept.save()
-            accept_accepts=accept.accept.filter(isDeleted=False)
+            accept_accepts=accept.accept.filter(isDeleted=False).order_by('date')
         else:
             accept = YekaAccept.objects.get(business=yekabusiness,isDeleted=False)
             accept_accepts=accept.accept.filter(isDeleted=False).order_by('date')
