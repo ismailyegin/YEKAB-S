@@ -634,66 +634,66 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-12">
-                                <div class="card card-default card-outline collapsed-card">
-                                    <div class="card-header with-border">
-                                        <h3 class="card-title">Görevli Personel Listesi</h3>
-                                    <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
-                  </button>
-                </div>
-                                    {% if aktif != 'Admin' %}
-                                        {% for item in perm %}
-                                            {% if item == 'view_yekacompetition_personel' and employe in employees%}
-                                                <a href="{% url "ekabis:view_yekacompetition_personel" yeka.uuid %}"
-                                                   title="Personel Ekle"
-                                                   type="button" class="btn btn-outline-primary btn-sm"
-                                                   style="float: right"><i
-                                                        class="fa fa-plus"></i>
-                                                </a>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% else %}
-                                         <a href="{% url "ekabis:view_yekacompetition_personel" yeka.uuid %}"
-                                                   title="Personel Ekle"
-                                                   type="button" class="btn btn-outline-primary btn-sm"
-                                                   style="float: right"><i
-                                                        class="fa fa-plus"></i>
-                                                </a>
-                                    {% endif %}
-                                    </div>
-
-
-                                    <div class="card-body">
-
-                                        <table id="region" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Ad Soyad</th>
-
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-
-                                            {% for employee in employees %}
-                                                <tr>
-                                                    <td>{{ forloop.counter }} </td>
-                                                    <td>{{ employee.employee.person.user.first_name }} {{ employee.employee.person.user.last_name }}</td>
-
-                                                </tr>
-
-                                            {% endfor %}
-
-
-                                            </tbody>
-                                        </table>
-
-
-                                    </div>
-                                </div>
-                            </div>
+{#                            <div class="col-lg-12">#}
+{#                                <div class="card card-default card-outline collapsed-card">#}
+{#                                    <div class="card-header with-border">#}
+{#                                        <h3 class="card-title">Görevli Personel Listesi</h3>#}
+{#                                    <div class="card-tools">#}
+{#                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>#}
+{#                  </button>#}
+{#                </div>#}
+{#                                    {% if aktif != 'Admin' %}#}
+{#                                        {% for item in perm %}#}
+{#                                            {% if item == 'view_yekacompetition_personel' and employe in employees%}#}
+{#                                                <a href="{% url "ekabis:view_yekacompetition_personel" yeka.uuid %}"#}
+{#                                                   title="Personel Ekle"#}
+{#                                                   type="button" class="btn btn-outline-primary btn-sm"#}
+{#                                                   style="float: right"><i#}
+{#                                                        class="fa fa-plus"></i>#}
+{#                                                </a>#}
+{#                                            {% endif %}#}
+{#                                        {% endfor %}#}
+{#                                        {% else %}#}
+{#                                         <a href="{% url "ekabis:view_yekacompetition_personel" yeka.uuid %}"#}
+{#                                                   title="Personel Ekle"#}
+{#                                                   type="button" class="btn btn-outline-primary btn-sm"#}
+{#                                                   style="float: right"><i#}
+{#                                                        class="fa fa-plus"></i>#}
+{#                                                </a>#}
+{#                                    {% endif %}#}
+{#                                    </div>#}
+{##}
+{##}
+{#                                    <div class="card-body">#}
+{##}
+{#                                        <table id="region" class="table table-bordered table-hover">#}
+{#                                            <thead>#}
+{#                                            <tr>#}
+{#                                                <th>No</th>#}
+{#                                                <th>Ad Soyad</th>#}
+{##}
+{#                                            </tr>#}
+{#                                            </thead>#}
+{##}
+{#                                            <tbody>#}
+{##}
+{#                                            {% for employee in employees %}#}
+{#                                                <tr>#}
+{#                                                    <td>{{ forloop.counter }} </td>#}
+{#                                                    <td>{{ employee.employee.person.user.first_name }} {{ employee.employee.person.user.last_name }}</td>#}
+{##}
+{#                                                </tr>#}
+{##}
+{#                                            {% endfor %}#}
+{##}
+{##}
+{#                                            </tbody>#}
+{#                                        </table>#}
+{##}
+{##}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
                             {#                        personel Listesi#}
                             <div class="col-lg-6">
                                 <div class="card card-default card-outline collapsed-card">
