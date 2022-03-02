@@ -606,7 +606,13 @@
                                             :</b> {{ proposal.sub_prelicence_date }} </p>
                                         <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Süresi
                                             :</b>{{ proposal.prelicence_time }} </p>
-
+                                            <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Belgesi :</b>
+                                                {% if proposal.prelicence_file %}
+                                            <a target="_blank" title="{{ proposal.prelicence_file }}"
+                                               href=" {{ MEDIA_URL }}{{ proposal.prelicence_file.url }}"
+                                               download="">{{ proposal.prelicence_file | truncatechars:20 }}</a>
+                                        {% endif %}
+                                        </p>
                                         <p class="text-muted" style="font-size: 16px;"><b>Ön Lisans Bitiş Süresi :</b> {{ proposal.prelicence_finish_date }}
                                         </p>
 
@@ -617,6 +623,12 @@
                                             :</b> {{ proposal.licence_date }} </p>
                                         <p class="text-muted" style="font-size: 16px;"><b>Lisans Süresi
                                             :</b> {{ proposal.licence_time }} </p>
+                                        <p class="text-muted" style="font-size: 16px;"><b>Lisans Belgesi :</b>
+                                                {% if proposal.licence_file %}
+                                            <a target="_blank" title="{{ proposal.licence_file }}"
+                                               href=" {{ MEDIA_URL }}{{ proposal.licence_file.url }}"
+                                               download="">{{ proposal.licence_file | truncatechars:20 }}</a>
+                                        {% endif %}
                                          <p class="text-muted" style="font-size: 16px;"><b>Lisans Bitiş Tarihi
                                             :</b> {{ proposal.licence_finish_date }} </p>
                                         <p class="text-muted" style="font-size: 16px;"><b>İnşaat Bitiş Süresi :</b> {{ proposal.build_date }}

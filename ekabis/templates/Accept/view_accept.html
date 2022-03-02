@@ -195,7 +195,7 @@
                                 {% for item in accept_all %}
                                     <tr>
                                         <td>{{ forloop.counter }} </td>
-                                        <td>{{ item.date |date }}</td>
+                                        <td>{{ item.date }}</td>
                                         <td>
                                             {% if item.report %}
                                                 <a target="_blank" title="{{ item.report }}"
@@ -308,31 +308,35 @@
                     },
                     {
                         extend: 'print',
-                        title: 'YEKA LİSTESİ',
+                        title: 'YEKABIS-Kabuller',
                         text: '<i class="fa fa-print"></i>',
+
+                        titleAttr: 'Yazdır',
                         exportOptions: {
-                            columns: ':visible'
-                        },
-                        titleAttr: 'Yazdır'
+                            columns: [0,1,2,3,4]
+                        }
                     },
                     {
                         extend: 'pdfHtml5',
                         download: 'open',
+                        title: 'YEKABIS-Kabuller',
                         text: '<i class="fa fa-file-pdf"></i>',
 
                         titleAttr: 'Pdf Kaydet',
                         exportOptions: {
-                            columns: ':visible'
+                            columns: [0,1,2,3,4]
                         }
                     },
+
 
                     {
                         extend: 'excelHtml5',
                         text: '<i class="fa fa-file-excel"></i>',
+                        title: 'YEKABIS-Kabuller',
                         titleAttr: 'Excel Kaydet',
                         exportOptions: {
-                            columns: ':visible'
-                        }
+                            columns: [0,1,2,3,4]
+                        },
                     },
 
 
@@ -341,7 +345,39 @@
                     "caseInsensitive": true,
                 },
                 'language': {
-                    "url": "{% static 'datatable_tr/datatable_tr.json' %}"
+
+                    "sDecimal": ",",
+                    "sEmptyTable": "Tabloda herhangi bir veri mevcut değil",
+                    "sInfo": "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+                    "sInfoEmpty": "Kayıt yok",
+                    "sInfoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "Sayfada _MENU_ kayıt göster",
+                    "sLoadingRecords": "Yükleniyor...",
+                    "sProcessing": "İşleniyor...",
+                    "sSearch": "Ara:",
+                    "sZeroRecords": "Eşleşen kayıt bulunamadı",
+
+                    "buttons": {
+                         "pageLength": {
+                        "-1": "Bütün satırları göster",
+                        "_": "%d satır göster"
+                    },
+
+                        "colvis": "Sütun Görünürlüğü",
+                    },
+                    "oPaginate": {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": artan sütun sıralamasını aktifleştir",
+                        "sSortDescending": ": azalan sütun soralamasını aktifleştir"
+
+                    }
                 },
 
                 "footerCallback": function (row, data, start, end, display) {
@@ -404,11 +440,11 @@
                 },
 
 
-                 'paging': true,
+                'paging': true,
                 'lengthChange': true,
                 'searching': true,
 
-                 'info': true,
+                'info': true,
                 'responsive': true,
             });
             table.on('draw.dt', function () {
