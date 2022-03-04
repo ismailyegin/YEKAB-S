@@ -853,11 +853,20 @@ def change_yekacompetitionbusinessBlog(request, competition, yekabusiness, busin
                     for dependence_block in dependence_blocks:
                         add_time_next(yekabussiness.pk, dependence_block.pk, competition)
                 if yekaBusinessBlogo_form.cleaned_data['status']=='1':
-                    region = ConnectionRegion.objects.get(yekacompetition=competition)
-                    yeka_name = Yeka.objects.get(connection_region=region).definition
-                    if CalendarYeka.objects.filter(calendarName__name=yeka_name+'-'+competition.name+'-'+business.name):
-                        calendar_yeka = CalendarYeka.objects.get(calendarName__name=yeka_name+'-'+competition.name+'-'+business.name)
-                        calendar_yeka.delete()
+                    if not competition.parent:
+                        region = ConnectionRegion.objects.get(yekacompetition=competition)
+                        yeka_name = Yeka.objects.get(connection_region=region).definition
+                        if CalendarYeka.objects.filter(calendarName__name=yeka_name+'-'+competition.name+'-'+business.name):
+                            calendar_yeka = CalendarYeka.objects.get(calendarName__name=yeka_name+'-'+competition.name+'-'+business.name)
+                            calendar_yeka.delete()
+                    else:
+                        region = ConnectionRegion.objects.get(yekacompetition=competition.parent)
+                        yeka_name = Yeka.objects.get(connection_region=region).definition
+                        if CalendarYeka.objects.filter(
+                                calendarName__name=yeka_name + '-' + competition.name + '-' + business.name):
+                            calendar_yeka = CalendarYeka.objects.get(
+                                calendarName__name=yeka_name + '-' + competition.name + '-' + business.name)
+                            calendar_yeka.delete()
 
                 messages.success(request, 'Başarıyla Kayıt Edilmiştir.')
                 url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
