@@ -14,7 +14,7 @@
 
                 </div>
                 <div class="modal-body">
-                    <p>Alt YEKA yarışmasını silmek istediğinizden emin misiniz ?</p>
+                    <p>Silmek istediğinizden emin misiniz ?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline pull-left btn-ok" id="btn-conf1"
@@ -789,7 +789,7 @@
 
                                                                                 <a class="dropdown-item" href=""
                                                                                    data-toggle="modal"
-                                                                                   onclick=deleteExtraTime('{{ proposal.proposal.uuid }}')><i
+                                                                                   onclick=deleteProposal('{{ proposal.proposal.uuid }}')><i
                                                                                         class="fa fa-trash"></i>Sil</a>
                                                                             {% endif %}
 
@@ -1557,7 +1557,43 @@
             });
 
         }
+         function deleteProposal(id) {
+        debugger;
+        console.log(id);
+        var html = ''
+        $("#modal-delete").on("shown.bs.modal", function (e) {
+            $("#btn-conf1").click(function () {
+                $.ajax({
+                    url: "{% url "ekabis:delete_proposal" %}",
+                    type: "POST",
+                    data: {
+                        'csrfmiddlewaretoken': "{{  csrf_token  }}",
+                          uuid: id.toString()
+                    },
+                    success: function (result) {
 
+                        html = 'Aday Yeka Başarıyla Silindi';
+                        debugger;
+                        $(".successModal").html(html);
+                        $('#modal-success').on("shown.bs.modal", function (e) {
+                            $(".btn-ok").click(function () {
+
+                                window.location.reload();
+
+                            });
+
+                        }).modal('show');
+
+                        console.log(result.status)
+                    }
+                });
+            });
+        }).modal('show');
+        $('#btn-close1').click(function () {
+            $('#modal-active').modal('hide');
+        });
+
+    }
     </script>
 
 
