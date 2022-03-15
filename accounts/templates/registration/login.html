@@ -60,8 +60,8 @@
     </script>
     <!-- Bootstrap 4 -->
     <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    {#    <script src="{% static 'captcha_js/jquery-captcha.js' %}"></script>#}
-    {#    <script src="{% static 'captcha_js/jquery-captcha.min.js' %}"></script>#}
+    <script src="{% static 'captcha_js/jquery-captcha.js' %}"></script>
+    <script src="{% static 'captcha_js/jquery-captcha.min.js' %}"></script>
     <style>
 
 
@@ -100,13 +100,13 @@
             <div class="form-group has-feedback">
                 <input type="password" class="form-control" placeholder="Şifre" name="password" autocomplete="off">
 
-                {#            <span class="glyphicon glyphicon-lock form-control-feedback"></span>#}
-                {#                <div class="captcha-box">#}
-                {#                    <canvas id="canvas" style="margin:10px"></canvas>#}
-                {#                    <h6>Güvenlik Kodunu Girin</h6>#}
-                {#                    <input name="code" class="form-control">#}
-                {##}
-                {#                </div>#}
+                            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                <div class="captcha-box">
+                                    <canvas id="canvas" style="margin:10px"></canvas>
+                                    <h6>Güvenlik Kodunu Girin</h6>
+                                    <input name="code" class="form-control">
+
+                                </div>
             </div>
 
 
@@ -123,7 +123,7 @@
                 <!-- /.col -->
 
                 <div class="col-lg-12"> <!--js-captcha-refresh  class a eklenecek -->
-                    <button id="valid" type="submit" class="btn btn-primary  "
+                    <button id="valid" type="button" class="btn btn-primary js-captcha-refresh "
                             style="float:right;margin-top: 10px ">Giriş Yap
                     </button>
 
@@ -170,34 +170,34 @@
 <script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
 <script>
 
-    {#// step-1#}
-    {#const captcha = new Captcha($('#canvas'), {#}
-    {#    length: 4#}
-    {#})
+    // step-1
+    const captcha = new Captcha($('#canvas'), {
+        length: 4
+    })
     ;
-    #}
-    {#// api#}
-    {#captcha.refresh();#}
-    {#captcha.getCode();#}
-    {#captcha.valid("");#}
-    {##}
-    {#$('#valid').on('click', function () {#}
-    {#    const ans = captcha.valid($('input[name="code"]').val());#}
-    {##}
-    {#    if (ans) {#}
-    {#        document.getElementById("login_form").submit();#}
-    {#        captcha.refresh();#}
-    {#    } else {#}
-    {#        $(document).Toasts('create', {#}
-    {#            class: 'bg-danger',#}
-    {#            title: 'Uyarı ! ',#}
-    {##}
-    {#            body: 'Güvenlik kodu yanlış. Lütfen tekrar deneyin.',#}
-    {#        })#}
-    {#        captcha.refresh();#}
-    {#    }#}
-    {#})
-    #}
+
+    // api
+    captcha.refresh();
+    captcha.getCode();
+    captcha.valid("");
+
+    $('#valid').on('click', function () {
+        const ans = captcha.valid($('input[name="code"]').val());
+
+        if (ans) {
+            document.getElementById("login_form").submit();
+            captcha.refresh();
+        } else {
+            $(document).Toasts('create', {
+                class: 'bg-danger',
+                title: 'Uyarı ! ',
+
+                body: 'Güvenlik kodu yanlış. Lütfen tekrar deneyin.',
+            })
+            captcha.refresh();
+        }
+    })
+
 
 
 </script>
