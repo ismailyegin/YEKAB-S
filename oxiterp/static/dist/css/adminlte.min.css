@@ -279,7 +279,7 @@ fieldset {
 
  .login-page,
 .register-page {
-    /*background: url("/media/sbs-arkaplan.jpg") no-repeat fixed center;*/
+    background: url("/media/sbs-arkaplan.jpg") no-repeat fixed center;
     background-size: cover;
 }
 
