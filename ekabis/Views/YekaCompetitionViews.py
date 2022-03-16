@@ -1073,6 +1073,7 @@ def add_sumcompetition(request, uuid, proposal_uuid):
             proposal = Proposal.objects.get(uuid=proposal_uuid)
 
         competition_form.fields['capacity'].initial = proposal.capacity
+        competition_form.fields['name'].initial = proposal.name
         name = general_methods.yekaname(parent_competition.business)
 
         with transaction.atomic():
@@ -1352,7 +1353,8 @@ def view_yeka_competition_detail(request, uuid):
             report_progress=None
         yekabusinessbloks_sub = None
         proposal_array = []
-        proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka__parent=yeka).filter(isDeleted=False).order_by('proposal__name')
+        proposal_sub_yeka = ProposalSubYeka.objects.filter(sub_yeka__parent=yeka).filter(isDeleted=False).order_by(
+            'proposal__order')
         for proposal in proposal_sub_yeka:
             sub_prelicence_date = '---'
             sub_prelicence_time = '---'
@@ -1555,11 +1557,23 @@ def view_yeka_competition_detail(request, uuid):
         not_result = 0
         if YekaProposal.objects.filter(business=yeka.business):
             yekaproposal = YekaProposal.objects.get(business=yeka.business)
-
+            pro_list = []
             proposals = yekaproposal.proposal.filter(isDeleted=False).order_by('-name')
-
+            for key, proposal in enumerate(proposals):
+                if key == 0:
+                    if not proposal.order:
+                        proposal.order = 1
+                        proposal.save()
+                else:
+                    if not proposal.order:
+                        last = proposals.filter(order__isnull=False).last().order
+                        proposal.order = int(last) + 1
+                        proposal.save()
             array_proposal = []
+            proposals = yekaproposal.proposal.filter(isDeleted=False).order_by('order')
+
             for proposal in proposals:
+
                 proposal_dict = {}
                 proposal_dict['status'] = '##ffffff'
                 olumsuz = proposal.institution.filter(status='Olumsuz', isDeleted=False)
@@ -1586,7 +1600,7 @@ def view_yeka_competition_detail(request, uuid):
                        'yeka': yeka, 'yekabusinessbloks': yekabusinessbloks, 'array_proposal': array_proposal,
                        'yeka_eskalasyon': eskalasyon, 'employee': employee, 'competition_persons': competition_persons,
                        'employees': employees, 'competitions': competitions, 'region': region,
-                       'yekaproposal': yekaproposal,'report_progress':report_progress,
+                       'yekaproposal': yekaproposal, 'report_progress': report_progress,
                        'indemnity': guarantees, 'comp_yeka': comp_yeka,
                        'yeka_info': yeka_info_dict, 'proposal_array': proposal_array
                        })

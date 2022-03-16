@@ -148,7 +148,7 @@
                                     {% for proposal in proposal_list %}
 
                                         <tr style="background: {{ proposal.status }}">
-                                            <td>{{ forloop.counter }} </td>
+                                            <td>{{ proposal.proposal.order }} </td>
                                         <td>{{ proposal.proposal.name }}</td>
                                             <td>{{ proposal.proposal.date }}</td>
                                             <td>{{ proposal.proposal.capacity }}</td>
