@@ -964,7 +964,7 @@ def add_proposal(request, uuid):
 
         proposal_form = ProposalForm()
         order=yeka_proposal.proposal.filter(isDeleted=False).order_by('order').last().order + 1
-        proposal_form.fields['order'].initial = order
+        proposal_form.fields['order'].initial = int(order)
         proposal_form.fields['order'].widget.attrs['readonly'] = True
 
 
@@ -974,6 +974,7 @@ def add_proposal(request, uuid):
         name = general_methods.yekaname(yeka_proposal.business)
 
         with transaction.atomic():
+            order = int(yeka_proposal.proposal.filter(isDeleted=False).order_by('order').last().order) + 1
 
             if request.method == 'POST':
                 proposal_form = ProposalForm(request.POST or None, request.FILES or None)
@@ -995,6 +996,8 @@ def add_proposal(request, uuid):
                             proposal.information_form = file
 
                     proposal.save()
+                    proposal.order = order
+                    proposal.save()
                     yeka_proposal.proposal.add(company)
 
                     proposal.save()
@@ -1004,9 +1007,9 @@ def add_proposal(request, uuid):
                         competition.name) + '</a> adlı YEKA yarışmasına ait  ' + str(
                         yeka_proposal.proposal.name) + ' adlı aday yeka bilgileri eklendi.'
                     notification(request, html, competition.uuid, 'yeka_competition')
-                    messages.success(request, 'Aday Yeka  Eklenmistir')
-                    return redirect('ekabis:change_yekaproposal', yeka_proposal.business.uuid,
-                                    yeka_proposal.yekabusinessblog.uuid)
+                    messages.success(request, 'Aday Yeka  Eklenmiştir')
+                    return redirect('ekabis:view_yeka_competition_detail', competition.uuid,
+                                    )
                 else:
                     error_messages = get_error_messages(proposal_form)
                     return render(request, 'Proposal/add_proposal.html',
