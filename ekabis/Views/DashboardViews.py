@@ -247,9 +247,9 @@ def return_admin_dashboard(request):
     for yeka in yekas:
         yeka_dict = dict()
 
-        regions = yeka.connection_region.filter(isDeleted=False)
+        regions = yeka.connection_region.filter(isDeleted=False).order_by('name')
         for region in regions:
-            for comp in region.yekacompetition.filter(isDeleted=False):
+            for comp in region.yekacompetition.filter(isDeleted=False).order_by('name'):
                 comp_dict = dict()
                 comp_dict['pk'] = comp.pk
                 comp_dict['competition'] = '(' + yeka.definition + ')' + ' - ' + comp.name
@@ -574,3 +574,4 @@ def api_yeka_accept(request):
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist', 'accepts': []})
+
