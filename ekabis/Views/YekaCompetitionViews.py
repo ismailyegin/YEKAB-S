@@ -1558,7 +1558,8 @@ def view_yeka_competition_detail(request, uuid):
         if YekaProposal.objects.filter(business=yeka.business):
             yekaproposal = YekaProposal.objects.get(business=yeka.business)
             pro_list = []
-            proposals = yekaproposal.proposal.filter(isDeleted=False).order_by('-name')
+            proposals = yekaproposal.proposal.filter(isDeleted=False).order_by('name')
+
             for key, proposal in enumerate(proposals):
                 if key == 0:
                     if not proposal.order:
@@ -1566,7 +1567,7 @@ def view_yeka_competition_detail(request, uuid):
                         proposal.save()
                 else:
                     if not proposal.order:
-                        last = proposals.filter(order__isnull=False).last().order
+                        last = proposals.filter(order__isnull=False).order_by('order').last().order
                         proposal.order = int(last) + 1
                         proposal.save()
             array_proposal = []
