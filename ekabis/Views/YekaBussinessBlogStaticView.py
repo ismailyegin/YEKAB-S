@@ -913,7 +913,7 @@ def change_yekaproposal(request, business, businessblog):
                 business=yekabusiness
             )
             yekaproposal.save()
-        proposals = yekaproposal.proposal.filter(isDeleted=False)
+        proposals = yekaproposal.proposal.filter(isDeleted=False).order_by('order')
 
         array_proposal = []
         for proposal in proposals:
@@ -963,6 +963,10 @@ def add_proposal(request, uuid):
         yeka_proposal = YekaProposal.objects.get(uuid=uuid)
 
         proposal_form = ProposalForm()
+        order=yeka_proposal.proposal.filter(isDeleted=False).order_by('order').last().order + 1
+        proposal_form.fields['order'].initial = order
+        proposal_form.fields['order'].widget.attrs['readonly'] = True
+
 
         urls = last_urls(request)
         current_url = resolve(request.path_info)
@@ -974,10 +978,26 @@ def add_proposal(request, uuid):
             if request.method == 'POST':
                 proposal_form = ProposalForm(request.POST or None, request.FILES or None)
                 if proposal_form.is_valid():
+
                     company = proposal_form.save(request, commit=False)
-                    company.save()
+                    proposal=Proposal()
+                    proposal.name = proposal_form.cleaned_data['name']
+                    proposal.capacity = proposal_form.cleaned_data['capacity']
+                    proposal.date = proposal_form.cleaned_data['date']
+                    proposal.order=proposal_form.cleaned_data['order']
+
+                    for filename, file in request.FILES.items():
+                        if filename == 'farm_form':
+                            proposal.farm_form = file
+                        elif filename == 'kml_file':
+                            proposal.kml_file = file
+                        elif filename == 'information_form':
+                            proposal.information_form = file
+
+                    proposal.save()
                     yeka_proposal.proposal.add(company)
-                    yeka_proposal.save()
+
+                    proposal.save()
                     competition = YekaCompetition.objects.get(business=yeka_proposal.business)
                     url = redirect('ekabis:view_yeka_competition_detail', competition.uuid).url
                     html = '<a style="" href="' + url + '"> ID : ' + str(competition.pk) + ' - ' + str(
@@ -1227,7 +1247,7 @@ def change_proposal(request, uuid, proposal):
         proposal = Proposal.objects.get(uuid=proposal)
         proposal_form = ProposalForm(request.POST or None, request.FILES or None, instance=proposal)
         name = general_methods.yekaname(yeka_proposal.business)
-
+        competition=YekaCompetition.objects.get(business=yeka_proposal.business)
         # proposal_form.fields['farm_form'].initial = proposal.farm_form
         # proposal_form.fields['information_form'].initial = proposal.information_form
         # proposal_form.fields['kml_file'].initial = proposal.kml_file
@@ -1247,6 +1267,7 @@ def change_proposal(request, uuid, proposal):
                     proposal.name = proposal_form.cleaned_data['name']
                     proposal.capacity = proposal_form.cleaned_data['capacity']
                     proposal.date = proposal_form.cleaned_data['date']
+                    proposal.order=proposal_form.cleaned_data['order']
                     for filename, file in request.FILES.items():
                         if filename == 'farm_form':
                             proposal.farm_form = file
@@ -1258,13 +1279,7 @@ def change_proposal(request, uuid, proposal):
                     proposal.save()
 
                     messages.success(request, 'Aday Yeka Güncellenmiştir.')
-                    return render(request, 'Proposal/change_proposal.html',
-                                  {
-                                      'urls': urls, 'name': name,
-                                      'current_url': current_url,
-                                      'url_name': url_name,
-                                      'proposal_form': proposal_form
-                                  })
+                    return redirect('ekabis:view_yeka_competition_detail' ,competition.uuid)
                 else:
                     proposal_form = ProposalForm(request.POST, request.FILES)
                     error_messages = get_error_messages(proposal_form)

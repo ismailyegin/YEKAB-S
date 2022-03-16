@@ -701,7 +701,9 @@
                                                         <th>Tarım Yazısı</th>
                                                         <th>Bilgi Formu</th>
                                                         <th>KML Dosyası</th>
+
                                                         <th>İşlemler</th>
+
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -709,7 +711,7 @@
                                                     {% for proposal in array_proposal %}
 
                                                         <tr style="background: {{ proposal.status }};font-size: 15px">
-                                                            <td>{{ forloop.counter }} </td>
+                                                            <td>{{ proposal.proposal.order }} </td>
                                                             <td>{{ proposal.proposal.name }}</td>
                                                             <td>{{ proposal.proposal.date }}</td>
                                                             <td>{{ proposal.proposal.capacity }}</td>
@@ -740,6 +742,7 @@
                                                                    download="">{{ proposal.proposal.kml_file | truncatechars:10 }}</a>
                                                                 </td>
                                                             {% endif %}
+
                                                             <td>
                                                             {% if aktif == 'Admin' or employee in employees %}
                                                                 <div class="btn-group">
@@ -1273,7 +1276,7 @@
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
-                "order": [[ 1, "asc" ]],
+                'order':true,
                  'info': true,
                 'responsive': true,
             })
@@ -1332,7 +1335,7 @@
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
-                "order": [[ 3, "asc" ]],
+                "order":true,
                  'info': true,
                 'responsive': true,
             })
