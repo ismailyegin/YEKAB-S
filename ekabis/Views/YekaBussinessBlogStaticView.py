@@ -964,8 +964,8 @@ def add_proposal(request, uuid):
 
         proposal_form = ProposalForm()
         order=yeka_proposal.proposal.filter(isDeleted=False).order_by('order').last().order + 1
-        proposal_form.fields['order'].initial = int(order)
-        proposal_form.fields['order'].widget.attrs['readonly'] = True
+        # proposal_form.fields['order'].initial = int(order)
+        # proposal_form.fields['order'].widget.attrs['readonly'] = True
 
 
         urls = last_urls(request)
@@ -985,7 +985,6 @@ def add_proposal(request, uuid):
                     proposal.name = proposal_form.cleaned_data['name']
                     proposal.capacity = proposal_form.cleaned_data['capacity']
                     proposal.date = proposal_form.cleaned_data['date']
-                    proposal.order=proposal_form.cleaned_data['order']
 
                     for filename, file in request.FILES.items():
                         if filename == 'farm_form':
@@ -1270,7 +1269,7 @@ def change_proposal(request, uuid, proposal):
                     proposal.name = proposal_form.cleaned_data['name']
                     proposal.capacity = proposal_form.cleaned_data['capacity']
                     proposal.date = proposal_form.cleaned_data['date']
-                    proposal.order=proposal_form.cleaned_data['order']
+
                     for filename, file in request.FILES.items():
                         if filename == 'farm_form':
                             proposal.farm_form = file

@@ -701,7 +701,6 @@
                                                         <th>Tarım Yazısı</th>
                                                         <th>Bilgi Formu</th>
                                                         <th>KML Dosyası</th>
-
                                                         <th>İşlemler</th>
 
                                                     </tr>
@@ -711,7 +710,7 @@
                                                     {% for proposal in array_proposal %}
 
                                                         <tr style="background: {{ proposal.status }};font-size: 15px">
-                                                            <td>{{ proposal.proposal.order }} </td>
+                                                            <td>{{ forloop.counter }} </td>
                                                             <td>{{ proposal.proposal.name }}</td>
                                                             <td>{{ proposal.proposal.date }}</td>
                                                             <td>{{ proposal.proposal.capacity }}</td>
