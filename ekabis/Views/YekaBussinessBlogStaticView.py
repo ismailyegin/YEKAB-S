@@ -30,7 +30,7 @@ from ekabis.Forms.YekaApplicationForm import YekaApplicationForm
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
     YekaCompany, YekaGuarantee, Collateral, ProposalSubYeka, YekaBudget, YekaEmployment, Budget, Employment, \
-    YekaProgressReport
+    YekaProgressReport, YekaKmlFile
 from ekabis.models.Competition import Competition
 from ekabis.models.Settings import Settings
 from ekabis.models.CompetitionCompany import CompetitionCompany
@@ -1269,6 +1269,7 @@ def change_proposal(request, uuid, proposal):
                     proposal.name = proposal_form.cleaned_data['name']
                     proposal.capacity = proposal_form.cleaned_data['capacity']
                     proposal.date = proposal_form.cleaned_data['date']
+                    proposal.order = proposal_form.cleaned_data['order']
 
                     for filename, file in request.FILES.items():
                         if filename == 'farm_form':
