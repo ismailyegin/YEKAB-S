@@ -83,7 +83,7 @@ def return_yeka(request):
             competitions = []
             regions = yeka.connection_region.filter(isDeleted=False)
             for region in regions:
-                for comp in region.yekacompetition.filter(isDeleted=False):
+                for comp in region.yekacompetition.filter(isDeleted=False).order_by('name'):
                     competitions.append(comp)
             yeka_dict['yeka'] = yeka
             yeka_dict['regions'] = regions
