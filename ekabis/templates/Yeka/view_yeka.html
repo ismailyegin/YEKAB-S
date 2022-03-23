@@ -207,7 +207,7 @@
                                                                             <div class="p-0">
                                                                                 <table class="table table-hover">
                                                                                     <tbody>
-                                                                                    {% for region in item.regions %}
+                                                                                    {% for region in item.regions|dictsort:'name' %}
                                                                                         <tr data-widget="expandable-table"
                                                                                             aria-expanded="false">
 
@@ -227,7 +227,7 @@
                                                                                                     <table id="competitions-{{ item.yeka.pk }}"
                                                                                                            class="table table-hover">
                                                                                                         <tbody>
-                                                                                                        {% for competition in region.yekacompetition.all %}
+                                                                                                        {% for competition in region.yekacompetition.all|dictsort:'name' %}
 
                                                                                                             {% if not competition.isDeleted %}
                                                                                                                 <tr data-widget="expandable-table"
