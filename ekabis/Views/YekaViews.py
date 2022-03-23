@@ -2222,14 +2222,14 @@ def competition_personal_assigment(request):
                 yeka_dict['competition']=competition
                 yeka_dict['sub']=''
                 competititon_array.append(yeka_dict)
-        elif competition.parent :
-            if competition.parent.isDeleted==False:
-                region = ConnectionRegion.objects.get(yekacompetition=competition.parent)
-                yeka = Yeka.objects.get(connection_region=region)
-                yeka_dict['sub'] = competition
-                yeka_dict['yeka'] = yeka
-                yeka_dict['competition'] =YekaCompetition.objects.get(pk=competition.parent.pk)
-                competititon_array.append(yeka_dict)
+        # elif competition.parent :
+        #     if competition.parent.isDeleted==False:
+        #         region = ConnectionRegion.objects.get(yekacompetition=competition.parent)
+        #         yeka = Yeka.objects.get(connection_region=region)
+        #         yeka_dict['sub'] = competition
+        #         yeka_dict['yeka'] = yeka
+        #         yeka_dict['competition'] =YekaCompetition.objects.get(pk=competition.parent.pk)
+        #         competititon_array.append(yeka_dict)
 
 
     try:
