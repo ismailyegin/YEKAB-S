@@ -30,7 +30,7 @@ from ekabis.Forms.YekaApplicationForm import YekaApplicationForm
 from ekabis.Forms.YekaContractForm import YekaContract, YekaContractForm
 from ekabis.models import YekaBusiness, YekaCompetition, Permission, Company, Logs, CompanyUser, ConnectionRegion, \
     YekaCompany, YekaGuarantee, Collateral, ProposalSubYeka, YekaBudget, YekaEmployment, Budget, Employment, \
-    YekaProgressReport, YekaKmlFile
+    YekaProgressReport
 from ekabis.models.Competition import Competition
 from ekabis.models.Settings import Settings
 from ekabis.models.CompetitionCompany import CompetitionCompany
@@ -2659,3 +2659,5 @@ def delete_budget(request):
     except:
         traceback.print_exc()
         return JsonResponse({'status': 'Fail', 'msg': 'Object does not exist'})
+
+
