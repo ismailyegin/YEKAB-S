@@ -1797,3 +1797,44 @@ def view_person_competition(request):
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
         return redirect('ekabis:view_yeka')
+
+
+def competitionEskalasyonDate(request):
+    yekas = YekaCompetition.objects.filter(isDeleted=False).order_by('-date')
+    try:
+        with transaction.atomic():
+            for competition in yekas:
+                business = competition.business
+                if business:
+                    if business.businessblogs:
+                        if business.businessblogs.filter(businessblog__name='Yarışmanın Yapılması'):
+                            businessblog = business.businessblogs.get(businessblog__name='Yarışmanın Yapılması')
+                            if YekaContract.objects.filter(business=competition.business):
+                                contract = YekaContract.objects.get(business=competition.business)
+                                if contract:
+                                    if competition.is_calculation:
+                                        if not competition.eskalasyon_first_date:
+
+                                            date = businessblog.startDate.month
+                                            year=businessblog.startDate.year
+
+                                        else:
+                                                date=int(competition.eskalasyon_first_date.split('-')[0])
+                                                year=int(competition.eskalasyon_first_date.split('-')[1])
+
+                                        if date == 1 or date == 2 or date == 3:
+                                            competition.eskalasyon_first_date = '7-' + str(year)
+                                        elif date == 4 or date == 5 or date == 6:
+                                            competition.eskalasyon_first_date = '10-' + str(year)
+                                        elif date == 7 or date == 8 or date == 9:
+                                            competition.eskalasyon_first_date = '1-' + str(year)
+                                        elif date == 10 or date == 11 or date == 12:
+                                            competition.eskalasyon_first_date = '4-' + str(year+1)
+                                        competition.save()
+
+        return redirect('ekabis:view_admin')
+    except Exception as e:
+
+        traceback.print_exc()
+        messages.warning(request, e)
+        return redirect('ekabis:view_yeka')

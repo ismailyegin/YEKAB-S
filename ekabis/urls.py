@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.urls import path, include
 
 from ekabis.Views import DashboardViews, ClaimView, LogViews, AdminViews, HelpViews, DirectoryViews, UserViews, \
@@ -555,5 +554,6 @@ urlpatterns = [
 
     path('yeka/yarisma-personel-ata', YekaViews.competition_personal_assigment, name='competition_personal_assigment'),
     path('yeka/ilerleme-rapor-ekle/<uuid:comp_uuid>', YekaBussinessBlogStaticView.add_progressreport, name='add_progressreport'),
+    path('yeka/yarisma-eskalasyon-tarihi-ata', YekaCompetitionViews.competitionEskalasyonDate, name='competitionEskalasyonDate'),
 
 ]
