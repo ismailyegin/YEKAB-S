@@ -54,9 +54,11 @@ def EskalasyonCalculation(request, uuid):
                         date = startDate + endDate
                         url = 'https://evds2.tcmb.gov.tr/service/evds/series=TP.DK.USD.S.YTL&' + date + '&type=json&key=cakxFSu6Oh&aggregationTypes=max&formulas=0&frequency=1'
                         payload = {}
+
                         headers = {
-                            'Cookie': 'TS01ab7d04=015d31d69177a668a8501cee5acf4e7218ddba7c5142b3bd18702be96d61d829a97551ffd1193c8ce196ebe26d8d3a618ea6f63f1c'
+                            'Cookie': 'SessionCookie=!saM+1r9bxxJliC3qkygjtJLA5IKF7bg5bQPg1AjsMdVIDyq5N4gnw6wFTgHsKn1YWFt7d2kgEi8vMso=; TS013c5758=015d31d691e7f86c0311e5edbd9e6a7fd89a0892a967143bfd3ae3ae51db8ec696d5ef2d3939211dd7b80fc6682c6bba87cb9e038552b5c4c45c4e1fab8c06888be3878ccd'
                         }
+
                         response = requests.request("GET", url, headers=headers, data=payload)
                         x = json.loads(response.text)  # Pik değerini hesaplamak için günlük dolar ortalaması
                         peak_value = float(peak_value) * float(
@@ -68,32 +70,6 @@ def EskalasyonCalculation(request, uuid):
 
                             month_name = calendar.month_name[(datetime.today().month)]
                             current_date = datetime.today().date()
-
-                            # 3 aylık dönemin ilk ayından önceki 2. aya ait UFE-TUFE
-                            date_second = (current_date - relativedelta(months=2)).strftime("%d-%m-%Y")
-                            date_second = str(date_second).split('-', 1)[1]
-                            ufe_tufe_second = month_value_tufe_ufe(date_second, '2')
-                            eskalasyon_ufe = Eskalasyon.objects.get(uuid=ufe_tufe_second['eskalasyon_ufe'])
-                            eskalasyon_tufe = Eskalasyon.objects.get(uuid=ufe_tufe_second['eskalasyon_tufe'])
-                            YekaCompetitionEskalasyon_eskalasyon(
-                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                                eskalasyon_info=eskalasyon_tufe).save()
-                            YekaCompetitionEskalasyon_eskalasyon(
-                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                                eskalasyon_info=eskalasyon_ufe).save()
-
-                            # 3 aylık dönemin ilk ayından önceki 5. aya ait UFE-TUFE
-                            date_fifth = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
-                            date_fifth = str(date_fifth).split('-', 1)[1]
-                            ufe_tufe_fifth = month_value_tufe_ufe(date_fifth, '5')
-                            eskalasyon_ufe = Eskalasyon.objects.get(uuid=ufe_tufe_fifth['eskalasyon_ufe'])
-                            eskalasyon_tufe = Eskalasyon.objects.get(uuid=ufe_tufe_fifth['eskalasyon_tufe'])
-                            YekaCompetitionEskalasyon_eskalasyon(
-                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                                eskalasyon_info=eskalasyon_tufe).save()
-                            YekaCompetitionEskalasyon_eskalasyon(
-                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
-                                eskalasyon_info=eskalasyon_ufe).save()
 
                             # 3 aylık dönemin ilk ayından önceki 2. 3. 4. ayların USD ortalaması
                             endDate = (current_date - relativedelta(months=2)).strftime("%d-%m-%Y")
@@ -126,6 +102,37 @@ def EskalasyonCalculation(request, uuid):
                             YekaCompetitionEskalasyon_eskalasyon(
                                 yeka_competition_eskalasyon=yeka_competition_eskalasyon,
                                 eskalasyon_info=eskalasyon).save()
+
+                            # 3 aylık dönemin ilk ayından önceki 2. aya ait UFE-TUFE
+                            date_second = (current_date - relativedelta(months=2)).strftime("%d-%m-%Y")
+                            date_second = str(date_second).split('-', 1)[1]
+                            ufe_tufe_second = month_value_tufe_ufe(date_second, '2')
+                            eskalasyon_ufe = Eskalasyon.objects.get(uuid=ufe_tufe_second['eskalasyon_ufe'])
+                            eskalasyon_tufe = Eskalasyon.objects.get(uuid=ufe_tufe_second['eskalasyon_tufe'])
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon_tufe).save()
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon_ufe).save()
+
+
+                            # 3 aylık dönemin ilk ayından önceki 5. aya ait UFE-TUFE
+                            date_fifth = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
+                            date_fifth = str(date_fifth).split('-', 1)[1]
+                            ufe_tufe_fifth = month_value_tufe_ufe(date_fifth, '5')
+                            eskalasyon_ufe = Eskalasyon.objects.get(uuid=ufe_tufe_fifth['eskalasyon_ufe'])
+                            eskalasyon_tufe = Eskalasyon.objects.get(uuid=ufe_tufe_fifth['eskalasyon_tufe'])
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon_tufe).save()
+                            YekaCompetitionEskalasyon_eskalasyon(
+                                yeka_competition_eskalasyon=yeka_competition_eskalasyon,
+                                eskalasyon_info=eskalasyon_ufe).save()
+
+
+
+
 
                             # SONUÇ
                             ufe_result = 0.26 * float(ufe_tufe_second['ufe']) / float(ufe_tufe_fifth['ufe'])
@@ -257,10 +264,17 @@ def yeka_competition_eskalasyon(request):
              'isDeleted':False
         }
 
-        yeka_competitions = YekaCompetitionService(request, filter)
-        for competition in yeka_competitions:
-            EskalasyonCalculation(request, competition.uuid)
+        competitions = YekaCompetition.objects.filter(isDeleted=False).filter(eskalasyon_first_date__isnull=False).filter(is_calculation=True)
+        date = datetime.now().date()
+        for competition in competitions:
+            compDate=competition.eskalasyon_first_date.split('-')
+            if compDate[0] == str(date.month) and compDate[1] == str(date.year):
+                EskalasyonCalculation(request, competition.uuid)
+
+
         return redirect('ekabis:yeka_report')
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
+
+
