@@ -11,3 +11,5 @@ djangorestframework-simplejwt
 python-dateutil
 pycryptodome
 cryptography
+pandas
+apscheduler

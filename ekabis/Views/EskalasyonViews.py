@@ -19,11 +19,11 @@ import requests
 
 from ekabis.models.YekaContract import YekaContract
 from ekabis.services import general_methods
-from ekabis.services.NotificationServices import notification
+from ekabis.services.NotificationServices import notification, notification_eskalasyon
 from ekabis.services.services import YekaCompetitionService
 
 
-def EskalasyonCalculation(request, uuid):
+def EskalasyonCalculation(uuid):
     try:
         with transaction.atomic():
 
@@ -46,9 +46,10 @@ def EskalasyonCalculation(request, uuid):
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması"):
                 yeka_business = YekaBusiness.objects.get(pk=competition.business.pk).businessblogs.get(
                     businessblog__name="YEKA Kullanım Hakkı Sözleşmesinin İmzalanması")
-                if YekaContract.objects.get(business=competition.business).unit.name=='TL Kuruş/kWh':
+                if YekaContract.objects.get(business=competition.business).unit.name == 'TL Kuruş/kWh':
                     if YekaContract.objects.get(business=competition.business).eskalasyonMaxPrice:
-                        peak_value = YekaContract.objects.get(business=competition.business).eskalasyonMaxPrice  # Sözleşme iş bloğunda girilen eskalasyon pik değeri (USD)
+                        peak_value = YekaContract.objects.get(
+                            business=competition.business).eskalasyonMaxPrice  # Sözleşme iş bloğunda girilen eskalasyon pik değeri (USD)
                         startDate = 'startDate=' + str(datetime.today().date().strftime('%d-%m-%Y')) + '&'
                         endDate = 'endDate=' + str(datetime.today().date().strftime('%d-%m-%Y'))
                         date = startDate + endDate
@@ -116,7 +117,6 @@ def EskalasyonCalculation(request, uuid):
                                 yeka_competition_eskalasyon=yeka_competition_eskalasyon,
                                 eskalasyon_info=eskalasyon_ufe).save()
 
-
                             # 3 aylık dönemin ilk ayından önceki 5. aya ait UFE-TUFE
                             date_fifth = (current_date - relativedelta(months=5)).strftime("%d-%m-%Y")
                             date_fifth = str(date_fifth).split('-', 1)[1]
@@ -129,10 +129,6 @@ def EskalasyonCalculation(request, uuid):
                             YekaCompetitionEskalasyon_eskalasyon(
                                 yeka_competition_eskalasyon=yeka_competition_eskalasyon,
                                 eskalasyon_info=eskalasyon_ufe).save()
-
-
-
-
 
                             # SONUÇ
                             ufe_result = 0.26 * float(ufe_tufe_second['ufe']) / float(ufe_tufe_fifth['ufe'])
@@ -152,7 +148,8 @@ def EskalasyonCalculation(request, uuid):
                             html = '<a style="color:black;" href="' + url + '"> ID : ' + str(
                                 competition.pk) + ' - ' + str(
                                 competition.name) + '</a> adlı yarışmanın eskalasyon hesabı yapıldı.'
-                            notification(request, html, competition.uuid, 'yeka_competition')
+                            notification_eskalasyon(html, competition.uuid, 'yeka_competition')
+                            print('eskalasyon hesabı yapıldı')
                             return result
 
     except Exception as e:
@@ -261,20 +258,18 @@ def yeka_competition_eskalasyon(request):
 
         filter = {
             'is_calculation': True,
-             'isDeleted':False
+            'isDeleted': False
         }
 
-        competitions = YekaCompetition.objects.filter(isDeleted=False).filter(eskalasyon_first_date__isnull=False).filter(is_calculation=True)
+        competitions = YekaCompetition.objects.filter(isDeleted=False).filter(
+            eskalasyon_first_date__isnull=False).filter(is_calculation=True)
         date = datetime.now().date()
         for competition in competitions:
-            compDate=competition.eskalasyon_first_date.split('-')
+            compDate = competition.eskalasyon_first_date.split('-')
             if compDate[0] == str(date.month) and compDate[1] == str(date.year):
                 EskalasyonCalculation(request, competition.uuid)
-
 
         return redirect('ekabis:yeka_report')
     except Exception as e:
         traceback.print_exc()
         messages.warning(request, 'Lütfen Tekrar Deneyiniz.')
-
-

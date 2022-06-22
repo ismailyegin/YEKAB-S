@@ -6,7 +6,8 @@ from django.shortcuts import redirect
 from django.urls import resolve
 from django.utils.safestring import mark_safe
 
-from ekabis.models import Notification, NotificationUser, Permission
+from ekabis.models import Notification, NotificationUser, Permission, YekaCompetition
+from ekabis.models.YekaCompetitionPerson import YekaCompetitionPerson
 from ekabis.services.services import YekaCompetitionGetService, YekaCompetitionPersonService
 
 
@@ -50,3 +51,32 @@ def notification(request, html,uuid,type):
 
 
 
+def notification_eskalasyon(html,uuid,type):
+    try:
+        with transaction.atomic():
+            notification = Notification()
+            notification.not_description = mark_safe(html)
+            title = 'ESKALASYON HESABI'
+            notification.title = title
+            notification.save()
+            if type =='yeka_competition':
+
+                competition = YekaCompetition.objects.get(uuid=uuid)
+
+                yeka_persons = YekaCompetitionPerson.objects.get(competition=competition)
+                for yeka_person in yeka_persons:
+                    user_not = NotificationUser()
+                    user_not.notification = notification
+                    user_not.user = yeka_person.employee.person.user
+                    user_not.save()
+
+            admins = User.objects.filter(groups__name='Admin')
+            for user in admins:
+                user_not_admin = NotificationUser()
+                user_not_admin.notification = notification
+                user_not_admin.user = user
+                user_not_admin.save()
+
+    except Exception as e:
+        traceback.print_exc()
+        pass
