@@ -1509,7 +1509,7 @@ def view_yeka_competition_detail(request, uuid):
                             if YekaCompetitionEskalasyon.objects.filter(competition=yeka):
                                 eskalasyon = YekaCompetitionEskalasyon.objects.filter(competition=yeka).last()
                                 eskalasyon_price = str(eskalasyon.result) + ' ' + 'TL'
-                                eskalasyon_date = eskalasyon.creationDate.date().strftime("%d/%m/%Y")
+                                eskalasyon_date = yeka.eskalasyon_first_date
             if block.businessblog.name == 'Kabuller':
                 if YekaAccept.objects.filter(business=yeka.business):
                     yeka_accept = YekaAccept.objects.get(business=yeka.business)
