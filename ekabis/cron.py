@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from django.http import request
 
 from ekabis.Views.EskalasyonViews import EskalasyonCalculation
-from ekabis.models import YekaCompetition
+from ekabis.Views.YekaCompetitionViews import competitionEskalasyonDate
+from ekabis.models import YekaCompetition, Notification, NotificationUser
 
 
 def my_scheduled_job():
@@ -22,3 +23,14 @@ def my_scheduled_job():
     except:
         traceback.print_exc()
 
+
+def eskalasyon_date_job():
+    try:
+        print('eskalasyon date ')
+        notification=Notification(not_description='TEST CRON NOTIFICATION',title=str(datetime.today())+'--CRONJOB')
+        notification.save()
+        NotificationUser(user=User.objects.filter(is_superuser=True).last(),notification=notification).save()
+        # yekas = YekaCompetition.objects.filter(isDeleted=False).order_by('-date')
+        # competitionEskalasyonDate(yekas)
+    except:
+        traceback.print_exc()

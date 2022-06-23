@@ -1804,8 +1804,8 @@ def view_person_competition(request):
         return redirect('ekabis:view_yeka')
 
 
-def competitionEskalasyonDate(request):
-    yekas = YekaCompetition.objects.filter(isDeleted=False).order_by('-date')
+def competitionEskalasyonDate(yekas):
+
     try:
         with transaction.atomic():
             for competition in yekas:
@@ -1818,39 +1818,39 @@ def competitionEskalasyonDate(request):
                                 contract = YekaContract.objects.get(business=competition.business)
                                 if contract:
                                     if competition.is_calculation:
-                                        # if not competition.eskalasyon_first_date:
+                                        if not YekaCompetitionEskalasyon_eskalasyon.objects.filter(eskalasyon_info__startDate=competition.eskalasyon_first_date):
 
-                                        date = businessblog.startDate.month
-                                        year = businessblog.startDate.year
-                                        day=businessblog.startDate.day
+                                            if not competition.eskalasyon_first_date:
 
-
-                                        # else:
-                                        #         date=int(competition.eskalasyon_first_date.split('-')[0])
-                                        #         year=int(competition.eskalasyon_first_date.split('-')[1])
+                                                date = businessblog.startDate.month
+                                                year = businessblog.startDate.year
+                                                day=businessblog.startDate.day
 
 
-                                        if date == 1 or date == 2 or date == 3:
-                                           first_date = datetime.datetime(year, 7, day)
-                                        elif date == 4 or date == 5 or date == 6:
-                                            first_date = datetime.datetime(year, 10, day)
-                                        elif date == 7 or date == 8 or date == 9:
-                                            first_date = datetime.datetime(year, 1, day)
-                                        elif date == 10 or date == 11 or date == 12:
-                                            first_date = datetime.datetime(year+1, 4, day)
-                                        day_name = calendar.day_name[(first_date.weekday())]
-                                        if day_name == 'Saturday':
-                                            first_date = datetime.datetime(year+1, 4, day-1).date().strftime('%d-%m-%Y')
-                                        elif day_name == 'Sunday':
-                                            first_date = datetime.datetime(year+1, 4, day-2).date().strftime('%d-%m-%Y')
-                                        else:
-                                            first_date = datetime.datetime(year + 1, 4, day).date().strftime('%d-%m-%Y')
-                                        competition.eskalasyon_first_date=first_date
-                                        competition.save()
+                                            else:
+                                                    date=int(competition.eskalasyon_first_date.split('-')[0])
+                                                    year=int(competition.eskalasyon_first_date.split('-')[1])
 
-        return redirect('ekabis:view_admin')
+
+                                            if date == 1 or date == 2 or date == 3:
+                                               first_date = datetime.datetime(year, 7, day)
+                                            elif date == 4 or date == 5 or date == 6:
+                                                first_date = datetime.datetime(year, 10, day)
+                                            elif date == 7 or date == 8 or date == 9:
+                                                first_date = datetime.datetime(year, 1, day)
+                                            elif date == 10 or date == 11 or date == 12:
+                                                first_date = datetime.datetime(year+1, 4, day)
+                                            day_name = calendar.day_name[(first_date.weekday())]
+                                            if day_name == 'Saturday':
+                                                first_date = datetime.datetime(year+1, 4, day-1).date().strftime('%d-%m-%Y')
+                                            elif day_name == 'Sunday':
+                                                first_date = datetime.datetime(year+1, 4, day-2).date().strftime('%d-%m-%Y')
+                                            else:
+                                                first_date = datetime.datetime(year + 1, 4, day).date().strftime('%d-%m-%Y')
+                                            competition.eskalasyon_first_date=first_date
+                                            competition.save()
+
+            return True
     except Exception as e:
-
         traceback.print_exc()
-        messages.warning(request, e)
         return redirect('ekabis:view_yeka')
