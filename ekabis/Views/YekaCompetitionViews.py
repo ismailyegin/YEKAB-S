@@ -1,3 +1,4 @@
+import calendar
 import traceback
 
 from dateutil.relativedelta import relativedelta
@@ -1816,20 +1817,31 @@ def competitionEskalasyonDate(request):
                                         # if not competition.eskalasyon_first_date:
 
                                         date = businessblog.startDate.month
-                                        year=businessblog.startDate.year
+                                        year = businessblog.startDate.year
+                                        day=businessblog.startDate.day
+
 
                                         # else:
                                         #         date=int(competition.eskalasyon_first_date.split('-')[0])
                                         #         year=int(competition.eskalasyon_first_date.split('-')[1])
 
+
                                         if date == 1 or date == 2 or date == 3:
-                                            competition.eskalasyon_first_date = datetime.datetime(year, 7, 1).date().strftime('%d-%m-%Y')
+                                           first_date = datetime.datetime(year, 7, day)
                                         elif date == 4 or date == 5 or date == 6:
-                                            competition.eskalasyon_first_date = datetime.datetime(year, 10, 1).date().strftime('%d-%m-%Y')
+                                            first_date = datetime.datetime(year, 10, day)
                                         elif date == 7 or date == 8 or date == 9:
-                                            competition.eskalasyon_first_date = datetime.datetime(year, 1, 1).date().strftime('%d-%m-%Y')
+                                            first_date = datetime.datetime(year, 1, day)
                                         elif date == 10 or date == 11 or date == 12:
-                                            competition.eskalasyon_first_date = datetime.datetime(year+1, 4, 1).date().strftime('%d-%m-%Y')
+                                            first_date = datetime.datetime(year+1, 4, day)
+                                        day_name = calendar.day_name[(first_date.weekday())]
+                                        if day_name == 'Saturday':
+                                            first_date = datetime.datetime(year+1, 4, day-1).date().strftime('%d-%m-%Y')
+                                        elif day_name == 'Sunday':
+                                            first_date = datetime.datetime(year+1, 4, day-2).date().strftime('%d-%m-%Y')
+                                        else:
+                                            first_date = datetime.datetime(year + 1, 4, day).date().strftime('%d-%m-%Y')
+                                        competition.eskalasyon_first_date=first_date
                                         competition.save()
 
         return redirect('ekabis:view_admin')
