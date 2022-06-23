@@ -1537,7 +1537,7 @@ def view_yeka_competition_detail(request, uuid):
             blocks.append(bloc_dict)
         eskalasyon=YekaCompetitionEskalasyon.objects.filter(competition=yeka)
         if eskalasyon:
-            eskalasyon_price=str(eskalasyon.last().result) + ' ' + 'TL'
+            eskalasyon_price=str(eskalasyon.last().result) + ' ' + 'TL (TEST)'
             eskalasyon_date=yeka.eskalasyon_first_date
 
         yeka_info_dict = {}
