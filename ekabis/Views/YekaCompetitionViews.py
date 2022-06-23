@@ -1539,7 +1539,7 @@ def view_yeka_competition_detail(request, uuid):
         yeka_info_dict['unit'] = unit
         yeka_info_dict['accept_total'] = total
         yeka_info_dict['eskalasyon_price'] = eskalasyon_price
-        yeka_info_dict['eskalasyon_date'] = eskalasyon_date
+        yeka_info_dict['eskalasyon_date'] = yeka.eskalasyon_first_date
 
         yeka_info_dict['contract_price'] = contract_price
         yeka_info_dict['build_date'] = build_date
@@ -1813,23 +1813,23 @@ def competitionEskalasyonDate(request):
                                 contract = YekaContract.objects.get(business=competition.business)
                                 if contract:
                                     if competition.is_calculation:
-                                        if not competition.eskalasyon_first_date:
+                                        # if not competition.eskalasyon_first_date:
 
-                                            date = businessblog.startDate.month
-                                            year=businessblog.startDate.year
+                                        date = businessblog.startDate.month
+                                        year=businessblog.startDate.year
 
-                                        else:
-                                                date=int(competition.eskalasyon_first_date.split('-')[0])
-                                                year=int(competition.eskalasyon_first_date.split('-')[1])
+                                        # else:
+                                        #         date=int(competition.eskalasyon_first_date.split('-')[0])
+                                        #         year=int(competition.eskalasyon_first_date.split('-')[1])
 
                                         if date == 1 or date == 2 or date == 3:
-                                            competition.eskalasyon_first_date = '7-' + str(year)
+                                            competition.eskalasyon_first_date = datetime.datetime(year, 7, 1).date()
                                         elif date == 4 or date == 5 or date == 6:
-                                            competition.eskalasyon_first_date = '10-' + str(year)
+                                            competition.eskalasyon_first_date = datetime.datetime(year, 10, 1).date()
                                         elif date == 7 or date == 8 or date == 9:
-                                            competition.eskalasyon_first_date = '1-' + str(year)
+                                            competition.eskalasyon_first_date = datetime.datetime(year, 1, 1).date()
                                         elif date == 10 or date == 11 or date == 12:
-                                            competition.eskalasyon_first_date = '4-' + str(year+1)
+                                            competition.eskalasyon_first_date = datetime.datetime(year+1, 4, 1).date()
                                         competition.save()
 
         return redirect('ekabis:view_admin')
