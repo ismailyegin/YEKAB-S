@@ -1823,13 +1823,13 @@ def competitionEskalasyonDate(request):
                                         #         year=int(competition.eskalasyon_first_date.split('-')[1])
 
                                         if date == 1 or date == 2 or date == 3:
-                                            competition.eskalasyon_first_date = datetime.datetime(year, 7, 1).date()
+                                            competition.eskalasyon_first_date = datetime.datetime(year, 7, 1).date().strftime('%d-%m-%Y')
                                         elif date == 4 or date == 5 or date == 6:
-                                            competition.eskalasyon_first_date = datetime.datetime(year, 10, 1).date()
+                                            competition.eskalasyon_first_date = datetime.datetime(year, 10, 1).date().strftime('%d-%m-%Y')
                                         elif date == 7 or date == 8 or date == 9:
-                                            competition.eskalasyon_first_date = datetime.datetime(year, 1, 1).date()
+                                            competition.eskalasyon_first_date = datetime.datetime(year, 1, 1).date().strftime('%d-%m-%Y')
                                         elif date == 10 or date == 11 or date == 12:
-                                            competition.eskalasyon_first_date = datetime.datetime(year+1, 4, 1).date()
+                                            competition.eskalasyon_first_date = datetime.datetime(year+1, 4, 1).date().strftime('%d-%m-%Y')
                                         competition.save()
 
         return redirect('ekabis:view_admin')
